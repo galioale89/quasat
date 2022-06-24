@@ -587,7 +587,7 @@ router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
                                     .then((pes_instalador) => {
                                         q++
 
-                                        qtdmod = projeto.plaQtdMod
+                                        // qtdmod = projeto.plaQtdMod
 
                                         if (naoVazio(pes_instalador)) {
                                             instalador = pes_instalador.nome
@@ -601,10 +601,11 @@ router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
                                         ////     ins_banco = ''
                                         //// }
 
-                                        addInstalador = [{ instalador: instalador, qtdmod: qtdmod }]
+                                        // addInstalador = [{ instalador: instalador, qtdmod: qtdmod }]
 
                                         listaAndamento.push({
-                                            id: projeto._id, seq: projeto.seq
+                                            id: projeto._id, 
+                                            //seq: projeto.seq
                                             // , modulos: qtdmod, potencia: projeto.plaWattMod, inversor: projeto.plaKwpInv, telhado: projeto.telhado, estrutura: projeto.estrutura, cidade: projeto.cidade, uf: projeto.uf,
                                             // instalador, deadline: dataMensagem(e.dtfim), parado: projeto.parado, execucao: projeto.execucao, instalado: projeto.instalado, autorizado: projeto.autorizado, pago: projeto.pago, encerrado: projeto.encerrado, addInstalador
                                         })
