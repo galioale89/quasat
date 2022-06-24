@@ -1,0 +1,274 @@
+<style>
+    .disabledbutton {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .picture-canvas {
+        display: none;
+    }
+</style>
+
+<script>
+    window.onload = function () {
+
+        var bloquear = document.getElementById('bloquear')
+
+        if (bloquear.className == 'true') {
+            bloquear.className = 'disabledbutton'
+        }
+    }
+</script>
+
+<div class='text-center mt-2' style="width: 98%;padding-left: 2%;padding-top: 0.5%;height: auto">
+    {{#if projeto._id}}
+    <div style="width: 100%;" class="header">
+        <label style="font-size: 25px;">{{cliente_projeto.nome}}&nbsp{{projeto.seq}} </label>
+    </div>
+    {{#if instalador}}
+    <label style="font-size: 30px;font-weight: 600;padding: 10px;margin-bottom: 30px;">Obra</label><br>
+    <div class="mt-4">
+        <table>
+            <tr>
+                {{#if projeto.instalado}}
+                {{else}}
+                <td style="width: 200px;">
+                    <label style="font-size: 16px;text-align: center;">Em execução</label>
+                </td>
+                {{/if}}
+                <td>
+                    <label style="font-size: 16px;text-align: center">Atividade</label>
+                </td>
+            </tr>
+            {{#each tarefas}}
+            <tr>
+                {{#if projeto.instalado}}
+                {{else}}
+                <td>
+                    <input class="" style="transform: scale(3)" type="checkbox" {{check}}
+                        onclick='window.location.href="/gerenciamento/checkAtv/{{id}}"'>
+                </td>
+                {{/if}}
+                <td>
+                    <a href='/gerenciamento/mostrarFotos/tarefa@{{id}}@{{../projeto._id}}'
+                        class="btn btn-primary mb-1 fw-bold" {{#if
+                        checkAtv}}style="width: 300px;height: 50px;padding: 10px;font-size: 20px;"
+                        {{else}}style="width: 300px;height: 50px;padding: 10px;opacity: 50%;font-size: 20px;pointer-events: none"
+                        {{/if}}>{{descricao}}</a>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+    <a href='/dashboard' style="font-size: 40px;"><i class='bi bi-arrow-left-circle'></i></a>
+    {{else}}
+    {{#if funpro}}
+    <div class="row">
+        <div class="col">
+            <a href='/gerenciamento/fatura/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-images d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspFatura </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/fotos/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-images d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspFotos </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+        {{#if termo}}
+        <div style="width: 60px;">
+            <a class="btn btn-sm btn-primary" style="max-width: 120px;max-height: 90px;border-radius: 90px;"
+                href="/gerenciamento/mostrarBucket/{{desctermo}}"><i style="font-size: 25px;padding: 5px"
+                    class="bi bi-folder"></i></a>
+        </div>
+        {{/if}}
+        {{#if entrega}}
+        <div style="width: 60px;">
+            <a href="/gerenciamento/entrega/{{projeto._id}}" {{#if projeto.encerrado}}title="Alterar o projeto."
+                {{else}}{{#if projeto.instalado}}title="Encerrar o projeto." {{else}}title="Finalizar Instalação."
+                {{/if}}{{/if}}
+                class='{{#if projeto.encerrado}}btn btn-sm btn-warning{{else}}btn btn-sm btn-success{{/if}}'
+                style="max-width: 120px;max-height: 90px;border-radius: 90px;"><i
+                    class='{{#if projeto.encerrado}}bi bi-journal-arrow-down{{else}}{{#if projeto.instalado}}bi bi-check2-circle{{else}}bi bi-journal-arrow-up{{/if}}{{/if}} d-flex align-items-center'
+                    style="font-size: 25px;padding: 5px"></i></a>
+        </div>
+        {{/if}}
+    </div>
+    {{else}}
+    {{#if projeto.ganho}}
+    <div class='row'>
+        <div class="col">
+            <a href='/gerenciamento/orcamento/{{projeto._id}}'
+                class='{{#if projeto.ganho}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-funnel d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProposta </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+    </div>
+    {{else}}
+    <div class="btn-group col-12 gap-2 ativo">
+        <a href='/gerenciamento/orcamento/{{projeto._id}}' style="font-size: 20px;color: white;font-weight: 700;"
+            class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
+            <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
+        </a>
+        <a href='/gerenciamento/ganho/{{projeto._id}}/'>
+            <i class="bi bi-check" style="font-size: 30px;color: white"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+    </div>
+    {{/if}}
+    {{/if}}
+    {{/if}}
+    {{/if}}
+
+    <label style="font-size: 40px;font-weight: 800;" class="mt-4">Checklist e Fotos</label>
+    <div class="row mt-4 mb-4">
+        {{#if projeto.encerrado}}
+        <table>
+            <tr>
+                <td style="font-weight: 600;">Atividade</td>
+                <td style="font-weight: 600;">Ver</td>
+                <td style="font-weight: 600;">Data Inicio</td>
+                <td style="font-weight: 600;">Data Entrega</td>
+                <td style="font-weight: 600;">Dias</td>
+                <td style="font-weight: 600;">Situacao</td>
+            </tr>
+            {{#each tarefas}}
+            <tr>
+                <form action="/gerenciamento/salvarImagem" method="post" enctype="multipart/form-data">
+                    <input type='hidden' name='idprj' value='{{../projeto._id}}'>
+                    <div class='row'>
+                        <input type='hidden' name='id' value='{{_id}}'>
+                        <input type='hidden' name='caminho' value='instalacao'>
+                        <input type='hidden' name='usuario' value='gestor'>
+                        <input type='hidden' name='tipo' value='tarefa'>
+                    </div>
+                    <td>
+                        <label style="font-size: 14px;">{{descricao}}</label>
+                    </td>
+                    <td>
+                        <a href="/gerenciamento/verFotos/{{id}}" class='btn btn-primary'><i class='bi bi-eye'></i></a>
+                    </td>
+                    <td>
+                        <input readonly class="form-control" type="date" name="dtfoto" value="{{dataini}}">
+                    </td>
+                    <td>
+                        <input readonly class="form-control" type="date" name="dtfoto" value="{{datafim}}">
+                    </td>
+                    <td>
+                        <label style="font-size: 14px;">{{contaDias}}</label>
+                    </td>
+                    <td>
+                        <select class='form-select' readonly name="check" id="check">
+                            {{#if concluido}}
+                            <option>Aprovado</option>
+                            <option>Averiguar</option>
+                            {{else}}
+                            <option>Averiguar</option>
+                            <option>Aprovado</option>
+                            {{/if}}
+                        </select>
+                    </td>
+                </form>
+            </tr>
+            {{/each}}
+        </table>
+        {{else}}
+        <table>
+            <tr>
+                <td style="font-weight: 600;">Atividade</td>
+                <td style="font-weight: 600;">Fotos</td>
+                <td style="font-weight: 600;">Ver</td>
+                <td style="font-weight: 600;">Data Inicio</td>
+                <td style="font-weight: 600;">Data Entrega</td>
+                <td style="font-weight: 600;">Situação</td>
+                <td style="font-weight: 600;">Salvar</td>
+                <td style="font-weight: 600;">Dias</td>
+                <td style="font-weight: 600;">Status</td>
+            </tr>
+            {{#each tarefas}}
+            <tr>
+                <form action="/gerenciamento/salvarImagem" method="post" enctype="multipart/form-data">
+                    <input type='hidden' name='idprj' value='{{../projeto._id}}'>
+                    <input type='hidden' name='id' value='{{id}}'>
+                    <input type='hidden' name='caminho' value='instalacao'>
+                    <input type='hidden' name='usuario' value='gestor'>
+                    <input type='hidden' name='tipo' value='tarefa'>
+                    <td>
+                        <label style="font-size: 16px;">{{descricao}}</label>
+                    </td>
+                    <td style="width: 140px;">
+                        <input style="font-size: 14px;" type='file' multiple class='form-control' name='files'>
+                    </td>
+                    <td>
+                        <a href="/gerenciamento/verFotos/{{id}}" class='btn btn-primary'><i class='bi bi-eye'></i></a>
+                    </td>
+                    <td style="width: 140px;">
+                        <input readonly class="form-control" type="date" name="dtfoto" value="{{dataini}}">
+                    </td>
+                    <td style="width: 140px;">
+                        <input readonly class="form-control" type="date" name="dtfoto" value="{{datafim}}">
+                    </td>
+                    <td>
+                        <select class='form-select' name="check" id="check">
+                            {{#if concluido}}
+                            <option>Aprovado</option>
+                            <option>Averiguar</option>
+                            {{else}}
+                            <option>Averiguar</option>
+                            <option>Aprovado</option>
+                            {{/if}}
+                        </select>
+                    </td>
+                    <td>
+                        <button type='submit' class='btn btn-success'><i class='bi bi-save'></i></button>
+                    </td>
+                    <td>
+                        <label style="font-size: 14px;">{{contaDias}}</label>
+                    </td>
+                    <td>
+                        {{#if concluido}}<i class="bi bi-check-circle" style="color: green"></i>{{else}}
+                        {{#if realizado}}<i class="bi bi-card-image" style="color: green"></i>{{else}}
+                        {{#if emandamento}}<i class="bi bi-play-circle" style="color: orange"></i>{{else}}<i
+                            class="bi bi-stop-circle" style="color: red"></i>{{/if}}{{/if}}{{/if}}
+                    </td>
+                </form>
+            </tr>
+            {{/each}}
+        </table>
+        {{/if}}
+    </div>
+</div>

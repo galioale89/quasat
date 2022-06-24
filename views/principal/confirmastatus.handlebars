@@ -1,0 +1,55 @@
+<script>
+    function novo() {
+        var obs = document.getElementById('obs')
+        obs.value = ''
+    }
+
+</script>
+<div class='container'>
+    <div class="card-body">
+        <form method='post' action='/gerenciamento/aplicarstatus'>
+            <input type='hidden' id='cliente' value='{{cliente._id}}'>
+            <input type='hidden' name='id' value='{{projeto._id}}'>
+            <input type='hidden' name="tipo" value="status">
+            <div class="row mt-1 mb-4">
+                <div class="col-md-10">
+                    <label class='text-center' style="font-size: 25px;">Proposta</label>
+                    <label class="text-center mb-4 fw-bold" style="font-size: 25px;">
+                        <a href='/gerenciamento/orcamento/{{projeto._id}}'> &nbsp{{projeto.seq}}</a></label><br>
+                    <label class='text-center' style="font-size: 25px;">Cliente:</label>
+                    <label class="text-center mb-4 fw-bold" style="font-size: 25px;">{{cliente.nome}}</label>
+                </div>
+                <div class="col-md-2 text-end">
+                     {{#if vendedor}}
+                        <a href="/dashboard"><i class='bi bi-arrow-left-circle d-flex align-items-center'
+                                style="font-size: 38px;color: rgba(132,122,244);"></i></a>
+                        {{else}}
+                        <a href="/gerenciamento/selecao"><i class='bi bi-arrow-left-circle d-flex align-items-center'
+                                style="font-size: 38px;color: rgba(132,122,244);"></i></a>
+                        {{/if}}
+                </div>
+            </div>
+            <div>
+                <label class='col-form-label fw-bold'>Status:</label>
+                <div class="btn-group gap-2">
+                    <select class='form-select' name='status'>
+                        <option class='fw-bold'>{{projeto.status}}</option>
+                        <option>Analisando Financiamento</option>
+                        <option>Comparando Propostas</option>
+                        <option>Aguardando redução de preço</option>
+                    </select>
+                    <div onclick="novo()" style="cursor: pointer;">
+                        <i class='bi bi-plus-square d-flex align-items-center'
+                            style="font-size: 36px;color: rgba(132,122,244);"></i>
+                    </div>
+                </div>
+            </div>
+            <label class='col-form-label'>Descreva uma ação de resposta</label>
+            <textarea name='obs' class='form-control' id='obs' rows="8">{{projeto.descstatus}}</textarea>
+
+            <div class="row mb-4">
+                <button type="submit" class='btn btn-success'>Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>

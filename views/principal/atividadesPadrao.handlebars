@@ -1,0 +1,31 @@
+<div style="width: 98%;padding-left: 2%;padding-top: 0.5%;">
+    <form action="/gerenciamento/addAtvPadrao/" method="post">
+    <div class="row mt-4">
+        <div class="col">
+            <label class='titulo-beneficio fw-bold'>Descrição</label>
+            <input class="form-control" name="descricao">
+        </div>
+        <div class="col">
+            <button type="submit" class="btn"><i class='bi bi-plus d-flex align-items-center'
+                    style="font-size: 40px;margin-top: 20px;"></i></button>
+        </div>
+    </div>
+    </form>
+    {{#if atv}}
+    <div class="card mt-4">
+        <div class="card-body">
+             <label class='titulo-inicio' style="cursor: none;font-size: 30px;">Atividades Padrão</label>
+            {{#each atv}}
+            <div class="row" style="line-height: 40px;">
+                <div class="col">
+                   <label class='titulo-beneficio'>{{descricao}}</label>
+                </div>
+                <div class="col">
+                    <a href="/gerenciamento/delAtvPadrao/{{_id}}"><i class='bi bi-x-circle' style="color: orangered;font-size: 24px;"></i></a>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+</div>

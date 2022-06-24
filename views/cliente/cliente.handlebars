@@ -1,0 +1,323 @@
+<style>
+    .icone {
+        font-size: 30px;
+        color: rgb(2, 38, 78);
+    }
+</style>
+<script src='/js/uteis.js'></script>
+<script>
+    function mascara(data) {
+        if (data.length == 8) {
+            var ano = String(data).substring(0, 4)
+            var mes = String(data).substring(4, 6)
+            var dia = String(data).substring(6, 8)
+            return dia + '/' + mes + '/' + ano
+        } else {
+            return 'Sem Data'
+        }
+    }
+    window.onload = function () {
+
+        var dtcadastro = document.getElementById('dtcadastro')
+        dtcadastro.innerHTML = mascara(dtcadastro.innerHTML)
+    }    
+</script>
+
+<form {{#if cliente._id}}action='/cliente/edicao' {{else}}action='/cliente/novo' {{/if}} method='post'>
+    <input type='hidden' name='id' value='{{cliente._id}}'>
+    <input type='hidden' name='voltar' value='{{voltar}}'>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs mb-2">
+                    {{#if usina}}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" style="color: black"
+                            href="/cliente/edicao/{{cliente._id}}"><label class="col-form-label titulo-inicio">Cadastro
+                                de Cliente</label></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" style="color: black"
+                            href="/cliente/usinas/{{cliente._id}}"><label
+                                class="col-form-label titulo-inicio">Usinas</label></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" style="color: black"
+                            href="/cliente/historico/{{cliente._id}}"><label
+                                class="col-form-label titulo-inicio">Histórico</label></a>
+                    </li>
+                    {{else}}
+                    <label class='col-form-label titulo-inicio fw-bold'>Cadastro de Clientes</label>
+                    {{/if}}
+                </ul>
+                <div class="mb-2">
+                    {{#if vendedor}}
+                    <div style="margin-bottom: 40px;">
+                        {{!-- <div class="form-check">
+                            <input class="form-check-input" style="margin-top: 7px;" type="checkbox" name="checkLead" {{checkLead}}>
+                            <label class="col-form-label col-form-label-sm">Lead</label>
+                        </div> --}}
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Nome Completo: </label><label style="font-size: 20px;color: orangered">*</label>
+                        <input type='text' name='nome' class='form-control form-control-sm mb-1'
+                            value='{{cliente.nome}}'>
+                        <label class="col-form-label col-form-label-sm fw-bold">Documento</label><label style="font-size: 20px;color: orangered">*</label>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check" onchange="documento()">
+                                    <input class="form-check-input" type="radio" name="check" id="radioCPF"
+                                        {{checkCPF}}>
+                                    <label class="col-form-label col-form-label-sm">
+                                        CPF
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check" onchange="documento()">
+                                    <input class="form-check-input" type="radio" name="check" id="radioCNPJ"
+                                        {{checkCNPJ}}>
+                                    <label class="col-form-label col-form-label-sm">
+                                        CNPJ
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="" id="mostraCNPJ"
+                                style="display: {{#if cliente.cnpj}}{{ehcnpj}}{{else}}none{{/if}};">
+                                <input type='text' class='form-control form-control-sm mb-1' maxlength="18"
+                                    autocomplete="off" id='cnpj' name='cnpj' onkeyup="valida_cnpj()"
+                                    value='{{#if cnpj}}{{cnpj}}{{else}}{{cliente.cnpj}}{{/if}}'>
+                            </div>
+                            <div class="" id="mostraCPF"
+                                style="display: {{#if cliente.cpf}}{{ehcpf}}{{else}}''{{/if}};">
+                                <input type='text' class='form-control form-control-sm mb-1' maxlength="14"
+                                    autocomplete="off" id='cpf' name='cpf' onkeyup="valida_cpf('cpf')"
+                                    value='{{#if cpf}}{{cpf}}{{else}}{{cliente.cpf}}{{/if}}'>
+                            </div>                     
+                        <div class="mt-3">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>CEP:
+                            </label>
+                            <input type='text' id='cep' name='cep' size='10' maxlength="9"
+                                class='form-control form-control-sm mb-1' value='{{cliente.cep}}'>
+                        </div>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Estado</label>
+                        <input type='text' id="estado" name='uf' class='form-control form-control-sm mb-1'
+                            value="{{cliente.uf}}" size="2">
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Cidade</label><label style="font-size: 20px;color: orangered">*</label>
+                        <input type='text' id="cidade" name='cidade' size='40' class='form-control form-control-sm mb-1'
+                            value="{{cliente.cidade}}">
+                        <div class="mt-3">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Endereço</label><label style="font-size: 20px;color: orangered">*</label>
+                            <input type='text' name='endereco' id='rua' size='60'
+                                class='form-control form-control-sm mb-1'
+                                value='{{#if endereco}}{{endereco}}{{else}}{{cliente.endereco}}{{/if}}'>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Número:
+                                </label>
+                                <input type='text' name='numero' class='form-control form-control-sm mb-1'
+                                    value='{{cliente.numero}}'>
+                            </div>
+                            <div class="col">
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Bairro:
+                                </label>
+                                <input type='text' name='bairro' id='bairro' size='40'
+                                    class='form-control form-control-sm mb-1' value='{{cliente.bairro}}'>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Complemento:
+                                </label>
+                                <input type='text' name='complemento' class='form-control form-control-sm mb-1'
+                                    value='{{cliente.complemento}}'>
+                            </div>
+                        </div> <label class='fw-bold col-form-label col-form-label-sm mb-1'>Contato: </label>
+                        <input type='text' name='contato' class='form-control form-control-sm mb-1'
+                            value='{{cliente.contato}}'>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Celular: </label><label style="font-size: 20px;color: orangered">*</label>
+                        <input type='text ' name='celular' id='celular' class='form-control form-control-sm mb-1'
+                            maxlength="11" autocomplete="off" value='{{cliente.celular}}'>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>E-mail: </label>
+                        <input type='email' name='email' style="text-transform: lowercase;"
+                            class='form-control form-control-sm mb-1' value='{{cliente.email}}'>
+                    </div>
+                    {{else}}
+                    <div class="row">
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Nome Completo: </label>
+                        </div>
+                        <div class="col">
+                            <input type='text' name='nome' class='form-control form-control-sm mb-1'
+                                value='{{cliente.nome}}'>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>CEP: </label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type='text' id='cep' name='cep' size='10' maxlength="9"
+                                class='form-control form-control-sm mb-1' value='{{cliente.cep}}'>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Endereço: </label>
+                        </div>
+                        <div class="col">
+                            <input type='text' name='endereco' id='rua' size='60'
+                                class='form-control form-control-sm mb-1'
+                                value='{{#if endereco}}{{endereco}}{{else}}{{cliente.endereco}}{{/if}}'>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Número: </label>
+                        </div>
+                        <div class="col-md-1">
+                            <input type='text' name='numero' class='form-control form-control-sm mb-1'
+                                value='{{cliente.numero}}'>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Bairro: </label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type='text' name='bairro' id='bairro' size='40'
+                                class='form-control form-control-sm mb-1' value='{{cliente.bairro}}'>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Complemento: </label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type='text' name='complemento' class='form-control form-control-sm mb-1'
+                                value='{{cliente.complemento}}'>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Cidade: </label>
+                        </div>
+                        <div class="col">
+                            <input type='text' id="cidade" name='cidade' size='40'
+                                class='form-control form-control-sm mb-1' value="{{cliente.cidade}}">
+                        </div>
+                        <div class="col-md-1">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Estado: </label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type='text' id="estado" name='uf' class='form-control form-control-sm mb-1'
+                                value="{{cliente.uf}}" size="2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-end">
+                            <label class="col-form-label col-form-label-sm fw-bold">Documento</label><label style="font-size: 20px;color: orangered">*</label>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-check" onchange="documento()">
+                                <input class="form-check-input" type="radio" name="check" id="radioCPF" {{checkCPF}}>
+                                <label class="col-form-label col-form-label-sm">
+                                    CPF
+                                </label>
+                            </div>
+                            <div class="form-check" onchange="documento()">
+                                <input class="form-check-input" type="radio" name="check" id="radioCNPJ" {{checkCNPJ}}>
+                                <label class="col-form-label col-form-label-sm">
+                                    CNPJ
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="" id="mostraCNPJ"
+                                style="display: {{#if cliente.cnpj}}{{ehcnpj}}{{else}}none{{/if}};">
+                                <input type='text' class='form-control form-control-sm mb-1' maxlength="18"
+                                    autocomplete="off" id='cnpj' name='cnpj' onkeyup="valida_cnpj()"
+                                    value='{{#if cnpj}}{{cnpj}}{{else}}{{cliente.cnpj}}{{/if}}'>
+                            </div>
+                            <div class="" id="mostraCPF"
+                                style="display: {{#if cliente.cpf}}{{ehcpf}}{{else}}''{{/if}};">
+                                <input type='text' class='form-control form-control-sm mb-1' maxlength="14"
+                                    autocomplete="off" id='cpf' name='cpf' onkeyup="valida_cpf('cpf')"
+                                    value='{{#if cpf}}{{cpf}}{{else}}{{cliente.cpf}}{{/if}}'>
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <label class="col-form-label col-form-label-sm fw-bold">Inscrição</label>
+                        </div>
+                        <div class="col">
+                            <input type='number' class='form-control form-control-sm mb-1' id='inscricao'
+                                name='inscricao' value='{{cliente.inscricao}}'>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Contato: </label>
+                        </div>
+                        <div class="col">
+                            <input type='text' name='contato' class='form-control form-control-sm mb-1'
+                                value='{{cliente.contato}}'>
+                        </div>
+                        <div class="col-md-1 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>Celular: </label>
+                        </div>
+                        <div class="col">
+                            <input type='text ' name='celular' id='celular' class='form-control form-control-sm mb-1'
+                                maxlength="10" autocomplete="off" value='{{cliente.celular}}'>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-end">
+                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>E-mail: </label>
+                        </div>
+                        <div class="col">
+                            <input type='email' name='email' class='form-control form-control-sm mb-1'
+                                value='{{cliente.email}}'>
+                        </div>
+                    </div>
+                    {{#if projetos}}
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="row" style="width: 100%;">
+                            <label class="col-form-label fw-bold text-center">Projetos</label>
+                            <table>
+                                <tr>
+                                    <td style="width: 50px"><label class="col-form-label col-form-label-sm">Cod.</label></td>
+                                    <td style="width: 50px"><label class="col-form-label col-form-label-sm">Tipo</label></td>
+                                    <td style="width: 40px"><label class="col-form-label col-form-label-sm">Potência</label></td>
+                                    <td style="width: 70px"><label class="col-form-label col-form-label-sm">Qtd. Módulos</label></td>
+                                    <td style="width: 70px"><label class="col-form-label col-form-label-sm">kWp Inversor</label></td>
+                                    <td style="width: 70px"><label class="col-form-label col-form-label-sm">Cadastro</label></td>
+                                </tr>
+                                {{#each projetos}}
+                                <tr>
+                                    <td><a href='/gerenciamento/orcamento/{{id}}' style="text-align: center;">{{seq}}</a></td>
+                                    <td><a href='/gerenciamento/orcamento/{{id}}' style="text-align: center;">{{tipo}}</a></td>
+                                    <td><a href='/gerenciamento/orcamento/{{id}}' style="text-align: center;">{{potencia}}kWp</a></td>
+                                    <td><a href='/gerenciamento/orcamento/{{id}}' style="text-align: center;">{{plaQtdMod}}</a></td>
+                                    <td><a href='/gerenciamento/orcamento/{{id}}' style="text-align: center;">{{plaKwpInv}}</a></td>
+                                    <td><a href='/gerenciamento/orcamento/{{id}}' style="text-align: center;" id="dtcadastro">{{datacad}}</a></td>
+                                </tr>
+                                {{/each}}
+                            </table>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{/if}}
+                </div>
+                <div class="col mt-2 mb-4" style="text-align: center;">
+                    <a href='/cliente/novo' class='btn btn-sm btn-primary'>Novo</a>
+                    <a href="/cliente/consulta" class="btn btn-sm btn-primary text-start"> <i
+                            class='bi bi-search'></i></a>
+                    <button type='submit' class='btn btn-sm btn-success'>Salvar</button>
+                    <a href='/dashboard'><i class='bi bi-house btn btn-sm btn-primary' title="Dashboard"></i></a>
+                    {{#if cliente._id}}
+                    {{#if voltar}}
+                    <a href='/gerenciamento/agenda' class='btn btn-sm btn-primary'><i
+                            class='bi bi-arrow-return-left'></i></a>
+                    {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

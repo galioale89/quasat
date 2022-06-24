@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<script>
+    function login() {
+        window.location.href = '/usuario/login'
+    }
+    function registrar() {
+        window.location.href = '/usuario/registrar/todos'
+    }
+    function changeBenefit(num) {
+        /*
+        var ben1 = document.getElementById('benefit-1')
+        var descben1 = document.getElementById('desc-benefit-1')
+        var ben2 = document.getElementById('benefit-2')
+        var descben2 = document.getElementById('desc-benefit-2')
+        */
+        var ben3 = document.getElementById('benefit-3')
+        var descben3 = document.getElementById('desc-benefit-3')
+        var ben4 = document.getElementById('benefit-4')
+        var descben4 = document.getElementById('desc-benefit-4')
+        /*
+        var ben5 = document.getElementById('benefit-5')
+        var descben5 = document.getElementById('desc-benefit-5')
+        */
+        var ben6 = document.getElementById('benefit-6')
+        var descben6 = document.getElementById('desc-benefit-6')
+        /*
+        ben1.className = 'topic'
+        descben1.style.display = 'none'
+        ben2.className = 'topic'
+        descben2.style.display = 'none'
+        */
+        ben3.className = 'topic'
+        descben3.style.display = 'none'
+        ben4.className = 'topic'
+        descben4.style.display = 'none'
+        /*
+        ben5.className = 'topic'
+        descben5.style.display = 'none'
+        */
+        ben6.className = 'topic'
+        descben6.style.display = 'none'
+        /*
+        if (num == 1) {
+            ben1.className = 'topic active'
+            descben1.style.display = ''
+        }
+        if (num == 2) {
+            ben2.className = 'topic active'
+            descben2.style.display = ''
+        }
+        */
+        if (num == 3) {
+            ben3.className = 'topic active'
+            descben3.style.display = ''
+        }
+        if (num == 4) {
+            ben4.className = 'topic active'
+            descben4.style.display = ''
+        }
+        /*
+        if (num == 5) {
+            ben5.className = 'topic active'
+            descben5.style.display = ''
+        }
+        */
+        if (num == 6) {
+            ben6.className = 'topic active'
+            descben6.style.display = ''
+        }
+    }
+    window.onload = function () {
+        var ehmobile = document.getElementById('ehmobile')
+        var mostra = document.getElementById('mostraMenu')
+        var mostrabanner = document.getElementById('mostrabanner')
+        if (screen.width < 640 || screen.height < 480) {
+            ehmobile.style.display = 'none'
+            mostra.style.display = 'flex'
+            mostrabanner.style.display = ''
+        } else {
+            mostrabanner.style.display = 'flex'
+            ehmobile.style.display = ''
+            mostra.style.display = 'none'
+            var img = document.getElementById('img')
+            var banner = document.getElementById('banner')
+            var titulo = document.getElementById('titulo')
+            var subtitulo = document.getElementById('subtitulo')
+            var tam = screen.width - (screen.width * 0.5)
+            img.style.width = String(tam) + 'px'
+            banner.style.width = String(tam) + 'px'
+            titulo.style.left = '127px'
+            subtitulo.style.marginLeft = '127px'
+            var altura = document.getElementById('altura')
+            var offset = document.getElementsByTagName('header')[0].offsetTop;
+            var menu = document.getElementsByTagName('header')[0];
+            var sobre = menu.getElementsByTagName('a')[0]
+            var solucao = menu.getElementsByTagName('a')[1]
+            var contato = menu.getElementsByTagName('a')[2]
+            document.addEventListener('scroll', function () {
+                if (document.body.scrollTop > offset || document.documentElement.scrollTop > offset) {
+                    menu.style.backgroundColor = '#847AF4'
+                    menu.style.boxShadow = '0px 3px 5px rgba(100,100,100,0.8)'
+                    menu.style.height = '60px'
+                    menu.style.padding = '5px 10px'
+                    sobre.style.color = 'white'
+                    solucao.style.color = 'white'
+                    contato.style.color = 'white'
+                    altura.className = 'row align-items-center'
+                } else {
+                    menu.style.backgroundColor = 'white'
+                    menu.style.padding = '20px 10px'
+                    sobre.style.color = '#847AF4'
+                    menu.style.boxShadow = ''
+                    solucao.style.color = '#847AF4'
+                    contato.style.color = '#847AF4'
+                    altura.className = 'row align-items-center mt-4'
+                }
+            })
+        }
+    }
+</script>
+<style>
+    button {
+        text-transform: uppercase;
+    }
+    small {
+        font-size: 12px;
+        line-height: 20px;
+    }
+    .texto-banner {
+        font-size: 30px;
+        line-height: 40px;
+    }
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vimmus - Gestão de Obras para Integradores de Energia Solar</title>
+    <meta property="og:title" content="Vimmus - Gestão de Obras para Integradores de Energia Solar">
+    <meta property="og:description" content="Gestão de Obras">
+
+    <meta name="title" content="Vimmus - Gestão de Obras para energia solar.">
+    <meta name="description" content="Melhore a comunicação em suas obras.">
+
+    <!-- FAV ICON -->
+    <link rel="apple-touch-icon" sizes="32x32" href="favicon/apple-icon-32x32.png">
+    <link rel="apple-touch-icon" sizes="16x16" href="favicon/apple-icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <meta name="msapplication-TileColor" content="#B3F85E">
+    <meta name="msapplication-TileImage" content="favicon/favicon-32x32.png">
+    <meta name="theme-color" content="#B3F85E">
+    <!-- END FAV ICON -->
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="/">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image" content="favicon/share.png">
+    <meta property="og:site_name" content="Vimmus - Gestão de Obras para Integradores de Energia Solar">
+
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+
+    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+</head>
+
+<body style="line-height: 1.6875rem;width: 100%;">
+    <header style="padding: 20px 10px;height: 120px;">
+        <div class="row align-items-center mt-4" id="altura">
+            <div class="col-md-3 text-center">
+                <h1 class="logo">VIMMUS<span>®</span></h1>
+            </div>
+            <div class="col-md-9 text-end">
+                <div id="ehmobile" style="padding-left: 400px;">
+                    <nav class="header-menu">
+                        <ul>
+                            <li>
+                                <a href="#about">Sobre</a>
+                            </li>
+                            <li>
+                                <a href="#resource">Solução</a>
+                            </li>
+                            <li>
+                                <a href="#contact">Contato</a>
+                            </li>
+                            <li>
+                                <button class="secondary-btn" type="button" title="Login" onclick="login()">
+                                    Login</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div id="mostraMenu" style="display: none;padding-bottom: 200px;">
+                    <div class="dropdown">
+                        <button class="btn fw-bold" data-bs-toggle="dropdown" aria-expanded="false"
+                            style='font-size: 30px;'>
+                            <i class='bi bi-list d-flex align-items-center'></i>
+                        </button>
+
+                        <ul class="dropdown-menu text-center">
+                            <li>
+                                <a href="#about">Sobre</a>
+                            </li>
+                            <li>
+                                <a href="#resource">Solução</a>
+                            </li>
+                            <li>
+                                <a href="#contact">Contato</a>
+                            </li>
+                            <li>
+                                <a onclick="login()" style="color:#847AF4;font-weight: 600;">Login<a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="initial-section">
+        <div class='row' style="width: 100%;display: flex;margin-top: 100px;">
+            <div class="col-md-5">
+                <div class="container">
+                    <h2 class="title-banner stripe-animation" id="titulo">
+                        Melhore a comunicação <br>
+                        <span class="stripe"></span>
+                        entre a equipe de campo e o <br>
+                        escritório <br>
+                    </h2>
+                    <p class="text" id="subtitulo">
+                        Otimize seus processos e <br> transforme a gestão das suas obras <br> de instalação de sistemas fotovoltaicos <br> na sua empresa de energia solar.</p>
+                </div>
+            </div>
+            <div class="col text-end">
+                <img src="img/banner-texto.svg" id='banner' width="400px" alt="Dashboard de projetos"
+                    title="Dashboard de projetos">
+            </div>
+        </div>
+    </section>
+
+    <section id="integration">
+
+    </section>
+
+    <section id="step-by-step">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="title-section">
+                        Processos
+                        <span class="stripe"></span>
+                    </h2>
+                    <div class="">
+                        <div class="row wrapper-cards text-center">
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <img src='img/plan.svg' width="70"
+                                        style="margin: auto;margin-top: 5px;margin-bottom: 32px;">
+                                    <p class="text-card">Vendas</p>
+                                    <small>Propostas solicitadas pelos vendedores são encaminhadas para o
+                                        orçamentista</small>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+
+                                    <svg class="picture-card" xmlns="http://www.w3.org/2000/svg" width="70.347"
+                                        height="70.333" viewBox="0 0 70.347 70.333">
+
+                                        <g id="local-na-rede-internet" transform="translate(0.05 512)">
+                                            <path id="Caminho_120" data-name="Caminho 120"
+                                                d="M6.8-504.074l-.041,7.94-1.236.082a10.98,10.98,0,0,0-1.69.234,5.906,5.906,0,0,0-3.736,4.286c-.192,1-.192,37.475,0,38.477a5.834,5.834,0,0,0,3.16,4.025l.893.426,8.1.069,8.1.069.041,2.239L20.425-444H15.892v2.335H54.355V-444H49.822l.027-2.225.041-2.239,8.1-.069,8.1-.069.893-.426a5.834,5.834,0,0,0,3.16-4.025c.192-1,.192-37.475,0-38.477a5.906,5.906,0,0,0-3.736-4.286,10.719,10.719,0,0,0-1.69-.234l-1.236-.082-.041-7.94L63.422-512H6.825ZM61.224-506.3v3.366H9.023v-6.731h52.2Zm0,23.834v18.133H9.023V-500.6h52.2ZM6.8-477.973l.027,15.839h56.6l.027-15.839.041-15.825.659-.041a3.648,3.648,0,0,1,3.517,1.951c.288.577.288.714.288,16.333V-459.8H2.292v-15.756c0-15.44,0-15.756.275-16.32A3.584,3.584,0,0,1,6-493.826l.756.027Zm61.157,22.5c0,2.377-.11,2.83-.865,3.613a4.725,4.725,0,0,1-.989.756l-.549.3H4.7l-.549-.3a4.725,4.725,0,0,1-.989-.756c-.756-.783-.865-1.236-.865-3.613V-457.6H67.955ZM47.6-446.241,47.624-444h-25v-2.17a14.161,14.161,0,0,1,.1-2.267c.041-.055,5.66-.082,12.459-.069l12.377.041Z"
+                                                transform="translate(0)" fill="#07072d" />
+                                            <path id="Caminho_121" data-name="Caminho 121"
+                                                d="M83-477.832v1.168h2.2V-479H83Z"
+                                                transform="translate(-71.641 -28.467)" fill="#07072d" />
+                                            <path id="Caminho_122" data-name="Caminho 122"
+                                                d="M116-477.832v1.168h2.2V-479H116Z"
+                                                transform="translate(-100.108 -28.467)" fill="#07072d" />
+                                            <path id="Caminho_123" data-name="Caminho 123"
+                                                d="M149-477.832v1.168h2.2V-479H149Z"
+                                                transform="translate(-128.575 -28.467)" fill="#07072d" />
+                                            <path id="Caminho_124" data-name="Caminho 124"
+                                                d="M92.959-412.689a5.445,5.445,0,0,0-2.486,1.36c-1.36,1.223-1.841,2.638-1.841,5.385,0,2.569.33,3.558,1.621,4.9.33.343.591.7.549.8a8.924,8.924,0,0,1-2.129.756c-2.418.7-2.995.962-3.9,1.813-1.415,1.319-1.772,2.4-1.772,5.357v2.1h22.666v-1.69c0-2.967-.412-4.3-1.758-5.66-.934-.962-1.374-1.154-5.206-2.267a2.576,2.576,0,0,1-1-.412A3.33,3.33,0,0,1,98.33-401a6.433,6.433,0,0,0,1.058-1.552c.426-.893.44-.975.481-3.1a11.732,11.732,0,0,0-.124-2.816,5.787,5.787,0,0,0-4.176-4.2A4.813,4.813,0,0,0,92.959-412.689Zm2.926,2.569a3.727,3.727,0,0,1,1.69,2.253,10.22,10.22,0,0,1,.1,2.2c-.082,2.157-.371,2.734-1.868,3.764l-.453.316L95.391-400l.041,1.594,2.885.838a31.113,31.113,0,0,1,3.311,1.071,3.8,3.8,0,0,1,1.539,1.868,5.444,5.444,0,0,1,.165,1.374v.838H85.2v-.8a6.638,6.638,0,0,1,.137-1.291,4.06,4.06,0,0,1,1.5-1.951c.247-.137,1.758-.632,3.352-1.1l2.912-.838.041-1.69a5.069,5.069,0,0,0-.1-1.676c-.343,0-1.511-1.126-1.786-1.731a8.807,8.807,0,0,1-.3-4.19,3.273,3.273,0,0,1,3.379-2.871A2.513,2.513,0,0,1,95.885-410.12Z"
+                                                transform="translate(-71.641 -85.519)" fill="#07072d" />
+                                            <path id="Caminho_125" data-name="Caminho 125"
+                                                d="M263.941-411.874l.041,1.14,11.306.041,11.292.028V-413H263.9Z"
+                                                transform="translate(-227.691 -85.4)" fill="#07072d" />
+                                            <path id="Caminho_126" data-name="Caminho 126"
+                                                d="M263.941-378.874l.041,1.14,11.306.041,11.292.027V-380H263.9Z"
+                                                transform="translate(-227.691 -113.867)" fill="#07072d" />
+                                            <path id="Caminho_127" data-name="Caminho 127"
+                                                d="M264-345.832v1.168h15.935V-347H264Z"
+                                                transform="translate(-227.777 -142.334)" fill="#07072d" />
+                                            <path id="Caminho_128" data-name="Caminho 128"
+                                                d="M264-304.934v9.066h22.666V-314H264Zm20.468.069v6.8H266.335v-13.6h18.133Z"
+                                                transform="translate(-227.777 -170.801)" fill="#07072d" />
+                                            <path id="Caminho_129" data-name="Caminho 129"
+                                                d="M83-229.9v1.1h22.666V-231H83Z"
+                                                transform="translate(-71.641 -242.399)" fill="#07072d" />
+                                            <path id="Caminho_130" data-name="Caminho 130"
+                                                d="M83-196.9v1.1h22.666V-198H83Z"
+                                                transform="translate(-71.641 -270.866)" fill="#07072d" />
+                                            <path id="Caminho_131" data-name="Caminho 131" d="M50-97.9v1.1h2.2V-99H50Z"
+                                                transform="translate(-43.175 -356.266)" fill="#07072d" />
+                                            <path id="Caminho_132" data-name="Cami  nho 132"
+                                                d="M83-97.9v1.1h2.2V-99H83Z" transform="translate(-71.641 -356.266)"
+                                                fill="#07072d" />
+                                            <path id="Caminho_133" data-name="Caminho 133"
+                                                d="M116-97.9v1.1h2.2V-99H116Z" transform="translate(-100.108 -356.266)"
+                                                fill="#07072d" />
+                                        </g>
+                                    </svg>
+                                    <p class="text-card">Projetos</p>
+                                    <small>Acompanhamento do status da obra pelo gestor</small>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+
+                                    <img src='img/time.svg' width="110"
+                                        style="margin: auto;margin-top: 2px;margin-bottom: 5px;">
+                                    <p class="text-card">Instalação</p>
+                                    <small>Salvamento de imagens tiradas pelos instaladores</small>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div style="width: 100%;padding-top: 40px;display: flex;" id='mostrabanner'>
+            <div>
+                <img src="img/banner.jpg" id='img' style="padding-left: 30px;" width="400px" alt="Dashboard de projetos"
+                    title="Dashboard de projetos">
+            </div>
+            <div style="margin-top: 5px; padding-left: 30px;padding-right: 30px">
+                <div style='border: 1px solid rgba(140,140,140,0.4);border-radius: 10px;background-color: #847AF4;'>
+                    <div style="padding: 60px">
+                        <label class='texto-banner'>
+                            O software de gestão de Obras para a Energia Solar
+                        </label>
+                        <label class='texto-banner'>
+                            proporciona
+                        </label>
+                        <label class='texto-banner' style="font-weight: 700;">
+                            agilidade
+                        </label>
+                        <label class='texto-banner'>
+                            nos processos, maior
+                        </label>
+                        <label class='texto-banner' style="font-weight: 700;">
+                            integração
+                        </label>
+                        <label class='texto-banner'>
+                            entre as equipes
+                        </label>
+                        <label class='texto-banner'>
+                            e transforma a
+                        </label>
+                        <label class='texto-banner' style="font-weight: 700;">
+                            comunicação.
+                        </label>
+                        <br>
+                        <a href="#contact" style="text-align: center;">
+                            <button class="btn primary-btn mt-4" href="#contact" style="font-size: 20px;">Quero
+                                Conhecer</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resource" class="diferenciais">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="title-section">
+                        Funcionalidades
+                        <span class="stripe"></span>
+                    </h2>
+
+                    <div class="row wrapper-cards">
+
+                        <div class="card mb-4">
+
+                            <img src="img/indicador.svg" width="100"
+                                style="color: white;margin: auto;margin-top: 5px;margin-bottom: 10px;">
+
+                            <p class="text-card"
+                                style="font-size: 12px;line-height: 12px;margin: auto;padding-bottom: 90px;">Indicador
+                                de fechamento de propostas</p>
+                        </div>
+
+                        <div class="card mb-4">
+                            <img src="img/comu.svg" width="100"
+                                style="color: white;margin: auto;margin-top: 12px;margin-bottom: 10px;">
+                            <p class="text-card"
+                                style="font-size: 12px;line-height: 12px;margin: auto;padding-bottom: 90px;">
+                                Comunicação entre a obra e o escritório</p>
+
+                        </div>
+
+                        <div class="card mb-4">
+                            <img src="img/integ.svg" width="90"
+                                style="color: white;margin: auto;margin-top: 20px;margin-bottom: 10px;">
+                            <p class="text-card"
+                                style="font-size: 12px;line-height: 12px;margin: auto;padding-bottom: 90px;">
+                                Integração de documentos e fotos</p>
+                        </div>
+
+                        <div class="card">
+                            <img src="img/agenda.svg" width="100"
+                                style="color: white;margin: auto;margin-top: 15px;margin-bottom: 10px;">
+                            <p class="text-card"
+                                style="font-size: 12px;line-height: 12px;margin: auto;padding-bottom: 90px;">Agenda de
+                                planejamento</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10">
+                    <h2 class="title-section">
+                        Sobre nós
+                        <span class="stripe"></span>
+                    </h2>
+
+                    <p class="text big-text">
+                        A Vimmus é uma startup que em janeiro de 2020 iniciou uma jornada de conhecimento,
+                        planejamento e desenvolvimento de um modelo de negócio voltado para gerar valor para
+                        as empresas de energia solar e oportunidades para o mercado de energias renováveis.<br><br>
+
+                        Acreditamos que o acesso livre a energia é de fundamental
+                        importância para a liberdade econômica, para a sustentabilidade
+                        do meio ambiente e para a independência energética das famílias e das empresas.<br><br>
+
+                        O Software de Gestão de Obras da Vimmus possibilita que as empresas de energia solar
+                        tenham o controle do andamento das suas obras, da venda à instalação, tendo como prioridade
+                        a comunicação e o compartilhamento de informações entre os membros da equipe.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section id="benefits">
+        <div class="container">
+            <h2 class="title-section">
+                Controle as informações com maior efetividade
+                <span class="stripe"></span>
+            </h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="topics">
+                        <ol>
+
+                            <li class="topic active" style="cursor: pointer;" id="benefit-3"
+                                onmousedown="changeBenefit(3)">
+                                Notificações por Whatsapp</li>
+                            <li class="topic" style="cursor: pointer;" id="benefit-6" onmousedown="changeBenefit(6)">
+                                Follow up do projeto</li>
+                            <li class="topic" style="cursor: pointer;" id="benefit-4" onmousedown="changeBenefit(4)">
+                                Auxílio na tomada de decisões</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+
+                    <div class="descriptions" id="desc-benefit-3">
+                        <p class="text">Informe a equipe quando um vendedor solicitou uma proposta, adicionou uma fatura
+                            e fez uma observação sobre a proposta
+                            , avise a equipe quando uma proposta foi ganha e avise o instalador que a obra já pode ser
+                            iniciadia, tudo de forma automatizada.
+                        </p>
+                    </div>
+
+                    <div class="descriptions" id="desc-benefit-4" style="display: none;">
+                        <p class="text">Acompanhe os indicadores de conversão de propostas e os relatórios de propostas
+                            vencidas
+                            para tomar decisões mais assertivas sobre as possibilidades de negócio com potenciais
+                            clientes.
+                        </p>
+                    </div>
+
+                    <div class="descriptions" id="desc-benefit-6" style="display: none;">
+                        <p class="text">Mantenha os gestores informados sobre o andamento das obras em tempo real a
+                            partir de fotos tiradas pelos técnicos instaladores,
+                            assinaturas de formulários de aceite da instalação e checklist de treinamento dos clientes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="background-color: #07072D;color: white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-5 text-end">
+                    <h2 class="title-section" style="color: white;">Entre em contato</h2>
+                    <p class="">Deseja receber mais informações? <br> Nos chame aqui e retornaremos em breve.</p>
+                </div>
+                <div class="col-md-5">
+
+                    <form action="/usuario/salvacontato" method="post">
+
+                        <input name="nome" type="text" style="margin-top: 100px;" placeholder="Nome"><br>
+                        <input name="email" type="text" style="text-transform: lowercase;" placeholder="E-mail"><br>
+                        <input name="celular" type="text" placeholder="Telefone">
+
+                        <br>
+
+                        <label class='col-form-label text-start'> Motivo:</label>
+
+                        <select class="form-select" name="motivo" type="text">
+                            <option>Gostei! Quero contratar</option>
+                            <option>Me chama pelo Whats!</option>
+                            <option>Agendar apresentação</option>
+                        </select>
+                        <br>
+                        <button type="submit" class="btn primary-btn">ENVIAR</button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id='partners'>
+
+    </section>
+
+</body>
+
+</html>

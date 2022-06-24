@@ -1,0 +1,178 @@
+<style type="text/css">
+    i {
+        font-size: 16px;
+        vertical-align: text-top;
+    }
+
+    th {
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    td {
+        text-align: center;
+        line-height: 30px;
+    }
+
+    table {
+        font-size: 15px;
+
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    .swal-wide {
+        width: 850px !important;
+    }
+</style>
+
+<script src="/js/uteis.js"></script>
+
+<div style="width: 99%;padding-left: 15px;">
+    <div class="row">
+        <div class="col">
+            <label class='col-form-label mt-2' id='saudacao'></label>
+        </div>
+        <div class="col text-end">
+            <div class="dropstart">
+                <button class=" fw-bold btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-list d-flex align-items-center botao-menu"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                    <div style='padding-left: 20px;width: 300px;'>
+                        <a href='/usuario/editar/{{id}}' class="botaomenu mb-1">Minha
+                            Conta</a><br>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <input type="hidden" name='pessoa' id='pessoa' value="{{pessoa}}">
+        <input type='hidden' id='nome' value="{{nome}}">
+        <div class="row" style="margin-bottom: 20px;width: 98%;">
+            <div class='quadro-scroll' id='dim' style="padding-left: 5px;margin-left: 10px;margin-bottom: 30px;">
+                <div class="text-center mt-1 mb-3">
+                    <label style="font-size: 15px;font-weight: 600;">Obras em Aberto</label>
+                </div>
+                <div class="row" style="width: 100%;">
+                    <form action="/relatorios/filtraInstalador" method="post">
+                        <label class="col-form-label col-form-label-sm fw-bold text-start">Cliente</label><br>
+                        <div class="btn-group mb-2">
+                            <div style="width: 250px;">
+                                <select name='cliente' class="form-select form-select-sm">
+                                    {{#each clientes}}
+                                    <option value="{{id}}">{{nome}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div style="width: 25px;">
+                                <button type='submit' class='btn'><i
+                                        class='bi bi-search d-flex align-items-center'></i></button>
+                            </div>
+                        </div>
+                    </form>
+                    {{#each listaAberto}}
+                    <div class="col-md-3 mb-2" style="padding-left: 30px;">
+                        <div class="card"
+                            style="background-color: {{#if ativo}} rgba(46, 255, 102, 0.6)  {{else}} rgba(255, 255, 67, 0.6) {{/if}}">
+                            <div class="card-body text-start">
+                                <div class="row">
+                                    <div style="width: 120px;">
+                                        <label class="col-form-label fw-bold">Projeto:</label>
+                                        <label class="col-form-label">{{seq}}</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col-form-label fw-bold">Inicio:</label>
+                                        <label class="col-form-label">{{dtini}}</label>
+                                    </div>
+                                </div>
+                                <label class="col-form-label fw-bold">Cliente:</label>
+                                <label class="col-form-label">{{cliente}}</label><br>
+                                <label class="col-form-label fw-bold">Endereco:</label>
+                                <label class="col-form-label">{{endereco}}</label>
+                                <label class="col-form-label">{{cidade}}/</label>
+                                <label class="col-form-label">{{uf}}</label><br>
+                                <div class="row">
+                                    <div style="width: 200px;">
+                                        <div class="text-center">
+                                            <label class="col-form-label fw-bold">Módulos</label><br>
+                                            <table>
+                                                <tr>
+                                                    <th style="width: 50%;">Quantidade</th>
+                                                    <th style="width: 50%;">Potência</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label class="col-form-label fw-bold">{{modulos}}</label>
+                                                    </td>
+                                                    <td>
+                                                        <label class="col-form-label fw-bold">{{potencia}}</label>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class='text-center'>
+                                            <label class="col-form-label fw-bold">Inversor</label><br>
+                                            <label class="col-form-label fw-bold">{{inversor}} kWp</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <label class="col-form-label fw-bold">Telhado:</label>
+                                    <label class="col-form-label fw-bold">{{telhado}}</label><br>
+                                    <label class="col-form-label fw-bold">Vendedor:</label>
+                                    <label class="col-form-label fw-bold">{{vendedor}}</label>
+                                    <br>
+                                    <div>
+                                        {{#if ativo}}
+                                        <a href='/gerenciamento/seleciona/{{id}}' class='btn btn-warning mb-1'
+                                            style="cursor: pointer">Parar</a>
+                                        {{else}}
+                                        <a href='/gerenciamento/seleciona/{{id}}' class='btn btn-success mb-1'
+                                            style="cursor: pointer">Selecionar</a>
+                                        {{/if}}
+                                        <a href='/gerenciamento/listaAtividade/{{id}}' class='btn btn-primary mb-1'
+                                            style="cursor: pointer">Fotos</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{else}}
+                    <label class='col-form-label col-form-label-sm'>Nenhuma obra lançada.</label>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class='quadro-scroll' id='dim1' style="padding-left: 5px;margin-left: 10px;margin-bottom: 30px;">
+                <div class="row" style="width: 100%;">
+                    <div class="text-center mt-1 mb-3">
+                        <label style="font-size: 15px;font-weight: 600;">Obras Finalizadas</label>
+                    </div>
+                    <table>
+                        <tr>
+                            <th style="width: 10%;text-align: center">Projeto</th>
+                            <th style="width: 20%;text-align: center">Cliente</th>
+                        </tr>
+                        {{#each listaEncerrado}}
+                        <tr>
+                            <a href='/gerenciamento/atividades'>
+                                <td style="text-align: center"><a href='/gerenciamento/atividades/{{id}}'>{{seq}}</a>
+                                </td>
+                                <td style="text-align: center">{{cliente}}</td>
+                            </a>
+                        </tr>
+                        {{else}}
+                        <label class='col-form-label col-form-label-sm'>Nenhuma obra lançada.</label>
+                        {{/each}}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

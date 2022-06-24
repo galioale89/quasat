@@ -1,0 +1,1165 @@
+<style>
+    .disabledbutton {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .picture-canvas {
+        display: none;
+    }
+
+    table {
+        font-size: 12px;
+    }
+</style>
+
+<script src="/js/uteis.js"></script>
+
+<script>
+
+    window.onload = function () {
+        var id = document.getElementById('id')
+        var col = document.getElementById('col')
+        var div0 = document.createElement('div')
+
+        var ano = 0
+        var mes = 0
+        var dia = 0
+
+        var bloquear = document.getElementById('bloquear')
+        var dtcad = document.getElementById('dtcadastro')
+        var dtvalida = document.getElementById('dtvalidade')
+        var prazo = document.getElementById('prazo')
+
+        var dthoje = new Date()
+        ano = dthoje.getFullYear()
+        mes = dthoje.getMonth() + 1
+        if (mes < 10) {
+            mes = '0' + mes
+        }
+        dia = dthoje.getDate()
+        if (dia < 10) {
+            dia = '0' + dia
+        }
+        var dataFinal = ano + '-' + mes + '-' + dia
+        dtcad.value = dataFinal
+
+        var novadata = new Date(dataFinal)
+        var date = new Date(dataFinal)
+
+        novadata.setDate(date.getDate() + parseFloat(prazo.value))
+        ano = novadata.getFullYear()
+        mes = novadata.getMonth()
+        dia = novadata.getDate()
+        if (dia == 1) {
+            mes = mes + 2
+        } else {
+            mes = mes + 1
+        }
+
+        if (mes < 10) {
+            mes = '0' + mes
+        }
+        if (dia < 10) {
+            dia = '0' + dia
+        }
+        dtvalida.value = ano + '-' + mes + '-' + dia
+
+        var material = document.getElementById('vlrKit')
+        var servico = document.getElementById('vlrServico')
+        var total = document.getElementById('vlrTotal')
+
+        if (String(total.value).length > 0) {
+            material.value = parseFloat(total.value) - parseFloat(servico.value)
+        } else {
+            total.value = parseFloat(servico.value)
+        }
+    }
+
+</script>
+
+<!-- MENU DO PROJETO -->
+<!-- RESUMO -->
+<!-- SÃO 3 PROCESSOS BASES => PROPOSTA(DADOS/FATURA/FOTOS) / PROJETO / INSTALAÇÃO -->
+<!-- FLUXO: FATURA => SOLICITAR ORÇAMENTO => ANEXO DA PROPOSTA => PROPOSTA ENVIADA => FOTOS => PEDIDO => PROPOSTA GANHA(AUTORIZADO PELO VENDEDOR) => PROJETO => INSTALAÇÃO -->
+
+<!-- O MENU DE FATURA PODERÁ SER UTILIZADO EM DOIS MOMENTOS, QUANDO OS PROJETOS ESTÃO GANHOS OU NÃO GANHOS -->
+
+<!-- ACESSO PARA QUATRO TIPOS DE USUÁRIOS -->
+<!-- CADA USUÁRIO PODERÁ TER FUNÇÕES: GESTOR, ORÇAMENTISTA, VENDEDOR E PROJETISTA, NÃO EXCLUSIVAS -->
+<!-- MASTER => ACESSO AOS PROCESSOS DE VENDA/PROJETO/INSTALAÇÃO-->
+<!-- GESTOR => ACESSO AOS PROCESSOS DE FATURA/FOTOS/PROJETO/INSTALAÇÃO-->
+<!-- ORÇAMENTISTA => ACESSO AOS PROCESSOS DE PROPOSTA(DADOS/FATURA)-->
+<!-- VENDEDOR => ACESSO À PROPOSTA => DADOS/FATURA/FOTOS -->
+<!-- PROJETISTA => ACESSO AOS PROCESSOS DE FATURA/FOTOS/PROJETO/INSTALAÇÃO-->
+
+<!---->
+<!-- GESTOR=> PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- GESTOR=> PROPOSTAS GANHAS => FATURA / FOTOS / PROJETO / INSTALAÇÃO -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => OBSERVAÇÃO, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, VER TERMO, VOLTAR  -->
+
+<!-- PROJETISTA=> PROPOSTAS NÃO GANHAS => NÃO TEM ACESSO -->
+<!-- PROJETISTA=> PROPOSTAS GANHAS => FATURA / FOTOS / PROJETO / INSTALAÇÃO -->
+
+<!-- PROCESSOS DISPONÍVEIS PARA CADA TIPO DE USUÁRIO -->
+<!-- MASTER=> PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- MASTER=> PROPOSTAS GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) / PROJETO / INSTALAÇÃO -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => EMITIR PEDIDO/GANHAR PEDIDO, EXPORTAR EXCEL, OBSERVAÇÃO, AGENDA, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, TERMO(ADD/VER), VOLTAR  -->
+
+<!-- ORÇAMENTISTA=> PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA) -->
+<!-- ORÇAMENTISTA=> PROPOSTAS GANHAS => PROPOSTA(DADOS/FATURA) -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => EMITIR PEDIDO/GANHAR PEDIDO, EXPORTAR EXCEL, VER PROPOSTA, OBSERVAÇÃO, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, VER TERMO, VOLTAR  -->
+
+<!-- VENDEDOR => PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- VENDEDOR=> PROPOSTAS GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => EMITIR PEDIDO/GANHAR PEDIDO, OBSERVAÇÃO, AGENDA, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, TERMO(ADD/VER), VOLTAR  -->
+
+<div class='text-center mt-2' style="width: 98%;padding-left: 2%;padding-top: 0.5%;height: auto">
+    {{#if projeto.cliente}}
+    <div style="width: 100%;" class="header">
+        <label style="font-size: 25px;">{{cliente_projeto.nome}}&nbsp{{projeto.seq}} </label>
+    </div>
+    {{/if}}
+    {{#if proandges}}
+    <!-- PROPOSTA GANHA -->
+    {{#if projeto.ganho}}
+    <div class="row">
+        <div class="col">
+            <a href='/gerenciamento/fatura/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-images d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspFatura </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/fotos/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-images d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspFotos </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+    </div>
+    {{/if}}
+    <!-- FIM PROJETO GANHO -->
+    {{else}}
+    <!-- SENÃO É PROJETISTA OU GESTOR -->
+    <div class="row">
+        <div class="col">
+            <div class="btn-group col-12 gap-2 ativo mt-1" style="border-radius: 200px;">
+                <a href='/gerenciamento/orcamento/{{projeto._id}}'
+                    style="font-size: 20px;color: white;font-weight: 700;"
+                    class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
+                    <i class="bi bi-funnel d-flex align-items-center"></i>{{#if projeto._id}}&nbspProposta{{else}}&nbspOrçamento{{/if}}
+                </a>
+                <input type='hidden' value='{{agenda.descricao}}' id="descricao">
+                {{#if ehMaster}}
+                {{#if projeto.ganho}}
+                <!-- INICIO VALIDAÇÃO GANHO -->
+                <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
+                        style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+                <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
+                    <i class="bi bi-folder"
+                        style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
+                </a>
+                {{#if projeto.termo}}
+                <div style="width: 60px;">
+                    <a href="/gerenciamento/entrega/{{projeto._id}}" {{#if projeto.encerrado}}title="Alterar o projeto."
+                        {{else}}{{#if projeto.instalado}}title="Encerrar o projeto."
+                        {{else}}title="Finalizar Instalação." {{/if}}{{/if}}
+                        class='{{#if projeto.encerrado}}btn btn-sm btn-warning{{else}}btn btn-sm btn-success{{/if}}'
+                        style="max-width: 120px;max-height: 90px;border-radius: 90px;"><i
+                            class='{{#if projeto.encerrado}}bi bi-journal-arrow-down{{else}}{{#if projeto.instalado}}bi bi-check2-circle{{else}}bi bi-journal-arrow-up{{/if}}{{/if}} d-flex align-items-center'
+                            style="font-size: 25px;padding: 5px"></i></a>
+                </div>
+                {{/if}}                
+                {{else}}
+                {{#if projeto.pedido}}
+                <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+                    <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
+                </a>
+                {{else}}
+                <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
+                    <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+                </a>
+                {{/if}}
+                <a href='' class="mt-1" data-bs-toggle="modal" data-bs-target='#orcamento' title='orçamento'>
+                    <i class='bi bi-eye' style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+                <a href='/gerenciamento/exportarOrcamento/{{projeto._id}}' class="mt-1">
+                    <i class="bi bi-box-arrow-down" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+                </a>
+                {{/if}}
+                <!-- FIM VALIDAÇÃO GANHO -->
+                <!-- FEATURES PADRÃO PARA AS DUAS SITUAÇÕES -->
+                <a onclick='agendar("{{projeto._id}}","{{projeto.cliente}}","{{projeto.vendedor}}","{{agenda.data}}","{{agenda._id}}")'
+                    style="cursor: pointer;" title='agenda'>
+                    <i class='bi bi-calendar-date d-flex align-items-center mt-2'
+                        style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+                {{else}}
+                <!-- INICIO ORÇAMENTISTA -->
+                {{#if orcamentista}}
+                {{#if projeto.ganho}}
+                <!-- INICIO VALIDAÇÃO GANHO -->
+                <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
+                        style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+                <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
+                    <i class="bi bi-folder"
+                        style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
+                </a>
+                {{#if projeto.termo}}
+                    <a href="/gerenciamento/entrega/{{projeto._id}}" {{#if projeto.encerrado}}title="Alterar o projeto."
+                        {{else}}{{#if projeto.instalado}}title="Encerrar o projeto."
+                        {{else}}title="Finalizar Instalação." {{/if}}{{/if}} class="mt-1"><i
+                            class='{{#if projeto.encerrado}}bi bi-journal-arrow-down{{else}}{{#if projeto.instalado}}bi bi-check2-circle{{else}}bi bi-journal-arrow-up{{/if}}{{/if}} d-flex align-items-center'
+                            style='font-size: 25px;padding: 5px;font-weight: 700;color: white'></i></a>
+                {{/if}}
+                {{else}}
+                {{#if projeto.pedido}}
+                <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+                    <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
+                </a>
+                {{else}}
+                <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
+                    <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+                </a>
+                {{/if}}
+                <a href='' class="mt-1" data-bs-toggle="modal" data-bs-target='#orcamento' title='orçamento'>
+                    <i class='bi bi-eye' style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+                <a href='/gerenciamento/exportarOrcamento/{{projeto._id}}' class="mt-1">
+                    <i class="bi bi-box-arrow-down" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+                </a>
+                {{/if}}
+                <!-- FIM VALIDAÇÃO GANHO -->
+                {{else}}
+                <!-- SE VENDEDOR -->
+                {{#if projeto.ganho}}
+                <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
+                        style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+                <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
+                    <i class="bi bi-folder"
+                        style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
+                </a>
+                {{else}}
+                {{#if projeto._id}}
+                {{#if projeto.pedido}}
+                <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+                    <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
+                </a>
+                {{else}}
+                <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
+                    <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+                </a>
+                {{/if}}
+                {{/if}}
+                {{/if}}
+                <!-- FIM VALIDA GANHO -->
+                {{/if}}
+                <!-- FIM VENDEDOR -->
+                {{/if}}
+                <!-- FIM ORÇAMENTISTA -->
+                {{/if}}
+                <!-- FIM MASTER -->
+                {{#if projeto._id}}
+                <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações'
+                    style="cursor: pointer;">
+                    <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
+                        style="font-size: 25px;color: white;padding-right: 10px;"></i>
+                </a>
+                {{/if}}
+                <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
+                    <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+                </a>
+            </div>
+            <!-- INICIO TABS -->
+            <!-- GANHO -->
+            {{#if projeto.ganho}}
+            <!-- VALIDA SE NÃO É PROJETISTA -->
+            {{#if funpro}}
+            {{else}}
+            <ul class="nav nav-tabs mb-2">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" style="margin: 0px solid;"
+                        href="/gerenciamento/orcamento/{{projeto._id}}"><label
+                            class="col-form-label titulo-inicio ulativo">Dados</label></a>
+                </li>
+                <a class="nav-link" aria-current="page"
+                    style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+                    href="/gerenciamento/fatura/{{projeto._id}}"><label
+                        class="col-form-label titulo-inicio ulinativo">Fatura</label></a>
+                </li>
+                <!-- VALIDA SE NÃO É ORÇAMENTISTA -->
+                {{#if orcamentista}}
+                {{else}}
+                <li>
+                    <a class="nav-link" aria-current="page"
+                        style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+                        href="/gerenciamento/fotos/{{projeto._id}}"><label
+                            class="col-form-label titulo-inicio ulinativo">Fotos</label></a>
+                </li>
+                {{/if}}
+                <!-- FIM VALIDAÇÃO -->
+            </ul>
+            {{/if}}
+            <!-- FIM VALIDAÇÃO PROJETISTA -->
+            <!-- NÃO GANHO -->
+            {{else}}
+            {{#if funpro}}
+            {{else}}
+            <ul class="nav nav-tabs mb-2">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" style="margin: 0px solid;"
+                        href="/gerenciamento/orcamento/{{projeto._id}}"><label
+                            class="col-form-label titulo-inicio ulativo">Dados</label></a>
+                </li>
+                <a class="nav-link" aria-current="page"
+                    style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+                    href="/gerenciamento/fatura/{{projeto._id}}"><label
+                        class="col-form-label titulo-inicio ulinativo">Fatura</label></a>
+                </li>
+                <!-- VALIDA SE NÃO É ORÇAMENTISTA -->
+                {{#if orcamentista}}
+                {{else}}
+                <li>
+                    <a class="nav-link" aria-current="page"
+                        style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+                        href="/gerenciamento/fotos/{{projeto._id}}"><label
+                            class="col-form-label titulo-inicio ulinativo">Fotos</label></a>
+                </li>
+                <!-- FIM VALIDAÇÃO -->
+            </ul>
+            {{/if}}
+            {{/if}}
+            <!-- FIM TABS -->
+
+            {{/if}}
+            <!-- FIM SENÃO É PROJETISTA OU GESTOR -->
+        </div>
+        {{#if projeto.ganho}}
+        {{#if ehMaster}}
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+        {{/if}}
+        {{/if}}
+    </div>
+
+    <div id='bloquear' class='{{projeto.encerrado}}'>
+        <input type='hidden' id='desctermo' value="{{desctermo}}">
+        <div class='card mt-1 mb-4' style="margin-bottom: 10px;">
+            <div class="card-body">
+                <form action="/gerenciamento/addorcamento" method='POST'>
+                    <input type="hidden" id='dados_desc' name="dados_desc" value="">
+                    <input type="hidden" id='dados_qtd' name="dados_qtd" value="">
+                    <input type="hidden" id='campos' name="campos" value="">
+                    <input type='hidden' id='id' name="id" value='{{projeto._id}}'>
+                    <input type='hidden' id='tipo' name="tipo" value='novo'>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="row">
+                                {{#if projeto.cliente}}
+                                <div class="row text-start">
+                                    <div class="col-md-3">
+                                        <div class="row">
+                                            <label class='col-form-label fw-bold mb-1'>Cliente:</label><br>
+                                            <a href='/cliente/edicao/{{cliente_projeto._id}}'
+                                                class='col-form-label mb-1'>{{cliente_projeto.nome}}</label></a>
+                                        </div>
+                                        {{#if responsavel}}
+                                        <div class="mt-3">
+                                            <input type="hidden" name="responsavel" id="responsavel"
+                                                value='{{responsavel.nome}}'>
+                                            <input type="hidden" name="idres" id="idres" value='{{responsavel._id}}'>
+                                            <label class='col-form-label col-form-label-sm fw-bold'>Orçamentista:
+                                            </label>
+                                            <label class='col-form-label col-form-label-sm'>{{responsavel.nome}}
+                                            </label>
+                                        </div>
+                                        {{/if}}
+                                        {{#if vendedor}}
+                                        {{else}}
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <label class='col-form-label col-form-label-sm fw-bold'>Vendedor:
+                                                </label>
+                                            </div>
+                                            <div class="col text-start">
+                                                <select class='form-select form-select-sm' name='vendedor'>
+                                                    {{#if ven_projeto}}
+                                                    <option class='fw-bold' value='{{ven_projeto._id}}'>
+                                                        {{ven_projeto.nome}}
+                                                    </option>
+                                                    {{/if}}
+                                                    {{#each todos_vendedores}}
+                                                    <option value='{{_id}}'>{{nome}}</option>
+                                                    {{else}}
+                                                    <option>Sem vendedores cadastrados</option>
+                                                    {{/each}}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class='col-form-label fw-bold mb-1'>Contato:</label><br>
+                                        <label class='col-form-label mb-1'>{{cliente_projeto.contato}}</label>
+                                        <label class='col-form-label mb-1'>({{cliente_projeto.celular}})</label>
+                                        {{#if projeto.solar}}
+                                        <div class="text-center mt-4">
+                                            <label class="col-form-label fw-bold">Potência: </label>
+                                            <label class="col-form-label">{{pedido.potencia}}&nbspkW</label><br>
+                                        </div>
+                                        {{/if}}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class='col-form-label text-end fw-bold'>Local de Instalação: </label>
+                                        <br>
+                                        <div class='row' style='width: 100%'>
+                                            <div class="col-md-3">
+                                                <label>CEP:</label>
+                                                <input type='text' id='cep' name='cep' size='10' maxlength="9"
+                                                    class='form-control form-control-sm mb-1' value='{{projeto.cep}}'>
+                                            </div>
+                                            <div class='col-md-2'>
+                                                <label>Estado</label>
+                                                <select name="estado" class="form-select form-select-sm">
+                                                    {{#if projeto.uf}}
+                                                    <option class="fw-bold" value="{{projeto.uf}}">{{projeto.uf}}
+                                                    </option>
+                                                    {{/if}}
+                                                    <option value="RS">RS</option>
+                                                    <option vlaue='SC'>SC</option>
+                                                </select>
+                                                {{!-- <input type='text' id="estado" name='uf' size='2'
+                                                    class='form-control form-control-sm mb-1' value="{{projeto.uf}}"
+                                                    maxlength="2"> --}}
+                                                <input type='hidden' name='ufh' value='{{cliente_projeto.uf}}'>
+                                            </div>
+                                            <div class='col'>
+                                                <label>Cidade</label>
+                                                <input type='text' id="cidade" name='cidade' id="cidade" size="40"
+                                                    class='form-control form-control-sm mb-1'
+                                                    value="{{projeto.cidade}}">
+                                                <input type='hidden' name='cidadeh' value='{{cliente_projeto.cidade}}'>
+                                            </div>
+                                            <div class="col">
+                                                <label>Bairro</label>
+                                                <input class='form-control form-control-sm' type='text' name='bairro'
+                                                    id='bairro' value='{{projeto.bairro}}'>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label>Endereço</label>
+                                                <input class='form-control form-control-sm' type='text' name='endereco'
+                                                    id='rua' size='60' value='{{projeto.endereco}}'>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Número</label>
+                                                <input class='form-control form-control-sm' type='text' name='numero'
+                                                    value='{{projeto.numero}}'>
+                                            </div>
+                                            <div class="col">
+                                                <label>Complemento</label>
+                                                <input class='form-control form-control-sm' type='text'
+                                                    name='complemento' value='{{projeto.complemento}}'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{else}}
+
+                                <div class="container mb-2 text-start">
+                                    {{#if vendedor}}
+                                    <input type="hidden" value="{{idven}}" name="vendedor">
+                                    {{else}}
+                                    <div class="row">
+                                        <label class='col-form-label col-form-label-sm fw-bold'>Vendedor:
+                                        </label><br>
+                                        <select class='form-select form-select-sm mt-1 m-1'
+                                            style="width: 95%;margin-left: 10px;" name='vendedor'
+                                            style="margin-left: 5px;">
+                                            {{#each todos_vendedores}}
+                                            <option value='{{_id}}'>{{nome}}</option>
+                                            {{else}}
+                                            <option>Sem vendedores cadastrados</option>
+                                            {{/each}}
+                                        </select><br>
+                                    </div>
+                                    {{/if}}
+                                    <div id='clienteNovo'>
+                                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Nome
+                                            Completo</label><label style="color: orangered;font-size: 20px;">*</label>
+                                        <label style="font-weight: 600;font-size: 20px;cursor: pointer;"
+                                            onclick="buscaCPF()" class='cliente'>&nbsp?</label>
+                                        <input type='text' name='nome' class='form-control form-control-sm mb-1'
+                                            value='{{#if nome}}{{nome}}{{else}}{{cliente.nome}}{{/if}}'>
+                                        <label class="col-form-label col-form-label-sm fw-bold">Documento</label><label
+                                            style="color: orangered;font-size: 20px;">*</label>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-check" onchange="documento()">
+                                                    <input class="form-check-input" type="radio" name="check"
+                                                        id="radioCPF" checked>
+                                                    <label class="col-form-label col-form-label-sm">
+                                                        CPF
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-check" onchange="documento()">
+                                                    <input class="form-check-input" type="radio" name="check"
+                                                        id="radioCNPJ">
+                                                    <label class="col-form-label col-form-label-sm">
+                                                        CNPJ
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="" id="mostraCNPJ" style="display: none;">
+                                            <input type='text' class='form-control form-control-sm mb-1' maxlength="18"
+                                                autocomplete="off" id='cnpj' name='cnpj' onkeyup="valida_cnpj()"
+                                                value='{{#if cnpj}}{{cnpj}}{{else}}{{cliente.cnpj}}{{/if}}'>
+                                        </div>
+                                        <div class="" id="mostraCPF" style="display: '';">
+                                            <input type='text' class='form-control form-control-sm mb-1' maxlength="14"
+                                                autocomplete="off" id='cpf' name='cpf' onkeyup="valida_cpf('cpf')"
+                                                value='{{#if cpf}}{{cpf}}{{else}}{{cliente.cpf}}{{/if}}'>
+                                        </div>
+                                        <div class="mt-3">
+                                            <label class='fw-bold col-form-label col-form-label-sm mb-1'>CEP:
+                                            </label>
+                                            <input type='text' id='cep' name='cep' size='10' maxlength="9"
+                                                class='form-control form-control-sm mb-1'
+                                                value='{{#if projeto.cep}}{{projeto.cep}}{{else}}{{cliente.cep}}{{/if}}'>
+                                        </div>
+                                        {{#if quebra}}
+                                        <div class='row' style="width: 100%;">
+                                            <div class='col'>
+                                                <label
+                                                    class='fw-bold col-form-label col-form-label-sm mb-1'>Estado</label>
+                                                <select name="estado" class="form-select form-select-sm">
+                                                    {{#if cliente_projeto.uf}}
+                                                    <option value="{{cliente_projeto.uf}}">{{cliente_projeto.uf}}
+                                                    </option>
+                                                    {{/if}}
+                                                    <option value="RS">RS</option>
+                                                    <option vlaue='SC'>SC</option>
+                                                </select>
+                                                {{!-- <input type='text' id="estado" name='uf'
+                                                    class='form-control form-control-sm mb-1'
+                                                    value="{{#if projeto.uf}}{{projeto.uf}}{{else}}{{cliente.uf}}{{/if}}"
+                                                    size="2"> --}}
+                                            </div>
+                                            <div class='col'>
+                                                <label
+                                                    class='fw-bold col-form-label col-form-label-sm mb-1'>Cidade</label>
+                                                <input type='text' id="cidade" name='cidade'
+                                                    class='form-control form-control-sm mb-1'
+                                                    value="{{#if projeto.cidade}}{{projeto.cidade}}{{else}}{{cliente.cidade}}{{/if}}">
+                                            </div>
+                                        </div>
+                                        {{else}}
+                                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Estado</label>
+                                        <select name="estado" class="form-select form-select-sm">
+                                            {{#if cliente_projeto.uf}}
+                                            <option value="{{cliente_projeto.uf}}">{{cliente_projeto.uf}}</option>
+                                            {{/if}}
+                                            <option value="RS">RS</option>
+                                            <option vlaue='SC'>SC</option>
+                                        </select>
+                                        {{!-- <input type='text' id="estado" name='uf'
+                                            class='form-control form-control-sm mb-1'
+                                            value="{{#if projeto.uf}}{{projeto.uf}}{{else}}{{cliente.uf}}{{/if}}"
+                                            size="2"> --}}
+                                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Cidade</label>
+                                        <input type='text' id="cidade" name='cidade' size='40'
+                                            class='form-control form-control-sm mb-1'
+                                            value="{{#if projeto.cidade}}{{projeto.cidade}}{{else}}{{cliente.cidade}}{{/if}}">
+                                        {{/if}}
+                                        <div class="mt-3">
+                                            <label
+                                                class='fw-bold col-form-label col-form-label-sm mb-1'>Endereço</label>
+                                            <input type='text' name='endereco' id='rua' size='60'
+                                                class='form-control form-control-sm mb-1'
+                                                value='{{#if endereco}}{{endereco}}{{else}}{{cliente.endereco}}{{/if}}'>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Número:
+                                                </label>
+                                                <input type='text' name='numero'
+                                                    class='form-control form-control-sm mb-1'
+                                                    value='{{#if projeto.numero}}{{projeto.numero}}{{else}}{{cliente.numero}}{{/if}}'>
+                                            </div>
+                                            <div class="col">
+                                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Bairro:
+                                                </label>
+                                                <input type='text' name='bairro' id='bairro' size='40'
+                                                    class='form-control form-control-sm mb-1'
+                                                    value='{{#if projeto.bairro}}{{projeto.bairro}}{{else}}{{cliente.bairro}}{{/if}}'>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <label
+                                                    class='fw-bold col-form-label col-form-label-sm mb-1'>Complemento:
+                                                </label>
+                                                <input type='text' name='complemento'
+                                                    class='form-control form-control-sm mb-1'
+                                                    value='{{#if projeto.complemento}}{{projeto.complemento}}{{else}}{{cliente.complemento}}{{/if}}'>
+                                            </div>
+                                        </div>
+                                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Contato do
+                                            Cliente</label><label style="color: orangered;font-size: 20px;">*</label>
+                                        <input type='text' name='contato' class='form-control form-control-sm mb-1'
+                                            value='{{#if contato}}{{contato}}{{else}}{{cliente.contato}}{{/if}}'>
+                                        <label
+                                            class='fw-bold col-form-label col-form-label-sm mb-1'>Celular</label><label
+                                            style="color: orangered;font-size: 20px;">*</label>
+                                        <input type='text ' name='celular' id='celular'
+                                            class='form-control form-control-sm mb-1'
+                                            value='{{#if celular}}{{celular}}{{else}}{{cliente.celular}}{{/if}}'>
+                                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>E-mail</label>
+                                        <input type='email' name='email' class='form-control form-control-sm mb-1'
+                                            style="text-transform: lowercase;"
+                                            value='{{#if email}}{{email}}{{else}}{{cliente.email}}{{/if}}'>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </div>
+                            <div class="card text-start mt-2" style="margin-bottom: 10px;">
+                                <div class="card-body">
+                                    <label style="font-size: 17px;" class="fw-bold titulo-inicio">Características do
+                                        Sistema</label><br>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label class='col-form-label col-form-label-sm'>Orientação</label>
+                                            <select class='form-select form-select-sm' name='orientacao'>
+                                                <option>{{projeto.orientacao}}</option>
+                                                <option>Norte</option>
+                                                <option>Oeste</option>
+                                                <option>Leste</option>
+                                                <option>Nordeste</option>
+                                                <option>Noroeste</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label class="col-form-label col-form-label-sm">Concessionária:</label>
+                                            <input type="String" class="form-control form-control-sm"
+                                                name="concessionaria" value='{{projeto.concessionaria}}'>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label class='col-form-label col-form-label-sm'>Telhado:
+                                            </label>
+                                            <input class='form-control form-control-sm' name='telhado'
+                                                value='{{projeto.telhado}}'>
+                                        </div>
+                                        <div class="col">
+                                            <label class='col-form-label col-form-label-sm'>Estrutura:
+                                            </label>
+                                            <select class="form-select form-select-sm" name='estrutura'>
+                                                {{#if projeto.estrutura}}
+                                                <option class='fw-bold'>{{projeto.estrutura}}</option>
+                                                {{/if}}
+                                                <option>Minitrilho</option>
+                                                <option>Pé em L</option>
+                                                <option>Kit Gancho Telha</option>
+                                                <option>Suporte com Ajuste e Inclinação</option>
+                                                <option>Estrutura de Solo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {{!-- <div class="col">
+                                        <label class='col-form-label col-form-label-sm'>Sobredimensionamento:
+                                        </label>
+                                        <input class='form-control form-control-sm' name='sobredim'
+                                            value='{{projeto.sobredim}}'>
+                                    </div> --}}
+                                </div>
+                                {{#if projeto.cliente}}
+                                {{#if vendedor}}
+                                <div class="row text-center" style="width: 99%;">
+                                    <div class="col">
+                                        <div>
+                                            <label class='col-form-label col-form-label-sm'>Qtd. de Módulos:
+                                            </label>
+                                            <label
+                                                class='col-form-label col-form-label-sm'>{{projeto.plaQtdMod}}</label>
+                                        </div>
+                                        <div>
+                                            <label class='col-form-label col-form-label-sm'>Potência Módulos:
+                                            </label>
+                                            <label
+                                                class='col-form-label col-form-label-sm'>{{projeto.plaWattMod}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div>
+                                            <label class='col-form-label col-form-label-sm'>Qtd. de Inversores:
+                                            </label>
+                                            <label
+                                                class='col-form-label col-form-label-sm'>{{projeto.plaQtdInv}}</label>
+                                        </div>
+                                        <div>
+                                            <label class='col-form-label col-form-label-sm'>Potência do
+                                                Inversor:</label>
+                                            <label
+                                                class='col-form-label col-form-label-sm'>{{projeto.plaKwpInv}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div>
+                                            <label class='col-form-label col-form-label-sm'>Dimensão
+                                                Área(m2):</label>
+                                            <label
+                                                class='col-form-label col-form-label-sm'>{{projeto.plaDimArea}}</label>
+                                        </div>
+                                        <div>
+                                            <label class='col-form-label col-form-label-sm'>MPPTs:
+                                            </label>
+                                            <label
+                                                class='col-form-label col-form-label-sm'>{{projeto.plaQtdString}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class='col-form-label col-form-label-sm fw-bold'>Unidade
+                                                Geradora</label>
+                                            <input class='form-control form-control-sm' type='text' name='descug'
+                                                value="{{#if pedido.descug}}{{pedido.descug}}{{else}}{{projeto.descug}}{{/if}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class='col-form-label col-form-label-sm fw-bold'>Unidade
+                                                Compensadora:
+                                            </label>
+                                            <input class='form-control form-control-sm' type='text' name='descuc'
+                                                value="{{#if pedido.descuc}}{{pedido.descuc}}{{else}}{{projeto.descuc}}{{/if}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center mt-2 mb-2">
+                                    <label style="font-size: 20px;">Valor R$: {{projeto.valor}}</label>
+                                </div>
+                                {{/if}}
+                                {{#if lancarPedido}}
+                                <section id="informacoes">
+                                    <div class="card-body">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row mt-3" style="padding-right: 10px;">
+                                                    <div class="col">
+                                                        <div class='row' style="width: 100%;">
+                                                            <div class="col-md-8 text-end">
+                                                                <label class='col-form-label col-form-label-sm'>Qtd. de
+                                                                    Módulos:
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type='number'
+                                                                    class="form-control form-control-sm"
+                                                                    name='plaQtdMod' value='{{projeto.plaQtdMod}}'>
+                                                            </div>
+                                                        </div>
+                                                        <div class='row mt-1' style="width: 100%;">
+                                                            <div class="col-md-8 text-end">
+                                                                <label class='col-form-label col-form-label-sm'>Potência
+                                                                    Módulos:
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type='number'
+                                                                    class="form-control form-control-sm"
+                                                                    name='plaWattMod' value='{{projeto.plaWattMod}}'>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class='row' style="width: 100%;">
+                                                            <div class="col-md-8 text-end">
+                                                                <label class='col-form-label col-form-label-sm'>Qtd. de
+                                                                    Inversores:
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type='number'
+                                                                    class="form-control form-control-sm"
+                                                                    name='plaQtdInv' value='{{projeto.plaQtdInv}}'>
+                                                            </div>
+                                                        </div>
+                                                        <div class='row mt-1' style="width: 100%;">
+                                                            <div class="col-md-8 text-end">
+                                                                <label class='col-form-label col-form-label-sm'>Potência
+                                                                    do
+                                                                    Inversor:
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="string" name="plaKwpInv"
+                                                                    class='form-control form-control-sm'
+                                                                    value="{{projeto.plaKwpInv}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class='row' style="width: 100%;">
+                                                            <div class="col-md-8 text-end">
+                                                                <label class='col-form-label col-form-label-sm'>Dimensão
+                                                                    Área(m2):
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type='text' class="form-control form-control-sm"
+                                                                    name='plaDimArea' value='{{projeto.plaDimArea}}'>
+                                                            </div>
+                                                            </table>
+                                                        </div>
+                                                        <div class='row mt-1' style="width: 100%;">
+                                                            <div class="col-md-8 text-end">
+                                                                <label class='col-form-label col-form-label-sm'>MPPTs:
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-4 mb-1">
+                                                                <input type="string" name="plaQtdString"
+                                                                    class='form-control form-control-sm'
+                                                                    value="{{projeto.plaQtdString}}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row text-center">
+                                                    <div class="col text-end">
+                                                        <label class='col-form-label'>R$ Valor:&nbsp</label>
+                                                    </div>
+                                                    <div class="col-md-3 text-start" style="margin-right: 40px;">
+                                                        <input type="number" class='form-control' name="valor"
+                                                            value="{{projeto.valor}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{!-- <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class='col-form-label col-form-label-sm fw-bold'>Unidade
+                                                    Geradora</label>
+                                                <input class='form-control form-control-sm' type='text' name='descuc'
+                                                    value="{{projeto.descuc}}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class='col-form-label col-form-label-sm fw-bold'>Unidade
+                                                    Compensadora:
+                                                </label>
+                                                <input class='form-control form-control-sm' type='text' name='descug'
+                                                    value="{{projeto.descug}}">
+                                            </div>
+                                        </div>
+                                    </div> --}}
+                                </section>
+                                {{/if}}
+                                {{/if}}
+                                {{#if vendedor}}
+                                {{else}}
+
+                                <div class="card-body">
+                                    <div class="card mt-2">
+                                        {{#if projeto.pedido}}
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-2 text-start">
+                                                    <label
+                                                        style="font-size: 30px;font-weight: 600;padding: 15px;">Pedido
+                                                    </label>
+                                                </div>
+                                                <div class="col">
+                                                    <a href='/relatorios/pedido/{{projeto._id}}'
+                                                        style="color: rgb(40, 55, 86);font-size: 30px;"><i
+                                                            class="bi bi-printer d-flex align-items-left mt-3"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                        <div class="card-body">
+                                            <div class="row" style="width: 100%;">
+                                                {{#if lista_params}}
+                                                <div class="col">
+                                                    <div class="mb-4 text-start">
+                                                        <label style="font-size: 17px;"
+                                                            class='fw-bold titulo-inicio '>Informações
+                                                            Complementares</label>
+                                                        <table>
+                                                            <tr>
+                                                                <td>
+                                                                    <label
+                                                                        class='col-form-label col-form-label-sm fw-bold'>Item</label>
+                                                                </td>
+                                                                <td style="width: 50%;">
+                                                                    <label
+                                                                        class='col-form-label col-form-label-sm fw-bold'>Valor</label>
+                                                                </td>
+                                                            </tr>
+                                                            {{#each lista_params}}
+                                                            <tr>
+                                                                <td>
+                                                                    <label
+                                                                        class='col-form-label col-form-label-sm fw-bold'>{{descricao}}</label>
+                                                                </td>
+                                                                <td>
+                                                                    {{{campo}}}
+                                                                </td>
+                                                            </tr>
+                                                            {{/each}}
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                {{/if}}
+                                                {{#if equipamento}}
+                                                <div class="col-md-7">
+                                                    <label style="font-size: 17px;"
+                                                        class='fw-bold titulo-inicio'>Equipamentos
+                                                    </label>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label
+                                                                class="col-form-label col-form-label-sm">Descrição</label><br>
+                                                            <select id='desc_equi' class="form-select form-select-sm">
+                                                                {{#each equipamento}}
+                                                                <option value="{{nome}}">{{nome}}</option>
+                                                                {{/each}}
+                                                            </select>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label
+                                                                class="col-form-label col-form-label-sm text-center">Quantidade</label><br>
+                                                            <input type="text" id='qtd_equi'
+                                                                class="form-control form-control-sm">
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <label
+                                                                class="col-form-label col-form-label-sm">Adicionar</label><br>
+                                                            <a class="btn btn-sm" onclick="addequipamento()"
+                                                                style="font-size: 14px;border: 1px solid gray;border-radius: 20px;">+</a>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                    <div id="equipamentos">
+                                                        {{#if projeto.material}}
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>
+                                                                            Descrição
+                                                                        </td>
+                                                                        <td style="width: 10%">
+                                                                            Valor
+                                                                        </td>
+                                                                    </tr>
+                                                                    {{#each projeto.material}}
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{desc}}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{qtd}}
+                                                                        </td>
+                                                                    </tr>
+                                                                    {{/each}}
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        {{/if}}
+                                                    </div>
+                                                </div>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class='col-md-1' id='col'>
+                            {{#if vendedor}}
+                            <button type="submit" class="setaproximo salvar" onclick="salvarCampos()" id='salvar'>
+                                <i style="font-size: 60px;color: rgba(132,122,244);"
+                                    class='bi bi-arrow-right-circle'></i>
+                            </button>
+                            {{else}}
+                            <button type="submit" class="setaproximo salvar" style="position: fixed;"
+                                onclick="salvarCampos()" id='salvar'>
+                                <i style="font-size: 60px;color: rgba(132,122,244);"
+                                    class='bi bi-arrow-right-circle'></i>
+                            </button>
+                            {{/if}}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{#if projeto._id}}
+    <div class="card" style="margin-bottom: 40px;padding: 10px;">
+        {{#if lancarPedido}}
+        <div class="text-start">
+            <label style="font-size: 17px;" class='fw-bold titulo-inicio '>Propostas</label>
+        </div>
+        <form action='/gerenciamento/proposta' enctype="multipart/form-data" method='POST'>
+            <input type="hidden" name="id" value='{{projeto._id}}'>
+            <input type="hidden" name='seq' value='{{nome_cliente}}'>
+            <div class="row">
+                <div class='col-md-1'>
+                    <label class='col-form-label fw-bold mt-3'>Inserir:</label><br>
+                </div>
+                <div class='col-md-6'>
+                    <input type='file' class='form-control mt-3' name='proposta'>
+                </div>
+                <div class="col-md-2">
+                    <label> Data de Cadastro</label>
+                    <input type='date' class='form-control' name='dtcadastro' id='dtcadastro' onchange="setValidade()">
+                </div>
+                <div class="col-md-2">
+                    <label>Data de Validade</label>
+                    <input type='date' class='form-control' name='dtvalidade' id='dtvalidade'>
+                    <input type="hidden" id="prazo" value="{{empresa.valpro}}">
+                </div>
+                <div class="col-md-1 mt-3">
+                    <button type='submit' class='btn btn-success salvarprop' id="salvarprop"><i
+                            class='bi bi-save'></i></button>
+                </div>
+            </div>
+        </form>
+        {{#if lista_proposta}}
+        <div class="row" style="margin-bottom: 40px;font-size: 15px;margin-top: 20px;">
+            <table>
+                <tr>
+                    <th>Sequência</th>
+                    <th style="width: 10%;">Descrição</th>
+                    <th>Data Envio</th>
+                    <th>Validade</th>
+                    <th>Excluir</th>
+                    <th>Exibir</th>
+                    <th>Baixar</th>
+                </tr>
+                {{#each lista_proposta}}
+                <tr>
+                    <td>{{seq}}</td>
+                    <td class='labelp'>{{arquivo}}</td>
+                    <td>{{data}}</td>
+                    <td>{{validade}}</td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" style='width: 30px;'
+                            href='/gerenciamento/deletarProposta/{{_id}}@{{../projeto._id}}'>-</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" href='/gerenciamento/mostrarBucket/{{arquivo}}'
+                            target="_blank"><i class='bi bi-eye'></i></a>
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" href='/gerenciamento/mostrarBucket/{{arquivo}}'
+                            download="{{arquivo}}"><i class='bi bi-arrow-down-circle'></i></a>
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+        {{/if}}
+        {{else}}
+        {{#if lista_proposta}}
+        <div class="text-start">
+            <label style="font-size: 17px;" class='fw-bold titulo-inicio '>Propostas</label>
+        </div>
+        <div class="" style="margin-bottom: 40px;">
+            <div>
+                <table>
+                    <tr>
+                        <th style="width: 10%;">Sequência</th>
+                        <th style="width: 40%;">Descrição</th>
+                        <th style="width: 10%;">Exibir</th>
+                        <th style="width: 10%;">Baixar</th>
+                    </tr>
+                    {{#each lista_proposta}}
+                    <tr>
+                        <td>{{seq}}</td>
+                        <td class='labelp'>{{arquivo}}</td>
+                        <td>
+                            <a class="btn btn-sm btn-primary" href='/gerenciamento/mostrarBucket/{{arquivo}}'
+                                target="_blank"><i class='bi bi-eye'></i></a>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-primary" href='/gerenciamento/mostrarBucket/{{arquivo}}'
+                                download="{{arquivo}}"><i class='bi bi-arrow-down-circle'></i></a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+        {{/if}}
+        {{/if}}
+    </div>
+    {{/if}}
+    {{#each lista_itens}}
+    <input type="hidden" id='itens[]' value="{{desc}}">
+    {{/each}}
+</div>
+
+<script>
+    function salvar() {
+        let timerInterval
+        Swal.fire({
+            title: 'Aguarde um momento!',
+            html: '',
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+    }
+    document.querySelector('.salvar').addEventListener('click', event => { salvar() })
+    document.querySelector('.salvarprop').addEventListener('click', event => { salvar() })
+</script>

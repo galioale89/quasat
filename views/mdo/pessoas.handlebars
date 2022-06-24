@@ -1,0 +1,204 @@
+<style>
+    .icone {
+        font-size: 30px;
+        color: rgb(2, 38, 78);
+    }
+</style>
+<script src='/js/uteis.js'></script>
+<script>
+
+    window.onload = function () {
+
+        var mostraCPF = document.getElementById('mostraCPF')
+        var mostraCNPJ = document.getElementById('mostraCNPJ')
+        var radioCPF = document.getElementById('radioCPF')
+        var radioCNPJ = document.getElementById('radioCNPJ')
+        if (radioCPF.checked) {
+            mostraCPF.style.display = ''
+            mostraCNPJ.style.display = 'none'
+        } else {
+            mostraCPF.style.display = 'none'
+            mostraCNPJ.style.display = ''
+        }
+    }
+
+</script>
+
+<form action='/pessoa/salvar' method='post' enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{pessoa._id}}">
+    <div class="mt-2" style="padding: 20px;">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mt-4">
+                    <div class="col-md-8">
+                        <label style='font-weight: bold;font-size:20px'> Cadastro de Pessoas</label>
+                    </div>
+                    <div class="col-md-4 mt-2" style="text-align: right;">
+                        <a href='/pessoa/novo' class='btn btn-sm btn-primary'>Novo</a>
+                        <a href='/pessoa/consulta'><i class='bi bi-search btn btn-sm btn-primary'></i> </a>
+                        {{#if ehMaster}}
+                        <a href='/usuario/novousuario/{{pessoa._id}}' class='btn btn-sm btn-primary'>Criar Usuário</a>
+                        {{/if}}
+                        <button type='submit' class='btn btn-sm btn-success'>Salvar</button>
+                        <a href='/dashboard'><i class='bi bi-house btn btn-sm btn-primary' title="Dashboard"></i></a>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="row mb-2 mt-3 text-end">
+                            <div class="col-md-4">
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Nome Completo: </label><br>
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Endereço: </label><br>
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Estado: </label><br>
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Cidade: </label><br>
+                            </div>
+                            <div class="col-md-7">
+                                <input type='text' name='nome' class='form-control form-control-sm mb-1'
+                                    value="{{pessoa.nome}}">
+                                <input type='text' name='endereco' class='form-control form-control-sm mb-1'
+                                    value="{{pessoa.endereco}}">
+                                <input name="uf" id="uf" class="form-control form-control-sm mt-1"
+                                    value='{{pessoa.uf}}'>
+                                <input name="cidade" id="cidade" class="form-control form-control-sm mt-1"
+                                    value='{{pessoa.cidade}}'>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-end">
+                                <label class="col-form-label col-form-label-sm fw-bold">Documento: </label>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-check" onchange="documento()">
+                                    <input class="form-check-input" type="radio" name="check" id="radioCPF"
+                                        {{checkCPF}}>
+                                    <label class="col-form-label col-form-label-sm">
+                                        CPF
+                                    </label>
+                                </div>
+                                <div class="form-check" onchange="documento()">
+                                    <input class="form-check-input" type="radio" name="check" id="radioCNPJ"
+                                        {{checkCNPJ}}>
+                                    <label class="col-form-label col-form-label-sm">
+                                        CNPJ
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="" id="mostraCNPJ" style="display: {{#if pessoa.cnpj}}{{ehcnpj}}{{else}}''{{/if}};">
+                                    <input type='text' class='form-control form-control-sm mb-1' maxlength="18"
+                                        autocomplete="off" id='cnpj' name='cnpj' onkeyup="valida_cnpj()"
+                                        value='{{pessoa.cnpj}}'>
+                                </div>
+                                <div class="" id="mostraCPF" style="display: {{#if pessoa.cpf}}{{ehcpf}} {{else}}none{{/if}};">
+                                    <input type='text' class='form-control form-control-sm mb-1' maxlength="14"
+                                        autocomplete="off" id='cpf' name='cpf' onkeyup="valida_cpf('cpf')"
+                                        value='{{pessoa.cpf}}'>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-end">
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Inicio Atividades:
+                                </label><br>
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>Celular: </label><br>
+                                <label class='fw-bold col-form-label col-form-label-sm mb-1'>E-mail: </label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type='text' class='form-control form-control-sm mb-1' autocomplete="off"
+                                    maxlength="7" placeholder='__/____' id='data' name='iniati' maxlength="8"
+                                    onkeyup="mascara_data()" value="{{pessoa.iniati}}">
+                                <input type='text ' name='celular' id='celular' placeholder='DDD + Número'
+                                    class='form-control form-control-sm mb-1' maxlength="10" autocomplete="off"
+                                    value="{{pessoa.celular}}">
+                                <input type='email' name='email' style="text-transform: lowercase;"
+                                    class='form-control form-control-sm mb-1' value="{{pessoa.email}}">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-6">
+                        <label class='col-form-label col-form-label-sm fw-bold'>Função:</label>
+                        <div class='row mt-2'>
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funges' class="form-check-input" type="checkbox" {{pessoa.funges}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Gestor</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funorc' class="form-check-input" type="checkbox" {{pessoa.funorc}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Orçamentista</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funpro' id='funpro' class="form-check-input" type="checkbox"
+                                        {{pessoa.funpro }}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Projetista</label>
+                                </div>
+                            </div>      
+                        </div>
+                        <div class="row mt-1">                      
+                            <div class="col-md-3">
+                                <div class="form-check form-switch">
+                                    <input name='funins' id='funins' class="form-check-input" type="checkbox"
+                                        {{pessoa.funins}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Instalador</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check form-switch">
+                                    <input name='vendedor' id='vendedor' class="form-check-input" type="checkbox"
+                                        {{pessoa.vendedor}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Vendedor</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funass' id='funass' class="form-check-input" type="checkbox"
+                                        {{pessoa.funass}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Assitência Técnica</label>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if vendedor}}
+                        <div class="row mb-1">
+                            <label class="col-form-label col-form-label-sm fw-bold">Parâmetros de Orçamento</label>
+                            <div class="col-md-3 text-end">
+                                <label class="col-form-label col-form-label-sm">Constante:</label>
+                            </div>
+                            <div class="col text-start">
+                                <input type='text' name='const' class="form-control form-control-sm"
+                                    value="{{pessoa.const}}">
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <label class="col-form-label col-form-label-sm">Sequência:</label>
+                            </div>
+                            <div class="col text-start">
+                                <input type='number' name='seq' step='0.010' class="form-control form-control-sm"
+                                    value="{{pessoa.seq}}">
+                            </div>
+                        </div>
+                        {{/if}}
+                        <div class="row mt-4">
+                            <div class="input-group input-group-sm">
+                                <label class="input-group-text">Foto</label>
+                                <input type="file" name='files' id="files" class='form-control'
+                                    onchange="preview_foto()">
+                            </div>
+                        </div>
+                        <div class="mt-2" style="margin-left: 160px;" id="fotosalva">
+                            <img src='/gerenciamento/mostrarBucket/{{pessoa.foto}}' style="width: 160px; height: 160px;"
+                                alt='Minha Figura'>
+                        </div>
+                        <div class="mt-2" style="display: {{#if pessoa.foto}}none{{else}}''{{/if}}; margin-left: 160px;"
+                            id="fotopreview">
+                            <img id='foto' name='foto' style="width: 160px; height: 160px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,63 @@
+<script>
+    function novo() {
+        var obs = document.getElementById('obs')
+        obs.value = ''
+    }    
+</script>
+<div class='container'>
+    <div class="card-body">
+        <form method='post' action='/gerenciamento/aplicarstatus'>
+            <input type='hidden' name='id' value='{{projeto._id}}'>
+            <input type='hidden' name="tipo" value="baixa">
+            <div class="row mt-1 mb-4">
+                <div class="col-md-10">
+                    <label class='text-center' style="font-size: 25px;">Proposta</label>
+                    <label class="text-center mb-4 fw-bold" style="font-size: 25px;">
+                        <a href='/gerenciamento/orcamento/{{projeto._id}}'> &nbsp{{projeto.seq}}</a></label><br>
+                    <label class='text-center' style="font-size: 25px;">Cliente:</label>
+                    <label class="text-center mb-4 fw-bold" style="font-size: 25px;">{{cliente.nome}}</label>
+                </div>
+                <div class="col-md-4">
+                    <div class="btn-group col-12 gap-2">
+                        {{#if projeto.baixada}}
+                        <a href="/gerenciamento/recuperar/{{projeto._id}}" style="cursor: pointer;"
+                            title="Restaurar proposta."><i class='bi bi-hammer'
+                                style="font-size: 30px;color: rgba(132,122,244);"></i></a>
+                        {{/if}}
+                        {{#if vendedor}}
+                        <a href="/dashboard"><i class='bi bi-arrow-left-circle d-flex align-items-center'
+                                style="font-size: 38px;color: rgba(132,122,244);"></i></a>
+                        {{else}}
+                        <a href="/gerenciamento/selecao"><i class='bi bi-arrow-left-circle d-flex align-items-center'
+                                style="font-size: 38px;color: rgba(132,122,244);"></i></a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <label class='col-form-label'>Motivo</label>
+                <select class='form-select' name='motivo'>
+                    <option class='fw-bold'>{{projeto.motivo}}</option>
+                    <option>Fechou com concorrente</option>
+                    <option>Não conseguiu o financiamento</option>
+                    <option>Preço elevado</option>
+                    <option>Prazo de instalação</option>
+                    <option>Sem motivo</option>
+                </select>
+                <label class='col-form-label'>Descreva uma ação de resposta</label>
+                <textarea name='obs' id='obs' class='form-control' rows="5">{{projeto.descmot}}</textarea>
+            </div>
+            <div class="row mb-4 text-enter">
+                <div class="col">
+                    <label style="font-size: 25px;margin-top: 20px;" class="mb-4">Você tem certeza que deseja baixar
+                        esta
+                        proposta?</label>
+                </div>
+                <div class="col">
+                    <button type="submit" class='btn btn-danger mt-4'>Sim</button>
+                    <a class='btn btn-secondary mt-4' href='/gerenciamento/selecao'>Não</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

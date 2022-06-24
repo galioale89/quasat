@@ -1,0 +1,254 @@
+<style>
+    .quadro {
+        background: white;
+        border: solid 1px;
+        border-color: rgba(153, 151, 151, 0.384);
+        border-radius: 10px;
+        width: 90%;
+        height: fit-content;
+        margin: auto;
+        margin-top: 10px;
+    }
+</style>
+<script>
+    /* 
+    function valida_celular() {
+        var cel = document.getElementById('celular')
+        if (cel.value.length == 1) {
+            cel.value = '(' + cel.value
+        }
+        if (cel.value.length == 3) {
+            cel.value += ')'
+        }
+        if (cel.value.length == 4) {
+            cel.value += ' '
+        }
+        if (cel.value.length == 6) {
+            cel.value += ' '
+        }
+        if (cel.value.length == 11) {
+            cel.value += '-'
+        }
+    };
+    */
+    function plano() {
+        var mes = document.getElementById('mes')
+        var ano = document.getElementById('ano')
+        var selecionado = document.getElementById('selecionado')
+        if (mes.checked) {
+            selecionado.value = 'mes'
+        } else {
+            if (mes.checked) {
+                selecionado.value = 'ano'
+            } else {
+                selecionado.value = 'free'
+            }
+        }
+    }
+
+    function valida_cnpj() {
+        var cnpj = document.getElementById('cnpj')
+
+        if (cnpj.value.length == 2 || cnpj.value.length == 6) {
+            cnpj.value += '.'
+        }
+        if (cnpj.value.length == 10) {
+            cnpj.value += '/'
+        }
+        if (cnpj.value.length == 15) {
+            cnpj.value += '-'
+        }
+
+        if (cnpj.value.length == 18) {
+
+            var d1 = cnpj.value
+            var p1 = d1.substring(0, 2)
+            var p2 = d1.substring(3, 6)
+            var p3 = d1.substring(7, 10)
+            var p4 = d1.substring(11, 15)
+            var p5 = d1.substring(16, 18)
+            var numdoc = p1 + p2 + p3 + p4 + p5
+
+            if (numdoc == "00000000000000" ||
+                numdoc == "11111111111111" ||
+                numdoc == "22222222222222" ||
+                numdoc == "33333333333333" ||
+                numdoc == "44444444444444" ||
+                numdoc == "55555555555555" ||
+                numdoc == "66666666666666" ||
+                numdoc == "77777777777777" ||
+                numdoc == "88888888888888" ||
+                numdoc == "99999999999999") {
+                cnpj.value = ''
+            }
+
+            // Valida DVs
+            var tamanho = numdoc.length - 2
+            var numeros = numdoc.substring(0, tamanho)
+            var digitos = numdoc.substring(tamanho)
+            var soma = 0
+            var pos = tamanho - 7;
+            for (i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2)
+                    pos = 9;
+            }
+            var resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            if (resultado != digitos.charAt(0)) {
+                cnpj.value = ''
+            }
+
+            tamanho = tamanho + 1;
+            numeros = numdoc.substring(0, tamanho);
+            soma = 0;
+            pos = tamanho - 7;
+            for (i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2)
+                    pos = 9;
+            }
+            resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            if (resultado != digitos.charAt(1)) {
+                cnpj.value = ''
+            }
+        }
+    };
+
+    window.onload = function () {
+
+        var estados = document.getElementById('estado');
+        var cidades = document.getElementById('cidade');
+
+        /*
+        cidades.onchange = function () {
+            if (cidades.value !== "") {
+                //Basta modificar está linha conforme a necessidade
+                window.location = "pagina.asp?estado=" + estados.value + "&cidade=" + cidades.value
+            }
+        };
+        */
+
+        new dgCidadesEstados({
+            estado: estados,
+            cidade: cidades,
+            estadoVal: '<%=Request("estado") %>',
+            cidadeVal: '<%=Request("cidade") %>'
+        });
+    };
+</script>
+<div
+    style="background-color: white;background-image: url(fundosite.png); background-repeat: no-repeat; height: 100%; width: 100%;position: absolute;">
+    <form action="/usuario/enviar" method="post">
+        <div class="quadro mt-4" style="margin-bottom: 2%;">
+            <h5 style="text-align: center;" class="fw-bold mt-2">Pré Cadastro para gerar a Proposta Comercial</h5>
+            <div class="row mt-4" style="width: 100%;">
+                <input type='hidden' name='pgto' value='1'>
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="row">
+                            <div class="col-md-6 text-end">
+                                <label class='col-form-label col-form-label-sm' for="nome">Nome Pessoa Responsável:
+                                </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="razao">Razão Social:
+                                </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="fantasia">Nome Fantasia:
+                                </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="cnpj">CNPJ: </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="usuraio">Endereço Empresa:
+                                </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="usuraio">Estado: </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="usuraio">Cidade: </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="usuraio">Número Celular:
+                                </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="usuraio">Nome de Usuário:
+                                </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="email">E-mail: </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="senha">Senha: </label><br>
+                                <label class='col-form-label col-form-label-sm mt-1' for="senha">Repita sua senha:
+                                </label><br>
+                            </div>
+                            <div class="col-md-6">
+                                <input name="nome" id="nome" class="form-control form-control-sm">
+                                <input name="razao" id="razao" class="form-control form-control-sm mt-1">
+                                <input name="fantasia" id="fantasia" class="form-control form-control-sm mt-1">
+                                <input type='text' class='form-control form-control-sm mt-1' maxlength="18"
+                                    autocomplete="off" id='cnpj' name='cnpj' onkeyup="valida_cnpj()">
+                                <input name="endereco" id="endereo" class="form-control form-control-sm mt-1 mb-1">
+                                <select id='estado' name='uf' clas='form-select' style="margin-bottom: 2%;"></select>
+                                <select id='cidade' name='cidade' clas='form-select'></select>
+                                <!--<input name="cidade" id="cidade" class="form-control form-control-sm mt-1">-->
+                                <!--<input name="uf" id="uf" class="form-control form-control-sm mt-1">-->
+                                <input name="celular" id="celular" maxlength="16" placeholder="DDD + Número"
+                                    autocomplete="off" class="form-control form-control-sm mt-2">
+                                <input name="usuario" id="usuario" class="form-control form-control-sm mt-1">
+                                <input name="email" type="email" class="form-control form-control-sm mt-1">
+                                <input name="senha" type="password" class="form-control form-control-sm mt-1">
+                                <input name="senharep" type="password" class="form-control form-control-sm mt-1">
+                            </div>
+                        </div>
+                        <div class="row mt-3" style="width: 100%;">
+                            <div class='text-center'>
+                                <label class="col-form-label col-form-label-sm fw-bold">Forma de Pagamento</label>
+                            </div>
+                            {{#if tipoTodos}}
+                            <input type='hidden' name='selecionado' id='selecionado' value=''>
+                            <div class="form-check col text-center" onchange='plano()'>
+                                <input type="radio" name='plano' id='mes'>
+                                <label class="form-check-label" style="font-size: 14px;">
+                                    Mensal
+                                </label>
+                            </div>
+                            <div class="form-chek col text-center" onchange="plano()">
+                                <input type="radio" name='plano' id='ano'>
+                                <label class="form-check-label" style="font-size: 14px;">
+                                    Anual
+                                </label>
+                            </div>
+                            <div class="form-chek col text-center" onchange="plano()">
+                                <input type="radio" name='plano' checked id='free'>
+                                <label class="form-check-label" style="font-size: 14px;">
+                                    Free 7 dias
+                                </label>
+                            </div>
+                            {{else}}
+                            {{#if tipoPlano}}
+                            <input type='hidden' name='selecionado' id='selecionado' value=''>
+                            <div class="form-check col text-center" onchange='plano()'>
+                                <input type="radio" name='plano' id='mes'>
+                                <label class="form-check-label" style="font-size: 14px;">
+                                    Mensal
+                                </label>
+                            </div>
+                            <div class="form-chek col text-center" onchange="plano()">
+                                <input type="radio" name='plano' id='ano'>
+                                <label class="form-check-label" style="font-size: 14px;">
+                                    Anual
+                                </label>
+                            </div>
+                            {{else}}
+                            <div class="form-chek col text-center" onchange="plano()">
+                                <input type="radio" name='plano' checked id='free'>
+                                <label class="form-check-label" style="font-size: 14px;">
+                                    Free 7 dias
+                                </label>
+                            </div>
+                            {{/if}}
+                            {{/if}}
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <img src="/img/proposta.jpg" width="500">
+                        <div style="text-align: center;">
+                            <label class="col-form-label col-form-label-sm">Vamos precisar dos seus dados para entrar em
+                                contato com você e apresentar nossa proposta e o contrato comercial, ok?</label>
+                            <label class="col-form-label col-form-label-sm">Mas fique tranquilo porque sua obrigação de
+                                pagamento começa apenas após a assinatura do contrato!</label>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-sm btn-success mt-4 mx-auto">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </form>
+</div>

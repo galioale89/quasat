@@ -1,0 +1,5 @@
+node_modules/
+public/arquivos/
+public/upload/
+keys_apicalendar/
+.env

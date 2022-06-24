@@ -1,0 +1,745 @@
+<style>
+    .disabledbutton {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    th {
+        text-align: right;
+    }
+
+    table {
+        margin-left: 30px;
+    }
+</style>
+<script>
+    window.onload = function () {
+        var bloquear
+        if (encerrado.value == 'true') {
+            bloquear = document.getElementById('bloquear')
+            if (bloquear.className == 'btn-group gap-2') {
+                bloquear.className = 'disabledbutton'
+            }
+            bloquear = document.getElementById('bloquear1')
+            if (bloquear.className == 'bloquear') {
+                bloquear.className = 'disabledbutton'
+            }
+        }
+    }
+</script>
+
+<!-- MENU DE FATURA DO PROJETO -->
+<!-- RESUMO -->
+<!-- SÃO 3 PROCESSOS BASES => PROPOSTA(DADOS/FATURA/FOTOS) / PROJETO / INSTALAÇÃO -->
+<!-- FLUXO: FATURA => SOLICITAR ORÇAMENTO => ANEXO DA PROPOSTA => PROPOSTA ENVIADA => FOTOS => PEDIDO => PROPOSTA GANHA(AUTORIZADO PELO VENDEDOR) => PROJETO => INSTALAÇÃO -->
+
+<!-- O MENU DE FATURA PODERÁ SER UTILIZADO EM DOIS MOMENTOS, QUANDO OS PROJETOS ESTÃO GANHOS OU NÃO GANHOS -->
+
+<!-- ACESSO PARA QUATRO TIPOS DE USUÁRIOS -->
+<!-- CADA USUÁRIO PODERÁ TER FUNÇÕES: GESTOR, ORÇAMENTISTA, VENDEDOR E PROJETISTA, NÃO EXCLUSIVAS -->
+<!-- MASTER => ACESSO AOS PROCESSOS DE VENDA/PROJETO/INSTALAÇÃO-->
+<!-- GESTOR => ACESSO AOS PROCESSOS DE FATURA/FOTOS/PROJETO/INSTALAÇÃO-->
+<!-- ORÇAMENTISTA => ACESSO AOS PROCESSOS DE PROPOSTA(DADOS/FATURA)-->
+<!-- VENDEDOR => ACESSO À PROPOSTA => DADOS/FATURA/FOTOS -->
+<!-- PROJETISTA => ACESSO AOS PROCESSOS DE FATURA/FOTOS/PROJETO/INSTALAÇÃO-->
+
+<!---->
+<!-- GESTOR=> PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- GESTOR=> PROPOSTAS GANHAS => FATURA / FOTOS / PROJETO / INSTALAÇÃO -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => OBSERVAÇÃO, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, VER TERMO, VOLTAR  -->
+
+<!-- PROJETISTA=> PROPOSTAS NÃO GANHAS => NÃO TEM ACESSO -->
+<!-- PROJETISTA=> PROPOSTAS GANHAS => FATURA / FOTOS / PROJETO / INSTALAÇÃO -->
+
+<!-- PROCESSOS DISPONÍVEIS PARA CADA TIPO DE USUÁRIO -->
+<!-- MASTER=> PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- MASTER=> PROPOSTAS GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) / PROJETO / INSTALAÇÃO -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => EMITIR PEDIDO/GANHAR PEDIDO, EXPORTAR EXCEL, OBSERVAÇÃO, AGENDA, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, TERMO(ADD/VER), VOLTAR  -->
+
+<!-- ORÇAMENTISTA=> PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA) -->
+<!-- ORÇAMENTISTA=> PROPOSTAS GANHAS => PROPOSTA(DADOS/FATURA) -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => EMITIR PEDIDO/GANHAR PEDIDO, EXPORTAR EXCEL, VER PROPOSTA, OBSERVAÇÃO, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, VER TERMO, VOLTAR  -->
+
+<!-- VENDEDOR => PROPOSTAS NÃO GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- VENDEDOR=> PROPOSTAS GANHAS => PROPOSTA(DADOS/FATURA/FOTOS) -->
+<!-- FEATURES DISPONÍVEIS => NÃO GANHO => EMITIR PEDIDO/GANHAR PEDIDO, OBSERVAÇÃO, AGENDA, VOLTAR  -->
+<!-- FEATURES DISPONÍVEIS => GANHO => VER PEDIDO, OBSERVAÇÃO, TERMO(ADD/VER), VOLTAR  -->
+
+<div class='text-center mt-2' style="width: 98%;padding-left: 2%;padding-top: 0.5%;height: auto">
+    {{#if projeto.cliente}}
+    <div style="width: 100%;" class="header">
+        <label style="font-size: 25px;">{{cliente_projeto.nome}}&nbsp{{projeto.seq}} </label>
+    </div>
+    {{/if}}
+    {{#if proandges}}
+    <!-- PROPOSTA GANHA -->
+    {{#if projeto.ganho}}
+    <div class="row">
+        <div class="col">
+            <a href='/gerenciamento/fatura/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-images d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspFatura </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/fotos/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-images d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspFotos </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+    </div>
+    {{/if}}
+    <!-- FIM PROJETO GANHO -->
+    {{else}}
+    <!-- SENÃO É PROJETISTA OU GESTOR -->
+    {{#if ehMaster}}
+    <div class="btn-group col-12 gap-2 ativo mt-1" style="border-radius: 200px;">
+        <a href='/gerenciamento/orcamento/{{projeto._id}}' style="font-size: 20px;color: white;font-weight: 700;"
+            class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
+            <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
+        </a>
+        <input type='hidden' value='{{agenda.descricao}}' id="descricao">
+        {{#if projeto.ganho}}
+        <!-- INICIO VALIDAÇÃO GANHO -->
+        <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
+                style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
+            <i class="bi bi-folder" style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
+        </a>
+        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
+            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+        {{else}}
+        {{#if projeto.pedido}}
+        <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+            <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
+        </a>
+        {{else}}
+        <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
+            <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+        </a>
+        {{/if}}
+        <a href='' class="mt-1" data-bs-toggle="modal" data-bs-target='#orcamento' title='orçamento'>
+            <i class='bi bi-eye' style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        <a href='/gerenciamento/exportarOrcamento/{{projeto._id}}' class="mt-1">
+            <i class="bi bi-box-arrow-down" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+        </a>
+        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
+            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+        {{/if}}
+        <!-- FIM VALIDAÇÃO GANHO -->
+        <!-- FEATURES PADRÃO PARA AS DUAS SITUAÇÕES -->
+        <a onclick='agendar("{{projeto._id}}","{{projeto.cliente}}","{{projeto.vendedor}}","{{agenda.data}}","{{agenda._id}}")'
+            style="cursor: pointer;" title='agenda'>
+            <i class='bi bi-calendar-date d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+    </div>
+    {{else}}
+    <!-- INICIO ORÇAMENTISTA -->
+    {{#if orcamentista}}
+    <div class="btn-group col-12 gap-2 ativo mt-1" style="border-radius: 200px;">
+        <a href='/gerenciamento/orcamento/{{projeto._id}}' style="font-size: 20px;color: white;font-weight: 700;"
+            class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
+            <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
+        </a>
+        <input type='hidden' value='{{agenda.descricao}}' id="descricao">
+        {{#if projeto.ganho}}
+        <!-- INICIO VALIDAÇÃO GANHO -->
+        <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
+                style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
+            <i class="bi bi-folder" style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
+        </a>
+        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
+            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+        {{else}}
+        {{#if projeto.pedido}}
+        <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+            <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
+        </a>
+        {{else}}
+        <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
+            <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+        </a>
+        {{/if}}
+        <a href='' class="mt-1" data-bs-toggle="modal" data-bs-target='#orcamento' title='orçamento'>
+            <i class='bi bi-eye' style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        <a href='/gerenciamento/exportarOrcamento/{{projeto._id}}' class="mt-1">
+            <i class="bi bi-box-arrow-down" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+        </a>
+        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
+            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+        {{/if}}
+    </div>
+    <!-- FIM VALIDAÇÃO GANHO -->
+    {{else}}
+    <!-- SE VENDEDOR -->
+    <div class="btn-group col-12 gap-2 ativo mt-1" style="border-radius: 200px;">
+        <a href='/gerenciamento/orcamento/{{projeto._id}}' style="font-size: 20px;color: white;font-weight: 700;"
+            class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
+            <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
+        </a>
+        <input type='hidden' value='{{agenda.descricao}}' id="descricao">
+        {{#if projeto.ganho}}
+        <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
+                style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
+            <i class="bi bi-folder" style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
+        </a>
+        {{else}}
+        {{#if projeto._id}}
+        {{#if projeto.pedido}}
+        <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+            <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
+        </a>
+        {{else}}
+        <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
+            <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+        </a>
+        {{/if}}
+        {{/if}}
+        {{/if}}
+        <!-- FIM VALIDA GANHO -->
+        <!-- FEATURES PADRÃO PARA AS DUAS SITUAÇÕES -->
+        {{#if projeto._id}}
+        <a onclick='agendar("{{projeto._id}}","{{projeto.cliente}}","{{projeto.vendedor}}","{{agenda.data}}","{{agenda._id}}")'
+            style="cursor: pointer;" title='agenda'>
+            <i class='bi bi-calendar-date d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
+            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i>
+        </a>
+        {{/if}}
+        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+    </div>
+    {{/if}}
+    <!-- FIM VENDEDOR -->
+    {{/if}}
+    <!-- FIM ORÇAMENTISTA -->
+    {{/if}}
+    <!-- FIM MASTER -->
+
+    <!-- INICIO TABS -->
+    <!-- GANHO -->
+    {{#if projeto.ganho}}
+    <!-- VALIDA SE NÃO É PROJETISTA -->
+    {{#if funpro}}
+    {{else}}
+    <ul class="nav nav-tabs mb-2">
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" style="margin: 0px solid;"
+                href="/gerenciamento/orcamento/{{projeto._id}}"><label
+                    class="col-form-label titulo-inicio ulinativo">Dados</label></a>
+        </li>
+        <a class="nav-link" aria-current="page"
+            style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+            href="/gerenciamento/fatura/{{projeto._id}}"><label
+                class="col-form-label titulo-inicio ulativo">Fatura</label></a>
+        </li>
+        <!-- VALIDA SE NÃO É ORÇAMENTISTA -->
+        {{#if orcamentista}}
+        {{else}}
+        <li>
+            <a class="nav-link" aria-current="page"
+                style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+                href="/gerenciamento/fotos/{{projeto._id}}"><label
+                    class="col-form-label titulo-inicio ulinativo">Fotos</label></a>
+        </li>
+        {{/if}}
+        <!-- FIM VALIDAÇÃO -->
+    </ul>
+    {{/if}}
+    <!-- FIM VALIDAÇÃO PROJETISTA -->
+    <!-- NÃO GANHO -->
+    {{else}}
+    {{#if funpro}}
+    {{else}}
+    <ul class="nav nav-tabs mb-2">
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" style="margin: 0px solid;"
+                href="/gerenciamento/orcamento/{{projeto._id}}"><label
+                    class="col-form-label titulo-inicio ulinativo">Dados</label></a>
+        </li>
+        <a class="nav-link" aria-current="page"
+            style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+            href="/gerenciamento/fatura/{{projeto._id}}"><label
+                class="col-form-label titulo-inicio ulativo">Fatura</label></a>
+        </li>
+        <!-- VALIDA SE NÃO É ORÇAMENTISTA -->
+        {{#if orcamentista}}
+        {{else}}
+        <li>
+            <a class="nav-link" aria-current="page"
+                style="margin: 0px solid;{{#if projeto._id}}{{else}}display: none{{/if}}"
+                href="/gerenciamento/fotos/{{projeto._id}}"><label
+                    class="col-form-label titulo-inicio ulinativo">Fotos</label></a>
+        </li>
+        {{/if}}
+        <!-- FIM VALIDAÇÃO -->
+    </ul>
+    {{/if}}
+    <!-- FIM TABS -->
+
+    {{/if}}
+    <!-- FIM SENÃO É PROJETISTA OU GESTOR -->
+
+    <div class="justify-content-center">
+        <div class='card mt-4' style="margin-bottom: 50px;">
+            <div class="card-body">
+                <form action="/gerenciamento/salvarFotos" id="formfotos" method="post">
+                    <input type='hidden' name='id' value="{{projeto._id}}">
+                    <input type="hidden" name="tipo" value="fatura">
+                    {{!-- <input type='hidden' name='idAcesso' value="{{idAcesso}}"> --}}
+                    <label class="mt-2" style="font-size: 25px;font-weight: bold;">Tire fotos da Fatura</label>
+                    <div class='text-center'>
+                        <div class="btn-group gap-2" id='bloquear'>
+                            <div class="btn start-video" title='Ativar Câmera'><i style="font-size: 40px;"
+                                    class='bi bi-camera-video-fill'></i></div>
+                            <div class="btn picture" title='Tirar uma foto'><i style="font-size: 40px;"
+                                    class='bi bi-camera'></i></div>
+                            <button type="submit" class="btn save-picture" title='Salvar Fotos' style="display: none;"
+                                id='upload'><i style="font-size: 35px;" class='btn bi bi-save'></i> </button>
+                        </div>
+
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;" id='lblscreen'>Fotos
+                                        Tiradas</label>
+                                    <div class="row" id="screen">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas" name='canvas'></canvas>
+                    </div>
+                </form>
+                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
+                    id='bloquear1'>
+                    <input type="hidden" name='tipo' value='projeto'>
+                    <input type="hidden" name='caminho' value='fatura'>
+                    <input type='hidden' name='idprj' value="{{projeto._id}}">
+                    <input type='hidden' name='seq' value="fatura">
+                    <div class="card">
+                        <div class="card-body">
+                            <label class='col-form-label col-form-label-sm'>Adicionar fatura da galeria</label>
+                            <div>
+                                <input type="file" name="files" multiple class='form-control'>
+                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                {{#if projeto.fatura}}
+                <div class="row mt-3">
+                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                    {{#if lista_faturas}}
+                    {{#each lista_faturas}}
+                    <div class="col-md-3">
+                        <div style="width: 1px;">
+                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfaturadelimg{{../projeto._id}}'
+                                class='botao-filter'><i class='bi bi-x-circle'
+                                    style="font-size: 20px;color: orangered"></i></a>
+                        </div>
+                        {{#if ehimagem}}
+                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
+                        {{/if}}
+                        {{#if ehpdf}}
+                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                            <div style="font-size: 50px;">
+                                <img src='/img/pdf.png' style="width: 80%;" alt='Minha Figura'></img>
+                            </div>
+                            <i class="bi bi-arrow-down-circle"></i>
+                        </a>
+                        {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf" width="100%"
+                            height="500">
+                            <p>Seu navegador não tem um plugin pra PDF</p>
+                        </object> --}}
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                    {{/if}}
+                </div>
+                {{/if}}
+            </div>
+            <div class="card-body">
+                <label class="col-form-label">Consumo Mensal kWp</label>
+                <br>
+                <label class="col-form-label fw-bold">Unidades Consumidoras</label>
+                <label class='btn btn-primary adduc' id='adduc'><i class='bi bi-plus'></i></label>
+                <form action='/gerenciamento/salvaruc' method="POST">
+                    <input type='hidden' name="id" value='{{projeto._id}}'>
+                    {{#if lista_unidades}}
+                    <label class='col-form-label col-form-label-sm'>Média de Consumo:&nbsp{{media}}</label>
+                    {{!-- {{#if projeto.adduc}}
+                    <label class='col-form-label col-form-label-sm'>/ Houve um consumo adicional de:
+                        {{projeto.adduc}}&nbsp kW por mês</label>
+                    {{/if}} --}}
+                    <div class="mt-2 mb-2">
+                        <table>
+                            <tr>
+                                <th style="width: 5%;text-align: center;">Janeiro</th>
+                                <th style="width: 5%;text-align: center;">Fevereiro</th>
+                                <th style="width: 5%;text-align: center;">Março</th>
+                                <th style="width: 5%;text-align: center;">Abril</th>
+                                <th style="width: 5%;text-align: center;">Maio</th>
+                                <th style="width: 5%;text-align: center;">Junho</th>
+                                <th style="width: 5%;text-align: center;">Julho</th>
+                                <th style="width: 5%;text-align: center;">Agosto</th>
+                                <th style="width: 5%;text-align: center;">Setembro</th>
+                                <th style="width: 5%;text-align: center;">Outubro</th>
+                                <th style="width: 5%;text-align: center;">Novembro</th>
+                                <th style="width: 5%;text-align: center;">Dezembro</th>
+                                <th style="width: 5%;text-align: center;">Total</th>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center;">{{totalJan}}</td>
+                                <td style="text-align: center;">{{totalFev}}</td>
+                                <td style="text-align: center;">{{totalMar}}</td>
+                                <td style="text-align: center;">{{totalAbr}}</td>
+                                <td style="text-align: center;">{{totalMai}}</td>
+                                <td style="text-align: center;">{{totalJun}}</td>
+                                <td style="text-align: center;">{{totalJul}}</td>
+                                <td style="text-align: center;">{{totalAgo}}</td>
+                                <td style="text-align: center;">{{totalSet}}</td>
+                                <td style="text-align: center;">{{totalOut}}</td>
+                                <td style="text-align: center;">{{totalNov}}</td>
+                                <td style="text-align: center;">{{totalDez}}</td>
+                                <td style="text-align: center;">{{total}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    {{/if}}
+                    <div class='row text-center' id='uc' class="mt-2">
+                        {{#each lista_unidades}}
+                        <div class='col-md-3'>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="btn fw-bold">UC&nbsp{{seq}}</div>
+                                </div>
+                                <div class="col text-start">
+                                    <a href="/gerenciamento/deletauc/{{_id}}@{{../projeto._id}}"><i
+                                            style="color: orangered" class='bi bi-x-circle'></i></a>
+                                </div>
+                            </div>
+                            <input type="hidden" name='iduc' value="{{_id}}">
+                            <table>
+                                <input type="hidden" name="mes" value="1">
+                                <tr>
+                                    <th>Janeiro:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="jan" step="0.010"
+                                            type="number" value="{{jan}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Fevereiro:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="fev" step="0.010"
+                                            type="number" value="{{fev}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Março:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="mar" step="0.010"
+                                            type="number" value="{{mar}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Abril:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="abr" step="0.010"
+                                            type="number" value="{{abr}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Maio:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="mai" step="0.010"
+                                            type="number" value="{{mai}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Junho:&nbsp&nbsp</th>
+                                    <td>
+                                        <input class="form-control form-control-sm" name="jun" step="0.010"
+                                            type="number" value="{{jun}}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Julho:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="jul" step="0.010"
+                                            type="number" value="{{jul}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Agosto:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="ago" step="0.010"
+                                            type="number" value="{{ago}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Setembro:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="set" step="0.010"
+                                            type="number" value="{{set}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Outubro:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="out" step="0.010"
+                                            type="number" value="{{out}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Novembro:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="nov" step="0.010"
+                                            type="number" value="{{nov}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Dezembro:&nbsp&nbsp</th>
+                                    <td><input class="form-control form-control-sm" name="dez" step="0.010"
+                                            type="number" value="{{dez}}"></td>
+                                </tr>
+                                <tr>
+                                    <th>Total:&nbsp&nbsp</th>
+                                    <td><label class="col-form-label col-form-label-sm" name="total">{{total}}</label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div id='salvaruc' class="mt-2">
+                        {{#if lista_unidades}}
+                        <label class="col-form-label col-form-label-sm">Consumo Mensal Adicional</label>
+                        <div style="display: flex;">
+                            <input type="number" name="add" class="form-control form-control-sm">
+                            <select name="tipoadd" class="form-select form-select-sm">
+                                <option>%</option>
+                                <option>kW</option>
+                            </select>
+                            <button type='submit' class='btn btn-sm btn-success'>Salvar</button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function carregar(texto) {
+        let timerInterval
+        Swal.fire({
+            title: 'Aguarde um momento!',
+            html: texto,
+            timer: 500,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+        })
+    }
+    function move(salvarId, progressId) {
+        const btnsalvar = document.getElementById(salvarId)
+        var elem = document.getElementById(progressId)
+        var width = 1
+        var id = setInterval(frame, 100)
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id)
+                btnsalvar.style.display = ''
+            } else {
+                width++
+                elem.style.width = width + '%'
+            }
+        }
+    }
+
+
+    function startCamera(videoId, screenId) {
+        navigator.mediaDevices.getUserMedia({
+            video: {
+                width: {
+                    min: 1280,
+                    ideal: 1920,
+                    max: 2560,
+                },
+                height: {
+                    min: 720,
+                    ideal: 1080,
+                    max: 1440,
+                },
+                facingMode: 'environment'
+            }
+        }).then((stream) => {
+
+            const lblscreen = document.getElementById(screenId)
+            const video = document.getElementById(videoId)
+            lblscreen.style.display = ''
+            video.style.display = ''
+
+            document.getElementById(videoId).srcObject = stream
+        })
+    }
+
+
+    function takePicture(screenId, canvasId, videoId, salvarId, progressId) {
+        const screen = document.getElementById(screenId)
+        const canvas = document.getElementById(canvasId)
+        const context = canvas.getContext('2d')
+        const video = document.getElementById(videoId)
+
+        const div0 = document.createElement("div")
+        const div1 = document.createElement("div")
+        const div2 = document.createElement("div")
+        const div3 = document.createElement("div")
+        const img = document.createElement("img")
+        const fileimg = document.createElement("input")
+        const imgblob = document.createElement('input')
+        //const inputFiles = document.getElementById('files')
+
+        canvas.width = video.videoWidth
+        canvas.height = video.videoHeight
+        context.drawImage(video, 0, 0)
+
+        //var imagem = document.getElementById('id_do_input');
+        //imagem.src = imagem;
+        var image = canvas.toDataURL('image/png')
+        fileimg.name = 'imagem'
+        fileimg.value = image
+        fileimg.type = 'hidden'
+
+        canvas.toBlob(function (blob) {
+            var url
+            url = URL.createObjectURL(blob)
+            img.style.width = '200px'
+            img.src = url
+            imgblob.name = 'imgblob'
+            imgblob.type = 'hidden'
+            imgblob.value = url
+
+            var idiv = url.replace('blob:https://quasat.vimmus.com.br/', '')
+            //var idiv = url.replace('blob:http://localhost:3001/', '')
+
+            div0.className = 'row'
+            div1.className = 'col-md-4'
+            div2.style.width = '5px'
+            div2.style.cursor = 'pointer'
+            div3.innerHTML = '<i class="bi bi-x-circle"></i>'
+            div3.addEventListener('click', (e) => {
+                node = document.getElementById(idiv)
+                node.parentNode.removeChild(node)
+            })
+
+            //move(salvarId, progressId)
+            div0.id = idiv
+            div2.append(div3)
+            div1.prepend(img)
+            div1.prepend(imgblob)
+            div1.append(fileimg)
+            div0.append(div2)
+            div0.append(div1)
+            screen.prepend(div0)
+
+        }, 'image/png')
+
+        carregar('Capturando a imagem!')
+
+        const salvar = document.getElementById('upload')
+        salvar.style.display = ''
+    }
+
+    document.querySelector('.start-video').addEventListener('click', event => { startCamera('video', 'lblscreen') })
+
+    document.querySelector('.picture').addEventListener('click', event => { takePicture('screen', 'canvas', 'video', 'upload', 'progress') })
+
+    document.querySelector('.save-picture').addEventListener('click', event => { carregar('Fazendo upload da(s) imagem(ns)!') })
+
+    document.querySelector('.adduc').addEventListener('click', event => {
+        var uc = document.getElementById('uc')
+        var salvar = document.getElementById('salvaruc')
+        var verificar = uc.getElementsByTagName('table')
+        if (verificar.length == 0) {
+            var addsalvar = true
+        }
+        var seq = verificar.length + 1
+        var html = '<div class="col-md-3"><div class="btn fw-bold text-center">UC&nbsp' + seq + '</div>' +
+            '<input type="hidden" name="mes" value="1">' +
+            '<table><tr><th>Janeiro:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="jan" type="number" value=""></td></tr>' +
+            '<tr><th>Fvereiro:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="fev" type="number" value=""></td></tr>' +
+            '<tr><th>Março:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="mar" type="number" value=""></td></tr>' +
+            '<tr><th>Abril:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="abr" type="number" value=""></td></tr>' +
+            '<tr><th>Maio:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="mai" type="number" value=""></td></tr>' +
+            '<tr><th>Junho:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="jun" type="number" value=""></td></tr>' +
+            '<tr><th>Julho:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="jul" type="number" value=""></td></tr>' +
+            '<tr><th>Agosto:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="ago" type="number" value=""></td></tr>' +
+            '<tr><th>Setembro:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="set" type="number" value=""></td></tr>' +
+            '<tr><th>Outubro:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="out" type="number" value=""></td></tr>' +
+            '<tr><th>Novembro:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="nov" type="number" value=""></td></tr>' +
+            '<tr><th>Dezembro:&nbsp&nbsp</th><td><input class="form-control form-control-sm"  name="dez" type="number" value=""></td></tr></table></div>'
+        Swal.fire({
+            title: 'Confirma a adição de mais uma unidade consumidora?',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                uc.innerHTML = uc.innerHTML + html
+            }
+            if (addsalvar) {
+                var htmladd = '<label class="col-form-label col-form-label-sm">Consumo Mensal Adicional</label><div style="display: flex"><input type="number" name="add" class="form-control form-control-sm"><select name="tipoadd" class="form-select form-select-sm"><option>%</option><option>kW</option></select>'
+                salvar.innerHTML = htmladd + '<button type="submit" class="btn btn-sm btn-success">Salvar</button></div>'
+            }
+        })
+    })
+</script>

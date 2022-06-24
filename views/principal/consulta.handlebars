@@ -1,0 +1,315 @@
+<style>
+    button {
+        line-height: 0px;
+    }
+
+    #header {
+        width: 100%;
+        border-bottom: rgb(40, 55, 86) 0, 1px solid;
+        color: rgb(40, 55, 86);
+    }
+
+    .filtro-selecao {
+        width: fit-content;
+        height: fit-content;
+        background: white;
+        border: solid 1px;
+        border-radius: 10px;
+        margin-left: 5px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    tr {
+        font-size: 12px;
+        border-bottom: rgba(120, 120, 120, 0.4) solid 1px;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+</style>
+<script>
+    window.onload = function () {
+        var dia
+        var data
+        var dataini = document.getElementById('dataini')
+        var datafim = document.getElementById('datafim')
+
+        if (dataini.value == '') {
+            var data = new Date()
+            var mes = data.getMonth()
+            var ano = data.getFullYear()
+            if (mes == 0 || mes == 2 || mes == 4 || mes == 6 || mes == 7 || mes == 9 || mes == 11) {
+                dia = '31'
+            } else {
+                dia = '30'
+            }
+            mes = mes + 1
+            if (mes < 10) {
+                mes = '0' + mes
+            }
+            data = ano + '-' + mes + '-' + '01'
+            dataini.value = String(data)
+            data = ano + '-' + mes + '-' + dia
+            datafim.value = String(data)
+        }
+    }
+    function select() {
+        var select = document.getElementById('select')
+        var select2030 = document.getElementById('select2030')
+        var select3050 = document.getElementById('select3050')
+        var select50100 = document.getElementById('select50100')
+        var select100 = document.getElementById('select100')
+        var valor = document.getElementById('valor')
+
+        if (select.checked) {
+            valor.value = 'tudo'
+        } else {
+            if (select2030.checked) {
+                valor.value = '2030'
+            } else {
+                if (select3050.checked) {
+                    valor.value = '3050'
+                } else {
+                    if (select50100.checked) {
+                        valor.value = '50100'
+                    } else {
+                        valor.value = '100'
+                    }
+                }
+            }
+        }
+    }
+</script>
+<div class='row' style="width: 100%;padding-left: 2%;">
+    <div id='header'>
+        <div class="row mt-4">
+            <form action='/relatorios/filtrar/' method='post'>
+                <input type="hidden" name="tipo" value='projeto'>
+                <div class="col-md-4">
+                    <h5 class="mt-2 titulo-inicio">Lista de Propostas {{titulo}}</h5>
+                    <input type="hidden" name='tipo' value='{{tipo}}'>
+                </div>
+                <div class="row no-print">
+                    <div class="col mt-3">
+                        <label class='col-form-label col-form-label-sm fw-bold'>Status</label>
+                        <select class='form-select form-select-sm' name='stats'>
+                            <option class='fw-bold'>Todos</option>
+                            <option class='fw-bold'>Enviado</option>
+                            <option class='fw-bold'> Negociando </option>
+                            <option>Analisando Financiamento</option>
+                            <option>Comparando Propostas</option>
+                            <option>Aguardando redução de preço</option>
+                            <option class='fw-bold'>Ganho</option>
+                            <option class='fw-bold'>Perdido</option>
+                            <option class='fw-bold'>Instalação Realizada</option>
+                        </select>
+                    </div>
+
+                    <div class='col mt-3'>
+                        <label class='col-form-label col-form-label-sm fw-bold'>Vendedor</label>
+                        <select name='vendedor' class='form-select form-select-sm'>
+                            <option>Todos</option>
+                            {{#each todos_vendedores}}
+                            <option value='{{_id}}'>{{nome}}</option>
+                            {{else}}
+                            <option>Nenhum vendedor cadastrado</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class='col mt-3'>
+                        <label class='col-form-label col-form-label-sm fw-bold'>Cliente</label>
+                        <select name='cliente' class='form-select form-select-sm'>
+                            <option>Todos</option>
+                            {{#each todos_clientes}}
+                            <option value='{{_id}}'>{{nome}}</option>
+                            {{else}}
+                            <option>Nenhum cliente cadastrado</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div style="width: 160px;" class="mt-3">
+                        <label class="col-form-label col-form-label-sm">Data Inicial</label>
+                        <input type='date' class='form-control form-control-sm' name='dataini' id='dataini'
+                            value='{{dataini}}'>
+                    </div>
+                    <div style="width: 160px;" class="mt-3">
+                        <label class="col-form-label col-form-label-sm">Data Final</label>
+                        <input type='date' class='form-control form-control-sm' name='datafim' id='datafim'
+                            value='{{datafim}}'>
+                    </div>
+
+                    <div class="col">
+                        <label>Valor Projeto (mil) </label>
+                        <input type="hidden" name="valor" id='valor' value='tudo'>
+                        {{!-- <label for="customRange" class="col-form-label col-form-label-sm">Valor
+                            até:&nbsp</label><label class='col-form-label col-form-label-sm' id="vlrfinal"></label>
+                        <input type="range" class="form-range customRange" min="0" max="100000" step='1000'
+                            id="customRange"> --}}
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check" onclick="select()">
+                                    <input class="form-check-input" style="margin-top: 0px" type="radio" name="valor"
+                                        id="select" {{#if checktudo}}{{checktudo}}{{else}}checked{{/if}}>
+                                    <label class="form-check-label" style="font-size: 12px;">
+                                        Todos
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check" onclick="select()">
+                                    <input class="form-check-input" style="margin-top: 0px" type="radio" name="valor"
+                                        id="select2030" {{check2030}}>
+                                    <label class="form-check-label" style="font-size: 12px;">
+                                        20 a 30
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check" onclick="select()">
+                                    <input class="form-check-input" style="margin-top: 0px" type="radio" name="valor"
+                                        id="select3050" {{check3050}}>
+                                    <label class="form-check-label" style="font-size: 12px;">
+                                        30 a 50
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check" onclick="select()">
+                                    <input class="form-check-input" style="margin-top: 0px" type="radio" name="valor"
+                                        id="select50100" {{check50100}}>
+                                    <label class="form-check-label" style="font-size: 12px;">
+                                        50 a 100
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check" onclick="select()">
+                                    <input class="form-check-input" style="margin-top: 0px" type="radio" name="valor"
+                                        id="select100" {{check100}}>
+                                    <label class="form-check-label" style="font-size: 12px;">
+                                        > 100
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="width: 70px;">
+                        <button type='submit' class='mt-3 botaofiltrar'><i
+                                class='bi bi-search iconefiltrar'></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 2%;margin-top: 1%;">
+        <table>
+            <tr>
+                <th style="width: 7%;">Status</th>
+                <th style="width: 5%;">Proposta</th>
+                <th style="width: 5%;">Local</th>
+                <th style="width: 10%;">Cliente</th>
+                <th style="width: 10%;">Vendedor</th>
+                <th style="width: 5%;text-align: right;">Valor R$</th>
+                <th style="width: 5%">Cadastro</th>
+                {{!-- <th style="width: 5%;"></th> --}}
+            </tr>
+            {{#each lista}}
+            <tr style="line-height: 20px;">
+                <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{s}}</a></td>
+                <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{seq}}</a></td>
+                <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{cidade}}/{{uf}}</a></td>
+                <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{cliente}}</a></td>
+                <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{nome_vendedor}}</a></td>
+                <td style="text-align: right;"><a href='/gerenciamento/orcamento/{{id}}'>{{valor}}</a></td>
+                <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{cadastro}}</a></td>
+            </tr>
+            {{else}}
+            <label>Nenhuma proposta encontrada.</label>
+            {{/each}}
+        </table>
+    </div>
+    <div class='row' style="margin-bottom: 50px;">
+        <div class="col">
+            <label style="font-size: 20px;">{{qtd}} propostas</label>
+        </div>
+        <div class="col-md-6 text-end">
+            <label style="font-size: 20px;">Total&nbspR$&nbsp{{total}}</label>
+        </div>
+
+        <div style="width: 50px;" class="text-end no-print">
+            <form method="post" action="/gerenciamento/exportar">
+                <input type="hidden" name="status" value="{{stats}}">
+                <input type="hidden" name="cliente" value="{{cliente}}">
+                <input type="hidden" name="vendedor" value="{{vendedor}}">
+                <input type="hidden" name="inicio" value="{{inicio}}">
+                <input type="hidden" name="fim" value="{{fim}}">
+                <button type="submit" title="Exportar para Excel"
+                    style="font-size: 30px;color: rgb(40, 55, 86);display: {{mostrar}}" class="btn btn-sm"><i
+                        class="bi bi-box-arrow-right"></i></button>
+            </form>
+        </div>
+        <div style="width: 10px;" class="text-end">
+            <div style='margin-top: 13px'>
+                <a href='/' class='no-print' style="color: rgb(40, 55, 86);font-size: 30px;" value="Imprimir"
+                    onclick="window.print();return false"><i class="bi bi-printer"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelector('.customRange').addEventListener('change', event => {
+        range = document.getElementById('customRange')
+        valor = document.getElementById('vlrfinal')
+        var x
+        var params
+        var decimais
+
+        var vlrstring = String(range.value)
+        if (vlrstring.indexOf(',') != -1) {
+            params = vlrstring.split(',')
+            x = params[0].length
+            decimais = params[1]
+        } else {
+            x = vlrstring.length
+            decimais = '00'
+        }
+        if (x < 3) {
+            var primeiros = vlrstring
+            var total = primeiros + ',' + decimais
+        } else {
+            if (x > 2 && x < 6) {
+                var i = x - 3
+                var ultimos = vlrstring.slice(i, x)
+                var primeiros = vlrstring.slice(0, i)
+                var total = primeiros + '.' + ultimos + ',' + decimais
+            } else {
+                if (x > 2 && x < 9) {
+                    var i = x - 3
+                    var y = i - 3
+                    var ultimos = vlrstring.slice(i, x)
+                    var milhares = vlrstring.slice(y, i)
+                    var primeiros = vlrstring.slice(0, y)
+                    var total = primeiros + '.' + milhares + '.' + ultimos + ',' + decimais
+                }
+            }
+        }
+        valor.innerHTML = String(total)
+    })    
+</script>

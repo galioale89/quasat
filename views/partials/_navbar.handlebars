@@ -1,0 +1,54 @@
+<!-- Default dropstart button -->
+{{#if user}}
+<nav id='menu-fixo-user' class='navbar navbar-expand-lg no-print' style="position: relative;">
+  <div class='btn-group col-12 gap-2 justify-content-end'>
+    {{#if crm}}
+    <div class="dropdown">
+      <button class="botao-filter dropdown-toggle fw-bold" type="button" style='background-color: rgb(44,55,89);'
+        data-bs-toggle="dropdown" aria-expanded="false">
+        Relatórios
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <a href='/relatorios/analiseproposta' class="contorno-menu d-flex align-items-center'">
+          <i class='bi bi-file-earmark-spreadsheet d-flex align-items-center'></i>
+          Analisa Propostas
+        </a>
+        <div class=''>
+          <a href='/relatorios/priorizacao' class="contorno-menu d-flex align-items-center">
+            <i class='bi bi-file-earmark-arrow-up d-flex align-items-center'></i>
+            Compras
+          </a>
+        </div>
+      </ul>
+    </div>
+    {{/if}}
+    
+    {{#if funges}}
+    <label class='mt-2' style="font-size: 25px;font-weight: bold;">Visão Gerencial</label><br>
+    {{else}}
+    {{#if orcamentista}}
+    <label class='mt-2' style="font-size: 25px;font-weight: bold;">Orçamentista</label><br>
+    {{else}}
+    {{#if funpro}}
+    <label class='mt-2' style="font-size: 25px;font-weight: bold;">Projetista</label><br>
+    {{else}}
+    {{#if vendedor}}
+    <label class='mt-2' style="font-size: 25px;font-weight: bold;">Vendedor</label><br>
+    {{else}}
+    {{#if instalador}}
+    <label class='mt-2' style="font-size: 25px;font-weight: bold;">Instalador</label><br>
+    {{/if}}
+    {{/if}}
+    {{/if}}
+    {{/if}}
+    {{/if}}
+
+    <a href='/dashboard'><i class='bi bi-house botao-filter' title="Dashboard"></i></a><br>
+    {{#if crm}}
+    <a href='/gerenciamento/consulta' class="d-flex align-items-center"><i
+        class="bi bi-search botao-filter d-flex align-items-center" title="Busca Propostas"></i></a><br>
+    {{/if}}
+    <a href='/logout'><i class='bi bi-door-open botao-filter' style="padding-right: 10px" title="Sair"></i></a>
+  </div>
+</nav>
+{{/if}}

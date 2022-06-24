@@ -1,0 +1,345 @@
+<style>
+    .lists {
+
+        flex: 1;
+        width: 100%;
+    }
+
+    .lists .list {
+        flex-flow: column;
+        flex: 1;
+
+        width: 100%;
+        border-radius: 20px;
+        min-height: 300px;
+
+        background-color: #001263e5;
+        margin: 0 15px;
+        padding: 8px;
+        transition: all 0.2s linear;
+    }
+
+    .lists .list .item {
+        background-color: #F3F3F3;
+        border-radius: 8px;
+        text-align: center;
+        margin: 4px 0px;
+        cursor: pointer;
+    }
+
+    .lists .list .item-enviado {
+        background-color: #F3F3F3;
+        border-radius: 8px;
+        text-align: center;
+        margin: 4px 0px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .lists .list .item-negociando {
+        background-color: #F3F3F3;
+        border-radius: 8px;
+        text-align: center;
+        margin: 4px 0px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .lists .list .item-baixado {
+        background-color: #F3F3F3;
+        border-radius: 8px;
+        text-align: center;
+        margin: 4px 0px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .lists .list .item-ganho {
+        background-color: #F3F3F3;
+        border-radius: 8px;
+        text-align: center;
+        margin: 4px 0px;
+        cursor: pointer;
+        font-size: 17px;
+        font-weight: 600;
+    }
+</style>
+
+<script src="/js/uteis.js"></script>
+
+<div style="width: 98%;padding-left: 2%;padding-top: 0.5%;">
+    <label style="font-size: 20px;font-weight: 700;margin-top: 20px;">Gestão das Propostas</label>
+    {{#if vendedor}}
+    {{else}}
+    <form action="/gerenciamento/aplicaSelecao/" method="post">
+        <div class="text-center mt-4 mb-2">
+            <label style="font-size: 20px; text-transform: uppercase;" class='fw-bold mt-1'>{{mestitulo}} de
+                {{ano}}</label>
+        </div>
+        <div class='row md-1 mt-2'>
+            <div class='col-md-1 text-start'>
+                <input type='number' class='form-control form-control-sm' name='ano' value='{{ano}}'>
+            </div>
+            <div class='col-md-11'>
+                <div class="btn-toolbar">
+                    <div class="btn-group gap-2 col-12">
+                        <input type='hidden' name='mes' id='mes' value=''>
+                        <button type="submit" id='selectjan' onclick="selectJan()"
+                            class="btn btn-sm btn-primary {{janeiro}}">Janeiro</button>
+                        <button type="submit" id='selectfev' onclick="selectFev()"
+                            class="btn btn-sm btn-primary {{fevereiro}}">Fevereiro</button>
+                        <button type="submit" id='selectmar' onclick="selectMar()"
+                            class="btn btn-sm btn-primary {{marco}}">Março</button>
+                        <button type="submit" id='selectabr' onclick="selectAbr()"
+                            class="btn btn-sm btn-primary {{abril}}">Abril</button>
+                        <button type="submit" id='selectmai' onclick="selectMai()"
+                            class="btn btn-sm btn-primary {{maio}}">Maio</button>
+                        <button type="submit" id='selectjun' onclick="selectJun()"
+                            class="btn btn-sm btn-primary {{junho}}">Junho</button>
+                        <button type="submit" id='selectjul' onclick="selectJul()"
+                            class="btn btn-sm btn-primary {{julho}}">Julho</button>
+                        <button type="submit" id='selectago' onclick="selectAgo()"
+                            class="btn btn-sm btn-primary {{agosto}}">Agosto</button>
+                        <button type="submit" id='selectset' onclick="selectSet()"
+                            class="btn btn-sm btn-primary {{setembro}}">Setembro</button>
+                        <button type="submit" id='selectout' onclick="selectOut()"
+                            class="btn btn-sm btn-primary {{outubro}}">Outubro</button>
+                        <button type="submit" id='selectnov' onclick="selectNov()"
+                            class="btn btn-sm btn-primary {{novembro}}">Novembro</button>
+                        <button type="submit" id='selectdez' onclick="selectDez()"
+                            class="btn btn-sm btn-primary {{dezembro}}">Dezembro</button>
+                        <button type="submit" id='selecttodos' onclick="selectTodos()"
+                            class="btn btn-sm btn-primary {{todos}}">Todos</button>
+                        {{#if funges}}
+                        <a href='/relatorios/analiseproposta' class="contorno-titulo d-flex align-items-center">
+                            <i class='bi bi-file-earmark-spreadsheet d-flex align-items-center'></i>
+                            Analisa Propostas
+                        </a>
+                        {{/if}}
+                        {{#if ehMaster}}
+                        <a href='/relatorios/analiseproposta' class="contorno-titulo d-flex align-items-center">
+                            <i class='bi bi-file-earmark-spreadsheet d-flex align-items-center'></i>
+                            Analisa Propostas
+                        </a>
+                        {{/if}}                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {{/if}}
+    <form method="post" action='/gerenciamento/selecao'>
+        <div class="row mt-2" style="padding:20px;width: 100%;">
+            <div class="row">
+                <div class="lists">
+                    <div class="row text-center">
+                        <div class="col">
+                            <label style="font-size: 20px;color: rgb(44,55,89)">Total R$:&nbsp{{totEnviado}}</label>
+                            <div class="list mt-2">
+                                <label class="col-form-label col-form-label-md fw-bold text-center"
+                                    style="color: white">Enviado</label>
+                                {{#each enviado}}
+                                <div class="item-enviado" style='color: black;' draggable="true"><a
+                                        href="/gerenciamento/orcamento/{{id}}">{{seq}} - {{cliente}}</a></div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <a class="dropdown-toggle"
+                                style="font-size: 20px;color: rgb(44,55,89);border: 0px solid;cursor: pointer;"
+                                data-bs-toggle="dropdown">
+                                Total R$:&nbsp{{totNegociando}}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <div class="card-body">
+                                    <label style="font-size: 15px;color: rgb(44,55,89)">Analisando
+                                        Financiamento</label><br>
+                                    <label
+                                        style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totNegociando}}</label><br><br>
+                                    <label style="font-size: 15px;color: rgb(44,55,89)">Comparando
+                                        Propostas</label><br>
+                                    <label
+                                        style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totComparando}}</label><br><br>
+                                    <label style="font-size: 15px;color: rgb(44,55,89)">Aguardando redução de
+                                        preço</label><br>
+                                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totPreco}}</label>
+                                </div>
+                            </ul>
+                            <div class="list mt-2" id='negociando'>
+                                <label class="col-form-label col-form-label-md fw-bold text-center"
+                                    style="color: white">Negociando</label>
+                                {{#each negociando}}
+                                <div class="item-negociando" style='color: black;' draggable="true"><a
+                                        href='/gerenciamento/confirmastatus/{{id}}'>{{seq}} - {{cliente}} -
+                                        {{status}}</a>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label style="font-size: 20px;color: rgb(44,55,89)">Total R$:&nbsp{{totPerdido}}</label>
+                            <div class="list mt-2" id='baixado'>
+                                <label class="col-form-label col-form-label-md fw-bold text-center"
+                                    style="color: white">Perdido</label>
+                                {{#each baixado}}
+                                <div class="item-baixado" style='color: black; cursor: default'><a
+                                        href='/gerenciamento/confirmabaixa/{{id}}' draggable="false">{{seq}} -
+                                        {{cliente}} -
+                                        {{motivo}}</a></div>
+                                {{/each}}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label style="font-size: 20px;color: rgb(44,55,89)">Total R$:&nbsp{{totGanho}}</label>
+                            <div class="list mt-2" id='ganho'>
+                                <label class="col-form-label col-form-label-md fw-bold text-center"
+                                    style="color: white">Ganho</label>
+                                {{#each ganho}}
+                                <div class="item-ganho" style='color: black; cursor: default'><a
+                                        href="/gerenciamento/orcamento/{{id}}">{{seq}} - {{cliente}}</a></div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='dados'>
+                </div>
+                <div class="text-center" style="margin-bottom: 40px;">
+                    <button class='btn btn-success' style="width: 100px;" type="submit"
+                        onclick="salvar()">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    const list_enviado = document.querySelectorAll('.item-enviado')
+    const list_negociando = document.querySelectorAll('.item-negociando')
+    const lists = document.querySelectorAll('.list');
+    var text
+    var classe
+    var n
+
+    let draggedItem = null;
+
+    for (let i = 0; i < list_enviado.length; i++) {
+        const item = list_enviado[i];
+
+        item.addEventListener('dragstart', function () {
+            draggedItem = item;
+            setTimeout(function () {
+                item.style.display = 'none';
+            }, 0)
+        });
+
+        item.addEventListener('dragend', function () {
+            n = document.getElementById('negociando')
+            text = String(n.innerHTML)
+            if (text.indexOf("item-enviado") > -1) {
+                classe = 'item-negociando'
+            }
+            n = document.getElementById('baixado')
+            text = String(n.innerHTML)
+            if ((text.indexOf("item-enviado") > -1) || (text.indexOf("item-negociando") > -1)) {
+                classe = 'item-baixado'
+            }
+            n = document.getElementById('ganho')
+            text = String(n.innerHTML)
+            if ((text.indexOf("item-enviado") > -1) || (text.indexOf("item-negociando") > -1)) {
+                classe = 'item-ganho'
+            }
+            this.className = classe
+            setTimeout(function () {
+                draggedItem.style.display = 'block'
+                draggedItem = null;
+            }, 0);
+        })
+
+        for (let j = 0; j < lists.length; j++) {
+            const list = lists[j];
+
+            list.addEventListener('dragover', function (e) {
+                e.preventDefault();
+            });
+
+            list.addEventListener('dragenter', function (e) {
+                e.preventDefault();
+                this.style.backgroundColor = 'rgba(40, 55, 89, 1)';
+            });
+
+            list.addEventListener('dragleave', function (e) {
+                this.style.backgroundColor = 'rgba(40, 55, 86, 1)';
+            });
+
+            list.addEventListener('drop', function (e) {
+                this.append(draggedItem);
+                this.style.backgroundColor = 'rgba(40, 55, 86, 1)';
+            });
+        }
+    }
+
+    if (list_negociando.length > 0 || list_negociando.length != '') {
+
+        for (let x = 0; x < list_negociando.length; x++) {
+            const negociando = list_negociando[x]
+
+            negociando.addEventListener('dragstart', function () {
+                draggedItem = negociando;
+                setTimeout(function () {
+                    item.style.display = 'none';
+                }, 0)
+            });
+
+            negociando.addEventListener('dragend', function () {
+                n = document.getElementById('negociando')
+                text = String(n.innerHTML)
+                if (text.indexOf("item-enviado") > -1) {
+                    classe = 'item-negociando'
+                }
+                n = document.getElementById('baixado')
+                text = String(n.innerHTML)
+                if ((text.indexOf("item-enviado") > -1) || (text.indexOf("item-negociando") > -1)) {
+                    classe = 'item-baixado'
+                }
+                n = document.getElementById('ganho')
+                text = String(n.innerHTML)
+                if ((text.indexOf("item-enviado") > -1) || (text.indexOf("item-negociando") > -1)) {
+                    classe = 'item-ganho'
+                }
+                this.className = classe
+
+                setTimeout(function () {
+                    draggedItem.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
+            })
+
+            for (let y = 0; y < lists.length; y++) {
+                const list = lists[y];
+
+                list.addEventListener('dragover', function (e) {
+                    e.preventDefault();
+                });
+
+                list.addEventListener('dragenter', function (e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = 'rgba(40, 55, 86, 1)';
+                });
+
+                list.addEventListener('dragleave', function (e) {
+                    this.style.backgroundColor = 'rgba(40, 55, 86, 1)';
+                });
+
+                list.addEventListener('drop', function (e) {
+                    console.log('drop');
+                    this.append(draggedItem);
+                    this.style.backgroundColor = 'rgba(40, 55, 86, 1)';
+                });
+            }
+        }
+    }
+</script>

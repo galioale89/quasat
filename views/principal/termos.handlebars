@@ -1,0 +1,59 @@
+<style type="text/css">
+    i {
+        font-size: 16px;
+        vertical-align: text-top;
+    }
+
+    th {
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    td {
+        text-align: center;
+        line-height: 30px;
+    }
+
+    table {
+        font-size: 15px;
+
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    .swal-wide {
+        width: 850px !important;
+    }
+</style>
+
+<script src="/js/uteis.js"></script>
+
+
+<div class="card-body">
+    <div class="text-center mt-4 mb-3">
+        <label style="font-size: 30px;font-weight: 600;">Termos de Entrega</label>
+    </div>
+    <div class="row text-center" style="width: 100%">
+        {{#each projetos}}
+        {{#if alerta}}
+        <div class="col-md-3 text-center" id={{#if termo}}'execucao'{{else}}'realizado'{{/if}}
+            style="text-align: center;transform: scale(1);height: 90px;margin-left: 20px;">
+            <div style="padding: 10px;">
+                <a href='/gerenciamento/orcamento/{{id}}'
+                    style="width: 70px;color: rgb(44,55,89);font-weight: 600;">{{seq}}</a><br>
+                <label style="font-size: 13px;">{{cliente}}</label><br>
+                <label style="font-size: 13px;">Data de Aprovação: {{dataapro}}</label><br>
+                <label style="font-size: 13px;">Data Troca Medidor: {{datatroca}}</label><br>
+                {{#if termo}}
+                 <label style="font-size: 13px;">Data da Entrega do Termo: {{datatermo}}</label>
+                {{else}}
+                <label {{#if alerta}}style="font-size: 13px; font-weight: 700; color: red"{{else}}style="font-size: 13px"{{/if}}>Dias: {{contaDias}}</label>
+                {{/if}}
+            </div>
+        </div>
+        {{/if}}
+        {{/each}}
+    </div>
+</div>

@@ -1,0 +1,42 @@
+
+#weekdays {
+width: 100%;
+display: flex;
+color: #1ea1da;
+font-weight: 700;
+}
+
+#weekdays div {
+width: 160px;
+padding: 10px;
+}
+
+#calendar {
+width: 100%;
+margin: auto;
+display: flex;
+flex-wrap: wrap;
+}
+
+.day {
+width: 150px;
+height: 100px;
+cursor: pointer;
+box-sizing: border-box;
+background-color: rgb(202, 199, 226);
+margin: 5px;
+box-shadow: 0px 0px 3px #9798e5;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+}
+
+.padding {
+  background-color: white ;
+}
+
+#currentDay:hover {
+background-color: #96daa9;
+border: 3px solid white;
+}
+

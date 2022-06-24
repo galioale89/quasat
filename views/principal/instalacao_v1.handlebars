@@ -1,0 +1,200 @@
+<style>
+    .disabledbutton {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .picture-canvas {
+        display: none;
+    }
+</style>
+
+<script>
+    window.onload = function () {
+
+        var bloquear = document.getElementById('bloquear')
+
+        if (bloquear.className == 'true') {
+            bloquear.className = 'disabledbutton'
+        }
+    }
+</script>
+
+<div class='text-center mt-2' style="width: 98%;padding-left: 2%;padding-top: 0.5%;height: auto">
+    {{#if projeto._id}}
+    <div style="width: 100%;" class="header">
+        <label style="font-size: 25px;">{{cliente_projeto.nome}}&nbsp{{projeto.seq}} </label>
+    </div>
+    {{#if instalador}}
+    <label style="font-size: 30px;font-weight: 600;padding: 10px;margin-bottom: 30px;">Obra</label><br>
+    {{#each tarefas}}
+    <a href='/gerenciamento/mostrarFotos/{{_id}}@{{../projeto._id}}' class="btn btn-primary mb-1 fw-bold"
+        style="width: 300px;height: 50px;padding: 10px;font-size: 20px;">{{descricao}}</a><br>
+    {{/each}}
+    <a href='/dashboard' style="font-size: 40px;"><i class='bi bi-arrow-left-circle'></i></a>
+    {{else}}
+    {{#if funges}}
+    {{#if projeto.ganho}}
+    <div class='row'>
+        <div class="col">
+            <a href='/gerenciamento/orcamento/{{projeto._id}}'
+                class='{{#if projeto.ganho}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-funnel d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspVenda </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+        {{#if entrega}}
+        <div style="width: 60px;">
+            <a href="/gerenciamento/entrega/{{projeto._id}}" {{#if projeto.encerrado}}title="Alterar o projeto."
+                {{else}}title="Finalizar o projeto." {{/if}}
+                class='{{#if projeto.encerrado}}btn btn-sm btn-warning{{else}}btn btn-sm btn-success{{/if}}'
+                style="max-width: 120px;max-height: 90px;border-radius: 90px;"><i
+                    class='{{#if projeto.encerrado}}bi bi-journal-arrow-down{{else}}bi bi-journal-arrow-up{{/if}} d-flex align-items-center'
+                    style="font-size: 25px;padding: 5px"></i></a>
+        </div>
+        {{/if}}
+    </div>
+    {{else}}
+    <div class="btn-group col-12 gap-2 ativo">
+        <a href='/gerenciamento/orcamento/{{projeto._id}}' style="font-size: 20px;color: white;font-weight: 700;"
+            class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
+            <i class="bi bi-funnel d-flex align-items-center"></i>&nbspVenda
+        </a>
+        <a href='/gerenciamento/ganho/{{projeto._id}}/'>
+            <i class="bi bi-check" style="font-size: 30px;color: white"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+    </div>
+    {{/if}}
+    {{else}}
+    {{#if funpro}}
+    <div class="row">
+        <div class="col">
+            <a href='/gerenciamento/fotos/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-images d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspFotos </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+        {{#if termo}}
+        <div style="width: 60px;">
+            <a class="btn btn-sm btn-primary" style="max-width: 120px;max-height: 90px;border-radius: 90px;" href="/gerenciamento/mostrarBucket/{{desctermo}}"><i style="font-size: 25px;padding: 5px" class="bi bi-folder"></i></a>        
+        </div>
+        {{/if}}        
+        {{#if entrega}}
+        <div style="width: 60px;">
+            <a href="/gerenciamento/entrega/{{projeto._id}}" {{#if projeto.encerrado}}title="Alterar o projeto."
+                {{else}}title="Finalizar o projeto." {{/if}}
+                class='{{#if projeto.encerrado}}btn btn-sm btn-warning{{else}}btn btn-sm btn-success{{/if}}'
+                style="max-width: 120px;max-height: 90px;border-radius: 90px;"><i
+                    class='{{#if projeto.encerrado}}bi bi-journal-arrow-down{{else}}bi bi-journal-arrow-up{{/if}} d-flex align-items-center'
+                    style="font-size: 25px;padding: 5px"></i></a>
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
+    {{/if}}
+
+    <div class="row mt-4">
+        <label style="font-size: 40px;font-weight: 800;">Fotos</label>
+        {{#each tarefas}}
+        <div class="row mt-4">
+            <form action="/gerenciamento/salvarImagem" method="post" enctype="multipart/form-data">
+                <input type='hidden' name='idprj' value='{{../projeto._id}}'>
+                <div class='row'>
+                    <input type='hidden' name='id' value='{{_id}}'>
+                    <input type='hidden' name='caminho' value='instalacao'>
+                    <input type='hidden' name='usuario' value='gestor'>
+                    <input type='hidden' name='tipo' value='tarefa'>
+                    {{#if tarefa.fotos}}
+                    <div class='col-md-5 text-end'>
+                        {{else}}
+                        <div {{#if ../projeto.encerrado}} class='col-md-5 text-end' {{else}} class='col-md-3 text-end'
+                            {{/if}}>
+                            <label class='col-form-label fw-bold'>{{descricao}}</label>
+                        </div>
+                        {{/if}}
+                        <div class='col-md-7'>
+                            <div class="row">
+                                {{#if fotos}}
+                                {{#if ../projeto.encerrado}}
+                                {{else}}
+                                <div style="width: 165px;">
+                                    <input style="font-size: 14px;" type='file' multiple class='form-control'
+                                        name='files'>
+                                </div>
+                                {{/if}}
+                                {{else}}
+                                <div class='col'>
+                                    <input type='file' multiple name='files' class='form-control'>
+                                </div>
+                                {{/if}}
+                                <div class="col-md-3">
+                                    <input readonly class="form-control" type="date" name="dtfoto" value="{{datafim}}">
+                                </div>
+                                {{#if fotos}}
+                                <div class="col-md-1">
+                                    <a href="/gerenciamento/verFotos/{{_id}}" class='btn btn-primary'><i
+                                            class='bi bi-eye'></i></a>
+                                </div>
+                                {{#if ../projeto.encerrado}}
+                                {{else}}
+                                <div class="col-md-3">
+                                    <select class='form-select' name="check" id="check">
+                                        {{#if concluido}}
+                                        <option>Aprovado</option>
+                                        <option>Averiguar</option>
+                                        {{else}}
+                                        <option>Averiguar</option>
+                                        <option>Aprovado</option>
+                                        {{/if}}
+                                    </select>
+                                </div>
+                                {{/if}}
+                                {{/if}}
+                                {{#if ../projeto.encerrado}}
+                                {{else}}
+                                <div class="col-md-1 text-end">
+                                    <button type='submit' class='btn btn-success'><i class='bi bi-save'></i></button>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        {{/each}}
+    </div>
+    {{/if}}
+    {{/if}}
+</div>

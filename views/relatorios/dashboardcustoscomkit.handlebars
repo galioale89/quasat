@@ -1,0 +1,403 @@
+<style>
+    table,
+    td,
+    tr,
+    th {
+        text-align: center;
+    }
+
+    td {
+        font-weight: 700;
+    }
+</style>
+<div style="margin-top: 5px;padding-left:20px;padding-right:20px">
+
+    <!-- Modal -->
+    <div class='modal fade' id='partComponentes' tabindex="-1" aria-hidden="true">
+        <div class='modal-dialog modal-xl'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class="modal-title">Participação dos Componentes (Kit Gerador)</h5>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class='modal-body'>
+                    <table align="center">
+                        <tr>
+                            <td style="font-size: 20px;">Módulos</td>
+                            <td style="font-size: 20px;">Inversor</td>
+                            <td style="font-size: 20px;">Estrutura</td>
+                            <td style="font-size: 20px;">Cabos</td>
+                            <td style="font-size: 20px;">Disjuntores</td>
+                            <td style="font-size: 20px;">DPS</td>
+                            <td style="font-size: 20px;">String Box</td>
+                            <td style="font-size: 20px;">Outros</td>
+                            <td style="font-size: 20px;">Total</td>
+                        </tr>
+                        <tr>
+                            <td>R$ {{med_modequ}}</td>
+                            <td>R$ {{med_invequ}}</td>
+                            <td>R$ {{med_estequ}}</td>
+                            <td>R$ {{med_cabequ}}</td>
+                            <td>R$ {{med_disequ}}</td>
+                            <td>R$ {{med_dpsequ}}</td>
+                            <td>R$ {{med_sbxequ}}</td>
+                            <td>R$ {{med_ocpequ}}</td>
+                        </tr>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_modequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_invequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_estequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_cabequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_disequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_dpsequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_sbxequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash-total textoper" style="margin-left: 5px;">
+                                <label>{{per_ocpequ}}%</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="sessao-dash textoper" style="margin-left: 5px;">
+                                <label>R$ {{med_totequ}}</label>
+                            </div>
+                        </td>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="contorno-titulo text-center" style="height: 100%;width: 100%;">
+                <label class='col-form-label fw-bold' style="font-size: 20px; margin-left: 8%;">Análise com Kit</label>
+                <div class="text-center">
+                    <label style="font-size: 18px;margin-left: 2%;">Projetos Realizados: </label><br>
+                    <label style="font-size: 18px;margin-left: 2%;">{{numprj}}</label>
+                </div>
+
+                <div class='sessao-dash' style="margin-left: 3%;">
+                    <li><label class='col-form-label col-form-label-sm' style="">kWp Instalados</label>
+                    </li>
+                    <li><label class='col-form-label col-form-label-sm' style="font-size: 25px;">{{soma_totkwp}}</label>
+                    </li>
+                </div>
+                <div class='sessao-dash' style="margin-left: 3%;">
+                    <li><label class='col-form-label col-form-label-sm' style="">Projetos
+                            Vendidos</label></li>
+                    <li><label class='col-form-label col-form-label-sm' style="font-size: 25px;">R$
+                            {{soma_totprj}}</label></li>
+                </div>
+                <div class='sessao-dash' style="margin-left: 3%;">
+                    <label class='col-form-label col-form-label-sm' style="">Lucro Líquido</label></li>
+                    <li><label class='col-form-label col-form-label-sm' style="font-size: 25px;">
+                            {{per_totliq}} %</label></li>
+                </div>
+                <div class='sessao-dash' style="margin-left: 3%;">
+                    <li><label class='col-form-label col-form-label-sm' style="">Dispêndio</label></li>
+                    <li><label class='col-form-label col-form-label-sm' style="font-size: 25px;">
+                            {{per_dispendio}} %</label></li>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mt-2 text-center">
+            <li><label class='col-form-label fw-bold'>Participação dos Custos por kWp Faturado</label></li>
+            <div class="row">
+                <label class='col-form-label fw-bold text-center'>Custos Fixos e Variáveis</label>
+                <div class="col-md-5 text-end">
+                    <li style="font-size: 14px;">Projetista:</li>
+                    <li style="font-size: 14px;">Art:</li>
+                    <li style="font-size: 14px;">Gestão:</li>
+                    <li style="font-size: 14px;">Instalação:</li>
+                    <li style="font-size: 14px;">Administrativo:</li>
+                    <li style="font-size: 14px;">Comissão:</li>
+                    <li style="font-size: 14px;">Tributos:</li>
+                    <li style="font-size: 14px;">Total:</li>
+                </div>
+                <div class="col-md-4 text-start">
+                    <li style="font-size: 14px;">R$ {{medkwp_totpro}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totart}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totges}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totint}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totadm}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totcom}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_tottrb}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_custoFix}}</li>
+                </div>
+                <div class="col-md-3 text-start">
+                    <li style="font-size: 14px;">{{per_totpro}} % </li>
+                    <li style="font-size: 14px;">{{per_totart}} % </li>
+                    <li style="font-size: 14px;">{{per_totges}} % </li>
+                    <li style="font-size: 14px;">{{per_totint}} % </li>
+                    <li style="font-size: 14px;">{{per_totadm}} % </li>
+                    <li style="font-size: 14px;">{{per_totcom}} % </li>
+                    <li style="font-size: 14px;">{{per_tottrb}} % </li>
+                    <li style="font-size: 14px;">{{per_custoFix}} % </li>
+                </div>
+
+            </div>
+            <div class="row">
+                <label class='col-form-label fw-bold text-center'>Custos Variáveis Adicionais</label>
+                <div class="col-md-5 text-end">
+                    <li style="font-size: 14px;">Alimentação:</li>
+                    <li style="font-size: 14px;">Deslocamento:</li>
+                    <li style="font-size: 14px;">Total:</li>
+                </div>
+                <div class="col-md-4 text-start">
+                    <li style="font-size: 14px;">R$ {{medkwp_totali}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totdes}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_custoVar}}</li>
+                </div>
+                <div class="col-md-3 text-start">
+                    <li style="font-size: 14px;">{{per_totali}} %</li>
+                    <li style="font-size: 14px;">{{per_totdes}} %</li>
+                    <li style="font-size: 14px;">{{per_custoVar}} %</li>
+                </div>                
+            </div>
+            <div class="row">
+                <label class='col-form-label fw-bold text-center'>Custos Variáveis Estruturais</label>
+                <div class="col-md-5 text-end">
+                    <li style="font-size: 14px;">Cercamento:</li>
+                    <li style="font-size: 14px;">Central:</li>
+                    <li style="font-size: 14px;">Postes:</li>
+                    <li style="font-size: 14px;">Total:</li>
+                </div>
+                <div class="col-md-4 text-start">
+                    <li style="font-size: 14px;">R$ {{medkwp_totcer}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totcen}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_totpos}}</li>
+                    <li style="font-size: 14px;">R$ {{medkwp_custoEst}}</li>
+                </div>
+                <div class="col-md-3 text-start">
+                    <li style="font-size: 14px;">{{per_totcer}} %</li>
+                    <li style="font-size: 14px;">{{per_totcen}} %</li>
+                    <li style="font-size: 14px;">{{per_totpos}} %</li>
+                    <li style="font-size: 14px;">{{per_custoEst}} %</li>
+                </div>                
+            </div>
+            <li class='text-center'><label class='col-form-label fw-bold'>Total Serviços: R$ {{soma_totser}}</label>
+            </li>
+        </div>
+        <div class="col-md-7">
+            <form method='post' action='/relatorios/filtradashcomkit'>
+                <div class="row">
+                    <div class="sessao-dash-titulo text-center" style="margin-bottom: 10px;margin-top: 0.5%;">
+                        <label class='col-form-label fw-bold' style="color: white;">{{#if
+                            mestitulo}}{{mestitulo}}{{ano}}{{else}}Tudo{{/if}}</label>
+                    </div>
+                    <div class="col-md-5 text-end">
+                        <label class='col-form-label fw-bold col-form-label-sm'>Selecione o mês e digite o ano:<label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class='form-select form-select-sm' name='messel'>
+                            <option>Janeiro</option>
+                            <option>Fevereiro</option>
+                            <option>Março</option>
+                            <option>Abril</option>
+                            <option>Maio</option>
+                            <option>Junho</option>
+                            <option>Julho</option>
+                            <option>Agosto</option>
+                            <option>Setembro</option>
+                            <option>Outubro</option>
+                            <option>Novembro</option>
+                            <option>Dezembro</option>
+                            <option>Todos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input class='form-control form-control-sm' type='number' name='mesano' placeholder="Ano">
+                    </div>
+                    <div class="col-md-2">
+                        <button type='submit' class='btn btn-primary btn-sm'>Filtrar</button>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <label class='col-form-label fw-bold' style="">Faturado/kWp: R$ {{medkwp_totfat}}</label>
+                </div>
+                <div style="height: 250px;padding-right: 5%;">
+                    <input id='totfat' type="hidden" value='{{soma_totfat}}'>
+                    <input id='totliq' type="hidden" value='{{soma_totliq}}'>
+                    <input id='totkit' type="hidden" value='{{soma_totkit}}'>
+                    <input id='totcom' type="hidden" value='{{soma_totcom}}'>
+                    <input id='totcop' type="hidden" value='{{soma_totcop}}'>
+                    <input id='totadm' type="hidden" value='{{soma_totadm}}'>
+                    <input id='tottrb' type="hidden" value='{{soma_tottrb}}'>
+                    <canvas id='chartTot'></canvas>
+                </div>
+            </form>
+            <div class="row">
+                <div class='row text-center'>
+                    <div class="col-md-3 sessao-dash-kit">
+                        <li><label style="">Equipamento</label></li>
+                        <label class='fw-bold' style="font-size: 15px">R$ {{medkwp_totkit}}</label>
+                        <li><label class='col-form-label fw-bold' style="font-size: 20px">{{per_kitfat}} %</label></li>
+                    </div>
+                    <div class="col-md-2 sessao-dash-kit">
+                        <li><label style="">Comissão</label></li>
+                        <label class='fw-bold' style="font-size: 15px">R$ {{medkwp_totcom}}</label>
+                        <li><label class='col-form-label fw-bold' style="font-size: 20px">{{per_comfat}} %</label></li>
+                    </div>
+                    <div class="col-md-2 sessao-dash-kit">
+                        <li><label style="">Custos</label></li>
+                        <label class='fw-bold' style="font-size: 15px">R$ {{medkwp_totcop}}</label>
+                        <li><label class='col-form-label fw-bold' style="font-size: 20px">{{per_cusfat}} %</label></li>
+                    </div>
+                    <div class="col-md-3 sessao-dash-kit">
+                        <li><label style="">Administrativo</label></li>
+                        <label class='fw-bold' style="font-size: 15px">R$ {{medkwp_totadm}}</label>
+                        <li><label class='col-form-label fw-bold' style="font-size: 20px">{{per_desfat}} %</label></li>
+                    </div>
+                    <div class="col-md-2 sessao-dash-kit">
+                        <li><label style="">Tributos</label></li>
+                        <label class='fw-bold' style="font-size: 15px">R$ {{medkwp_tottrb}}</label>
+                        <li><label class='col-form-label fw-bold' style="font-size: 20px">{{per_trbfat}} %</label></li>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-1 text-center">
+                <label class='col-form-label fw-bold'>Análise dos Resultados</label>
+                <div class="btn-group col-12 gap-2" style="width: 97%;">
+                    <a href='/relatorios/dashboardcustos' class='btn btn-sm btn-primary'>Geral</a>
+                    <a href='/relatorios/dashboardcustoscomkit' class='btn btn-sm btn-primary'>Com Kit</a>
+                    <a href='/relatorios/dashboardcustossemkit' class='btn btn-sm btn-primary'>Sem Kit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var soma_totfat = document.getElementById('totfat')
+    var soma_totcop = document.getElementById('totcop')
+    var soma_totkit = document.getElementById('totkit')
+    var soma_totcom = document.getElementById('totcom')
+    var soma_totliq = document.getElementById('totliq')
+    var soma_totadm = document.getElementById('totadm')
+    var soma_tottrb = document.getElementById('tottrb')
+    var ctxTot = document.getElementById('chartTot').getContext('2d')
+    var chartTot = new Chart(ctxTot, {
+        type: 'bar',
+        data: {
+            labels: ['Faturado', 'Equipamentos', 'Comissão', 'Custos', 'Administrativo', 'Tributos', 'Lucro Liquido'],
+            datasets: [{
+                data: [soma_totfat.value, soma_totkit.value, soma_totcom.value, soma_totcop.value, soma_totadm.value, soma_tottrb.value, soma_totliq.value],
+                backgroundColor: [
+                    'rgba(41, 8, 159, 0.5)',
+                    'rgba(249, 240, 71, 0.5)',
+                    'rgba(255, 161, 8, 0.5)',
+                    'rgba(194, 189, 188, 0.5)',
+                    'rgba(194, 189, 188, 0.5)',
+                    'rgba(255, 49, 53, 0.5)',
+                    'rgb(32, 255, 62, 0.5)'
+                ],
+
+                borderColor: [
+                    'rgba(41, 8, 159, 1)',
+                    'rgba(249,240,71, 1)',
+                    'rgba(255, 161, 8, 1)',
+                    'rgba(194, 189, 188, 1)',
+                    'rgba(194, 189, 188, 1)',
+                    'rgba(255, 49, 53, 1)',
+                    'rgb(32, 255, 62, 1)'
+                ],
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Resultados'
+                    },
+                    ticks: {
+                        min: 0,
+                    },
+                }],
+            },
+            legend: {
+                labels: {
+                    boxWidth: 0,
+                },
+                display: false,
+            },
+        }
+    })
+
+    var prjjan = document.getElementById('prjjan')
+    var prjfev = document.getElementById('prjfev')
+    var prjmar = document.getElementById('prjmar')
+    var prjabr = document.getElementById('prjabr')
+    var prjmai = document.getElementById('prjmai')
+    var prjjun = document.getElementById('prjjun')
+    var prjjul = document.getElementById('prjjul')
+    var prjago = document.getElementById('prjago')
+    var prjset = document.getElementById('prjset')
+    var prjout = document.getElementById('prjout')
+    var prjnov = document.getElementById('prjnov')
+    var prjdez = document.getElementById('prjdez')
+
+    var ctxPrj = document.getElementById('chartPrj').getContext('2d')
+    var chartPrj = new Chart(ctxPrj, {
+        type: 'line',
+        data: {
+            labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            datasets: [{
+                data: [prjjan.value, prjfev.value, prjmar.value, prjabr.value, prjmai.value, prjjun.value, prjjul.value, prjago.value, prjset.value, prjout.value, prjnov.value, prjdez.value],
+                backgroundColor: ['rgb(79, 99, 140)'],
+                borderColor: ['rgb(79, 99, 140)']
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Quantidade de Projetos'
+                    },
+                    ticks: {
+                        min: 0,
+                    },
+                }],
+            },
+            legend: {
+                labels: {
+                    boxWidth: 0,
+                },
+                display: false,
+            },
+        }
+    })
+</script>

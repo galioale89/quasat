@@ -1,0 +1,205 @@
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: rgb(40, 55, 89);
+  }
+
+  .body {
+    background-color: white;
+    height: 400px;
+  }
+
+  .lists {
+    display: flex;
+    flex: 1;
+    width: 100%;
+  }
+
+  .lists .list {
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+
+    width: 100%;
+    border-radius: 20px;
+    min-width: 250px;
+    max-width: 350px;
+    height: 100%;
+    min-height: 300px;
+
+    background-color: #847AF4;
+    margin: 0 15px;
+    padding: 8px;
+    transition: all 0.2s linear;
+  }
+
+  .lists .list .list-item {
+    background-color: #F3F3F3;
+    border-radius: 8px;
+    text-align: center;
+    margin: 4px 0px;
+    cursor: pointer;
+  }
+
+  .lists .list .item {
+    background-color: #F3F3F3;
+    border-radius: 8px;
+    text-align: center;
+    margin: 4px 0px;
+    cursor: pointer;
+  }
+</style>
+<form method='post' action='/pessoa/criarequipepadrao'>
+  <div class="body">
+    <input type='hidden' name='id' value='{{projeto._id}}' />
+    <div class="card-body" style="margin-top: 50px;">
+      <label style="font-size: 25px;font-weight: 600;">Criar nova equipe </label>
+      <div class="row" style="margin-top: 20px;">
+        <div class="col-md-5">
+          <div class="row mb-4" style="margin-left: 50px;margin-top: 50px;">
+            <div class="col-md-6 text-end">
+              <label class="col-form-label fw-bold">Nome Equipe:</label><br>
+              <label class="col-form-label fw-bold">Custo da Equipe por Dia:</label>
+            </div>
+            <div class="col-md-6">
+              <input type='text' name='nome' class="form-control form-control-sm mt-1" value='{{equipe.nome}}'>
+              <input type='number' name='custo' class="form-control form-control-sm mt-2" value='{{equipe.custo}}'>
+            </div>
+          </div>
+          <div class="row" style="margin-left: 100px;">
+            <button type='submit' class="col-6 btn btn-primary btn-lg" style="margin-left: 100px;"
+              onclick="getItemValue()">Salvar Equipe</button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="lists">
+            <div class="list">
+              <label class="col-form-label col-form-label-md fw-bold text-center" style="color: white;">Profissionais
+                Disponíveis</label>
+              {{#each instaladores}}
+              <div class="list-item" style='color: rgb(40,55,89);' draggable="true"  name='{{_id}}'>{{nome}}</div>
+              <input type='hidden' value='{{_id}}' id='id'>
+              {{else}}
+              {{/each}}
+            </div>
+            <div class="list">
+              <label class="col-form-label col-form-label-md fw-bold text-center" style="color: white;">Profissionais
+                Alocados</label>
+            </div>
+          </div>
+        </div>
+        <input type='hidden' class='ins0' name='ins0' id='ins0' value=''>
+        <input type='hidden' class='ins1' name='ins1' id='ins1' value=''>
+        <input type='hidden' class='ins2' name='ins2' id='ins2' value=''>
+        <input type='hidden' class='ins3' name='ins3' id='ins3' value=''>
+        <input type='hidden' class='ins4' name='ins4' id='ins4' value=''>
+        <input type='hidden' class='ins5' name='ins5' id='ins5' value=''>
+        <input type='hidden' name='idins0' id='idins0' value=''>
+        <input type='hidden' name='idins1' id='idins1' value=''>
+        <input type='hidden' name='idins2' id='idins2' value=''>
+        <input type='hidden' name='idins3' id='idins3' value=''>
+        <input type='hidden' name='idins4' id='idins4' value=''>
+        <input type='hidden' name='idins5' id='idins5' value=''>        
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  const list_items = document.querySelectorAll('.list-item');
+  const lists = document.querySelectorAll('.list');
+
+  let draggedItem = null;
+
+  for (let i = 0; i < list_items.length; i++) {
+    const item = list_items[i];
+
+    item.addEventListener('dragstart', function () {
+      draggedItem = item;
+      setTimeout(function () {
+        item.style.display = 'none';
+      }, 0)
+    });
+
+    item.addEventListener('dragend', function () {
+      this.className = 'item';
+      setTimeout(function () {
+        draggedItem.style.display = 'block';
+        draggedItem = null;
+      }, 0);
+    })
+
+    for (let j = 0; j < lists.length; j++) {
+      const list = lists[j];
+
+      list.addEventListener('dragover', function (e) {
+        e.preventDefault();
+      });
+
+      list.addEventListener('dragenter', function (e) {
+        e.preventDefault();
+        this.style.backgroundColor = '#001263e5';
+      });
+
+      list.addEventListener('dragleave', function (e) {
+        this.style.backgroundColor = '#001263e5';
+      });
+
+      list.addEventListener('drop', function (e) {
+
+        console.log('drop');
+        this.append(draggedItem);
+        this.style.backgroundColor = '#001263e5';
+      });
+    }
+  }
+
+  function getItemValue() {
+    const item = document.querySelectorAll('.item');
+    for (i = 0; i < item.length; i++) {
+      const insitem = document.getElementsByClassName(item[i].getAttribute('class'));
+      var element = insitem[i].innerText
+      var ins = insitem[i].getAttribute('name')
+      switch (i) {
+        case 0:
+          var insdes = document.getElementById('ins0')
+          var idins = document.getElementById('idins0')
+          insdes.value = element
+          idins.value = ins
+          break;
+        case 1:
+          var insdes = document.getElementById('ins1')
+          var idins = document.getElementById('idins1')
+          insdes.value = element
+          idins.value = ins
+          break;
+        case 2:
+          var insdes = document.getElementById('ins2')
+          var idins = document.getElementById('idins2')
+          insdes.value = element
+          idins.value = ins
+          break;
+        case 3:
+          var insdes = document.getElementById('ins3')
+          var idins = document.getElementById('idins3')
+          insdes.value = element
+          idins.value = ins
+          break;
+        case 4:
+          var insdes = document.getElementById('ins4')
+          var idins = document.getElementById('idins4')
+          insdes.value = element
+          idins.value = ins
+          break;
+        case 5:
+          var insdes = document.getElementById('ins5')
+          var idins = document.getElementById('idins5')
+          insdes.value = element
+          idins.value = ins
+          break;
+      }
+    }
+  }
+</script>

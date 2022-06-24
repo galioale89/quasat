@@ -1,0 +1,461 @@
+<style>
+    button {
+        line-height: 0px;
+    }
+
+    #header {
+        width: 100%;
+        border-bottom: rgb(40, 55, 86) 0, 1px solid;
+        color: rgb(40, 55, 86);
+    }
+
+    .filtro-selecao {
+        width: fit-content;
+        height: fit-content;
+        background: white;
+        border: solid 1px;  
+        border-radius: 10px;
+        margin-left: 5px;
+    }
+
+    table {
+        width: 100%;
+    }
+
+    th {
+        text-align: center;
+    }
+
+    tr {
+        font-size: 12px;
+        border-bottom: rgba(120, 120, 120, 0.4) solid 1px;
+        text-align: center;
+    }
+</style>
+<script>
+    function select() {
+        var mostrar = document.getElementById('naoganho')
+        var select = document.getElementById('select')
+
+        if (select.value == false) {
+            select.value = true
+            mostrar.style.display = ''
+        } else {
+            select.value = false
+            mostrar.style.display = 'none'
+        }
+
+    }
+    window.onload = function () {
+        var dataini = document.getElementById('dataini')
+        var datafim = document.getElementById('datafim')
+        if (dataini.value == '') {
+            var data = new Date()
+            var mes = data.getMonth()
+            var ano = data.getFullYear()
+            if (mes == 0 || mes == 2 || mes == 4 || mes == 6 || mes == 7 || mes == 9 || mes == 11) {
+                dia = '31'
+            } else {
+                dia = '30'
+            }
+            mes = mes + 1
+            dataini.value = ano + '-' + mes + '-' + '01'
+            datafim.value = ano + '-' + mes + '-' + dia
+        }
+    }
+</script>
+<div class='row' style="width: 100%;padding-left: 2%;">
+    <div id='header'>
+        <div class="row mt-4">
+            <form action='/relatorios/analisar/' method='post'>
+                <div class="row">
+                    <h5 class="mt-2 titulo-inicio">Análise de Propostas {{titulo}}:
+                        {{#if mestitulo}}{{mestitulo}} de {{anotitulo}}{{else}}{{mestituloinicio}} de
+                        {{anotituloinicio}} a {{mestitulofim}} de {{anotitulofim}} {{/if}}</h5>
+                    <input type="hidden" name='tipo' value='{{tipo}}'>
+                </div>
+                <div class="row">
+                    {{#if lista}}
+                    <div class="col">
+                        <label class='col-form-label col-form-label-sm fw-bold'>Status</label>
+                        <select class='form-select form-select-sm' name='stats'>
+                            <option>Todos</option>
+                            <option class='fw-bold'>Enviado</option>
+                            <option class='fw-bold'> Negociando </option>
+                            <option>Analisando Financiamento</option>
+                            <option>Comparando Propostas</option>
+                            <option>Aguardando redução de preço</option>
+                            <option class='fw-bold'>Fechado</option>
+                            <option class='fw-bold'>Perdido</option>
+                            <option class='fw-bold'>Realizado</option>
+                        </select>
+                    </div>
+                    {{/if}}
+                    <div class='col'>
+                        <label class='col-form-label col-form-label-sm fw-bold'>Vendedor</label>
+                        <select name='vendedor' class='form-select form-select-sm'>
+                            <option>Todos</option>
+                            {{#each pessoa}}
+                            <option value='{{_id}}'>{{nome}}</option>
+                            {{else}}
+                            <option>Nenhum responsável cadastrado</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class='col'>
+                        <label class='col-form-label col-form-label-sm fw-bold'>Cliente</label>
+                        <select name='cliente' class='form-select form-select-sm'>
+                            <option>Todos</option>
+                            {{#each todos_clientes}}
+                            <option value='{{_id}}'>{{nome}}</option>
+                            {{else}}
+                            <option>Nenhum cliente cadastrado</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div style="width: 160px;">
+                        <label class="col-form-label col-form-label-sm">Data Inicial</label>
+                        <input type='date' class='form-control form-control-sm' name='dataini'
+                            id='dataini' value='{{dataini}}'>
+                    </div>
+                    <div style="width: 160px;">
+                        <label class="col-form-label col-form-label-sm">Data Final</label>
+                        <input type='date' class='form-control form-control-sm'  name='datafim'
+                            id='datafim' value='{{datafim}}'>
+                    </div>
+                    <div style="width: 70px;">
+                        <button type='submit' class='mt-3 botaofiltrar'><i
+                                class='bi bi-search iconefiltrar'></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row mt-1 mb-1">
+            {{#if nomeVendedor}}
+            <div class='filtro-selecao'>Vendedor: {{nomeVendedor}}</div>
+            {{else}}
+            <div class='filtro-selecao'>Vendedor: Todos</div>
+            {{/if}}
+            {{#if nomeCliente}}
+            <div class='filtro-selecao'>Cliente: {{nomeCliente}}</div>
+            {{else}}
+            <div class='filtro-selecao'>Cliente: Todos</div>
+            {{/if}}
+        </div>
+        <div class='row'>
+            <div class="col">
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#ganhas" role="button" aria-expanded="false"
+                    aria-controls="ganhas">Propostas Ganhas</a>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#naoganhas"
+                    aria-expanded="false" aria-controls="naoganhas">Propostas Não Ganhas</button>
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse"
+                    aria-expanded="false" aria-controls="ganhas naoganhas">Mostrar Ambos</button>
+            </div>
+            <div class="col text-end">
+                <a onclick="location.reload()" style="cursor: pointer;" class='col-form-label'><i
+                        class='bi bi-x-circle'></i></a>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <div class="collapse multi-collapse" id="ganhas">
+                    <div class="card card-body">
+                        <table>
+                            <tr>
+                                <th>Vendedor</th>
+                                <th>Proposta</th>
+                                <th>Data Cadastro</th>
+                                <th>Data Inicio</th>
+                                <th>Data Entrega</th>
+                            </tr>
+                            {{#each lista_ganho}}
+                            <tr>
+                                <td>{{responsavel}}</td>
+                                <td>{{projeto}}</td>
+                                <td>{{datacad}}</td>
+                                <td>{{dataini}}</td>
+                                <td>{{datafim}}</td>
+                            </tr>
+                            {{else}}
+                            Nenhuma proposta enviada
+                            {{/each}}
+                        </table>
+                        <div class="row">
+                            <label class='col-form-label fw-bold'>Total Por Vendedor</label>
+                            {{#each venGanhoTotal}}
+                            <label class='col-form-label col-form-label-sm'>{{nome}}: R${{total}}</label>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="collapse multi-collapse" id="naoganhas">
+                    <div class="card card-body">
+                        <table>
+                            <tr>
+                                <th>Perdida</th>
+                                <th>Vendedor</th>
+                                <th>Proposta</th>
+                                <th>Data Cadastro</th>
+                                <th>Data Inicio</th>
+                                <th>Data Entrega</th>
+                            </tr>
+                            {{#each lista_naoganho}}
+                            <tr>
+                                <td>{{baixado}}</td>
+                                <td>{{responsavel}}</td>
+                                <td>{{projeto}}</td>
+                                <td>{{datacad}}</td>
+                                <td>{{dataini}}</td>
+                                <td>{{datafim}}</td>
+                            </tr>
+                            {{else}}
+                            Nenhuma proposta ganha
+                            {{/each}}
+                        </table>
+                        <div class="row">
+                            <label class='col-form-label fw-bold'>Total Por Vendedor</label>
+                            {{#each venNaoGanhoTotal}}
+                            <label class='col-form-label col-form-label-sm'>{{nome}}: R${{total}}</label>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type='hidden' id='qtd_conco' value='{{qtd_conco}}'>
+    <input type='hidden' id='qtd_finan' value='{{qtd_finan}}'>
+    <input type='hidden' id='qtd_prazo' value='{{qtd_prazo}}'>
+    <input type='hidden' id='qtd_preco' value='{{qtd_preco}}'>
+    <input type='hidden' id='qtd_smoti' value='{{qtd_smoti}}'>
+
+    <input type='hidden' id='qtd_envia' value='{{qtd_envia}}'>
+    <input type='hidden' id='qtd_negoc' value='{{qtd_negoc}}'>
+    <input type='hidden' id='qtd_anali' value='{{qtd_anali}}'>
+    <input type='hidden' id='qtd_compa' value='{{qtd_compa}}'>
+    <input type='hidden' id='qtd_reduc' value='{{qtd_reduc}}'>
+
+    {{!-- {{#each qtd_envio}}
+    <input type='hidden' id='res_envio[]' value='{{responsavel}}'>
+    <input type='hidden' id='qtd_envio[]' value='{{qtd}}'>
+    {{/each}}
+    {{#each qtd_ganho}}
+    <input type='hidden' id='res_ganho[]' value='{{responsavel}}'>
+    <input type='hidden' id='qtd_ganho[]' value='{{qtd}}'>
+    {{/each}} --}}
+
+    <input type="hidden" id='ganho_total' value='{{ganho_total}}'>
+    <input type="hidden" id='naoganho_total' value='{{naoganho_total}}'>
+    <input type="hidden" id='envio_total' value='{{envio_total}}'>
+
+    <div class="row" style="margin-bottom: 70px;">
+        <div class="col" style="height: 350px;margin-bottom: 100px;text-align: center;">
+            <label style="font-size: 20px;" id='total_propostas'>Todas Propostas</label><br>
+            <label class='col-form-label'>Total R$&nbsp{{total}}</label><br>
+            <label class='col-form-label'>Total Ganho R$&nbsp{{totalGanho}}</label><br>
+            <label class='col-form-label'>Total Não Ganho R$&nbsp{{totalNaoGanho}}</label>
+            <canvas id='chartAG' class='mt-1 mb-1'></canvas>
+        </div>
+        <div class="col" style="height: 350px;margin-bottom: 100px;text-align: center">
+            <label style="font-size: 20px;" id='total_negociacao'>Enviadas/Em Negociação</label><br>
+            <label class='col-form-label'>Total R$&nbsp{{totalAberto}}</label><br>
+            <a class="dropdown-toggle col-form-label" style="color: rgb(44,55,89);border: 0px solid;cursor: pointer;"
+                data-bs-toggle="dropdown">
+                Total NegociandoR$:&nbsp{{totalNegociando}}
+            </a>
+            <ul class="dropdown-menu">
+                <div class="card-body">
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Analisando Financiamento</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalAnali}}</label><br><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Comparando Propostas</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalCompa}}</label><br><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Aguardando redução de preço</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalReduc}}</label>
+                </div>
+            </ul>
+            <br>
+            <label class='col-form-label'>Total Enviado R$&nbsp{{totalEnviado}}</label>
+            <canvas id='chartNegociando' class='mt-1 mb-1'></canvas>
+        </div>
+        <div class="col" style="height: 350px;margin-bottom: 100px;text-align: center">
+            <label style="font-size: 20px;" id='total_baixadas'>Propostas Perdidas</label>
+            <br><br><br>
+            <a class="dropdown-toggle" style="font-size: 20px;color: rgb(44,55,89);border: 0px solid;cursor: pointer;"
+                data-bs-toggle="dropdown">
+                Total R$:&nbsp{{totalPerdido}}
+            </a>
+            <ul class="dropdown-menu">
+                <div class="card-body">
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Fechou com Concorrente</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalConco}}</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Não conseguiu o financiamento</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalFinan}}</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Preço Elevado</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalPreco}}</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Prazo de Instalação</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalPrazo}}</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">Sem Motivo</label><br>
+                    <label style="font-size: 15px;color: rgb(44,55,89)">R$&nbsp{{totalSmoti}}</label>
+                </div>
+            </ul>
+            <br><br><br><br>
+            <canvas id='chartBaixado' class='mt-1 mb-1'></canvas>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    var total
+    var total_propostas = document.getElementById('total_propostas')
+    var ganho = document.getElementById('ganho_total')
+    var naoganho = document.getElementById('naoganho_total')
+    total = parseFloat(ganho.value) + parseFloat(naoganho.value)
+    total_propostas.innerHTML = total_propostas.innerHTML + ': ' + total
+    perganho = (ganho.value / total * 100).toFixed(1)
+    pernaoganho = (naoganho.value / total * 100).toFixed(1)
+    var ctxAG = document.getElementById('chartAG').getContext('2d');
+    var chartAG = new Chart(ctxAG, {
+        type: 'doughnut',
+        data: {
+            labels: ['Não Ganho' + '  ' + naoganho.value, 'Ganho' + '  ' + ganho.value],
+            datasets: [{
+                data: [pernaoganho, perganho],
+                backgroundColor: [
+                    'rgba(250, 128, 114, 0.2)',
+                    'rgba(37, 139, 33, 0.2)',
+
+                ],
+                borderColor: [
+                    'rgba(250, 128, 114, 1)',
+                    'rgba(37, 139, 33, 1)',
+
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            legend: {
+                position: 'top',
+                reverse: true,
+                align: 'center',
+                labels: {
+                    usePointStyle: true,
+                }
+
+            }
+        }
+    });
+
+    var total_negociacao = document.getElementById('total_negociacao')
+    var envia = document.getElementById('qtd_envia')
+    var negoc = document.getElementById('qtd_negoc')
+    var anali = document.getElementById('qtd_anali')
+    var reduc = document.getElementById('qtd_reduc')
+    var compa = document.getElementById('qtd_compa')
+    total = parseFloat(negoc.value) + parseFloat(anali.value) + parseFloat(reduc.value) + parseFloat(compa.value) + parseFloat(envia.value)
+    total_negociacao.innerHTML = total_negociacao.innerHTML + ': ' + total
+
+    var perenvia = (envia.value / total * 100).toFixed(1)
+    var pernegoc = (negoc.value / total * 100).toFixed(1)
+    var peranali = (anali.value / total * 100).toFixed(1)
+    var perreduc = (reduc.value / total * 100).toFixed(1)
+    var percompa = (compa.value / total * 100).toFixed(1)
+
+    var ctxNegociando = document.getElementById('chartNegociando').getContext('2d');
+    var chartNegociando = new Chart(ctxNegociando, {
+        type: 'doughnut',
+        data: {
+            labels: ['Enviado' + '  ' + envia.value, 'Negociando' + '  ' + negoc.value, 'Analisando Financiamento' + '  ' + anali.value, 'Aguardando redução de preço' + '  ' + reduc.value, 'Comparando Propostas' + '  ' + compa.value],
+            datasets: [{
+                data: [perenvia, pernegoc, peranali, perreduc, percompa],
+                backgroundColor: [
+                    'rgba(255, 255, 20, 0.2)',
+                    'rgba(50, 50, 230, 0.2)',
+                    'rgba(1, 139, 200, 0.2)',
+                    'rgba(230, 140, 50, 0.2)',
+                    'rgba(20, 200, 80, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 255, 20, 1)',
+                    'rgba(50, 50, 230, 1)',
+                    'rgba(1, 139, 200, 1)',
+                    'rgba(230, 140, 50, 1)',
+                    'rgba(20, 200, 80, 1)',
+                ],
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            spanGaps: false,
+            responsive: true,
+            legend: {
+                position: 'top',
+                reverse: true,
+                align: 'center',
+                labels: {
+                    usePointStyle: true,
+                },
+            },
+        },
+    });
+
+    var total_baixadas = document.getElementById('total_baixadas')
+    var conco = document.getElementById('qtd_conco')
+    var finan = document.getElementById('qtd_finan')
+    var prazo = document.getElementById('qtd_prazo')
+    var preco = document.getElementById('qtd_preco')
+    var smoti = document.getElementById('qtd_smoti')
+    total = parseFloat(conco.value) + parseFloat(finan.value) + parseFloat(prazo.value) + parseFloat(preco.value) + parseFloat(smoti.value)
+    total_baixadas.innerHTML = total_baixadas.innerHTML + ': ' + total
+
+    var perconco = (conco.value / total * 100).toFixed(1)
+    var perfinan = (finan.value / total * 100).toFixed(1)
+    var perprazo = (prazo.value / total * 100).toFixed(1)
+    var perpreco = (preco.value / total * 100).toFixed(1)
+    var persmoti = (smoti.value / total * 100).toFixed(1)
+
+    var ctxBaixado = document.getElementById('chartBaixado').getContext('2d');
+    var chartBaixado = new Chart(ctxBaixado, {
+        type: 'doughnut',
+        data: {
+            labels: ['Concorrente' + '  ' + conco.value, 'Financiamento' + '  ' + finan.value, 'Prazo' + '  ' + prazo.value, 'Preço' + '  ' + preco.value, 'Sem Motivo' + '  ' + smoti.value],
+            datasets: [{
+                data: [perconco, perfinan, perprazo, perpreco, persmoti],
+                backgroundColor: [
+                    'rgba(255, 255, 20, 0.2)',
+                    'rgba(50, 50, 230, 0.2)',
+                    'rgba(1, 139, 200, 0.2)',
+                    'rgba(230, 140, 50, 0.2)',
+                    'rgba(20, 200, 80, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 255, 20, 1)',
+                    'rgba(50, 50, 230, 1)',
+                    'rgba(1, 139, 200, 1)',
+                    'rgba(230, 140, 50, 1)',
+                    'rgba(20, 200, 80, 1)',
+                ],
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            spanGaps: false,
+            responsive: true,
+            legend: {
+                position: 'top',
+                reverse: true,
+                align: 'center',
+                labels: {
+                    usePointStyle: true,
+                },
+            },
+        },
+    });
+</script>

@@ -1,0 +1,278 @@
+<style>
+    td {
+        line-height: 30px;
+        font-size: 14px;
+    }
+
+    th {
+        font-size: 16px;
+    }
+</style>
+<script src="/js/uteis.js/"></script>
+<script>
+    window.onload = function () {
+        var d = document.getElementById('data')
+        var ano = 0
+        var mes = 0
+        var dia = 0
+        var date = new Date()
+
+        ano = date.getFullYear()
+        mes = date.getMonth() + 1
+        if (mes < 10) {
+            mes = '0' + mes
+        }
+        dia = date.getDate()
+        if (dia < 10) {
+            dia = '0' + dia
+        }
+        var dataFinal = ano + '-' + mes + '-' + dia
+        d.value = dataFinal
+    }
+</script>
+<div id="imprimir" style="margin: 50px;display: {{imprime}}" >
+    <div class="card mt-4">
+        <div class="card-body">
+            <section id="cabecalho">
+                <div class="btn-group">
+                    <div style="width: 300px;">
+                        <img src='/gerenciamento/mostrarBucket/{{logo}}' style="width: 300px; height: 160px;"
+                            alt='Minha Figura' />
+                    </div>
+                    <div style="width: 400px;">
+                        <label style="font-size: 17px;line-height: 25px;">{{nome}}</label><br />
+                        <label style="font-size: 17px;line-height: 25px;">{{endereco}}</label><br>
+                        <label style="font-size: 17px;line-height: 25px;">Fone: {{telefone}}</label><br>
+                        <label style="font-size: 17px;line-height: 25px;">{{cidade}}</label>
+                        <label style="font-size: 17px;line-height: 25px;">{{uf}}</label><br>
+                        <label style="font-size: 17px;line-height: 25px;">{{website}}</label>
+                    </div>
+                    <div style="width: 200px;">
+                        <div class="text-center">
+                            <div class="col-form-label fw-bold">PEDIDO</div><br>
+                            <div>DATA</div><br>
+                            <input class='form-control' type="date" id='data'>
+                            <label class='col-form-label' id='descdata' style="width: 200px;margin-left: 70px;"></label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <hr>
+            <section id="cliente">
+                <div class="mt-2">
+                    <div style="display: flex;">
+                        <div style="width: 300px;">
+                            <label class="col-form-label col-form-label-sm">Cliente:
+                                {{cliente.nome}}</label>
+                        </div>
+                        <div style="width: 600px;" class="text-end">
+                            <div style="display: flex;">
+                                <label style="width: 100px;"
+                                    class="col-form-label col-form-label-sm text-start">&nbsp</label>
+                                <label style="width: 50px;" class="col-form-label col-form-label-sm">Unidade Consumidora(s):</label>
+                                <label style="width: 150px;" class='col-form-label col-form-label-sm text-start'>&nbsp{{projeto.descuc}}/{{projeto.concessionaria}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">Endereço:
+                        {{projeto.endereco}}</label>
+                    <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">Nº:
+                        {{projeto.numero}}</label>
+                    <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">Bairro:
+                        {{projeto.bairro}}</label><br>
+                    <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">Município:
+                        {{projeto.cidade}}</label>
+                    <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">CEP:
+                        {{projeto.cep}}</label>
+                    <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">Estado:
+                        {{projeto.uf}}</label>
+                    <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">Fone:
+                        {{cliente.celular}}</label><br>
+                    <div class="btn-group">
+                        <div class="col-md-8">
+                            <label class="col-form-label col-form-label-sm" style="margin-right: 200px;">{{#if
+                                ehCPF}}CPF:
+                                {{cliente.cpf}}{{else}}CNPJ: {{cliente.cnpj}}{{/if}}</label>
+                        </div>
+                        <div class="col-md-3 text-end">
+                            <label class="col-form-label col-form-label-sm">Incrição
+                                Estadual:</label><br>
+                        </div>
+                        <div class="col-md-4 text-start">
+                            <input type="text" class='form-control form-control-sm'>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="btn-group">
+                        <div style="margin-right: 90px;font-weight: bold;">
+                            <label class="col-form-label col-form-label-sm">E-mail:
+                                {{cliente.email}}</label>
+                        </div>
+                        <div class="col-md-2 text-end" style="margin-right: 60px;">
+                            <input type="text" class='form-control form-control-sm'>
+                        </div>
+                        <div class="col text-end">
+                            <label class="col-form-label col-form-label-sm" style="margin-right: 100px;font-weight: bold;">Potência:
+                                {{pedido.potencia}} kWp</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="descricao">
+                <div class="card-body">
+                    <div class="card" style="padding: 10px;">
+                        <table>
+                            <tr>
+                                <th style="width: 5%;">Item</th>
+                                <th>Descrição do Sistema</th>
+                                <th>Descrição</th>
+                                <th>Quantidade</th>
+                                <th style="width: 5%%;">Observações</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Módulo Fotovoltaico</td>
+                                <td>{{pedido.plaWattMod}} W</td>
+                                <td>{{pedido.plaQtdMod}}</td>
+                                <td style='width: 50px;text-align: left;'><input type='text'
+                                        class='form-control form-control-sm'></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Inversor</td>
+                                <td>{{pedido.plaKwpInv}} kWp</td>
+                                <td>{{pedido.plaQtdInv}}</td>
+                                <td style='width: 50px;text-align: start;'><input type='text'
+                                        class='form-control form-control-sm'></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Estruturas de Fixação em alumínio ou aço inox</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Cabos, Stringbox e outros componentes</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Projeto e Instalação</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="text-align: right;">Kit Fotovoltaico</td>
+                                <td style="text-align: center;">Valor</td>
+                                <td>R$ {{vlrKit}}</td>
+                                <td style='width: 50px;text-align: left;'><input type='text'
+                                        class='form-control form-control-sm'></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td style="text-align: right;">Serviço de Instalação</td>
+                                <td style="text-align: center;">Valor</td>
+                                <td>R$ {{vlrServico}}</td>
+                                <td style='width: 50px;text-align: left;'><input type='text'
+                                        class='form-control form-control-sm'></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td style="text-align: center;">Total</td>
+                                <td>R$ {{vlrTotal}}</td>
+                                <td style='width: 50px;text-align: left;'><input type='text'
+                                        class='form-control form-control-sm'></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section id="incluso">
+                <div class="card-body">
+                    <div class="card" style="padding: 10px;">
+                        <label style="font-size: 17px;" class='text-center fw-bold'>ESTÃO INCLUSOS NESTE
+                            PEDIDO</label><br>
+                        {{#each mensagem}}
+                        <label style='font-size: 15px'>{{descricao}}></label><br>
+                        {{/each}}
+                        <label style='font-size: 15px'>Projeto Homologação para Concessionária</label><br>
+                        <label style='font-size: 15px'>Acompanhamento junto à concessionária até a Finalização do
+                            Projeto</label><br>
+                        <label style='font-size: 15px'>Instalação e Startup do Sistema Fotovoltaico (Sistema
+                            Completo)</label><br>
+                        <label style='font-size: 15px'>Sistema de Controle de Monitoramento</label><br>
+                        <label style='font-size: 15px'>Transportes(Frete dos Equipamentos)</label><br>
+                        <label style='font-size: 15px'>Grantias e Pós-Venda - Quasat Solar</label>
+                    </div>
+                </div>
+            </section>
+            <section id="condicoes">
+                <div style="padding-left: 15px;padding-right: 15px">
+                    <div style="border: 1px solid rgba(140,140,140,0.3);border-radius: 5px;padding: 10px;">
+                        <label class="col-form-label col-form-label-sm"
+                            style="margin-right: 400px;font-weight: 600;">TIPO DE TELHADO:
+                            {{pedido.telhado}}</label>
+                    </div>
+                </div>
+               <div style="padding-left: 15px;padding-right: 15px">
+                    <div style="border: 1px solid rgba(140,140,140,0.3);border-radius: 5px;padding: 10px;">
+                        <label style="font-size: 17px;" class='text-center fw-bold'>CONDIÇÕES DE PAGAMENTO</label><br>
+                        <label class="col-form-label col-form-label-sm">Prazo de Entrega:
+                            {{pedido.prazo}} dias</label><br>
+                        <label class="col-form-label col-form-label-sm">Condição de Pagamento:
+                            {{pedido.pagamento}}</label><br>
+                        <label class="col-form-label col-form-label-sm">Observações: {{pedido.obs}}</label><br>
+                    </div>
+                </div>
+            </section>
+            <section id='assinatura'>
+                <div class="card-body">
+                    <div class='text-center' style="margin-bottom: 50px;">
+                        <label class="col-form-label fw-bold">Assinaturas</label>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <label class="col-form-label">________________________________</label><br>
+                            <label class="col-form-label">{{nome}}</label><br>
+                            <label class="col-form-label">{{cnpj}}</label><br>
+                            <label class="col-form-label">Vendedor: {{vendedor}}</label><br>
+                        </div>
+                        <div class="col text-center">
+                            <label class="col-form-label">________________________________</label><br>
+                            <label class="col-form-label">{{cliente.nome}}</label><br>
+                            <label class="col-form-label">{{#if
+                                ehCPF}}{{cliente.cpf}}{{else}}{{cliente.cnpj}}{{/if}}</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div style="margin-bottom: 90px;" class='no-print'>
+        <div class="btn-group gap-2 col-6">
+            <a href="/gerenciamento/orcamento/{{projeto._id}}" style="color: rgb(40, 55, 86);font-size: 30px;">
+                <i class="bi bi-arrow-left-circle"></i></a>
+            {{!-- <a href="/gerenciamento/imprimePedido/{{projeto._id}}"
+                style="color: rgb(40, 55, 86);font-size: 30px;">
+                <i class="bi bi-save"></i></a> --}}
+            <a href='/' style="color: rgb(40, 55, 86);font-size: 30px;" value="Imprimir"
+                onclick=";window.print();return false"><i class="bi bi-printer d-flex align-items-right mt-2"></i></a>
+        </div>
+    </div>
+</div>
+{{#if imprime}}
+    <div style="margin-bottom: 90px;" class='no-print'>
+        <div class="btn-group gap-2 col-6">
+            <a href="/gerenciamento/orcamento/{{projeto._id}}" style="color: rgb(40, 55, 86);font-size: 30px;">
+                <i class="bi bi-arrow-left-circle"></i></a>
+            {{!-- <a href="/gerenciamento/imprimePedido/{{projeto._id}}"
+                style="color: rgb(40, 55, 86);font-size: 30px;">
+                <i class="bi bi-save"></i></a> --}}
+            <a href='/' style="color: rgb(40, 55, 86);font-size: 30px;" value="Imprimir"
+                onclick="imprimir()"><i class="bi bi-printer d-flex align-items-right mt-2"></i></a>
+        </div>
+    </div>
+{{/if}}

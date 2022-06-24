@@ -1,0 +1,529 @@
+<style>
+    .icone {
+        font-size: 30px;
+        color: rgb(2, 38, 78);
+        "
+
+    }
+</style>
+<script>
+    window.onload = function imageOption() {
+        var imagem = document.getElementById('carregaFoto')
+        var foto = document.getElementById("foto")
+
+        foto.src = imagem.value
+
+    };
+
+    function preview_foto() {
+        var imagem = document.querySelector('input[name=foto]').files[0]
+        var preview = document.querySelector('img[name=foto]')
+
+        var reader = new FileReader()
+        reader.onloadend = function () {
+            preview.src = reader.result
+        }
+
+        if (imagem) {
+            reader.readAsDataURL(imagem)
+        } else {
+            preview.src = ''
+        }
+    };
+    /*
+        function preview_fotocert() {
+            var imagem = document.querySelector('input[name=fotocert]').files[0]
+            var preview = document.querySelector('img[name=fotocert]')
+    
+            var reader = new FileReader()
+            reader.onloadend = function () {
+                preview.src = reader.result
+            }
+    
+            if (imagem) {
+                reader.readAsDataURL(imagem)
+            } else {
+                preview.src = ''
+            }
+        };
+    */
+    function mascara_data() {
+        var data = document.getElementById('data')
+        var currenTime = new Date()
+        var year = currenTime.getFullYear()
+        var ano = data.value
+        ano1 = ano.substring(3, 7)
+        mes1 = ano.substring(0, 2)
+
+        if (data.value.length == 2) {
+            data.value += "/"
+        }
+        if (data.value.length == 7) {
+            if (parseFloat(ano1) > parseFloat(year) || parseFloat(ano1) < 1846 || parseFloat(mes1) > 12) {
+                data.value = ''
+            }
+        }
+    };
+
+    function valida_cnpj() {
+        var cnpj = document.getElementById('cnpj')
+
+        if (cnpj.value.length == 2 || cnpj.value.length == 6) {
+            cnpj.value += '.'
+        }
+        if (cnpj.value.length == 10) {
+            cnpj.value += '/'
+        }
+        if (cnpj.value.length == 15) {
+            cnpj.value += '-'
+        }
+
+        if (cnpj.value.length == 18) {
+
+            var d1 = cnpj.value
+            var p1 = d1.substring(0, 2)
+            var p2 = d1.substring(3, 6)
+            var p3 = d1.substring(7, 10)
+            var p4 = d1.substring(11, 15)
+            var p5 = d1.substring(16, 18)
+            var numdoc = p1 + p2 + p3 + p4 + p5
+
+            if (numdoc == "00000000000000" ||
+                numdoc == "11111111111111" ||
+                numdoc == "22222222222222" ||
+                numdoc == "33333333333333" ||
+                numdoc == "44444444444444" ||
+                numdoc == "55555555555555" ||
+                numdoc == "66666666666666" ||
+                numdoc == "77777777777777" ||
+                numdoc == "88888888888888" ||
+                numdoc == "99999999999999") {
+                cnpj.value = ''
+            }
+
+            // Valida DVs
+            var tamanho = numdoc.length - 2
+            var numeros = numdoc.substring(0, tamanho)
+            var digitos = numdoc.substring(tamanho)
+            var soma = 0
+            var pos = tamanho - 7;
+            for (i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2)
+                    pos = 9;
+            }
+            var resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            if (resultado != digitos.charAt(0)) {
+                cnpj.value = ''
+            }
+
+            tamanho = tamanho + 1;
+            numeros = numdoc.substring(0, tamanho);
+            soma = 0;
+            pos = tamanho - 7;
+            for (i = tamanho; i >= 1; i--) {
+                soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2)
+                    pos = 9;
+            }
+            resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+            if (resultado != digitos.charAt(1)) {
+                cnpj.value = ''
+            }
+        }
+    };
+
+    function valida_cpf() {
+        var doc = document.getElementById('cpf')
+        var soma
+        var resto
+
+        soma = 0
+
+        if (doc.value.length == 3 || doc.value.length == 7) {
+            doc.value += '.'
+        }
+        if (doc.value.length == 11) {
+            doc.value += '-'
+        }
+        if (doc.value.length == 14) {
+
+            var d1 = doc.value
+            var p1 = d1.substring(0, 3)
+            var p2 = d1.substring(4, 7)
+            var p3 = d1.substring(8, 11)
+            var p4 = d1.substring(12, 14)
+            var numdoc = p1 + p2 + p3 + p4
+
+            if (numdoc == "00000000000") {
+                doc.value = '';
+            }
+
+            for (i = 1; i <= 9; i++) {
+                soma = soma + parseInt(numdoc.substring(i - 1, i)) * (11 - i);
+            }
+            resto = (soma * 10) % 11;
+
+            if ((resto == 10) || (resto == 11)) {
+                resto = 0;
+            }
+            if (resto != parseInt(numdoc.substring(9, 10))) {
+                doc.value = ''
+            }
+
+            soma = 0;
+            for (i = 1; i <= 10; i++) {
+                soma = soma + parseInt(numdoc.substring(i - 1, i)) * (12 - i)
+            }
+
+            resto = (soma * 10) % 11
+            if ((resto == 10) || (resto == 11)) {
+                resto = 0
+            }
+
+            if (resto != parseInt(numdoc.substring(10, 11))) {
+                doc.value = ''
+            }
+
+        }
+    };
+
+    function responsavel() {
+        var res = document.getElementById('responsavel')
+        var funins = document.getElementById('funins')
+        if (funins.checked) {
+            res.style.display = ''
+        } else {
+            res.style.display = 'none'
+        }
+    }
+
+    window.onload = function () {
+
+        var estados = document.getElementById('estado');
+        var cidades = document.getElementById('cidade');
+
+        new dgCidadesEstados({
+            estado: estados,
+            cidade: cidades,
+            estadoVal: '<%=Request("estado") %>',
+            cidadeVal: '<%=Request("cidade") %>'
+        });
+    };
+
+</script>
+<form action='/pessoa/editar' method='post' enctype="multipart/form-data">
+
+    <input type='hidden' name='id' value='{{pessoa._id}}'>
+    <input type='hidden' name='ehVendedor' value='{{pessoa.ehVendedor}}'>
+
+    <div class="cotainer mt-2" style="width: 80%; margin-left: 150px;">
+
+        <div class="row mt-2 mb-3">
+            <div class="col-md-8 mt-2">
+                <label style='font-weight: bold;font-size:20px'> Edição de Pessoas</label>
+            </div>
+            <div class="col-md-4 mt-4 text-end">
+                <a href='/pessoa/consulta' class='btn btn-sm btn-primary'>Buscar</a>
+                {{#if ehMaster}}
+                <a href='/usuario/novousuario/{{pessoa._id}}' class='btn btn-sm btn-primary'>Criar Usuário</a>
+                {{/if}}
+                <button type='submit' class='btn btn-sm btn-success'>Salvar</button>
+                <a href='/pessoa/consulta' class='btn btn-sm btn-primary'><i class='bi-arrow-return-left'></i></a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row mb-2">
+                    <div class="col-md-4  text-end">
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Nome Completo: </label><br>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Endereço: </label><br>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1 mt-1'>Estado: </label><br>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Cidade: </label><br>
+                        {{#if pessoa.cnpj}}
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>CNPJ: </label><br>
+                        {{/if}}
+                        {{#if pessoa.cpf}}
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>CPF: </label><br>
+                        {{/if}}
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Inicio Atividades: </label><br>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>Celular: </label><br>
+                        <label class='fw-bold col-form-label col-form-label-sm mb-1'>E-mail: </label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type='text' name='nome' class='form-control form-control-sm mb-1'
+                            value='{{pessoa.nome}}'>
+                        <input type='text' name='endereco' class='form-control form-control-sm mb-1'
+                            value='{{pessoa.endereco}}'>
+                        {{#if pessoa.uf}}
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class='col-form-label col-form-label-sm mt-1'>{{pessoa.uf}}</label><br>
+                            </div>
+                            <div class="col-md-7">
+                                <select id='estado' name='uf' class='form-select form-select-sm mt-1'></select>
+                            </div>
+                        </div>
+                        {{else}}
+                        <select id='estado' name='uf' class='form-select form-select-sm mt-1'></select>
+                        {{/if}}
+                        {{#if pessoa.cidade}}
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class='col-form-label col-form-label-sm mt-1'>{{pessoa.cidade}}</label><br>
+                            </div>
+                            <div class="col-md-7">
+                                <select id='cidade' name='cidade' class='form-select form-select-sm mt-1'></select>
+                            </div>
+                        </div>
+                        {{else}}
+                        <select id='cidade' name='cidade' class='form-select form-select-sm mt-1'></select>
+                        {{/if}}
+                        <!--
+                        <input type='text ' name='cidade' class='form-control form-control-sm mb-1' value='{{pessoa.cidade}}'>
+                        <input type='text ' name='uf' class='form-control form-control-sm mb-1' value='{{pessoa.uf}}'>
+                        -->
+                        {{#if pessoa.cnpj}}
+                        <input type='text' class='form-control form-control-sm mb-1' maxlength="18" autocomplete="off"
+                            id='cnpj' name='cnpj' onkeyup="valida_cnpj()" value='{{pessoa.cnpj}}'>
+                        {{/if}}
+                        {{#if pessoa.cpf}}
+                        <input type='text' class='form-control form-control-sm mb-1 mt-1' maxlength="14"
+                            autocomplete="off" id='cpf' name='cpf' onkeyup="valida_cpf()" value='{{pessoa.cpf}}'>
+                        {{/if}}
+                        <input type='text' class='form-control form-control-sm mb-1' autocomplete="off" maxlength="7"
+                            placeholder='__/____' id='data' name='iniati' maxlength="8" onkeyup="mascara_data()"
+                            value='{{pessoa.iniati}}'>
+                        <input type='text ' name='celular' id='celular' class='form-control form-control-sm mb-1'
+                            maxlength="16" autocomplete="off" placeholder="DDD + Número" value='{{pessoa.celular}}'>
+                        <input type='text' name='email' class='form-control form-control-sm mb-1'
+                            value='{{pessoa.email}}'>
+                    </div>
+                </div>
+                {{#if pessoa.ehVendedor}}
+                {{else}}
+                <div class='row' style="padding-left: 10%;">
+                    <div class='col-md-2 text-end'>
+                        <label class='col-form-label col-form-label-sm fw-bold'>Função:</label>
+                    </div>
+                    <div class='col'>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funges' class="form-check-input" type="checkbox" {{pessoa.funges}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Gestor</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funpro' class="form-check-input" type="checkbox" {{pessoa.funpro}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Projetista</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funeng' class="form-check-input" type="checkbox" {{pessoa.funeng}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Engenheiro</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-switch" onchange="responsavel()">
+                                    <input name='funins' id='funins' class="form-check-input" type="checkbox"
+                                        {{pessoa.funins}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Instalador</label>
+                                </div>
+                            </div>
+                            <div class="col" id='responsavel' style="display: {{mostraRes}};">
+                                <div class="form-check form-switch">
+                                    <input name='insres' class="form-check-input" type="checkbox" {{pessoa.insres}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Responsável</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-check form-switch">
+                                    <input name='funele' class="form-check-input" type="checkbox" {{pessoa.funele}}>
+                                    <label class="form-check-label mt-1" style="font-size: 14px;">Eletricista</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            {{#if pessoa.ehVendedor}}
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class='col-form-label col-form-label-sm fw-bold'>Comissão:</label>
+                    </div>
+                    <div class="col-md-9">
+                        <input class='form-control form-control-sm' type='text' name='percom' value={{pessoa.percom}}>
+                    </div>
+                </div>
+                <div class="row">
+                    <div name='upload' class="col" style="margin-block-start: 20px; margin-inline-start: 100px;">
+                        <div class=''></div>
+                    </div>
+                    <div class="">
+                        <div class="input-group input-group-sm">
+                            <label class="input-group-text">Foto</label>
+                            <input type="file" name='foto' class='form-control' onchange="preview_foto()">
+                            <input type='hidden' name='carregaFoto' id='carregaFoto' value='{{pessoa.foto}}'>
+                        </div>
+                        <div class="row mt-2" style="margin-left: 120px;">
+                            <img src='{{pessoa.foto}}' id='foto' name='foto' style="width: 160px; height: 200px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="col-md-5">
+                <div class="row mb-1">
+                    <div class="col-md-3">
+                        <label class="col-form-label col-form-label-sm">R$ Custo Dia:</label>
+                    </div>
+                    <div class="col">
+                        <input type='number' name='custo' step='0.010' class="form-control form-control-sm"
+                            value='{{pessoa.custo}}'>
+                    </div>
+                </div>
+                <div class="row mb-1">
+                    <div class="col-md-3 text-end">
+                        <label class="col-form-label col-form-label-sm">Constante de Proposta:</label>
+                    </div>
+                    <div class="col mt-2 text-start">
+                        <input type='text' name='const'class="form-control form-control-sm" value="{{pessoa.const}}">
+                    </div>                    
+                    <div class="col-md-3 text-end">
+                        <label class="col-form-label col-form-label-sm">Sequência de Proposta:</label>
+                    </div>
+                    <div class="col mt-2 text-start">
+                        <input type='number' name='seq' step='0.010' class="form-control form-control-sm" value="{{pessoa.seq}}">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="input-group input-group-sm">
+                        <label class="input-group-text">Foto</label>
+                        <input type="file" name='foto' id="foto" class='form-control' onchange="preview_foto()">
+                    </div>
+                </div>
+                <div class="row mt-2" style="margin-left: 120px;">
+                    <img src='/{{pessoa.foto}}' id='foto' name='foto' style="width: 160px; height: 160px;" />
+                </div>
+                <!--
+                <div class="row">
+                    <a class='mt-3 btn btn-primary' data-bs-toggle="modal" data-bs-target='#certificado'>Adicionar Certificados</a>
+                </div>
+                -->
+            </div>
+            <hr>
+            <div class="row">
+                <label class='fw-bold col-form-label col-form-label-sm col-md-3'>Especialidades: </label><br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-check form-switch">
+                            <input name='maninv' class="form-check-input" type="checkbox" {{pessoa.maninv}}>
+                            <label class="form-check-label mt-1" style='font-size: 13px'>Manutenção de
+                                Inversores</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input name='subcom' class="form-check-input" type="checkbox" {{pessoa.subcom}}>
+                            <label class="form-check-label mt-1" style='font-size: 13px'>Substituição de
+                                Componentes</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check form-switch">
+                            <input name='repequ' class="form-check-input" type="checkbox" {{pessoa.repequ}}>
+                            <label class="form-check-label mt-1" style='font-size: 13px'>Reposicionamento de
+                                Equipamento</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input name='vistor' class="form-check-input" type="checkbox" {{pessoa.vistor}}>
+                            <label class="form-check-label mt-1" style='font-size: 13px'>Vistoria de Conexões e
+                                Instalações</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check form-switch">
+                            <input name='dlaudo' class="form-check-input" type="checkbox" {{pessoa.dlaudo}}>
+                            <label class="form-check-label mt-1" style='font-size: 13px'>Diagnóstico e
+                                Laudos</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input name='limmod' class="form-check-input" type="checkbox" {{pessoa.limmod}}>
+                            <label class="form-check-label mt-1" style='font-size: 13px'>Limpeza de
+                                Módulos(Painéis)</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+        <!-- Oculto para MVP
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <label class='fw-bold col-form-label col-form-label-sm col-md-3'>Especialidades: </label><br>
+
+                <div class="form-check form-switch">
+                    <input name='maninv' class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                        {{pessoa.maninv}}>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Manutenção de Inversores</label>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input name='subcom' class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                        {{pessoa.subcom}}>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Substituição de Componentes</label>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input name='repequ' class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                        {{pessoa.repequ}}>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Reposicionamento de Equipamento</label>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input name='vistor' class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                        {{pessoa.vistor}}>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Vistoria de Conexões e
+                        Instalações</label>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input name='dlaudo' class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                        {{pessoa.dlaudo}}>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Diagnóstico e Laudos</label>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input name='limmod' class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                        {{pessoa.limmod}}>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Limpeza de Módulos(Painéis)</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class='container'>
+                    <div class='card' style="scroll-margin-block-start: 30px;">
+                        <label class='fw-bold col-form-label col-form-label-sm'>Certificado</label>
+                        <input type="file" class='form-control'>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class='container'>
+                    <div class='card' style="scroll-margin-block-start: 30px;">
+                        <label class='fw-bold col-form-label col-form-label-sm'>Registro CREA</label>
+                        <input type="file" class='form-control'>
+                    </div>
+                </div>
+            </div>
+        </div>
+        -->
+    </div>
+</form>
