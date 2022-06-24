@@ -603,12 +603,12 @@ router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
 
                                         // addInstalador = [{ instalador: instalador, qtdmod: qtdmod }]
 
-                                        // listaAndamento.push({
-                                        //     id: projeto._id
-                                        //     //seq: projeto.seq
-                                        //     // , modulos: qtdmod, potencia: projeto.plaWattMod, inversor: projeto.plaKwpInv, telhado: projeto.telhado, estrutura: projeto.estrutura, cidade: projeto.cidade, uf: projeto.uf,
-                                        //     // instalador, deadline: dataMensagem(e.dtfim), parado: projeto.parado, execucao: projeto.execucao, instalado: projeto.instalado, autorizado: projeto.autorizado, pago: projeto.pago, encerrado: projeto.encerrado, addInstalador
-                                        // })
+                                        listaAndamento.push({
+                                            id: projeto._id
+                                            //seq: projeto.seq
+                                            // , modulos: qtdmod, potencia: projeto.plaWattMod, inversor: projeto.plaKwpInv, telhado: projeto.telhado, estrutura: projeto.estrutura, cidade: projeto.cidade, uf: projeto.uf,
+                                            // instalador, deadline: dataMensagem(e.dtfim), parado: projeto.parado, execucao: projeto.execucao, instalado: projeto.instalado, autorizado: projeto.autorizado, pago: projeto.pago, encerrado: projeto.encerrado, addInstalador
+                                        })
 
                                         if (q == conta_equipe.length) {
                                             // listaAndamento.sort(comparaNum)
@@ -618,10 +618,9 @@ router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
                                             //     caminho = 'principal/agenda'
                                             // }
                                             res.render('principal/emandamento', {
-                                                mestitulo, meshoje, anotitulo, todos_instaladores,
+                                                mestitulo, meshoje, anotitulo, listaAndamento, todos_instaladores,
                                                 dataini, datafim, projeto: true
                                             })
-                                            //listaAndamento,
                                         }
                                     }).catch((err) => {
                                         req.flash('error_msg', 'Falha ao encontrar o instalador.')
