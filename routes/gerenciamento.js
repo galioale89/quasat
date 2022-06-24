@@ -558,10 +558,12 @@ router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
             diafim = '31'
             break;
     }
+
     dataini = anotitulo + '-' + meshoje + '-' + diaini
     datafim = anotitulo + '-' + meshoje + '-' + diafim
     dtini = anotitulo + meshoje + diaini
     dtfim = anotitulo + meshoje + diafim
+
     // console.log('params[1]=>' + params[1])
     var sql = []
     sql = { user: id, feito: true, tarefa: { $exists: false }, nome_projeto: { $exists: true }, $or: [{ 'dtinibusca': { $lte: dtfim, $gte: dtini } }, { 'dtfimbusca': { $lte: dtfim, $gte: dtini } }] }
@@ -580,6 +582,7 @@ router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
                                 } else {
                                     insres = '111111111111111111111111'
                                 }
+
                                 Pessoa.findOne({ _id: insres })
                                     .then((pes_instalador) => {
                                         q++
@@ -607,7 +610,7 @@ router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
                                         })
 
                                         if (q == conta_equipe.length) {
-                                            listaAndamento.sort(comparaNum)
+                                            // listaAndamento.sort(comparaNum)
                                             // if (params[0] == 'lista') {
                                             //     caminho = 'principal/emandamento'
                                             // } else {
