@@ -157,15 +157,15 @@
             <tr style="line-height: 30px;">
                 <td style="text-align: center;font-weight: 800;" {{#if parado}}id="parado" {{else}}{{#if
                     instalado}}id="execucao" {{else}}{{#if execucao}}id="realizado" {{else}}id="aguardando"
-                    {{/if}}{{/if}}{{/if}}><a href='/gerenciamento/projeto/{{id}}'>{{seq}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{cliente}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{cidade}}/{{uf}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{telhado}}/{{estrutura}}</a>
+                    {{/if}}{{/if}}{{/if}}><a href='/gerenciamento/orcamento/{{id}}'>{{seq}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/orcamento/{{id}}'>{{cliente}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/orcamento/{{id}}'>{{cidade}}/{{uf}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/orcamento/{{id}}'>{{telhado}}/{{estrutura}}</a>
                 </td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{sistema}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{modulos}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{potencia}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{inversor}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/orcamento/{{id}}'>{{sistema}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/orcamento/{{id}}'>{{modulos}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/orcamento/{{id}}'>{{potencia}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/orcamento/{{id}}'>{{inversor}}</a></td>
                 <td style="text-align: center;">
                     <button class='btn'
                         onclick='getInstaler("projeto{{seq}}","{{id}}","{{modulos}}","{{execucao}}","{{parado}}","{{instalado}}","{{autorizado}}","{{pago}}","{{encerrado}}","{{deadline}}","{{checkReal}}", "{{nome_ins}}", "{{id_ins}}")'
