@@ -69,11 +69,6 @@ const listaFotos = require('../resources/listaFotos')
 const buscaPrimeira = require('../resources/buscaPrimeira')
 const diferencaDias = require('../resources/diferencaDias')
 
-const { urlencoded } = require('express')
-const { on } = require('events')
-const { match } = require('assert')
-const { QuoteFields } = require('@aws-sdk/client-s3')
-
 var credentials = new aws.SharedIniFileCredentials({ profile: 'vimmusimg' })
 aws.config.credentials = credentials
 
@@ -468,184 +463,183 @@ router.get('/propostaEntregue/:id', ehAdmin, (req, res) => {
     })
 })
 
-router.get('/emandamento/:tipo', ehAdmin, (req, res) => {
-    var params = req.params.tipo
-    params = params.split('tipo')
+router.get('/emandamento/', ehAdmin, (req, res) => {
+
     const { _id } = req.user
     const { user } = req.user
     var id
 
-    if (typeof user == 'undefined') {
-        id = _id
-    } else {
+    if (naoVazio(user)) {
         id = user
+    } else {
+        id = _id
     }
+
+    let seq
+    let cliente
+    let nome_cliente
+    let parado
+    let autorizado
+    let pagamento
+    let instalado
+    let execucao
+    let instalador
+    let cidade
+    let uf
+    let telhado
+    let estrutura
+    let inversor
+    let modulos
+    let potencia
+    let sistema
+    let deadline
+    let ins_banco
+    let checkReal
+    let nome_ins_banco
+    let id_ins_banco
+    let nome_ins
+    let id_ins
 
     var listaAndamento = []
     var addInstalador = []
-    var vendedor = ''
-    var instalador = ''
-    var q = 0
-    var diafim
-    var hoje
-    var meshoje
-    var mestitulo
-    var anotitulo
-    var caminho
-
-    var insres
-    var qtdmod
 
     var hoje = dataHoje()
-    var meshoje = hoje.substring(5, 7)
     var anotitulo = hoje.substring(0, 4)
-
-    // console.log('meshoje=>' + meshoje)
-    var dataini
-    var datafim
-    var dtini
-    var dtfim
-    var diaini
-    var diafim
-    diaini = '01'
-    switch (meshoje) {
-        case '01': janeiro = 'active'
-            mestitulo = 'Janeiro '
-            diafim = '31'
-            break;
-        case '02': fevereiro = 'active'
-            mestitulo = 'Fevereiro '
-            diafim = '28'
-            break;
-        case '03': marco = 'active'
-            mestitulo = 'Março '
-            diafim = '31'
-            break;
-        case '04': abril = 'active'
-            mestitulo = 'Abril '
-            diafim = '30'
-            break;
-        case '05': maio = 'active'
-            mestitulo = 'Maio '
-            diafim = '31'
-            break;
-        case '06': junho = 'active'
-            mestitulo = 'Junho '
-            diafim = '30'
-            break;
-        case '07': julho = 'active'
-            mestitulo = 'Julho '
-            diafim = '31'
-            break;
-        case '08': agosto = 'active'
-            mestitulo = 'Agosto '
-            diafim = '31'
-            break;
-        case '09': setembro = 'active'
-            mestitulo = 'Setembro '
-            diafim = '30'
-            break;
-        case '10': outubro = 'active'
-            mestitulo = 'Outubro '
-            diafim = '31'
-            break;
-        case '11': novembro = 'active'
-            mestitulo = 'Novembro '
-            diafim = '30'
-            break;
-        case '12': dezembro = 'active'
-            mestitulo = 'Dezembro '
-            diafim = '31'
-            break;
-    }
-
-    dataini = anotitulo + '-' + meshoje + '-' + diaini
-    datafim = anotitulo + '-' + meshoje + '-' + diafim
-    dtini = anotitulo + meshoje + diaini
-    dtfim = anotitulo + meshoje + diafim
-
-    // console.log('params[1]=>' + params[1])
-    var sql = []
-    sql = { user: id, feito: true, tarefa: { $exists: false }, nome_projeto: { $exists: true }, $or: [{ 'dtinibusca': { $lte: dtfim, $gte: dtini } }, { 'dtfimbusca': { $lte: dtfim, $gte: dtini } }] }
+    const dataini = anotitulo + '-01' + '-01'
+    const datafim = anotitulo + '-12' + '-31'
+    const dtini = parseFloat(dataBusca(dataini))
+    const dtfim = parseFloat(dataBusca(datafim))
+    
     // console.log('entrou')
-    Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
-        Equipe.find(sql)
-            .then((conta_equipe) => {
-                if (naoVazio(conta_equipe)) {
-                    conta_equipe.forEach((e) => {
-                        Projeto.findOne({ equipe: e._id })
-                            .then((projeto) => {
-                                // Cliente.findOne({ _id: id_cliente })
-                                //     .then((cliente) => {
-                                if (naoVazio(e.insres)) {
-                                    insres = e.insres
-                                } else {
-                                    insres = '111111111111111111111111'
-                                }
+    Cliente.find({ user: id }).lean().then((todos_clientes) => {
+        Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
 
-                                Pessoa.findOne({ _id: insres })
-                                    .then((pes_instalador) => {
-                                        q++
-
-                                        // qtdmod = projeto.plaQtdMod
-
-                                        // if (naoVazio(pes_instalador)) {
-                                        //     instalador = pes_instalador.nome
-                                        // } else {
-                                        //     instalador = ''
-                                        // }
-
-                                        //// if (naoVazio(pes_ins_banco)) {
-                                        ////     ins_banco = pes_ins_banco.nome
-                                        //// } else {
-                                        ////     ins_banco = ''
-                                        //// }
-
-                                        // addInstalador = [{ instalador: instalador, qtdmod: qtdmod }]
-
-                                        listaAndamento.push({
-                                            id: projeto._id
-                                            //seq: projeto.seq
-                                            // , modulos: qtdmod, potencia: projeto.plaWattMod, inversor: projeto.plaKwpInv, telhado: projeto.telhado, estrutura: projeto.estrutura, cidade: projeto.cidade, uf: projeto.uf,
-                                            // instalador, deadline: dataMensagem(e.dtfim), parado: projeto.parado, execucao: projeto.execucao, instalado: projeto.instalado, autorizado: projeto.autorizado, pago: projeto.pago, encerrado: projeto.encerrado, addInstalador
-                                        })
-
-                                        if (q == conta_equipe.length) {
-                                            // listaAndamento.sort(comparaNum)
-                                            // if (params[0] == 'lista') {
-                                            //     caminho = 'principal/emandamento'
-                                            // } else {
-                                            //     caminho = 'principal/agenda'
-                                            // }
-                                            res.render('principal/emandamento', {
-                                                mestitulo, meshoje, anotitulo, listaAndamento, todos_instaladores,
-                                                dataini, datafim, projeto: true
-                                            })
-                                        }
-                                    }).catch((err) => {
-                                        req.flash('error_msg', 'Falha ao encontrar o instalador.')
-                                        res.redirect('/dashboard')
-                                    })
-                                // }).catch((err) => {
-                                //     req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                                //     res.redirect('/dashboard')
-                                // })
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Falha ao encontrar o projeto<gea>.')
-                                res.redirect('/dashboard')
-                            })
-                    })
-                } else {
-                    req.flash('error_msg', 'Não existem projetos com instalação em andamento.')
-                    res.redirect('/dashboard')
+            Equipe.aggregate([
+                {
+                    $match: {
+                        user: id,
+                        tarefa: { $exists: false },
+                        nome_projeto: { $exists: true },
+                        "dtfimbusca": {
+                            $gte: dtini,
+                            $lte: dtfim,
+                        }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'projetos',
+                        localField: '_id',
+                        foreignField: 'equipe',
+                        as: 'projeto'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'pessoas',
+                        localField: 'insres',
+                        foreignField: '_id',
+                        as: 'instalador',
+                    }
                 }
-            }).catch((err) => {
-                req.flash('error_msg', 'Falha ao encontrar a equipe.')
-                res.redirect('/dashboard')
+            ]).then(async list => {
+
+                for (const item of list) {
+                    deadline = await item.dtfim
+                    qtdmod = await item.qtdmod
+                    projetos = await item.projeto
+
+                    projetos.map(async register => {
+                        id = register._id
+                        seq = register.seq
+                        cidade = register.cidade
+                        uf = register.uf
+                        telhado = register.telhado
+                        estrutura = register.estrutura
+                        inversor = register.plaKwpInv
+                        modulos = register.plaQtdMod
+                        potencia = register.plaWattMod
+                        instalado = register.instalado
+                        execucao = register.execucao
+                        parado = register.parado
+                        autorizado = register.autorizado
+                        pagamento = register.pago
+                        cliente = register.cliente
+                        ins_banco = register.ins_banco
+                        checkReal = register.ins_real
+                        
+                        if (checkReal != true) {
+                            checkReal = 'unchecked'
+                        } else {
+                            checkReal = 'checked'
+                        }
+
+                        if (naoVazio(modulos) && naoVazio(potencia)) {
+                            sistema = ((modulos * potencia) / 1000).toFixed(2)
+                        } else {
+                            sistema = 0
+                        }
+                    })
+
+                    instaladores = await item.instalador
+
+                    if (instaladores.length > 0) {
+                        instaladores.map(async register => {
+                            instalador = register.nome
+                            
+                            nome_ins = instalador
+                            id_ins = register._id
+
+                            if (naoVazio(ins_banco)) {
+                                if (register._id == ins_banco) {
+                                    addInstalador = [{ instalador, qtdmod }]
+                                } else {
+                                    let nome_ins = await Pessoa.findById(ins_banco)
+                                    addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
+                                }
+                            } else {
+                                addInstalador = [{ instalador, qtdmod }]
+                            }
+                        })
+                    }
+
+                    if (naoVazio(ins_banco)) {
+                        await Pessoa.findById(ins_banco).then(this_ins_banco => {
+                            nome_ins_banco = this_ins_banco.nome
+                            id_ins_banco = this_ins_banco._id
+                        })
+                    } else {
+                        nome_ins_banco = ''
+                        id_ins_banco = ''
+                    }
+
+                    await Cliente.findById(cliente).then(this_cliente => {
+                        nome_cliente = this_cliente.nome
+                    })
+
+                    await listaAndamento.push({
+                        id, seq, parado, execucao, autorizado, pagamento,
+                        instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+                        sistema, modulos, potencia, inversor, deadline, addInstalador,
+                        dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
+                    })
+                    addInstalador = []
+                }
+
+                listaAndamento.sort(comparaNum)
+                res.render('principal/emandamento', {
+                    listaAndamento, todos_clientes,
+                    todos_instaladores, datafim, dataini
+                })
             })
+
+        }).catch((err) => {
+            req.flash('error_msg', 'Nenhum instalador encontrado.')
+            res.redirect('/dashboard')
+        })
     }).catch((err) => {
-        req.flash('error_msg', 'Nenhum responsável encontrado.')
-        res.redirect('/relatorios/consulta')
+        req.flash('error_msg', 'Nenhum cliente encontrado.')
+        res.redirect('/dashboard')
     })
 })
 
@@ -2467,80 +2461,43 @@ router.get('/projeto/:id', ehAdmin, (req, res) => {
 
     Pessoa.find({ user: id, funins: 'checked' }).lean().then((instaladores) => {
         Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
-            Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
-                // console.log('equipe=>'+equipe)
-                if (projeto.autorizado) {
-                    checkAuth = 'checked'
-                } else {
-                    checkAuth = 'unchecked'
-                }
-                lista_proposta = projeto.proposta
-                if (naoVazio(equipe)) {
-                    Pessoa.findOne({ _id: equipe.insres }).lean().then((ins) => {
-                        // console.log('instalador=>' + instalador)
-                        Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
-                            Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
-                                var dtfim = setData(pedido.data, pedido.prazo)
-                                if (naoVazio(projeto.dataPost)) {
-                                    checkPost = 'checked'
-                                }
-                                if (naoVazio(projeto.dataSoli)) {
-                                    checkSoli = 'checked'
-                                }
-                                if (naoVazio(projeto.dataApro)) {
-                                    checkApro = 'checked'
-                                }
-                                if (naoVazio(projeto.dataTroca)) {
-                                    checkTroca = 'checked'
-                                }
-                                // console.log('lista_proposta=>' + lista_proposta)
-                                res.render('principal/projeto', { checkAuth, checkPay, vendedor, lista_proposta, orcamentista, funpro, funges, ehMaster, proandges, pedido, projeto, ins, instalador, instaladores, cliente_projeto, checkPost, checkSoli, checkApro, checkTroca, dtfim })
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Não foi possível encontrar o cliente da proposta<projeto>.')
-                                res.redirect('/dashboard')
-                            })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Não foi possível encontrar o pedido<equipe>.')
-                            res.redirect('/dashboard')
-                        })
-                    }).catch((err) => {
-                        req.flash('error_msg', 'Não foi possível encontrar a equipe.')
-                        res.redirect('/dashboard')
-                    })
-                } else {
-                    // console.log('sem equipe')
-                    Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
-                        Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
-                            if (naoVazio(projeto.prazo) && naoVazio(projeto.prazo)) {
-                                dtfim = setData(projeto.dtinicio, projeto.prazo)
-                            }
-                            if (naoVazio(projeto.dataPost)) {
-                                checkPost = 'checked'
-                            }
-                            if (naoVazio(projeto.dataSoli)) {
-                                checkSoli = 'checked'
-                            }
-                            if (naoVazio(projeto.dataApro)) {
-                                checkApro = 'checked'
-                            }
-                            if (naoVazio(projeto.dataTroca)) {
-                                checkTroca = 'checked'
-                            }
-                            // console.log('lista_proposta=>' + lista_proposta)
-                            res.render('principal/projeto', { checkAuth, checkPay, vendedor, lista_proposta, orcamentista, funpro, funges, proandges, instaladores, pedido, projeto, cliente_projeto, checkPost, checkSoli, checkApro, checkTroca, dtfim })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Não foi possível encontrar o cliente da proposta<projeto>.')
-                            res.redirect('/dashboard')
-                        })
-                    }).catch((err) => {
-                        req.flash('error_msg', 'Não foi possível encontrar o pedido<semequipe>.')
-                        res.redirect('/dashboard')
-                    })
-                }
+
+            // console.log('equipe=>'+equipe)
+            if (projeto.autorizado) {
+                checkAuth = 'checked'
+            } else {
+                checkAuth = 'unchecked'
+            }
+            lista_proposta = projeto.proposta
+
+            // console.log('instalador=>' + instalador)
+            Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
+                Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
+                    var dtfim = setData(pedido.data, pedido.prazo)
+                    if (naoVazio(projeto.dataPost)) {
+                        checkPost = 'checked'
+                    }
+                    if (naoVazio(projeto.dataSoli)) {
+                        checkSoli = 'checked'
+                    }
+                    if (naoVazio(projeto.dataApro)) {
+                        checkApro = 'checked'
+                    }
+                    if (naoVazio(projeto.dataTroca)) {
+                        checkTroca = 'checked'
+                    }
+                    // console.log('lista_proposta=>' + lista_proposta)
+                    res.render('principal/projeto', { checkAuth, checkPay, vendedor, lista_proposta, orcamentista, funpro, funges, ehMaster, proandges, pedido, projeto, instaladores, cliente_projeto, checkPost, checkSoli, checkApro, checkTroca, dtfim })
+                }).catch((err) => {
+                    req.flash('error_msg', 'Não foi possível encontrar o cliente da proposta<projeto>.')
+                    res.redirect('/dashboard')
+                })
             }).catch((err) => {
-                req.flash('error_msg', 'Houve erro ao encontrar o instalador.')
-                res.redirect('/gerenciamento/projeto/' + req.body.id)
+                req.flash('error_msg', 'Não foi possível encontrar o pedido<equipe>.')
+                res.redirect('/dashboard')
             })
+
+
         }).catch((err) => {
             req.flash('error_msg', 'Não foi possível encontrar o projeto<projeto>.')
             res.redirect('/dashboard')
@@ -3999,6 +3956,7 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
                 liberar: false,
                 prjfeito: false,
                 feito: true,
+                projeto: req.params.id,
                 dtinicio: dataHoje(),
                 dtfim: dataHoje(),
                 dtinibusca: dataBusca(dataHoje()),
@@ -4006,7 +3964,6 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
             }
             new Equipe(corpo).save().then(() => {
                 Equipe.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((equipe) => {
-                    projeto.equipe = equipe._id
                     projeto.save().then(() => {
                         // console.log('novaatv=>' + novaatv)
                         // new AtvTelhado(corpo).save().then(() => {
@@ -4293,154 +4250,115 @@ router.post('/projeto', ehAdmin, (req, res) => {
     })
 })
 
-router.post('/enviarEquipe/', ehAdmin, (req, res) => {
+router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
     const { user } = req.user
     const { _id } = req.user
     var id
-    if (typeof user == 'undefined') {
-        id = _id
-    } else {
+
+    if (naoVazio(user)) {
         id = user
+    } else {
+        id = _id
     }
+
     var mensagem
     var tipo
+
+    const check = req.body.check
+
+    const ins_realizado = await Pessoa.findById(req.body.ins_realizado)
+
     Projeto.findOne({ _id: req.body.id }).then((projeto) => {
         if (naoVazio(projeto)) {
             Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
-                // console.log('equipe=>' + equipe)
-                if (projeto.parado == false && projeto.execucao == false) {
-                    // console.log('req.body.instalador=>' + req.body.instalador)
-                    // console.log('novaatv=>' + novaatv)
-                    projeto.execucao = true
-                    projeto.parado = false
-                    projeto.dtiniicio = req.body.dtfim
-                    projeto.dtfim = req.body.dtfim
-                    projeto.save().then(() => {
-                        equipe.liberar = true
-                        projeto.dtiniicio = req.body.dtfim
-                        projeto.dtfim = req.body.dtfim
-                        projeto.dtinibusca = dataBusca(req.body.dtfim)
-                        projeto.dtfimbusca = dataBusca(req.body.dtfim)
-                        equipe.save().then(() => {
-                            Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
-                                // console.log('instalador=>' + instalador)
-                                Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                                    // console.log('cliente=>' + cliente)
-                                    var mensagem = 'Olá ' + instalador.nome + ',' + '\n' +
-                                        'Instalação programada para o cliente ' + cliente.nome + '\n' +
-                                        // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + '.' + '\n' +
-                                        // 'Acompanhe a obra acessando: https://integracao.vimmus.com.br/gerenciamento/instalacao/' + projeto._id + '.'
-                                        'Verifique seu aplicativo e aguarde a gerência entrar em contato.'
-                                    // console.log('mensagem=>' + mensagem)
-                                    // console.log('env.process.WHATS_SENDER=>' + env.process.WHATS_SENDER)
-                                    client.messages
-                                        .create({
-                                            body: mensagem,
-                                            from: 'whatsapp:+554991832978',
-                                            to: 'whatsapp:+55' + instalador.celular
-                                        })
-                                        .then((message) => {
-                                            req.flash('success_msg', 'Instalador alocado para o projeto.')
-                                            res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                                        }).done()
-                                }).catch((err) => {
-                                    req.flash('error_msg', 'Houve erro ao encontrar o cliente<envia>.')
-                                    res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                                })
+                Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
+                    Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
+                        // console.log('equipe=>' + equipe)
+                        if (projeto.parado == false && projeto.execucao == false) {
+                            if (check) {
+                                equipe.insres = ins_realizado
+                                projeto.ins_real = true
+                            } else {
+                                projeto.ins_real = false
+                                equipe.insres = projeto.ins_banco
+                            }
+                            projeto.execucao = true
+                            projeto.parado = false
+                            projeto.dtiniicio = req.body.dtfim
+                            projeto.dtfim = req.body.dtfim
+                            equipe.liberar = true
+                            equipe.dtinicio = req.body.dtfim
+                            equipe.dtfim = req.body.dtfim
+                            equipe.dtinibusca = dataBusca(req.body.dtfim)
+                            equipe.dtfimbusca = dataBusca(req.body.dtfim)
+                            projeto.save()
+                            equipe.save().then(() => {
+                                mensagem = 'Olá ' + instalador.nome + ',' + '\n' +
+                                    'Instalação programada para o cliente ' + cliente.nome + '\n' +
+                                    // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + '.' + '\n' +
+                                    // 'Acompanhe a obra acessando: https://integracao.vimmus.com.br/gerenciamento/instalacao/' + projeto._id + '.'
+                                    'Verifique seu aplicativo e aguarde a gerência entrar em contato.'
+                                client.messages
+                                    .create({
+                                        body: mensagem,
+                                        from: 'whatsapp:+554991832978',
+                                        to: 'whatsapp:+55' + instalador.celular
+                                    })
+                                    .then((message) => {
+                                        req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
+                                        res.redirect('/gerenciamento/emandamento')
+                                    }).done()
                             }).catch((err) => {
-                                req.flash('error_msg', 'Houve erro ao encontrar o instalador<envia>.')
-                                res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+                                req.flash('error_msg', 'Houve erro ao salvar a equipe.')
+                                res.redirect('/gerenciamento/emandamento')
                             })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Houve erro ao salvar a equipe.')
-                            res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                        })
+
+                        } else {
+                            if (projeto.parado == false) {
+                                projeto.execucao = true
+                                projeto.parado = true
+                                mensagem = 'Equipe de instalação cancelada'
+                                tipo = 'error_msg'
+                                equipe.parado = true
+                            } else {
+                                projeto.execucao = true
+                                projeto.parado = false
+                                mensagem = 'Equipe de instalação enviada'
+                                tipo = 'success_msg'
+                                equipe.parado = false
+                            }
+                            equipe.save()
+                            projeto.save().then(() => {
+                                // console.log('cliente=>' + cliente)
+                                mensagem = mensagem + ' para o cliente ' + cliente.nome + '\n' + '.'
+                                // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + ' foi cancelada.' + '\n' +
+                                'Aguarde a gerência entrar em contato.'
+                                client.messages
+                                    .create({
+                                        body: mensagem,
+                                        from: 'whatsapp:+554991832978',
+                                        to: 'whatsapp:+55' + instalador.celular
+                                    })
+                                    .then((message) => {
+                                        req.flash(tipo, mensagem)
+                                        res.redirect('/gerenciamento/emandamento')
+                                    }).done()
+                            }).catch((err) => {
+                                req.flash('error_msg', 'Houve erro ao salvar a projeto.')
+                                res.redirect('/gerenciamento/emandamento')
+                            })
+                        }
                     }).catch((err) => {
-                        req.flash('error_msg', 'Houve erro ao salvar o projeto.')
-                        res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+                        req.flash('error_msg', 'Houve erro ao encontrar o cliente<envia>.')
+                        res.redirect('/gerenciamento/emandamento')
                     })
-                } else {
-                    if (projeto.parado == false) {
-                        console.log('req.body.id=>' + req.body.id)
-                        projeto.execucao = true
-                        projeto.parado = true
-                        projeto.save().then(() => {
-                            Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
-                                console.log('projeto.cliente =>' + projeto.cliente)
-                                Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                                    // console.log('cliente=>' + cliente)
-                                    var mensagem = 'Olá ' + instalador.nome + ',' + '\n' +
-                                        'instalação CANCELADA. A instalação programada para o cliente ' + cliente.nome + '\n' +
-                                        // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + ' foi cancelada.' + '\n' +
-                                        'Aguarde a gerência entrar em contato.'
-                                    client.messages
-                                    console.log('instalador.celular=>' + instalador.celular)
-                                        .create({
-                                            body: mensagem,
-                                            from: 'whatsapp:+554991832978',
-                                            to: 'whatsapp:+55' + instalador.celular
-                                        })
-                                        .then((message) => {
-                                            req.flash('error_msg', 'Envio cancelado.')
-                                            res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                                        }).done()
-                                }).catch((err) => {
-                                    req.flash('error_msg', 'Houve erro ao encontrar o cliente<cancela>.')
-                                    res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                                })
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Houve erro ao encontrar o instalador<cancela>.')
-                                res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                            })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Houve erro ao salvar a projeto.')
-                            res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                        })
-                    } else {
-                        // console.log('req.body.instalador=>' + req.body.instalador)
-                        console.log('req.body.id=>' + req.body.id)
-                        projeto.execucao = true
-                        projeto.parado = false
-                        projeto.save().then(() => {
-                            Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
-                                // console.log('instalador=>' + instalador)
-                                Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                                    // console.log('cliente=>' + cliente)
-                                    var mensagem = 'Olá ' + instalador.nome + ',' + '\n' +
-                                        'Instalação programada para o cliente ' + cliente.nome + '\n' +
-                                        // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + '.' + '\n' +
-                                        // 'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/instalacao/' + projeto._id + '.'
-                                        'Verifique seu aplicativo e aguarde a gerência entrar em contato.'
-                                    // console.log('mensagem=>' + mensagem)
-                                    // console.log('env.process.WHATS_SENDER=>' + env.process.WHATS_SENDER)
-                                    client.messages
-                                    console.log('instalador.celular=>' + instalador.celular)
-                                        .create({
-                                            body: mensagem,
-                                            from: 'whatsapp:+554991832978',
-                                            to: 'whatsapp:+55' + instalador.celular
-                                        })
-                                        .then((message) => {
-                                            req.flash('success_msg', 'Instalador alocado para o projeto.')
-                                            res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                                        }).done()
-                                }).catch((err) => {
-                                    req.flash('error_msg', 'Houve erro ao encontrar o cliente<envia2>.')
-                                    res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                                })
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Houve erro ao encontrar o instalador<envia>.')
-                                res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                            })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Houve erro ao salvar o projeto.')
-                            res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                        })
-                    }
-                }
+                }).catch((err) => {
+                    req.flash('error_msg', 'Houve erro ao encontrar o instalador<envia>.')
+                    res.redirect('/gerenciamento/emandamento')
+                })
             }).catch((err) => {
                 req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
-                res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+                res.redirect('/gerenciamento/emandamento')
             })
         } else {
             Tarefas.findOne({ _id: req.body.id }).then((tarefa) => {
@@ -4479,7 +4397,7 @@ router.post('/enviarEquipe/', ehAdmin, (req, res) => {
         }
     }).catch((err) => {
         req.flash('error_msg', 'Houve erro ao encontrar a projeto.')
-        res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+        res.redirect('/gerenciamento/emandamento')
     })
 })
 
@@ -4492,34 +4410,28 @@ router.post('/addInstalador/', ehAdmin, (req, res) => {
     } else {
         id = user
     }
+    console.log(req.body.id)
     Projeto.findOne({ _id: req.body.id }).then((projeto) => {
-        if (naoVazio(projeto)) {
-            Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
-                // console.log('equipe=>' + equipe)
-                projeto.instalador = req.body.instalador
-                projeto.save().then(() => {
-                    console.log('req.body.instalador=>' + req.body.instalador)
-                    equipe.insres = req.body.instalador
-                    equipe.qtdmod = req.body.qtdmod
-                    equipe.save().then(() => {
-                        req.flash('success_msg', 'Instalador alocado para o projeto.')
-                        res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                    }).catch((err) => {
-                        req.flash('error_msg', 'Houve erro ao salvar a equipe.')
-                        res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                    })
-                }).catch((err) => {
-                    req.flash('error_msg', 'Houve erro ao salvar o projeto.')
-                    res.redirect('/gerenciamento/emandamento/listatipoprojeto')
-                })
+        projeto.ins_banco = req.body.instalador
+        projeto.save()
+        Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
+            equipe.insres = req.body.instalador
+            equipe.qtdmod = req.body.qtdmod
+            equipe.save().then(() => {
+                req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
+                res.redirect('/gerenciamento/emandamento')
             }).catch((err) => {
-                req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
-                res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+                req.flash('error_msg', 'Houve erro ao salvar a equipe.')
+                res.redirect('/gerenciamento/emandamento')
             })
-        }
+        }).catch((err) => {
+            req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
+            res.redirect('/gerenciamento/emandamento')
+        })
+
     }).catch((err) => {
         req.flash('error_msg', 'Houve erro ao encontrar a projeto.')
-        res.redirect('/gerenciamento/emandamento/listatipoprojeto/')
+        res.redirect('/gerenciamento/emandamento/')
     })
 })
 
@@ -7892,227 +7804,218 @@ router.get('/exportarOrcamento/:id', ehAdmin, (req, res) => {
 })
 
 router.post('/emandamento/', ehAdmin, (req, res) => {
+
     const { _id } = req.user
     const { user } = req.user
     var id
 
-    if (typeof user == 'undefined') {
-        id = _id
-    } else {
+    if (naoVazio(user)) {
         id = user
+    } else {
+        id = _id
     }
+
+    let seq
+    let cliente
+    let nome_cliente
+    let parado
+    let autorizado
+    let pagamento
+    let instalado
+    let execucao
+    let instalador
+    let cidade
+    let uf
+    let telhado
+    let estrutura
+    let inversor
+    let modulos
+    let potencia
+    let sistema
+    let deadline
+    let ins_banco
+    let checkReal
 
     var listaAndamento = []
-    var vendedor = ''
-    var q = 0
-    var hoje
-    var meshoje
-    var mestitulo
-    var anotitulo
-    var caminho
+    var addInstalador = []
 
-    var hoje = dataHoje()
-    var meshoje = hoje.substring(5, 7)
-    var anotitulo = hoje.substring(0, 4)
+    const dataini = req.body.dataini
+    const datafim = req.body.datafim
+    const dtini = parseFloat(dataBusca(dataini))
+    const dtfim = parseFloat(dataBusca(datafim))
 
-    var dataini
-    var datafim
-    var dtini
-    var dtfim
+    let filter_installer = req.body.instalador
+    let installer_name
+    let filter_status = req.body.status
+    let liberar_status = { $exists: true }
+    let prjfeito_status = { $exists: true }
+    let parado_status = { $exists: true }
+    let sql_installer
+    let sql = {}
 
-    var status = req.body.stats
-    var instalador = req.body.instalador
-    var id_installer
-    var installer_name
-    var installer_id
-
-    diaini = '01'
-    switch (meshoje) {
-        case '01': janeiro = 'active'
-            mestitulo = 'Janeiro '
-            diafim = '31'
-            break;
-        case '02': fevereiro = 'active'
-            mestitulo = 'Fevereiro '
-            diafim = '28'
-            break;
-        case '03': marco = 'active'
-            mestitulo = 'Março '
-            diafim = '31'
-            break;
-        case '04': abril = 'active'
-            mestitulo = 'Abril '
-            diafim = '30'
-            break;
-        case '05': maio = 'active'
-            mestitulo = 'Maio '
-            diafim = '31'
-            break;
-        case '06': junho = 'active'
-            mestitulo = 'Junho '
-            diafim = '30'
-            break;
-        case '07': julho = 'active'
-            mestitulo = 'Julho '
-            diafim = '31'
-            break;
-        case '08': agosto = 'active'
-            mestitulo = 'Agosto '
-            diafim = '31'
-            break;
-        case '09': setembro = 'active'
-            mestitulo = 'Setembro '
-            diafim = '30'
-            break;
-        case '10': outubro = 'active'
-            mestitulo = 'Outubro '
-            diafim = '31'
-            break;
-        case '11': novembro = 'active'
-            mestitulo = 'Novembro '
-            diafim = '30'
-            break;
-        case '12': dezembro = 'active'
-            mestitulo = 'Dezembro '
-            diafim = '31'
-            break;
-    }
-    dataini = req.body.dataini
-    datafim = req.body.datafim
-    dtini = dataBusca(dataini)
-    dtfim = dataBusca(datafim)
-    var sql_filter = {}
-    var sql_status = {}
-    var sql = {}
-    if (req.body.instalador == 'Todos') {
-        id_installer = '111111111111111111111111'
-        sql_filter = { user: id, feito: true, tarefa: { $exists: false }, nome_projeto: { $exists: true }, $or: [{ 'dtinibusca': { $lte: dtfim, $gte: dtini } }, { 'dtfimbusca': { $lte: dtfim, $gte: dtini } }] }
+    if (filter_installer != 'Todos') {
+        sql_installer = filter_installer
     } else {
-        id_installer = instalador
-        sql_filter = { insres: instalador, user: id, feito: true, tarefa: { $exists: false }, nome_projeto: { $exists: true }, $or: [{ 'dtinibusca': { $lte: dtfim, $gte: dtini } }, { 'dtfimbusca': { $lte: dtfim, $gte: dtini } }] }
+        sql_installer = { $exists: true }
+    }
+    
+    if (filter_status != 'Todos') {
+        switch (filter_status) {
+            case 'Aguardando': liberar_status = false; parado_status = false; prjfeito_status = false
+                break;
+            case 'Execução': liberar_status = true; parado_status = false; prjfeito_status = false
+                break;
+            case 'Instalado': liberar_status = true; parado_status = false; prjfeito_status = true
+                break;
+            case 'Parado': liberar_status = true; parado_status = true; prjfeito_status = false
+                break;
+        }
     }
 
-    switch (status) {
-        case 'Todos':
-            sql_status = {}
-            break;
-        case 'Aguardando':
-            sql_status = { liberar: false }
-            break;
-        case 'Execucao':
-            sql_status = { liberar: true, prjfeito: false }
-            break;
-        case 'Instalado':
-            sql_status = { liberar: true, prjfeito: true }
-            break;
-        case 'Parado':
-            sql_status = { parado: true, prjfeito: false }
-            break;
-    }
+    //Object.assign(sql,sql_status, sql_installer, { user: id })
 
-    Object.assign(sql, sql_filter, sql_status)
-
-    // console.log('sql=>'+JSON.stringify(sql))
-    Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
-        Pessoa.findOne({ user: id, _id: id_installer }).then((select_installer) => {
-            if (naoVazio(select_installer)) {
-                installer_name = select_installer.nome
-                installer_id = installer_id
-            } else {
-                installer_name = 'Todos'
-                installer_id = ''
-            }
-            Equipe.find(sql).then((conta_equipe) => {
-                // console.log('conta_equipe=>'+conta_equipe)
-                if (naoVazio(conta_equipe)) {
-                    conta_equipe.forEach((e) => {
-                        Projeto.findOne({ user: id, equipe: e._id }).then((projeto) => {
-                            // console.log('cliente=>'+projeto.cliente)
-                            Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                                Pessoa.findOne({ _id: projeto.vendedor }).then((pes_ven) => {
-                                    Pessoa.findOne({ _id: e.insres }).then((pes_instalador) => {
-                                        // Pessoa.findOne({ _id: projeto.ins_banco }).then((pes_ins_banco) => {
-                                        // console.log('pes_tecnico=>'+pes_tecnico)
-                                        q++
-                                        if (naoVazio(pes_ven)) {
-                                            vendedor = pes_ven.nome
-                                        } else {
-                                            vendedor = ''
-                                        }
-
-                                        if (naoVazio(pes_instalador)) {
-                                            instalador = pes_instalador.nome
-                                        } else {
-                                            instalador = ''
-                                        }
-
-                                        // if (naoVazio(pes_ins_banco)) {
-                                        //     ins_banco = pes_ins_banco.nome
-                                        // } else {
-                                        //     ins_banco = ''
-                                        // }
-
-                                        // if (naoVazio(ins_banco)) {
-                                        //     addInstalador = [{ instalador: instalador, ins_banco: ins_banco, qtdmod: projeto.plaQtdMod }]
-                                        // } else {
-                                        addInstalador = [{ instalador: instalador, qtdmod: projeto.plaQtdMod }]
-                                        // }
-
-                                        //console.log(addInstalador)
-                                        listaAndamento.push({
-                                            id: projeto._id, seq: projeto.seq, cliente: cliente.nome, modulos: projeto.plaQtdMod, potencia: projeto.plaWattMod, inversor: projeto.plaKwpInv, telhado: projeto.telhado, estrutura: projeto.estrutura, cidade: projeto.cidade, uf: projeto.uf,
-                                            vendedor, instalador, deadline: dataMensagem(e.dtfim), parado: projeto.parado, execucao: projeto.execucao, instalado: projeto.instalado, autorizado: projeto.autorizado, pago: projeto.pago, encerrado: projeto.encerrado, addInstalador
-                                        })
-                                        // console.log('q=>' + q)
-                                        // console.log('conta_equipe=>' + conta_equipe.length)
-
-                                        if (q == conta_equipe.length) {
-                                            listaAndamento.sort(comparaNum)
-                                            caminho = 'principal/emandamento'
-                                            // console.log('lista andamento=>' + JSON.stringify(listaAndamento))
-                                            res.render(caminho, {
-                                                mestitulo, meshoje, anotitulo, dataini, datafim, projeto: true,
-                                                listaAndamento, todos_instaladores, status, installer_id, installer_name
-                                            })
-                                        }
-                                        // }).catch((err) => {
-                                        //     req.flash('error_msg', 'Falha ao encontrar o técnico responsável do banco.')
-                                        //     res.redirect('/dashboard')
-                                        // })
-                                    }).catch((err) => {
-                                        req.flash('error_msg', 'Falha ao encontrar o técnico responsável.')
-                                        res.redirect('/dashboard')
-                                    })
-                                }).catch((err) => {
-                                    req.flash('error_msg', 'Falha ao encontrar o gestor responsável.')
-                                    res.redirect('/dashboard')
-                                })
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                                res.redirect('/dashboard')
-                            })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Falha ao encontrar o projeto<gea>.')
-                            res.redirect('/dashboard')
-                        })
-                    })
-                } else {
-                    req.flash('error_msg', 'Não foi(ram) econtrado(s) projeto(s)')
-                    res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+    Cliente.find({ user: id }).lean().then((todos_clientes) => {
+        Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
+            Equipe.aggregate([
+                {
+                    $match: {
+                        user: id,
+                        tarefa: { $exists: false },
+                        nome_projeto: { $exists: true },
+                        insres: sql_installer,
+                        liberar: liberar_status,
+                        prjfeito: prjfeito_status,
+                        parado: parado_status,
+                        "dtfimbusca": {
+                            $gte: dtini,
+                            $lte: dtfim
+                        }
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'projetos',
+                        localField: '_id',
+                        foreignField: 'equipe',
+                        as: 'projeto'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'pessoas',
+                        localField: 'insres',
+                        foreignField: '_id',
+                        as: 'instalador',
+                    }
                 }
-            }).catch((err) => {
-                req.flash('error_msg', 'Falha ao encontrar a equipe.')
-                res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+            ]).then(async list => {
+
+                for (const item of list) {
+                    deadline = await item.dtfim
+                    qtdmod = await item.qtdmod
+                    projetos = await item.projeto
+
+                    projetos.map(async register => {
+                        id = register._id
+                        seq = register.seq
+                        cidade = register.cidade
+                        uf = register.uf
+                        telhado = register.telhado
+                        estrutura = register.estrutura
+                        inversor = register.plaKwpInv
+                        modulos = register.plaQtdMod
+                        potencia = register.plaWattMod
+                        instalado = register.instalado
+                        execucao = register.execucao
+                        parado = register.parado
+                        autorizado = register.autorizado
+                        pagamento = register.pago
+                        cliente = register.cliente
+                        ins_banco = register.ins_banco
+                        checkReal = register.ins_real
+                        if (checkReal != true) {
+                            checkReal = 'unchecked'
+                        } else {
+                            checkReal = 'checked'
+                        }
+
+                        if (naoVazio(modulos) && naoVazio(potencia)) {
+                            sistema = ((modulos * potencia) / 1000).toFixed(2)
+                        } else {
+                            sistema = 0
+                        }
+                    })
+
+                    instaladores = await item.instalador
+
+                    if (instaladores.length > 0) {
+                        instaladores.map(async register => {
+                            instalador = register.nome
+                            
+                            nome_ins = instalador
+                            id_ins = register._id
+
+                            if (naoVazio(ins_banco)) {
+                                if (register._id == ins_banco) {
+                                    addInstalador = [{ instalador, qtdmod }]
+                                } else {
+                                    let nome_ins = await Pessoa.findById(ins_banco)
+                                    addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
+                                }
+                            } else {
+                                addInstalador = [{ instalador, qtdmod }]
+                            }
+                        })
+                    }
+
+                    if (naoVazio(ins_banco)) {
+                        await Pessoa.findById(ins_banco).then(this_ins_banco => {
+                            nome_ins_banco = this_ins_banco.nome
+                            id_ins_banco = this_ins_banco._id
+                        })
+                    } else {
+                        nome_ins_banco = ''
+                        id_ins_banco = ''
+                    }
+
+                    await Cliente.findById(cliente).then(this_cliente => {
+                        nome_cliente = this_cliente.nome
+                    })
+
+
+                    await listaAndamento.push({
+                        id, seq, parado, execucao, autorizado, pagamento,
+                        instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+                        sistema, modulos, potencia, inversor, deadline, addInstalador,
+                        dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
+                    })
+                    addInstalador = []
+                }
+
+                listaAndamento.sort(comparaNum)
+
+                if (filter_installer != 'Todos') {
+                    const installer = await Pessoa.findById(filter_installer)
+                } else {
+                    installer_name = 'Todos'
+                }
+
+                res.render('principal/emandamento', {
+                    listaAndamento, todos_clientes, todos_instaladores,
+                    datafim, dataini,
+                    installer_id: filter_installer, installer_name,
+                    status: filter_status
+                })
             })
+
         }).catch((err) => {
-            req.flash('error_msg', 'Não foi(ram) econtrado(s) projeto(s).')
-            res.redirect('/gerenciamento/emandamento/listatipoprojeto')
+            req.flash('error_msg', 'Nenhum instalador encontrado.')
+            res.redirect('/dashboard')
         })
     }).catch((err) => {
-        req.flash('error_msg', 'Nenhum instalador encontrado.')
-        res.redirect('/relatorios/consulta')
+        req.flash('error_msg', 'Nenhum cliente encontrado.')
+        res.redirect('/dashboard')
     })
-
 })
 
 router.post('/salvarFotos', ehAdmin, (req, res) => {
@@ -9560,6 +9463,21 @@ router.get('/deletamensagem/:id', ehAdmin, (req, res) => {
     }).catch((err) => {
         req.flash('error_msg', 'Houve erro ao excluir a mensagem.')
         res.redirect('/gerenciamento/mensagem')
+    })
+})
+
+router.get('/removeInstalador/:id', ehAdmin, (req, res) => {
+    let params = (req.params.id)
+    params = params.split('@')
+    Projeto.findById(params[0]).then((projeto) => {
+        Equipe.updateOne({ _id: projeto.equipe }, { $unset: { insres: "" } }).then(() => {
+            Projeto.updateOne({ _id: params[0] }, { $unset: { ins_banco: "" } }).then(() => {
+                Projeto.updateOne({ _id: params[0] }, { $set: { execucao: false, ins_real: false } }).then(() => {
+                    req.flash('success_msg', 'Removido ' + params[1] + ' do projeto ' + projeto.seq + '.')
+                    res.redirect('/gerenciamento/emandamento')
+                })
+            })
+        })
     })
 })
 

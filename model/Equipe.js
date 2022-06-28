@@ -7,6 +7,11 @@ const Equipe = new Schema({
     ref: 'usuario',
     require: true
   },
+  projeto: {
+    type: Schema.Types.ObjectId,
+    ref: 'projeto',
+    require: true
+  },  
   ehpadrao: {
     type: Boolean,
     require: false,
@@ -29,16 +34,6 @@ const Equipe = new Schema({
   qtdmod: {
     type: Number,
   },  
-  addinstalador: [{
-    tecnico: {
-      type: Schema.Types.ObjectId,
-      ref: 'pessoa',
-      require: false,
-    },
-    qtdmod: {
-      type: Number,
-    }
-  }],
   nome_projeto: {
     type: String,
     require: false
@@ -55,81 +50,12 @@ const Equipe = new Schema({
     type: String,
     require: false
   },
-  placa: [{
-    desc: {
-      type: String,
-      require: false
-    },
-    dtdes: {
-      type: String,
-      require: false
-    },
-  }],
-
   custoins: {
     type: Number,
     require: false
   },
   custoele: {
     type: Number,
-    require: false
-  },
-  ins0: {
-    type: String,
-    require: false
-  },
-  ins1: {
-    type: String,
-    require: false
-  },
-  ins2: {
-    type: String,
-    require: false
-  },
-  ins3: {
-    type: String,
-    require: false
-  },
-  ins4: {
-    type: String,
-    require: false
-  },
-  ins5: {
-    type: String,
-    require: false
-  },
-  idins0: {
-    type: Schema.Types.ObjectId,
-    ref: 'pessoa',
-    require: false
-  },
-  idins1: {
-    type: Schema.Types.ObjectId,
-    ref: 'pessoa',
-    require: false
-  },
-  idins2: {
-    type: Schema.Types.ObjectId,
-    ref: 'pessoa',
-    require: false
-  },
-  idins3: {
-    type: Schema.Types.ObjectId,
-    ref: 'pessoa',
-    require: false
-  },
-  idins4: {
-    type: Schema.Types.ObjectId,
-    ref: 'pessoa',
-    require: false
-  },
-  idins5: {
-    type: Schema.Types.ObjectId,
-    ref: 'pessoa',
-    require: false
-  },
-  email: {
-    type: String,
     require: false
   },
   feito: {

@@ -93,7 +93,7 @@
                     {{/if}}
                     <option>Todos</option>
                     {{#each todos_instaladores}}
-                    <option value='{{_id}}'>{{nome}}</option>
+                    <option name='sel_all_installers' value='{{_id}}'>{{nome}}</option>
                     {{else}}
                     <option>Nenhum instalador cadastrado</option>
                     {{/each}}
@@ -101,7 +101,7 @@
             </div>
             <div class='col-md-3'>
                 <label class='col-form-label col-form-label-sm fw-bold'>Status</label>
-                <select name='stats' class='form-select form-select-sm'>
+                <select name='status' class='form-select form-select-sm'>
                     {{#if status}}
                     <option class='fw-bold' value="{{status}}">{{status}}</option>
                     {{/if}}
@@ -137,15 +137,16 @@
             <tr>
             <tr>
                 <th style="width: 2%;" rowspan="2">Cód.</th>
-                <th style="width: 30%" rowspan="2">Cliente</th>
-                <th style="width: 10%;" rowspan="2">Cidade</th>
+                <th style="width: 20%" rowspan="2">Cliente</th>
+                <th style="width: 6%;" rowspan="2">Cidade</th>
                 <th style="width: 10%;" rowspan="2">Telhado</th>
-                <th style="width: 10%;" colspan="2">Módulos</th>
-                <th style="width: 8%;" rowspan="2">Inversor</th>
-                <th style="width: 10%;" rowspan="2">Instalador</th>
-                <th style="width: 5%;" rowspan="2">Banco</th>
-                <th style="width: 10%;" rowspan="2">Projeto</th>
-                <th style="width: 15%;" rowspan="2">Pagamento</th>
+                <th style="width: 6%;" rowspan="2">Sistema</th>
+                <th style="width: 8%;" colspan="2">Módulos</th>
+                <th style="width: 5%;" rowspan="2">Inversor</th>
+                <th style="width: 6%;" rowspan="2">Instalador</th>
+                <th style="width: 10%;" rowspan="2">Banco</th>
+                <th style="width: 6%;" rowspan="2">Projeto</th>
+                <th style="width: 6%;" rowspan="2">Pagamento</th>
                 <th style="width: 10%" rowspan="2">Data Final</th>
             </tr>
             <tr>
@@ -161,14 +162,16 @@
                 <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{cidade}}/{{uf}}</a></td>
                 <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{telhado}}/{{estrutura}}</a>
                 </td>
+                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{sistema}}</a></td>
                 <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{modulos}}</a></td>
                 <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{potencia}}</a></td>
                 <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{inversor}}</a></td>
                 <td style="text-align: center;">
                     <button class='btn'
-                        onclick='getInstaler("projeto{{seq}}","{{id}}","{{modulos}}","{{execucao}}","{{parado}}","{{instalado}}","{{autorizado}}","{{pago}}","{{encerrado}}")'
-                        id='submit' data-bs-toggle="modal" data-bs-target="#instalador">
-                        <i class='bi bi-person instalador'></i>
+                        onclick='getInstaler("projeto{{seq}}","{{id}}","{{modulos}}","{{execucao}}","{{parado}}","{{instalado}}","{{autorizado}}","{{pago}}","{{encerrado}}","{{deadline}}","{{checkReal}}", "{{nome_ins}}", "{{id_ins}}")'
+                        data-bs-toggle="modal" data-bs-target="#instalador">
+                        <i class='bi bi-person instalador' id='selinstalador'
+                            style="display: flex;justify-content: center;margin: auto;padding-top: 10px;"></i>
                         <div id='projeto{{seq}}' style="display: none;">
                             {{#each addInstalador}}
                             <label class="selectInstalador">{{instalador}}</label>
@@ -178,7 +181,7 @@
                         </div>
                     </button>
                 </td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{inst_banco}}</a></td>
+                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{nome_ins_banco}}</a></td>
                 <td style="text-align: center;">
                     <i {{#if autorizado}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
                         {{/if}} style="display: flex;justify-content: center;margin: auto;padding-top: 10px;"></i>
@@ -187,51 +190,63 @@
                     <i {{#if pagamento}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
                         {{/if}} style="display: flex;justify-content: center;margin: auto;padding-top: 10px;"></i>
                 </td>
-                <td style="text-align: center;">{{deadline}}</td>
+                <td style="text-align: center;">{{dtfim}}</td>
             </tr>
             {{/each}}
         </table>
-        {{!-- <table>
-            <tr>
-                <th style="width: 2%;" rowspan="2">Projeto</th>
-                <th style="width: 10%;" rowspan="2">Instalador</th>
-                <th style="width: 6%" rowspan="2">Inicio Programado</th>
-                <th style="width: 6%" rowspan="2">Fim Programado</th>
-                <th style="width: 10%;" rowspan="2">Cliente</th>
-                <th style="width: 10%;" colspan="2">Módulos</th>
-                <th style="width: 5%;" rowspan="2">Inversor</th>
-                <th style="width: 10%;" rowspan="2">Telhado</th>
-                <th style="width: 10%;" rowspan="2">Cidade</th>
-                <th style="width: 5%" rowspan="2">Vendedor</th>
-            </tr>
-            <tr>
-                <th style="width: 10%;">Quantidade</th>
-                <th style="width: 10%;">Potência</th>
-            </tr>
-            {{#each listaAndamento}}
-            <tr style="line-height: 30px;">
-                <td style="text-align: center;font-weight: 800;" {{#if parado}}id="parado" {{else}}id="aguardando"
-                    {{/if}}><a href='/gerenciamento/projeto/{{id}}'>{{seq}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{tecnico}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{dtinicio}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{deadline}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{cliente}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{modulos}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{potencia}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{inversor}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{telhado}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{cidade}}/{{uf}}</a></td>
-                <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{vendedor}}</a></td>
-            </tr>
-            {{else}}
-            <h6>Nenhum projeto encontrado.</h6>
-            {{/each}}
-        </table> --}}
     </div>
 </div>
-<script type="text/javascript">
 
-    function getInstaler(projeto, id, modulos, execucao, parado, instalado, autorizado, pago, encerrado) {
+<script type="text/javascript">
+    const popup = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+
+    function deleteInstalador(id, ins) {
+        popup.fire({
+            title: "Deletar Instalador",
+            text: "Tem certeza que deseja continuar?",
+            icon: "question",
+            heightAuto: false,
+            showCancelButton: true,
+            cancelButtonText: 'Não, voltar!',
+            confirmButtonText: 'Sim, remova o instalador!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/gerenciamento/removeInstalador/' + `${id}@${ins}`
+            }
+        })
+    }
+
+    function realizado(id) {
+        var check = $('#check').is(':checked')
+        var form = $('#insRealizado')
+
+        $('.checkReal').remove()
+
+        if (check) {
+            form.css("display", "flex")
+
+            $('<input>').attr({
+                name: 'check',
+                class: 'checkReal',
+                value: true,
+                type: 'hidden'
+
+            }).prependTo('form')
+
+            form.show()
+
+        } else {
+            form.hide()
+        }
+    }
+
+    function getInstaler(projeto, id, modulos, execucao, parado, instalado, autorizado, pago, encerrado, deadline, check, nome_ins, id_ins) {
         const listInstallers = $("#modal-body-installers")
         const listModules = $("#modal-body-modules")
         const listActions = $("#modal-body-actions")
@@ -239,9 +254,16 @@
         const sendTeam = $("#sendTeam")
         const buttonAuth = $("#buttonAuth")
         const iconAuth = $("#iconAuth")
+        const ins_realizado = $('#insRealizado')
+        const sel_realizado = $('#sel_realizado')
 
-        const qtmod = document.getElementById('qtdmod')
-        qtdmod.value = modulos
+        if (deadline != '') {
+            const dtfim = $('#dtfim')
+            dtfim.val(deadline)
+        }
+
+        const qtdmod = $('#qtdmod')
+        qtdmod.val(modulos)
 
         const content = document.getElementById(projeto)
         const lengthInstal = content.getElementsByClassName('selectInstalador')
@@ -254,38 +276,64 @@
             instalers = instalers + lengthInstal[i].innerHTML + '<br>'
             modules = modules + lengthQtdMod[i].innerHTML + '<br>'
             actions = actions + '<div style="display: flex;">' +
-                '<a href="/gerenciamento/removeAddInstalador/' + id + '@' + lengthInstal[i].innerHTML + '">' +
-                '<i class="bi bi-trash2" style="display: flex; top: 3px;position: relative;margin:auto; justify-content: center; font-size: 20px"></i></a>' +
-                '<div class="form-check">' +
-                '<label class="check-label" style="width: 50px;">É banco?</label>' +
-                '<input onclick="window.location.href="/gerenciamento/saveBank/' + id + '" class="check-input" type="checkbox" name="ehbanco">' +
-                '</div></div>'
+                '<div class="form-check" style="display: flex">' +
+                '<label class="check-label" style="width: 160px;">NÃO É INSTALADOR REALIZADO</label>' +
+                '<input ' + check + ' onclick="realizado(' + `'${id}'` + ')" class="check-input" type="checkbox" id="check" value="1">' +
+                '</div>' +
+                '<i onclick="deleteInstalador(' + `'${id}','${lengthInstal[i].innerHTML}'` + ')" class="bi bi-trash2" style="cursor: pointer;display: flex;margin-top: 5px; margin-left: 20px; font-size: 20px"></i>' +
+                '</div>'
         }
 
+        $(".optReal").remove()
+        if (check == 'checked') {
+            sel_realizado.prepend($('<option>',
+                {
+                    value: id_ins,
+                    text: nome_ins,
+                    addClass: 'fw-bold optReal',
+
+                }
+            ).prop('selected', true))
+
+            ins_realizado.css("display", "flex")
+            ins_realizado.show()
+
+        } else {
+            ins_realizado.hide()
+        }
+
+        iconAuth.removeClass()
+        buttonAuth.removeClass()
+        buttonAuth.text('')
+        sendTeam.hide()
+
         if (lengthInstal.length > 0) {
+
+            iconAuth.addClass("d-flex justify-align-right")
+
+            buttonAuth.addClass("btn btn-sm")
+            buttonAuth.addClass("d-flex justify-content-center")
+
             sendTeam.show()
             const icon = document.createElement('icon')
             if (execucao == "true") {
                 if (parado == "true") {
-                    iconAuth.addClass("d-flex justify-align-right bi bi-arrow-right-circle")
+                    iconAuth.addClass("bi bi-arrow-right-circle")
                 } else {
-                    iconAuth.addClass("d-flex justify-align-right bi bi-stop-circle")
+                    iconAuth.addClass("bi bi-stop-circle")
                 }
             } else {
-                iconAuth.addClass("d-flex justify-align-right bi bi-arrow-right-circle")
+                iconAuth.addClass("bi bi-arrow-right-circle")
             }
 
             if (execucao == 'true') {
                 if (parado == 'true') {
-                    buttonAuth.addClass("d-flex justify-content-center btn btn-sm btn-primary")
-                    buttonAuth.text("Autorizar Projeto")
+                    buttonAuth.addClass("btn-primary")
                 } else {
-                    buttonAuth.addClass("d-flex justify-content-center btn bt-sm btn-warning")
-                    buttonAuth.text("Parar Projeto")
+                    buttonAuth.addClass("btn-warning")
                 }
             } else {
-                buttonAuth.addClass("d-flex justify-content-center btn btn-sm btn-primary")
-                buttonAuth.text("Autorizar Projeto")               
+                buttonAuth.addClass("btn-primary")
             }
         }
 
@@ -304,7 +352,7 @@
         listActions.html(actions)
         listInstallers.html(instalers)
         listModules.html(modules)
-        addInstaller.append(inputInstalador)
+        addInstaller.prepend(inputInstalador)
         sendTeam.prepend(inputEnviar)
     }
 </script>

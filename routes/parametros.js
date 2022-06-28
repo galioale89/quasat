@@ -7,13 +7,11 @@ const Parametros = mongoose.model('parametros')
 
 const { ehAdmin } = require('../helpers/ehAdmin')
 
-router.get('/novo/:tipo', ehAdmin, (req, res) => {
+router.get('/novo/', ehAdmin, (req, res) => {
 
     const { _id } = req.user
     const { user } = req.user
     var id
-    var sql = {}
-    var view
 
     if (typeof user == 'undefined') {
         id = _id
@@ -21,8 +19,12 @@ router.get('/novo/:tipo', ehAdmin, (req, res) => {
         id = user
     }
 
-    Parametros.find({ user: id, tipo: 'solar' }).lean().then((params) => {
-        res.render('principal/paramsSolar', { params })
+    Parametros.find({ user: id }).lean().then((params) => {
+        if (naoVazio(params)) {
+            res.render('principal/paramsSolar', { params })
+        } else {
+            res.render('principal/paramsSolar')
+        }
     }).catch((err) => {
         req.flash('error_msg', 'Não foi possível encontrar os parâmetros.')
         res.redirect('/dashboard')

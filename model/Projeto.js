@@ -16,34 +16,28 @@ const Projeto = new Schema({
         ref: 'cliente',
         require: false,
     },
+    equipe: {
+        type: Schema.Types.ObjectId,
+        ref: 'equipe',
+        require: false,
+    },    
+    ins_banco: {
+        type: Schema.Types.ObjectId,
+        ref: 'pessoa',
+        require: false,
+    },
+    ins_real: {
+        type: Boolean,
+        require: false
+    },    
     responsavel: {
         type: Schema.Types.ObjectId,
         ref: 'pessoa',
         require: false,
-    },
-    instalador: {
-        type: Schema.Types.ObjectId,
-        ref: 'pessoa',
-        require: false,
-    },
-    addinstalador: [{
-        tecnico: {
-            type: Schema.Types.ObjectId,
-            ref: 'pessoa',
-            require: false,
-        },
-        qtdmod: {
-            type: Number,
-        }
-    }],    
+    }, 
     vendedor: {
         type: Schema.Types.ObjectId,
         ref: 'pessoa',
-        require: false,
-    },
-    equipe: {
-        type: Schema.Types.ObjectId,
-        ref: 'equipe',
         require: false,
     },
     novo: {

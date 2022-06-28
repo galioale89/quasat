@@ -71,16 +71,19 @@
   </div>
   <!-- Final Modal -->
 
-  <!-- Modal Instalador-->
-  <div class="modal fade" id="instalador" tabindex="-1" aria-hidden="true"> 
+    <!-- Modal Instalador-->
+  <div class="modal fade" id="instalador" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <div class="modal-title">Instalador</div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>          
+          <div class="modal-title">Equipe do Projeto</div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <div class="card mb-2">
+            <div class="card-body">
           <form action="/gerenciamento/addInstalador" method="post">
+            <label class="col-form-label">Selecionar instalador</label>
             <div id="addInstaller"></div>
             <div style="display: flex;">
               <select class="form-select form-select-sm" name="instalador" style="width: 38rem;margin: auto;">
@@ -90,42 +93,58 @@
               </select>
               <label class="col-form-label col-form-label-sm"
                 style="width: 22rem;margin: auto;padding-left: 50px;">Quantidade de Painéis: </label>
-              <input type="number" class="form-control form-control-sm" name="qtdmod" id="qtdmod"  style="width: 5rem;margin: auto;">
+              <input type="number" class="form-control form-control-sm" name="qtdmod" id="qtdmod"
+                style="width: 5rem;margin: auto;">
               <button type="submit" style="display: flex; height: 2rem; border-color: white;margin: auto;"><i
                   class="bi bi-plus" style="display: flex;margin: auto;"></i></button>
               <a href="/gerenciamento/vermais" class="btn btn-primary d-flex items-align-center"
                 style="margin-left: 10px;height: 40px;margin-top: 5px;"><i class="bi bi-calendar2"></i></a>
             </div>
           </form>
+          </div>
+          </div>
           <div class="card">
             <div class="card-body">
               <label class="col-form-label">Instaladores Selecionados</label>
               <table>
                 <tr>
-                  <th>Instalador</th>
+                  <th style="width: 40%;">Instalador Banco</th>
                   <th>Qtd. Módulos</th>
                   <th>Ações</th>
                 </tr>
                 <tr>
                   <td>
-                    <label style="font-size: 15px;" id="modal-body-installers"></label>
+                    <div style="font-size: 15px;" id="modal-body-installers"></div>
                   </td>
                   <td>
-                    <label style="font-size: 15px;" id="modal-body-modules"></label>
+                    <div style="font-size: 15px;" id="modal-body-modules"></div>
                   </td>
                   <td>
-                    <label id="modal-body-actions"></label>
+                    <div id="modal-body-actions"></div>
                   </td>
                 </tr>
               </table>
               <form action="/gerenciamento/enviarEquipe" method="post" id="formAuthorization">
-              <div id="sendTeam" style="display: none;">
+                <div id="sendTeam" style="display: none;">
                   <div style="display: flex;position: relative;padding-top: 20px;">
-                    <label class='col-form-label col-form-label-sm' style="margin: auto;width: 200px;text-align: right;">Data Final:&nbsp</label>
-                    <input class="form-control form-control-sm" style="margin: auto;width: 200px" type="date" name="dtfim">
-                    <button type="submit" id="buttonAuth" style="margin-left: 40px;width: 200px;">Autorizar Equipe<i id="iconAuth" style="padding: 4px;"></i></button>                  
+                    <div id="insRealizado">
+                      <label class="col-form-label col-form-label-sm" style="width: 150px;">Instalador Realizado:</label>
+                      <select class="form-select form-select-sm" name="ins_realizado" id="sel_realizado" style="width: 250px;margin: auto;">
+                        {{#each todos_instaladores}}
+                        <option value="{{_id}}">{{nome}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+                    <div style="display: flex;">
+                      <label class='col-form-label col-form-label-sm'
+                        style="margin: auto;width: 120px;text-align: right;">Data Final:&nbsp</label>
+                      <input class="form-control form-control-sm" style="margin: auto;width: 120px" type="date"
+                        name="dtfim" id="dtfim">
+                      <button type="submit" id="buttonAuth" style="margin-left: 40px;width: 40px;font-size: 15px;"><i
+                          id="iconAuth" style="padding: 4px;"></i></button>
+                    </div>
+                  </div>
                 </div>
-              </div>
               </form>
             </div>
           </div>
