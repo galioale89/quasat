@@ -60,6 +60,10 @@ li {
     list-style-type: none;
 }
 
+i {
+    font-size: 25px;
+}
+
 #mouse {
     display: block;
     width: 22px;
@@ -129,6 +133,19 @@ li {
     z-index: 1;
     overflow: hidden;
     background-color: rgb(40, 55, 89);
+}
+
+#selinstalador {
+    height: 40px;
+    width: 40px;
+    border-radius: 40px;
+    background-color: rgba(245, 252, 247, 0.6);
+    box-shadow: 3px 1px 5px rgba(200, 200, 200, 0.8)
+}
+
+#selinstalador:hover {
+    background-color: rgb(40, 55, 89);
+    color: white;
 }
 
 #execucao {
@@ -773,14 +790,8 @@ border-bottom-color: rgb(205, 223, 245); */
     font-weight: 700;
 }
 
-.body {
-    width: 100%;
-    padding: 20px;
-    align-items: center;
-}
-
 .header {
-    padding: 20px;
+    padding: 10px;
     border: rgb(126, 138, 163, 0.2) 2px solid;
     border-radius: 50px;
     color: rgb(40, 55, 89);
