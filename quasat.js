@@ -417,7 +417,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                     encerrado: e.encerrado
                                                                                                 })
                                                                                             }
-                                                                                            cliente.log('nome_cliente=>'+nome_cliente)
+                                                                                            console.log('nome_cliente=>'+nome_cliente)
                                                                                             if (vendedor) {
                                                                                                 if (naoVazio(e.medidor) && naoVazio(e.disjuntor) && naoVazio(e.trafo)) {
                                                                                                     leva = true
