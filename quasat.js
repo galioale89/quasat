@@ -189,6 +189,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
     var nome_cliente
     var nome_instalador
     var dataAprova
+    var datacad
 
     var totEnviado = 0
     var totGanho = 0
@@ -269,6 +270,17 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                             } else {
                                                                                 nome_instalador = ''
                                                                             }
+                                                                            if (naoVazio(e.dataApro)) {
+                                                                                dataAprova = e.dataApro
+                                                                            } else {
+                                                                                dataAprova = '0000-00-00'
+                                                                            }
+
+                                                                            if (naoVazio(e.datacad)) {
+                                                                                datacad = e.datacad
+                                                                            } else {
+                                                                                datacad = '0000-00-00'
+                                                                            }
 
                                                                             //DASHBOARD GESTOR
                                                                             if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
@@ -311,11 +323,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                     datatermo = ''
                                                                                 }
                                                                                 if (naoVazio(e.dataTroca)) {
-                                                                                    if (naoVazio(e.dataApro)) {
-                                                                                        dataAprova = e.dataApro
-                                                                                    } else {
-                                                                                        dataAprova = '0000-00-00'
-                                                                                    }
+
                                                                                     dataTroca = e.dataTroca
                                                                                     if (naoVazio(datatermo)) {
                                                                                         contaDias = diferencaDias(e.dataTroca, datatermo)
@@ -341,7 +349,24 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                     excedePrazo = false
                                                                                 }
 
-                                                                                listaTermos.push({ id: e._id, vendedor: pes_vendedor.nome, termo, mostrar, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                                                                listaTermos.push({
+                                                                                    id: e._id,
+                                                                                    vendedor: pes_vendedor.nome,
+                                                                                    termo,
+                                                                                    mostrar,
+                                                                                    excedePrazo,
+                                                                                    contaDias,
+                                                                                    nome_instalador,
+                                                                                    cliente: cliente.nome,
+                                                                                    desctermo,
+                                                                                    seq: e.seq,
+                                                                                    cadastro: dataMsgNum(datacad),
+                                                                                    aprovacao: dataMensagem(dataAprova),
+                                                                                    vistoria,
+                                                                                    parado: e.parado,
+                                                                                    execucao: e.execucao,
+                                                                                    encerrado: e.encerrado
+                                                                                })
                                                                             }
                                                                             //FIM TERMOS
 
@@ -355,15 +380,15 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                 data1 = new Date(data)
                                                                                 dif = Math.abs(data1.getTime() - data2.getTime())
                                                                                 days = Math.ceil(dif / (1000 * 60 * 60 * 24))
-                                                                                listaEntregue.push({ 
-                                                                                    id: e._id, 
-                                                                                    idcliente: e.cliente, 
-                                                                                    idvendedor: e.vendedor, 
-                                                                                    alerta: true, 
-                                                                                    seq: e.seq, 
-                                                                                    resp: e.responsavel, 
-                                                                                    cliente: nome_cliente, 
-                                                                                    cadastro: dataMsgNum(e.datacad) 
+                                                                                listaEntregue.push({
+                                                                                    id: e._id,
+                                                                                    idcliente: e.cliente,
+                                                                                    idvendedor: e.vendedor,
+                                                                                    alerta: true,
+                                                                                    seq: e.seq,
+                                                                                    resp: e.responsavel,
+                                                                                    cliente: nome_cliente,
+                                                                                    cadastro: dataMsgNum(e.datacad)
                                                                                 })
                                                                             } else {
                                                                                 if ((e.futuro == true) && (e.status == 'Futuro')) {
@@ -399,9 +424,10 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                     } else {
                                                                                         if (e.execucao) {
                                                                                             vistoria = false
-                                                                                            if (naoVazio(e.dataPost) && naoVazio(e.dataSoli) && naoVazio(e.dataApro)) {
+                                                                                            if (naoVazio(e.dataPost) && naoVazio(e.dataSoli) && naoVazio(dataAprova)) {
                                                                                                 vistoria = true
                                                                                             }
+
                                                                                             if (e.instalado != true) {
                                                                                                 listaExecucao.push({
                                                                                                     id: e._id,
@@ -409,7 +435,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                     cliente: cliente.nome,
                                                                                                     desctermo,
                                                                                                     seq: e.seq,
-                                                                                                    cadastro: dataMsgNum(e.datacad),
+                                                                                                    cadastro: dataMsgNum(datacad),
                                                                                                     aprovacao: dataMensagem(dataAprova),
                                                                                                     vistoria,
                                                                                                     parado: e.parado,
@@ -417,7 +443,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                     encerrado: e.encerrado
                                                                                                 })
                                                                                             }
-                                                                                            console.log('nome_cliente=>'+nome_cliente)
+
                                                                                             if (vendedor) {
                                                                                                 if (naoVazio(e.medidor) && naoVazio(e.disjuntor) && naoVazio(e.trafo)) {
                                                                                                     leva = true
@@ -425,17 +451,17 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                     leva = false
                                                                                                 }
                                                                                                 if (e.encerrado != true) {
-                                                                                                    listaGanho.push({ 
-                                                                                                        id: e._id, 
-                                                                                                        leva, 
-                                                                                                        idcliente: e.cliente, 
-                                                                                                        idvendedor: e.vendedor, 
-                                                                                                        seq: e.seq, 
-                                                                                                        resp: e.responsavel, 
-                                                                                                        pro: e.proposta, 
-                                                                                                        cliente: nome_cliente, 
-                                                                                                        cadastro: dataMsgNum(e.datacad), 
-                                                                                                        auth: e.autorizado 
+                                                                                                    listaGanho.push({
+                                                                                                        id: e._id,
+                                                                                                        leva,
+                                                                                                        idcliente: e.cliente,
+                                                                                                        idvendedor: e.vendedor,
+                                                                                                        seq: e.seq,
+                                                                                                        resp: e.responsavel,
+                                                                                                        pro: e.proposta,
+                                                                                                        cliente: nome_cliente,
+                                                                                                        cadastro: dataMsgNum(e.datacad),
+                                                                                                        auth: e.autorizado
                                                                                                     })
                                                                                                 }
                                                                                             }
@@ -513,7 +539,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                             cliente: cliente.nome,
                                                                                                             seq: e.seq,
                                                                                                             status: e.status,
-                                                                                                            cadastro: dataMsgNum(e.datacad)
+                                                                                                            cadastro: dataMsgNum(datacad)
                                                                                                         })
                                                                                                     } else {
                                                                                                         listaEnviado.push({
@@ -524,7 +550,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                             resp: e.responsavel,
                                                                                                             pro: e.proposta,
                                                                                                             cliente: nome_cliente,
-                                                                                                            cadastro: dataMsgNum(e.datacad)
+                                                                                                            cadastro: dataMsgNum(datacad)
                                                                                                         })
                                                                                                     }
                                                                                                     listaOrcado.push({
@@ -537,7 +563,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                         nome_responsavel,
                                                                                                         pro: e.proposta,
                                                                                                         cliente: nome_cliente,
-                                                                                                        cadastro: dataMsgNum(e.datacad)
+                                                                                                        cadastro: dataMsgNum(datacad)
                                                                                                     })
 
                                                                                                 }
@@ -737,6 +763,18 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                             }
                                                         }
 
+                                                        if (naoVazio(e.dataApro)) {
+                                                            dataAprova = e.dataApro
+                                                        } else {
+                                                            dataAprova = '0000-00-00'
+                                                        }
+
+                                                        if (naoVazio(e.datacad)) {
+                                                            datacad = e.datacad
+                                                        } else {
+                                                            datacad = '0000-00-00'
+                                                        }
+
                                                         if (e.instalado && e.ecerrado != true) {
                                                             termo = false
                                                             tamTermo = e.termo
@@ -751,11 +789,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                 datatermo = ''
                                                             }
                                                             if (naoVazio(e.dataTroca)) {
-                                                                if (naoVazio(e.dataApro)) {
-                                                                    dataAprova = e.dataApro
-                                                                } else {
-                                                                    dataAprova = '0000-00-00'
-                                                                }
                                                                 dataTroca = e.dataTroca
                                                                 if (naoVazio(datatermo)) {
                                                                     contaDias = diferencaDias(e.dataTroca, datatermo)
@@ -781,7 +814,23 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                 excedePrazo = false
                                                             }
 
-                                                            listaTermos.push({ id: e._id, termo, mostrar, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                                            listaTermos.push({
+                                                                id: e._id,
+                                                                termo,
+                                                                mostrar,
+                                                                excedePrazo,
+                                                                contaDias,
+                                                                nome_instalador,
+                                                                cliente: cliente.nome,
+                                                                desctermo,
+                                                                seq: e.seq,
+                                                                cadastro: dataMsgNum(datacad),
+                                                                aprovacao: dataMensagem(dataAprova),
+                                                                vistoria,
+                                                                parado: e.parado,
+                                                                execucao: e.execucao,
+                                                                encerrado: e.encerrado
+                                                            })
                                                         }
 
                                                         if ((e.baixada == false) && (e.encerrado == false) && (e.execucao == false)) {
@@ -800,7 +849,14 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                     days = Math.ceil(dif / (1000 * 60 * 60 * 24))
                                                                     // console.log('days=>' + days)
                                                                     if (days < 30) {
-                                                                        deadlineIns.push({ id: e._id, projeto: e.seq, cliente: cliente.nome, cadastro: dataMensagem(dtcadastro), inicio: dataMensagem(e.dtinicio), dliins: dataMensagem(e.dtfim) })
+                                                                        deadlineIns.push({ 
+                                                                            id: e._id, 
+                                                                            projeto: e.seq, 
+                                                                            cliente: cliente.nome, 
+                                                                            cadastro: dataMensagem(dtcadastro), 
+                                                                            inicio: dataMensagem(e.dtinicio), 
+                                                                            dliins: dataMensagem(e.dtfim) 
+                                                                        })
                                                                     }
                                                                 }
                                                                 if (naoVazio(e.medidor) && naoVazio(e.disjuntor) && naoVazio(e.trafo)) {
@@ -808,7 +864,15 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                 } else {
                                                                     leva = false
                                                                 }
-                                                                listaGanho.push({ id: e._id, leva, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                                                listaGanho.push({ 
+                                                                    id: e._id, 
+                                                                    leva, 
+                                                                    seq: e.seq, 
+                                                                    resp: e.responsavel, 
+                                                                    pro: e.proposta, 
+                                                                    cliente: nome_cliente, 
+                                                                    cadastro: dataMsgNum(e.datacad) 
+                                                                })
                                                             } else {
                                                                 if (naoVazio(e.proposta)) {
                                                                     // console.log('e.proposta=>'+e.proposta)
