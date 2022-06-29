@@ -567,8 +567,9 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                         cliente = register.cliente
                         ins_banco = register.ins_banco
                         checkReal = register.ins_real
+                        let pedido = register.pedido
 
-                        if (naoVazio(register.pedido)) {
+                        if (naoVazio(pedido)) {
                             if (checkReal != true) {
                                 checkReal = 'unchecked'
                             } else {
@@ -583,7 +584,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                         }
                     })
 
-                    if (naoVazio(register.pedido)) {
+                    if (naoVazio(pedido)) {
                         instaladores = await item.instalador
 
                         if (instaladores.length > 0) {
