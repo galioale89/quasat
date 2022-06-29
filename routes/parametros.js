@@ -13,13 +13,14 @@ router.get('/novo/', ehAdmin, (req, res) => {
     const { user } = req.user
     var id
 
-    if (typeof user == 'undefined') {
-        id = _id
-    } else {
+    if (naoVazio(user)) {
         id = user
+    } else {
+        id = _id
     }
 
     Parametros.find({ user: id }).lean().then((params) => {
+        console.log(params)
         if (naoVazio(params)) {
             res.render('principal/paramsSolar', { params })
         } else {

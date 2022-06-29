@@ -162,11 +162,11 @@ router.get('/termos/', ehAdmin, (req, res) => {
                             contaDias = diferencaDias(e.dataTroca, dataHoje())
                             termo = false
                         }
-                        if (contaDias > 6) {
-                            alerta = true
-                        } else {
-                            alerta = false
-                        }
+                        // if (contaDias > 6) {
+                        //     alerta = true
+                        // } else {
+                        //     alerta = false
+                        // }
                         projetos.push({ id: e._id, termo, alerta, contaDias, seq: e.seq, cadastro: e.datacad, cliente: cliente.nome, datatermo: dataMensagem(datatermo), dataapro: dataMensagem(dataAprova), datatroca: dataMensagem(dataTroca) })
                     }
                     if (q == projeto.length) {
@@ -7596,13 +7596,14 @@ router.get('/payprj/:id', ehAdmin, (req, res) => {
 
 router.get('/authprj/:id', ehAdmin, (req, res) => {
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
+        // console.log('projeto.autorizado=>' + projeto.autorizado)
         if (projeto.autorizado == true) {
             projeto.autorizado = false
         } else {
             projeto.autorizado = true
         }
         projeto.save().then(() => {
-            req.flash('success_msg', 'Projeto autorizado pelo projetista')
+            req.flash('success_msg', 'Projeto autorizado pelo projetista.')
             res.redirect('/gerenciamento/projeto/' + req.params.id)
         })
     }).catch((err) => {
@@ -7858,13 +7859,11 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
     let liberar_status = { $exists: true }
     let prjfeito_status = { $exists: true }
     let parado_status = { $exists: true }
-    let sql_installer
+    let sql_installer = {}
     let sql = {}
 
     if (filter_installer != 'Todos') {
         sql_installer = filter_installer
-    } else {
-        sql_installer = { $exists: true }
     }
 
     if (filter_status != 'Todos') {
@@ -8939,11 +8938,11 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                         }
 
                                                         // console.log(contaDias)
-                                                        if (contaDias > 6) {
-                                                            mostrar = true
-                                                        } else {
-                                                            mostrar = false
-                                                        }
+                                                        // if (contaDias > 6) {
+                                                        //     mostrar = true
+                                                        // } else {
+                                                        //     mostrar = false
+                                                        // }
 
                                                         if (contaDias > 14) {
                                                             excedePrazo = true
@@ -8951,7 +8950,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                             excedePrazo = false
                                                         }
 
-                                                        listaTermos.push({ id: e._id, vendedor: pes_vendedor.nome, termo, mostrar, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                                        listaTermos.push({ id: e._id, vendedor: pes_vendedor.nome, termo, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                                     }
 
                                                     if ((e.entregue == true) && (e.status == 'Enviado')) {
@@ -9294,11 +9293,11 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                         }
 
                                         // console.log(contaDias)
-                                        if (contaDias > 6) {
-                                            mostrar = true
-                                        } else {
-                                            mostrar = false
-                                        }
+                                        // if (contaDias > 6) {
+                                        //     mostrar = true
+                                        // } else {
+                                        //     mostrar = false
+                                        // }
 
                                         if (contaDias > 14) {
                                             excedePrazo = true
@@ -9306,7 +9305,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                             excedePrazo = false
                                         }
 
-                                        listaTermos.push({ id: e._id, termo, mostrar, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                        listaTermos.push({ id: e._id, termo, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                     }
 
                                     if ((e.baixada == false) && (e.encerrado == false) && (e.execucao == false)) {

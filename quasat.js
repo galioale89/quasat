@@ -215,7 +215,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
     let desctermo = ''
     let datatermo = ''
     let contaDias = 0
-    let mostrar = false
     let excedePrazo = false
     let tamTermo
     // console.log('pessoa=>'+pessoa)
@@ -337,11 +336,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                 }
 
                                                                                 // console.log(contaDias)
-                                                                                if (contaDias > 6) {
-                                                                                    mostrar = true
-                                                                                } else {
-                                                                                    mostrar = false
-                                                                                }
 
                                                                                 if (contaDias > 14) {
                                                                                     excedePrazo = true
@@ -353,7 +347,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                     id: e._id,
                                                                                     vendedor: pes_vendedor.nome,
                                                                                     termo,
-                                                                                    mostrar,
                                                                                     excedePrazo,
                                                                                     contaDias,
                                                                                     nome_instalador,
@@ -380,11 +373,15 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                 data1 = new Date(data)
                                                                                 dif = Math.abs(data1.getTime() - data2.getTime())
                                                                                 days = Math.ceil(dif / (1000 * 60 * 60 * 24))
+                                                                                if (days > 7) {
+                                                                                    alerta = true
+                                                                                }
+
                                                                                 listaEntregue.push({
                                                                                     id: e._id,
                                                                                     idcliente: e.cliente,
                                                                                     idvendedor: e.vendedor,
-                                                                                    alerta: true,
+                                                                                    alerta,
                                                                                     seq: e.seq,
                                                                                     resp: e.responsavel,
                                                                                     cliente: nome_cliente,
@@ -802,11 +799,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                             }
 
                                                             // console.log(contaDias)
-                                                            if (contaDias > 6) {
-                                                                mostrar = true
-                                                            } else {
-                                                                mostrar = false
-                                                            }
 
                                                             if (contaDias > 14) {
                                                                 excedePrazo = true
@@ -817,7 +809,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                             listaTermos.push({
                                                                 id: e._id,
                                                                 termo,
-                                                                mostrar,
                                                                 excedePrazo,
                                                                 contaDias,
                                                                 nome_instalador,

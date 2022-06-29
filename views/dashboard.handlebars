@@ -264,7 +264,6 @@
                         </tr>
 
                         {{#each listaTermos}}
-                        {{#if mostrar}}
                         <tr>
                             <td style="text-align: center" {{#if termo}}id='execucao'{{else}}id='realizado'{{/if}} class="d-flex align-items-center">
                                 <a href='/gerenciamento/orcamento/{{id}}'
@@ -276,7 +275,6 @@
                             <td style="text-align: center;color: {{#if termo}}{{#if excedePrazo}}orange{{else}}green{{/if}}{{else}}red{{/if}};">{{contaDias}}
                             </td>
                         </tr>
-                        {{/if}}
                         {{else}}
                         <label class='col-form-label col-form-label-sm'>Nenhum orçamento com termo de entrega
                             adicionado.</label>
@@ -975,7 +973,6 @@
                             <th style="width: 10%;text-align: center">Dias para Entrega</th>
                         </tr>
                         {{#each listaTermos}}
-                        {{#if mostrar}}
                         <tr>
                             <td style="text-align: center" {{#if termo}}id='execucao'{{else}}id='realizado'{{/if}} class="d-flex align-items-center">
                                 <a href='/gerenciamento/orcamento/{{id}}'
@@ -988,7 +985,6 @@
                                 {{contaDias}}
                             </td>
                         </tr>
-                        {{/if}}
                         {{else}}
                         <label class='col-form-label col-form-label-sm'>Nenhum orçamento com termo de entrega
                             adicionado.</label>
