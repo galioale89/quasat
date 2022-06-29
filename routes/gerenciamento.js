@@ -3962,6 +3962,7 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
                 liberar: false,
                 prjfeito: false,
                 feito: true,
+                parado: false,
                 projeto: req.params.id,
                 dtinicio: dataHoje(),
                 dtfim: dataHoje(),
