@@ -509,7 +509,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
     const datafim = anotitulo + '-12' + '-31'
     const dtini = parseFloat(dataBusca(dataini))
     const dtfim = parseFloat(dataBusca(datafim))
-    
+
     // console.log('entrou')
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
@@ -567,63 +567,67 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                         cliente = register.cliente
                         ins_banco = register.ins_banco
                         checkReal = register.ins_real
-                        
-                        if (checkReal != true) {
-                            checkReal = 'unchecked'
-                        } else {
-                            checkReal = 'checked'
-                        }
 
-                        if (naoVazio(modulos) && naoVazio(potencia)) {
-                            sistema = ((modulos * potencia) / 1000).toFixed(2)
-                        } else {
-                            sistema = 0
-                        }
-                    })
-
-                    instaladores = await item.instalador
-
-                    if (instaladores.length > 0) {
-                        instaladores.map(async register => {
-                            instalador = register.nome
-                            
-                            nome_ins = instalador
-                            id_ins = register._id
-
-                            if (naoVazio(ins_banco)) {
-                                if (register._id == ins_banco) {
-                                    addInstalador = [{ instalador, qtdmod }]
-                                } else {
-                                    let nome_ins = await Pessoa.findById(ins_banco)
-                                    addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
-                                }
+                        if (naoVazio(register.pedido)) {
+                            if (checkReal != true) {
+                                checkReal = 'unchecked'
                             } else {
-                                addInstalador = [{ instalador, qtdmod }]
+                                checkReal = 'checked'
                             }
-                        })
-                    }
 
-                    if (naoVazio(ins_banco)) {
-                        await Pessoa.findById(ins_banco).then(this_ins_banco => {
-                            nome_ins_banco = this_ins_banco.nome
-                            id_ins_banco = this_ins_banco._id
-                        })
-                    } else {
-                        nome_ins_banco = ''
-                        id_ins_banco = ''
-                    }
-
-                    await Cliente.findById(cliente).then(this_cliente => {
-                        nome_cliente = this_cliente.nome
+                            if (naoVazio(modulos) && naoVazio(potencia)) {
+                                sistema = ((modulos * potencia) / 1000).toFixed(2)
+                            } else {
+                                sistema = 0
+                            }
+                        }
                     })
 
-                    await listaAndamento.push({
-                        id, seq, parado, execucao, autorizado, pagamento,
-                        instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
-                        sistema, modulos, potencia, inversor, deadline, addInstalador,
-                        dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
-                    })
-                    addInstalador = []
+                    if (naoVazio(register.pedido)) {
+                        instaladores = await item.instalador
+
+                        if (instaladores.length > 0) {
+                            instaladores.map(async register => {
+                                instalador = register.nome
+
+                                nome_ins = instalador
+                                id_ins = register._id
+
+                                if (naoVazio(ins_banco)) {
+                                    if (register._id == ins_banco) {
+                                        addInstalador = [{ instalador, qtdmod }]
+                                    } else {
+                                        let nome_ins = await Pessoa.findById(ins_banco)
+                                        addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
+                                    }
+                                } else {
+                                    addInstalador = [{ instalador, qtdmod }]
+                                }
+                            })
+                        }
+
+                        if (naoVazio(ins_banco)) {
+                            await Pessoa.findById(ins_banco).then(this_ins_banco => {
+                                nome_ins_banco = this_ins_banco.nome
+                                id_ins_banco = this_ins_banco._id
+                            })
+                        } else {
+                            nome_ins_banco = ''
+                            id_ins_banco = ''
+                        }
+
+                        await Cliente.findById(cliente).then(this_cliente => {
+                            nome_cliente = this_cliente.nome
+                        })
+
+                        await listaAndamento.push({
+                            id, seq, parado, execucao, autorizado, pagamento,
+                            instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+                            sistema, modulos, potencia, inversor, deadline, addInstalador,
+                            dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
+                        })
+                        addInstalador = []
+                    }
                 }
 
                 listaAndamento.sort(comparaNum)
@@ -7858,7 +7862,7 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
     } else {
         sql_installer = { $exists: true }
     }
-    
+
     if (filter_status != 'Todos') {
         switch (filter_status) {
             case 'Aguardando': liberar_status = false; parado_status = false; prjfeito_status = false
@@ -7951,7 +7955,7 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                     if (instaladores.length > 0) {
                         instaladores.map(async register => {
                             instalador = register.nome
-                            
+
                             nome_ins = instalador
                             id_ins = register._id
 
