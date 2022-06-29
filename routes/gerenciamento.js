@@ -7841,6 +7841,7 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
     let deadline
     let ins_banco
     let checkReal
+    let pedido
 
     var listaAndamento = []
     var addInstalador = []
@@ -7889,9 +7890,9 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         tarefa: { $exists: false },
                         nome_projeto: { $exists: true },
                         insres: sql_installer,
-                        liberar: liberar_status,
-                        prjfeito: prjfeito_status,
-                        parado: parado_status,
+                        // liberar: liberar_status,
+                        // prjfeito: prjfeito_status,
+                        // parado: parado_status,
                         "dtfimbusca": {
                             $gte: dtini,
                             $lte: dtfim
@@ -7939,6 +7940,8 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         cliente = register.cliente
                         ins_banco = register.ins_banco
                         checkReal = register.ins_real
+                        pedido = register.pedido
+                        if (naoVazio(pedido)){
                         if (checkReal != true) {
                             checkReal = 'unchecked'
                         } else {
@@ -7950,8 +7953,10 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         } else {
                             sistema = 0
                         }
+                    }
                     })
 
+                    if (naoVazio(pedido)){
                     instaladores = await item.instalador
 
                     if (instaladores.length > 0) {
@@ -7988,7 +7993,6 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         nome_cliente = this_cliente.nome
                     })
 
-
                     await listaAndamento.push({
                         id, seq, parado, execucao, autorizado, pagamento,
                         instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
@@ -7996,6 +8000,7 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
                     })
                     addInstalador = []
+                }
                 }
 
                 listaAndamento.sort(comparaNum)
