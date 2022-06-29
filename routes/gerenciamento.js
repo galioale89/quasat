@@ -7890,8 +7890,8 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         tarefa: { $exists: false },
                         nome_projeto: { $exists: true },
                         insres: sql_installer,
-                        // liberar: liberar_status,
-                        // prjfeito: prjfeito_status,
+                        liberar: liberar_status,
+                        prjfeito: prjfeito_status,
                         // parado: parado_status,
                         "dtfimbusca": {
                             $gte: dtini,
