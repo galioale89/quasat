@@ -7892,7 +7892,7 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         insres: sql_installer,
                         liberar: liberar_status,
                         prjfeito: prjfeito_status,
-                        // parado: parado_status,
+                        parado: parado_status,
                         "dtfimbusca": {
                             $gte: dtini,
                             $lte: dtfim
