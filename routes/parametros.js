@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 require('../model/Parametros')
 const Parametros = mongoose.model('parametros')
-
+const naoVazio = require('../resources/naoVazio')
 const { ehAdmin } = require('../helpers/ehAdmin')
 
 router.get('/novo/', ehAdmin, (req, res) => {
