@@ -499,6 +499,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
     let id_ins_banco
     let nome_ins
     let id_ins
+    let pedido
 
     var listaAndamento = []
     var addInstalador = []
@@ -567,7 +568,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                         cliente = register.cliente
                         ins_banco = register.ins_banco
                         checkReal = register.ins_real
-                        let pedido = register.pedido
+                        pedido = register.pedido
 
                         if (naoVazio(pedido)) {
                             if (checkReal != true) {
