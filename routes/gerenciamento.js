@@ -7934,6 +7934,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     }
 
                     qtdmod = await item.qtdmod
+
                     let projetos = await item.projeto
 
                     projetos.map(async register => {
@@ -8004,6 +8005,8 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     await Cliente.findById(cliente).then(this_cliente => {
                         nome_cliente = this_cliente.nome
                     })
+
+                    alert(nome_cliente)
 
                     await listaAndamento.push({
                         id, seq, parado, execucao, autorizado, pagamento,
