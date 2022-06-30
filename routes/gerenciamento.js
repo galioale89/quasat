@@ -544,28 +544,35 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
 
                 for (const item of list) {
                     deadline = await item.dtfim
+                    if (naoVazio(deadline) == false) {
+                        deadline = '0000-00-00'
+                    }
                     qtdmod = await item.qtdmod
-                    let projetos = await item.projeto
 
-                    projetos.map(async register => {
-                        id = register._id
-                        seq = register.seq
-                        cidade = register.cidade
-                        uf = register.uf
-                        telhado = register.telhado
-                        estrutura = register.estrutura
-                        inversor = register.plaKwpInv
-                        modulos = register.plaQtdMod
-                        potencia = register.plaWattMod
-                        instalado = register.instalado
-                        execucao = register.execucao
-                        parado = register.parado
-                        autorizado = register.autorizado
-                        pagamento = register.pago
-                        cliente = register.cliente
-                        ins_banco = register.ins_banco
-                        checkReal = register.ins_real
-                        pedido = register.pedido
+
+                    let projetos = await item.projeto
+                    let instaladores = await item.instalador
+
+                    if (instaladores.length > 0) {
+                        projetos.map(async register => {
+                            id = register._id
+                            seq = register.seq
+                            cidade = register.cidade
+                            uf = register.uf
+                            telhado = register.telhado
+                            estrutura = register.estrutura
+                            inversor = register.plaKwpInv
+                            modulos = register.plaQtdMod
+                            potencia = register.plaWattMod
+                            instalado = register.instalado
+                            execucao = register.execucao
+                            parado = register.parado
+                            autorizado = register.autorizado
+                            pagamento = register.pago
+                            cliente = register.cliente
+                            ins_banco = register.ins_banco
+                            checkReal = register.ins_real
+                            pedido = register.pedido
 
                             if (checkReal != true) {
                                 checkReal = 'unchecked'
@@ -578,54 +585,51 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                             } else {
                                 sistema = 0
                             }
-                        
-                    })
 
-                    if (naoVazio(pedido)) {
-                        
-                        let instaladores = await item.instalador
+                        })
 
-                        if (instaladores.length > 0) {
-                            instaladores.map(async register => {
-                                instalador = register.nome
+                        if (naoVazio(pedido)) {
 
-                                nome_ins = instalador
-                                id_ins = register._id
+                                instaladores.map(async register => {
+                                    instalador = register.nome
 
-                                if (naoVazio(ins_banco)) {
-                                    if (register._id == ins_banco) {
-                                        addInstalador = [{ instalador, qtdmod }]
+                                    nome_ins = instalador
+                                    id_ins = register._id
+
+                                    if (naoVazio(ins_banco)) {
+                                        if (register._id == ins_banco) {
+                                            addInstalador = [{ instalador, qtdmod }]
+                                        } else {
+                                            let nome_instalador = await Pessoa.findById(ins_banco)
+                                            addInstalador = [{ instalador: nome_instalador.nome, qtdmod }]
+                                        }
                                     } else {
-                                        nome_ins = await Pessoa.findById(ins_banco)
-                                        addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
+                                        addInstalador = [{ instalador, qtdmod }]
                                     }
-                                } else {
-                                    addInstalador = [{ instalador, qtdmod }]
-                                }
+                                })
+                            
+                            if (naoVazio(ins_banco)) {
+                                await Pessoa.findById(ins_banco).then(this_ins_banco => {
+                                    nome_ins_banco = this_ins_banco.nome
+                                    id_ins_banco = this_ins_banco._id
+                                })
+                            } else {
+                                nome_ins_banco = ''
+                                id_ins_banco = ''
+                            }
+
+                            await Cliente.findById(cliente).then(this_cliente => {
+                                nome_cliente = this_cliente.nome
                             })
-                        }
 
-                        if (naoVazio(ins_banco)) {
-                            await Pessoa.findById(ins_banco).then(this_ins_banco => {
-                                nome_ins_banco = this_ins_banco.nome
-                                id_ins_banco = this_ins_banco._id
+                            await listaAndamento.push({
+                                id, seq, parado, execucao, autorizado, pagamento,
+                                instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+                                sistema, modulos, potencia, inversor, deadline, addInstalador,
+                                dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
                             })
-                        } else {
-                            nome_ins_banco = ''
-                            id_ins_banco = ''
+                            addInstalador = []
                         }
-
-                        await Cliente.findById(cliente).then(this_cliente => {
-                            nome_cliente = this_cliente.nome
-                        })
-
-                        await listaAndamento.push({
-                            id, seq, parado, execucao, autorizado, pagamento,
-                            instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
-                            sistema, modulos, potencia, inversor, deadline, addInstalador,
-                            dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
-                        })
-                        addInstalador = []
                     }
                 }
 
@@ -7842,6 +7846,8 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
     let checkReal
     let nome_ins
     let id_ins
+    let nome_ins_banco
+    let id_ins_banco
     let pedido
 
     var listaAndamento = []
@@ -7858,7 +7864,6 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
     let liberar_status = { $exists: true }
     let prjfeito_status = { $exists: true }
     let parado_status = { $exists: true }
-    let sql_installer = {}
     let match = {}
 
     if (filter_status != 'Todos') {
@@ -7876,7 +7881,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
 
     if (filter_installer != 'Todos') {
         const id_ins = await Pessoa.findById(filter_installer)
-        match =  {
+        match = {
             user: id,
             tarefa: { $exists: false },
             nome_projeto: { $exists: true },
@@ -7887,10 +7892,10 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
             "dtfimbusca": {
                 $gte: dtini,
                 $lte: dtfim
-            },                
-        }        
-    }else{
-        match =  {
+            },
+        }
+    } else {
+        match = {
             user: id,
             tarefa: { $exists: false },
             nome_projeto: { $exists: true },
@@ -7900,8 +7905,8 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
             "dtfimbusca": {
                 $gte: dtini,
                 $lte: dtfim
-            },                
-        }        
+            },
+        }
     }
 
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
@@ -7931,95 +7936,98 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                 for (const item of list) {
 
                     deadline = await item.dtfim
-                    if (naoVazio(deadline)==false){
+                    if (naoVazio(deadline) == false) {
                         deadline = '0000-00-00'
                     }
 
                     qtdmod = await item.qtdmod
 
                     let projetos = await item.projeto
-
-                    projetos.map(async register => {
-                        id = register._id
-                        seq = register.seq
-                        cidade = register.cidade
-                        uf = register.uf
-                        telhado = register.telhado
-                        estrutura = register.estrutura
-                        inversor = register.plaKwpInv
-                        modulos = register.plaQtdMod
-                        potencia = register.plaWattMod
-                        instalado = register.instalado
-                        execucao = register.execucao
-                        parado = register.parado
-                        autorizado = register.autorizado
-                        pagamento = register.pago
-                        cliente = register.cliente
-                        console.log(cliente)
-                        ins_banco = register.ins_banco
-                        checkReal = register.ins_real
-                        pedido = register.pedido
-                        if (checkReal != true) {
-                            checkReal = 'unchecked'
-                        } else {
-                            checkReal = 'checked'
-                        }
-
-                        if (naoVazio(modulos) && naoVazio(potencia)) {
-                            sistema = ((modulos * potencia) / 1000).toFixed(2)
-                        } else {
-                            sistema = 0
-                        }
-                    })
-
-                    // if (naoVazio(pedido)){
                     let instaladores = await item.instalador
 
                     if (instaladores.length > 0) {
-                        instaladores.map(async register => {
-                            instalador = register.nome
 
-                            nome_ins = instalador
-                            id_ins = register._id
-
-                            if (naoVazio(ins_banco)) {
-                                if (register._id == ins_banco) {
-                                    addInstalador = [{ instalador, qtdmod }]
-                                } else {
-                                    nome_ins = await Pessoa.findById(ins_banco)
-                                    addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
-                                }
+                        projetos.map(async register => {
+                            id = register._id
+                            seq = register.seq
+                            cidade = register.cidade
+                            uf = register.uf
+                            telhado = register.telhado
+                            estrutura = register.estrutura
+                            inversor = register.plaKwpInv
+                            modulos = register.plaQtdMod
+                            potencia = register.plaWattMod
+                            instalado = register.instalado
+                            execucao = register.execucao
+                            parado = register.parado
+                            autorizado = register.autorizado
+                            pagamento = register.pago
+                            cliente = register.cliente
+                            console.log(cliente)
+                            ins_banco = register.ins_banco
+                            checkReal = register.ins_real
+                            pedido = register.pedido
+                            if (checkReal != true) {
+                                checkReal = 'unchecked'
                             } else {
-                                addInstalador = [{ instalador, qtdmod }]
+                                checkReal = 'checked'
+                            }
+
+                            if (naoVazio(modulos) && naoVazio(potencia)) {
+                                sistema = ((modulos * potencia) / 1000).toFixed(2)
+                            } else {
+                                sistema = 0
                             }
                         })
-                    }
 
-                    if (naoVazio(ins_banco)) {
-                        await Pessoa.findById(ins_banco).then(this_ins_banco => {
-                            nome_ins_banco = this_ins_banco.nome
-                            id_ins_banco = this_ins_banco._id
+                        if (naoVazio(pedido)){
+
+                        if (instaladores.length > 0) {
+                            instaladores.map(async register => {
+                                instalador = register.nome
+
+                                nome_ins = instalador
+                                id_ins = register._id
+
+                                if (naoVazio(ins_banco)) {
+                                    if (register._id == ins_banco) {
+                                        addInstalador = [{ instalador, qtdmod }]
+                                    } else {
+                                        let nome_instalador = await Pessoa.findById(ins_banco)
+                                        addInstalador = [{ instalador: nome_instalador.nome, qtdmod }]
+                                    }
+                                } else {
+                                    addInstalador = [{ instalador, qtdmod }]
+                                }
+                            })
+                        }
+
+                        if (naoVazio(ins_banco)) {
+                            await Pessoa.findById(ins_banco).then(this_ins_banco => {
+                                nome_ins_banco = this_ins_banco.nome
+                                id_ins_banco = this_ins_banco._id
+                            })
+                        } else {
+                            nome_ins_banco = ''
+                            id_ins_banco = ''
+                        }
+
+                        await Cliente.findById(cliente).then(this_cliente => {
+                            nome_cliente = this_cliente.nome
                         })
-                    } else {
-                        nome_ins_banco = ''
-                        id_ins_banco = ''
+
+                        console.log(nome_cliente)
+
+                        await listaAndamento.push({
+                            id, seq, parado, execucao, autorizado, pagamento,
+                            instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+                            sistema, modulos, potencia, inversor, deadline, addInstalador,
+                            dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
+                        })
+
+                        addInstalador = []
                     }
-
-                    await Cliente.findById(cliente).then(this_cliente => {
-                        nome_cliente = this_cliente.nome
-                    })
-
-                    console.log(nome_cliente)
-
-                    await listaAndamento.push({
-                        id, seq, parado, execucao, autorizado, pagamento,
-                        instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
-                        sistema, modulos, potencia, inversor, deadline, addInstalador,
-                        dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
-                    })
-
-                    addInstalador = []
-                //}
+                }
                 }
 
                 listaAndamento.sort(comparaNum)
@@ -8902,7 +8910,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                         datacad = e.datacad
                                                     } else {
                                                         datacad = '0000-00-00'
-                                                    }                                                    
+                                                    }
 
                                                     if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
                                                         if (naoVazio(e.valor)) {
