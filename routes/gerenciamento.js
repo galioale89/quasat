@@ -553,7 +553,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                     let projetos = await item.projeto
                     let instaladores = await item.instalador
 
-                    // if (instaladores.length > 0) {
+                    if (projetos.length > 0) {
 
                         projetos.map(async register => {
                             id = register._id
@@ -631,7 +631,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                             })
                             addInstalador = []
                         }
-                    //}
+                    }
                 }
 
                 listaAndamento.sort(comparaNum)
