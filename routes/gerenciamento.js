@@ -554,6 +554,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                     let instaladores = await item.instalador
 
                     // if (instaladores.length > 0) {
+
                         projetos.map(async register => {
                             id = register._id
                             seq = register.seq
@@ -622,7 +623,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                                 nome_cliente = this_cliente.nome
                             })
 
-                            await listaAndamento.push({
+                            listaAndamento.push({
                                 id, seq, parado, execucao, autorizado, pagamento,
                                 instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
                                 sistema, modulos, potencia, inversor, deadline, addInstalador,
@@ -7945,7 +7946,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     let projetos = await item.projeto
                     let instaladores = await item.instalador
 
-                    // if (instaladores.length > 0) {
+                    if (projeto.length > 0) {
 
                         projetos.map(async register => {
                             id = register._id
@@ -8017,7 +8018,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
 
                             console.log(nome_cliente)
 
-                            await listaAndamento.push({
+                            listaAndamento.push({
                                 id, seq, parado, execucao, autorizado, pagamento,
                                 instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
                                 sistema, modulos, potencia, inversor, deadline, addInstalador,
@@ -8026,7 +8027,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
 
                             addInstalador = []
                         }
-                    //}
+                    }
                 }
 
                 listaAndamento.sort(comparaNum)
