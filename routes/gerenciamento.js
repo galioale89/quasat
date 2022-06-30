@@ -7955,6 +7955,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                         autorizado = register.autorizado
                         pagamento = register.pago
                         cliente = register.cliente
+                        console.log(cliente)
                         ins_banco = register.ins_banco
                         checkReal = register.ins_real
                         pedido = register.pedido
