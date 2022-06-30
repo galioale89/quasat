@@ -7968,7 +7968,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                         }
                     })
 
-                    if (naoVazio(pedido)){
+                    // if (naoVazio(pedido)){
                     let instaladores = await item.instalador
 
                     if (instaladores.length > 0) {
@@ -8005,7 +8005,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                         nome_cliente = this_cliente.nome
                     })
 
-                    listaAndamento.push({
+                    await listaAndamento.push({
                         id, seq, parado, execucao, autorizado, pagamento,
                         instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
                         sistema, modulos, potencia, inversor, deadline, addInstalador,
@@ -8013,10 +8013,10 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     })
 
                     addInstalador = []
-                }
+                //}
                 }
 
-                await listaAndamento.sort(comparaNum)
+                listaAndamento.sort(comparaNum)
 
                 if (filter_installer != 'Todos') {
                     const installer = await Pessoa.findById(filter_installer)
