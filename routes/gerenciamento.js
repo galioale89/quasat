@@ -619,7 +619,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                             nome_cliente = this_cliente.nome
                         })
 
-                        listaAndamento.push({
+                        await listaAndamento.push({
                             id, seq, parado, execucao, autorizado, pagamento,
                             instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
                             sistema, modulos, potencia, inversor, deadline, addInstalador,
@@ -8006,7 +8006,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                         nome_cliente = this_cliente.nome
                     })
 
-                    alert(nome_cliente)
+                    console.log(nome_cliente)
 
                     await listaAndamento.push({
                         id, seq, parado, execucao, autorizado, pagamento,
