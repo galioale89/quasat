@@ -7946,7 +7946,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     let projetos = await item.projeto
                     let instaladores = await item.instalador
 
-                    if (projeto.length > 0) {
+                    if (projetos.length > 0) {
 
                         projetos.map(async register => {
                             id = register._id
