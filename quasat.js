@@ -308,7 +308,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                             //FIM DASHBOARD GESTOR
 
                                                                             //TERMOS DE PROJETOS 
-                                                                            if (e.instalado && e.encerrado != true) {
+                                                                            if (e.instalado && e.encerrado != true && naoVazio(e.dataTroca)) {
                                                                                 termo = false
                                                                                 tamTermo = e.termo
                                                                                 if (tamTermo.length > 0) {
@@ -609,9 +609,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                     .sort({ field: 'asc', _id: -1 }).lean()
                                     .then((empresa) => {
                                         if (naoVazio(empresa)) {
-                                            // console.log("com empresa")
-                                            // console.log('sqlcli=>'+JSON.stringify(sqlcli))
-
                                             Cliente.find(sqlcli).lean().then((todos_clientes) => {
                                                 var render = []
                                                 if (naoVazio(todos_clientes)) {
@@ -772,7 +769,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                             datacad = '0000-00-00'
                                                         }
 
-                                                        if (e.instalado && e.ecerrado != true) {
+                                                        if (e.instalado && e.ecerrado != true && naoVazio(e.dataTroca)) {
                                                             termo = false
                                                             tamTermo = e.termo
                                                             if (tamTermo.length > 0) {
@@ -840,13 +837,13 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                     days = Math.ceil(dif / (1000 * 60 * 60 * 24))
                                                                     // console.log('days=>' + days)
                                                                     if (days < 30) {
-                                                                        deadlineIns.push({ 
-                                                                            id: e._id, 
-                                                                            projeto: e.seq, 
-                                                                            cliente: cliente.nome, 
-                                                                            cadastro: dataMensagem(dtcadastro), 
-                                                                            inicio: dataMensagem(e.dtinicio), 
-                                                                            dliins: dataMensagem(e.dtfim) 
+                                                                        deadlineIns.push({
+                                                                            id: e._id,
+                                                                            projeto: e.seq,
+                                                                            cliente: cliente.nome,
+                                                                            cadastro: dataMensagem(dtcadastro),
+                                                                            inicio: dataMensagem(e.dtinicio),
+                                                                            dliins: dataMensagem(e.dtfim)
                                                                         })
                                                                     }
                                                                 }
@@ -855,14 +852,14 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                 } else {
                                                                     leva = false
                                                                 }
-                                                                listaGanho.push({ 
-                                                                    id: e._id, 
-                                                                    leva, 
-                                                                    seq: e.seq, 
-                                                                    resp: e.responsavel, 
-                                                                    pro: e.proposta, 
-                                                                    cliente: nome_cliente, 
-                                                                    cadastro: dataMsgNum(e.datacad) 
+                                                                listaGanho.push({
+                                                                    id: e._id,
+                                                                    leva,
+                                                                    seq: e.seq,
+                                                                    resp: e.responsavel,
+                                                                    pro: e.proposta,
+                                                                    cliente: nome_cliente,
+                                                                    cadastro: dataMsgNum(e.datacad)
                                                                 })
                                                             } else {
                                                                 if (naoVazio(e.proposta)) {

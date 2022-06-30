@@ -63,7 +63,8 @@
                 <form method="POST" action="/cliente/buscaNomeCliente">
                     <div style='display: block;flex-direction: row;justify-item: left;margin-top: 15px;'>
                         <input type="text" class="typeahead mb-4" id="nome" name="nome" placeholder="Nome do Cliente">
-                        <button type="submit" style="height: 30px;position: absolute;" class="btn bnt-sm btn-primary">Ir</button>
+                        <button type="submit" style="height: 30px;position: absolute;"
+                            class="btn bnt-sm btn-primary">Ir</button>
                     </div>
                 </form>
                 <div style="margin-top: 10px;">
@@ -127,7 +128,7 @@
                             </li>
                             <li>
                                 <a href="/relatorios/consulta/" class="botao_menu mb-1">Relatório Comercial</a>
-                            </li>                            
+                            </li>
                             <li>
                                 <a href='/gerenciamento/atividadesPadrao/' class='botao_menu'>Cadastro de Atividades
                                     Padrão</a>
@@ -168,8 +169,12 @@
             <div class="row">
                 <div class="col-md-7">
                     {{!-- href='/gerenciamento/orcamento/' --}}
+                    {{#if todos_cientes}}
                     <a data-bs-toggle="modal" data-bs-target="#novoOrcamento" class='btn btn-sm btn-primary mb-1'>Novo
                         Orçamento</a>
+                    {{else}}
+                    <a href="/gerenciamento/orcamento" class='btn btn-sm btn-primary mb-1'>Novo Orçamento</a>
+                    {{/if}}
                     <a href='/gerenciamento/selecao/' class='btn btn-sm btn-primary mb-1' id="ehmobile">Qualificação de
                         Propostas</a>
                     <a href='/gerenciamento/emandamento/' class="btn btn-sm btn-primary mb-1">Planilha
@@ -265,14 +270,17 @@
 
                         {{#each listaTermos}}
                         <tr>
-                            <td style="text-align: center" {{#if termo}}id='execucao'{{else}}id='realizado'{{/if}} class="d-flex align-items-center">
+                            <td style="text-align: center" {{#if termo}}id='execucao' {{else}}id='realizado' {{/if}}
+                                class="d-flex align-items-center">
                                 <a href='/gerenciamento/orcamento/{{id}}'
                                     style="color: rgb(55,49,89);font-weight: 600;">&nbsp&nbsp{{seq}}&nbsp&nbsp&nbsp&nbsp</a>
                             </td>
                             <td style="text-align: center">{{cliente}}</td>
-                             <td style="text-align: center">{{vendedor}}</td>
+                            <td style="text-align: center">{{vendedor}}</td>
                             <td style="text-align: center">{{aprovacao}}</td>
-                            <td style="text-align: center;color: {{#if termo}}{{#if excedePrazo}}orange{{else}}green{{/if}}{{else}}red{{/if}};">{{contaDias}}
+                            <td
+                                style="text-align: center;color: {{#if termo}}{{#if excedePrazo}}orange{{else}}green{{/if}}{{else}}red{{/if}};">
+                                {{contaDias}}
                             </td>
                         </tr>
                         {{else}}
@@ -291,11 +299,15 @@
                 <a href='/cliente/novo/' class='btn btn-sm btn-primary mb-1'>Cliente</a>
                 <a href='/gerenciamento/leads/' class='btn btn-sm btn-primary mb-1'>Leads</a>
                 {{!-- href='/gerenciamento/orcamento/' --}}
-                <a data-bs-toggle="modal" data-bs-target="#novoOrcamento"
-                    class='btn btn-sm btn-primary mb-1'>Novo Orçamento</a>
+                {{#if todos_cientes}}
+                <a data-bs-toggle="modal" data-bs-target="#novoOrcamento" class='btn btn-sm btn-primary mb-1'>Novo
+                    Orçamento</a>
+                {{else}}
+                <a href="/gerenciamento/orcamento" class='btn btn-sm btn-primary mb-1'>Novo Orçamento</a>
+                {{/if}}
                 <a href='/gerenciamento/selecao/' class='btn btn-sm btn-primary mb-1' id="ehmobile">Qualificação de
                     Propostas</a>
-                <a href='/gerenciamento/termos/' class='btn btn-sm btn-primary mb-1'>Termos de Entrega</a>                    
+                <a href='/gerenciamento/termos/' class='btn btn-sm btn-primary mb-1'>Termos de Entrega</a>
                 {{!-- <a class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#atrasados">
                     Vencidos e a Vencer</a> --}}
             </div>
@@ -968,13 +980,14 @@
                         <tr>
                             <th style="width: 5%;text-align: left">Código</th>
                             <th style="width: 20%;text-align: center">Cliente</th>]
-                             <th style="width: 20%;text-align: center">Vendedor</th>
+                            <th style="width: 20%;text-align: center">Vendedor</th>
                             <th style="width: 10%;text-align: center">Data Aprovação</th>
                             <th style="width: 10%;text-align: center">Dias para Entrega</th>
                         </tr>
                         {{#each listaTermos}}
                         <tr>
-                            <td style="text-align: center" {{#if termo}}id='execucao'{{else}}id='realizado'{{/if}} class="d-flex align-items-center">
+                            <td style="text-align: center" {{#if termo}}id='execucao' {{else}}id='realizado' {{/if}}
+                                class="d-flex align-items-center">
                                 <a href='/gerenciamento/orcamento/{{id}}'
                                     style="color: rgb(55,49,89);font-weight: 600;">&nbsp&nbsp{{seq}}&nbsp&nbsp&nbsp&nbsp</a>
                             </td>

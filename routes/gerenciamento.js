@@ -137,6 +137,12 @@ router.get('/termos/', ehAdmin, (req, res) => {
             projeto.forEach((e) => {
                 Cliente.findOne({ _id: e.cliente }).then((cliente) => {
                     q++
+                    if (naoVazio(e.dataApro)) {
+                        dataAprova = e.dataApro
+                    } else {
+                        dataAprova = '0000-00-00'
+                    }
+
                     let tamTermo = e.termo
                     if (tamTermo.length > 0) {
                         if (naoVazio(tamTermo[0].data)) {
@@ -148,12 +154,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
                         datatermo = ''
                     }
 
-                    if (naoVazio(e.dataTroca)) {
-                        if (naoVazio(e.dataApro)) {
-                            dataAprova = e.dataApro
-                        } else {
-                            dataAprova = '0000-00-00'
-                        }
+                    if (naoVazio(e.dataTroca) && naoVazio(e.dataTroca)) {
                         dataTroca = e.dataTroca
                         if (naoVazio(datatermo)) {
                             contaDias = diferencaDias(e.dataTroca, datatermo)
@@ -162,12 +163,8 @@ router.get('/termos/', ehAdmin, (req, res) => {
                             contaDias = diferencaDias(e.dataTroca, dataHoje())
                             termo = false
                         }
-                        // if (contaDias > 6) {
-                        //     alerta = true
-                        // } else {
-                        //     alerta = false
-                        // }
-                        projetos.push({ id: e._id, termo, alerta, contaDias, seq: e.seq, cadastro: e.datacad, cliente: cliente.nome, datatermo: dataMensagem(datatermo), dataapro: dataMensagem(dataAprova), datatroca: dataMensagem(dataTroca) })
+
+                        projetos.push({ id: e._id, termo, alerta, contaDias, seq: e.seq, cadastro: datacad, cliente: cliente.nome, datatermo: dataMensagem(datatermo), dataapro: dataMensagem(dataAprova), datatroca: dataMensagem(dataTroca) })
                     }
                     if (q == projeto.length) {
                         res.render('principal/termos', { projetos })
@@ -548,7 +545,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                 for (const item of list) {
                     deadline = await item.dtfim
                     qtdmod = await item.qtdmod
-                    projetos = await item.projeto
+                    let projetos = await item.projeto
 
                     projetos.map(async register => {
                         id = register._id
@@ -570,7 +567,6 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                         checkReal = register.ins_real
                         pedido = register.pedido
 
-                        if (naoVazio(pedido)) {
                             if (checkReal != true) {
                                 checkReal = 'unchecked'
                             } else {
@@ -582,11 +578,12 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                             } else {
                                 sistema = 0
                             }
-                        }
+                        
                     })
 
                     if (naoVazio(pedido)) {
-                        instaladores = await item.instalador
+                        
+                        let instaladores = await item.instalador
 
                         if (instaladores.length > 0) {
                             instaladores.map(async register => {
@@ -622,7 +619,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                             nome_cliente = this_cliente.nome
                         })
 
-                        await listaAndamento.push({
+                        listaAndamento.push({
                             id, seq, parado, execucao, autorizado, pagamento,
                             instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
                             sistema, modulos, potencia, inversor, deadline, addInstalador,
@@ -7811,7 +7808,7 @@ router.get('/exportarOrcamento/:id', ehAdmin, (req, res) => {
     })
 })
 
-router.post('/emandamento/', ehAdmin, (req, res) => {
+router.post('/emandamento/', ehAdmin, async (req, res) => {
 
     const { _id } = req.user
     const { user } = req.user
@@ -7860,11 +7857,7 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
     let prjfeito_status = { $exists: true }
     let parado_status = { $exists: true }
     let sql_installer = {}
-    let sql = {}
-
-    if (filter_installer != 'Todos') {
-        sql_installer = filter_installer
-    }
+    let match = {}
 
     if (filter_status != 'Todos') {
         switch (filter_status) {
@@ -7879,25 +7872,41 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
         }
     }
 
-    //Object.assign(sql,sql_status, sql_installer, { user: id })
+    if (filter_installer != 'Todos') {
+        const id_ins = await Pessoa.findById(filter_installer)
+        match =  {
+            user: id,
+            tarefa: { $exists: false },
+            nome_projeto: { $exists: true },
+            liberar: liberar_status,
+            prjfeito: prjfeito_status,
+            parado: parado_status,
+            insres: id_ins._id,
+            "dtfimbusca": {
+                $gte: dtini,
+                $lte: dtfim
+            },                
+        }        
+    }else{
+        match =  {
+            user: id,
+            tarefa: { $exists: false },
+            nome_projeto: { $exists: true },
+            liberar: liberar_status,
+            prjfeito: prjfeito_status,
+            parado: parado_status,
+            "dtfimbusca": {
+                $gte: dtini,
+                $lte: dtfim
+            },                
+        }        
+    }
 
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
             Equipe.aggregate([
                 {
-                    $match: {
-                        user: id,
-                        tarefa: { $exists: false },
-                        nome_projeto: { $exists: true },
-                        insres: sql_installer,
-                        liberar: liberar_status,
-                        prjfeito: prjfeito_status,
-                        parado: parado_status,
-                        "dtfimbusca": {
-                            $gte: dtini,
-                            $lte: dtfim
-                        }
-                    }
+                    $match: match
                 },
                 {
                     $lookup: {
@@ -7918,9 +7927,14 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
             ]).then(async list => {
 
                 for (const item of list) {
+
                     deadline = await item.dtfim
+                    if (naoVazio(deadline)==false){
+                        deadline = '0000-00-00'
+                    }
+
                     qtdmod = await item.qtdmod
-                    projetos = await item.projeto
+                    let projetos = await item.projeto
 
                     projetos.map(async register => {
                         id = register._id
@@ -7941,7 +7955,6 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         ins_banco = register.ins_banco
                         checkReal = register.ins_real
                         pedido = register.pedido
-                        if (naoVazio(pedido)){
                         if (checkReal != true) {
                             checkReal = 'unchecked'
                         } else {
@@ -7953,11 +7966,10 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         } else {
                             sistema = 0
                         }
-                    }
                     })
 
                     if (naoVazio(pedido)){
-                    instaladores = await item.instalador
+                    let instaladores = await item.instalador
 
                     if (instaladores.length > 0) {
                         instaladores.map(async register => {
@@ -7993,17 +8005,18 @@ router.post('/emandamento/', ehAdmin, (req, res) => {
                         nome_cliente = this_cliente.nome
                     })
 
-                    await listaAndamento.push({
+                    listaAndamento.push({
                         id, seq, parado, execucao, autorizado, pagamento,
                         instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
                         sistema, modulos, potencia, inversor, deadline, addInstalador,
                         dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
                     })
+
                     addInstalador = []
                 }
                 }
 
-                listaAndamento.sort(comparaNum)
+                await listaAndamento.sort(comparaNum)
 
                 if (filter_installer != 'Todos') {
                     const installer = await Pessoa.findById(filter_installer)
@@ -8712,6 +8725,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
     var totEnviado = 0
     var totPerdido = 0
     var totNegociando = 0
+    let datacad
 
     if (ehAdmin == 0) {
         ehMaster = true
@@ -8741,13 +8755,6 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
     var diaval
     var vistoria
     var leva
-    var termo = false
-    var tamTermo = ''
-    var desctermo = ''
-    var contaDias
-    var dataAprova
-    var mostrar
-    var excedePrazo
 
     var desctermo
     var datatermo
@@ -8755,7 +8762,6 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
     var tamTermo = []
     var dataAprova
     var contaDias
-    var mostrar
     var excedePrazo
 
     var data = new Date()
@@ -8881,6 +8887,16 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                     } else {
                                                         nome_instalador = ''
                                                     }
+                                                    if (naoVazio(e.dataApro)) {
+                                                        dataAprova = e.dataApro
+                                                    } else {
+                                                        dataAprova = '0000-00-00'
+                                                    }
+                                                    if (naoVazio(e.datacad)) {
+                                                        datacad = e.datacad
+                                                    } else {
+                                                        datacad = '0000-00-00'
+                                                    }                                                    
 
                                                     if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
                                                         if (naoVazio(e.valor)) {
@@ -8920,11 +8936,6 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                             datatermo = ''
                                                         }
                                                         if (naoVazio(e.dataTroca)) {
-                                                            if (naoVazio(e.dataApro)) {
-                                                                dataAprova = e.dataApro
-                                                            } else {
-                                                                dataAprova = '0000-00-00'
-                                                            }
                                                             dataTroca = e.dataTroca
                                                             if (naoVazio(datatermo)) {
                                                                 contaDias = diferencaDias(e.dataTroca, datatermo)
@@ -8937,20 +8948,13 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                             contaDias = 0
                                                         }
 
-                                                        // console.log(contaDias)
-                                                        // if (contaDias > 6) {
-                                                        //     mostrar = true
-                                                        // } else {
-                                                        //     mostrar = false
-                                                        // }
-
                                                         if (contaDias > 14) {
                                                             excedePrazo = true
                                                         } else {
                                                             excedePrazo = false
                                                         }
 
-                                                        listaTermos.push({ id: e._id, vendedor: pes_vendedor.nome, termo, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                                        listaTermos.push({ id: e._id, vendedor: pes_vendedor.nome, termo, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                                     }
 
                                                     if ((e.entregue == true) && (e.status == 'Enviado')) {
@@ -8972,15 +8976,15 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                             alerta = true
                                                         }
                                                         // console.log(alerta)
-                                                        listaEntregue.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, alerta, seq: e.seq, resp: e.responsavel, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                                        listaEntregue.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, alerta, seq: e.seq, resp: e.responsavel, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                                     } else {
                                                         if ((e.futuro == true) && (e.status == 'Futuro')) {
-                                                            listaFuturos.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
-                                                            listaOrcado.push({ id: e._id, logado: pessoa, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, nome_responsavel, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                                            listaFuturos.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
+                                                            listaOrcado.push({ id: e._id, logado: pessoa, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, nome_responsavel, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                                         } else {
                                                             // console.log('e.execucao=>' + e.execucao)
                                                             if (e.baixada == true) {
-                                                                listaBaixado.push({ id: e._id, seq: e.seq, cliente: cliente.nome, cadastro: dataMsgNum(e.datacad) })
+                                                                listaBaixado.push({ id: e._id, seq: e.seq, cliente: cliente.nome, cadastro: dataMsgNum(datacad) })
                                                             } else {
                                                                 // console.log('e.status=>' + e.status)
                                                                 if ((e.execucao == true)) {
@@ -8988,12 +8992,12 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                     // console.log('pes_ins=>'+pes_ins)
 
                                                                     vistoria = false
-                                                                    if (naoVazio(e.dataPost) && naoVazio(e.dataSoli) && naoVazio(e.dataApro)) {
+                                                                    if (naoVazio(e.dataPost) && naoVazio(e.dataSoli) && naoVazio(dataAprova)) {
                                                                         vistoria = true
                                                                     }
 
                                                                     if (e.instalado != true) {
-                                                                        listaExecucao.push({ id: e._id, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                                                        listaExecucao.push({ id: e._id, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                                                     }
 
                                                                     if (naoVazio(vendedor)) {
@@ -9003,7 +9007,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                             leva = false
                                                                         }
                                                                         if (e.encerrado != true) {
-                                                                            listaGanho.push({ id: e._id, leva, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad), auth: e.autorizado })
+                                                                            listaGanho.push({ id: e._id, leva, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad), auth: e.autorizado })
                                                                         }
                                                                     }
                                                                 } else {
@@ -9031,7 +9035,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                             leva = false
                                                                         }
                                                                         if (e.encerrado != true) {
-                                                                            listaGanho.push({ id: e._id, leva, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, auth: e.autorizado, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad), auth: e.autorizado })
+                                                                            listaGanho.push({ id: e._id, leva, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, auth: e.autorizado, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad), auth: e.autorizado })
                                                                         }
                                                                     } else {
                                                                         if ((e.baixada == false) && (e.encerrado == false)) {
@@ -9087,11 +9091,11 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                                     alerta = true
                                                                                 }
                                                                                 // console.log(alerta)
-                                                                                listaNegociando.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, alerta, cliente: cliente.nome, seq: e.seq, status: e.status, cadastro: dataMsgNum(e.datacad) })
+                                                                                listaNegociando.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, alerta, cliente: cliente.nome, seq: e.seq, status: e.status, cadastro: dataMsgNum(datacad) })
                                                                             } else {
-                                                                                listaEnviado.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                                                                listaEnviado.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                                                             }
-                                                                            listaOrcado.push({ id: e._id, logado: pessoa, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, nome_responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                                                            listaOrcado.push({ id: e._id, logado: pessoa, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, nome_responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                                                         }
                                                                     }
                                                                 }
@@ -9225,6 +9229,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                             }
                             Pessoa.findOne({ _id: id_responsavel }).then((responsavel) => {
                                 Pessoa.findOne({ _id: insres }).lean().then((pes_ins) => {
+                                    q++
                                     if (naoVazio(cliente)) {
                                         nome_cliente = cliente.nome
                                     } else {
@@ -9235,7 +9240,16 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                     } else {
                                         nome_responsavel = ''
                                     }
-                                    q++
+                                    if (naoVazio(e.dataApro)) {
+                                        dataAprova = e.dataApro
+                                    } else {
+                                        dataAprova = '0000-00-00'
+                                    }
+                                    if (naoVazio(e.datacad)) {
+                                        datacad = e.datacad
+                                    } else {
+                                        datacad = '0000-00-00'
+                                    }
 
                                     if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
                                         if (naoVazio(e.valor)) {
@@ -9275,11 +9289,6 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                             datatermo = ''
                                         }
                                         if (naoVazio(e.dataTroca)) {
-                                            if (naoVazio(e.dataApro)) {
-                                                dataAprova = e.dataApro
-                                            } else {
-                                                dataAprova = '0000-00-00'
-                                            }
                                             dataTroca = e.dataTroca
                                             if (naoVazio(datatermo)) {
                                                 contaDias = diferencaDias(e.dataTroca, datatermo)
@@ -9305,7 +9314,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                             excedePrazo = false
                                         }
 
-                                        listaTermos.push({ id: e._id, termo, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(e.datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                        listaTermos.push({ id: e._id, termo, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                     }
 
                                     if ((e.baixada == false) && (e.encerrado == false) && (e.execucao == false)) {
@@ -9332,7 +9341,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                             } else {
                                                 leva = false
                                             }
-                                            listaGanho.push({ id: e._id, leva, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                            listaGanho.push({ id: e._id, leva, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                         } else {
                                             if (naoVazio(e.proposta)) {
                                                 // console.log('e.proposta=>'+e.proposta)
@@ -9366,16 +9375,16 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
 
                                             }
 
-                                            listaOrcado.push({ id: e._id, seq: e.seq, resp: e.responsavel, nome_responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                            listaOrcado.push({ id: e._id, seq: e.seq, resp: e.responsavel, nome_responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                         }
                                     } else {
                                         if (e.baixado == true) {
-                                            listaBaixado.push({ id: e._id, seq: e.seq, cliente: cliente.nome, cadastro: dataMsgNum(e.datacad) })
+                                            listaBaixado.push({ id: e._id, seq: e.seq, cliente: cliente.nome, cadastro: dataMsgNum(datacad) })
                                         } else {
                                             if ((e.execucao == true) && (e.instalado != true)) {
                                                 // && (e.status == 'Ganho')
                                                 // console.log('pes_ins=>'+pes_ins)
-                                                listaExecucao.push({ id: e._id, seq: e.seq, pes_ins, cliente: cliente.nome, nome_instalador, cadastro: dataMsgNum(e.datacad), parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
+                                                listaExecucao.push({ id: e._id, seq: e.seq, pes_ins, cliente: cliente.nome, nome_instalador, cadastro: dataMsgNum(datacad), parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                             }
                                         }
                                     }
