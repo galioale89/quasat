@@ -596,7 +596,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                                     if (register._id == ins_banco) {
                                         addInstalador = [{ instalador, qtdmod }]
                                     } else {
-                                        let nome_ins = await Pessoa.findById(ins_banco)
+                                        nome_ins = await Pessoa.findById(ins_banco)
                                         addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
                                     }
                                 } else {
@@ -7840,6 +7840,8 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
     let deadline
     let ins_banco
     let checkReal
+    let nome_ins
+    let id_ins
     let pedido
 
     var listaAndamento = []
@@ -7983,7 +7985,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                                 if (register._id == ins_banco) {
                                     addInstalador = [{ instalador, qtdmod }]
                                 } else {
-                                    let nome_ins = await Pessoa.findById(ins_banco)
+                                    nome_ins = await Pessoa.findById(ins_banco)
                                     addInstalador = [{ instalador: nome_ins.nome, qtdmod }]
                                 }
                             } else {
