@@ -1,0 +1,227 @@
+<script src="/js/uteis.js"></script>
+
+<div class="dashInstalador">
+    <div class="card">
+        <div class="card-body">
+            <div class="title">
+                <label class="h2" style="width: 100%;">Dashboard Instaladores</label>
+                <a href="/gerenciamento/emandamento" style="width: 100%;">
+                    <i class="bi bi-arrow-left-circle icon"></i>
+                </a>
+            </div>
+            <form action="/gerenciamento/dashInstalador/" method="post">
+                <div class="text-center mt-4 mb-2">
+                    <label class="title-filter">{{mestitulo}} de {{ano}}</label>
+                </div>
+                <div class='row md-1 mt-2'>
+                    <div class='col-md-1 text-start'>
+                        <input type='text' class='form-control form-control-sm' name='ano' value='{{ano}}'>
+                    </div>
+                    <div class='col-md-11'>
+                        <div class="btn-toolbar">
+                            <div class="btn-group gap-2 col-12">
+                                <input type='hidden' name='mes' id='mes' value=''>
+                                <button type="submit" id='selectjan' onclick="selectJan()"
+                                    class="btn btn-sm {{janeiro}}">Janeiro</button>
+                                <button type="submit" id='selectfev' onclick="selectFev()"
+                                    class="btn btn-sm {{fevereiro}}">Fevereiro</button>
+                                <button type="submit" id='selectmar' onclick="selectMar()"
+                                    class="btn btn-sm {{marco}}">Março</button>
+                                <button type="submit" id='selectabr' onclick="selectAbr()"
+                                    class="btn btn-sm {{abril}}">Abril</button>
+                                <button type="submit" id='selectmai' onclick="selectMai()"
+                                    class="btn btn-sm {{maio}}">Maio</button>
+                                <button type="submit" id='selectjun' onclick="selectJun()"
+                                    class="btn btn-sm {{junho}}">Junho</button>
+                                <button type="submit" id='selectjul' onclick="selectJul()"
+                                    class="btn btn-sm {{julho}}">Julho</button>
+                                <button type="submit" id='selectago' onclick="selectAgo()"
+                                    class="btn btn-sm {{agosto}}">Agosto</button>
+                                <button type="submit" id='selectset' onclick="selectSet()"
+                                    class="btn btn-sm {{setembro}}">Setembro</button>
+                                <button type="submit" id='selectout' onclick="selectOut()"
+                                    class="btn btn-sm {{outubro}}">Outubro</button>
+                                <button type="submit" id='selectnov' onclick="selectNov()"
+                                    class="btn btn-sm {{novembro}}">Novembro</button>
+                                <button type="submit" id='selectdez' onclick="selectDez()"
+                                    class="btn btn-sm {{dezembro}}">Dezembro</button>
+                                <button type="submit" id='selecttodos' onclick="selectTodos()"
+                                    class="btn btn-sm {{todos}}">Todos</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <hr>
+            {{#each lista_instaladores}}
+            <p class="ins mt-2">
+            <div style="padding: 10px 100px 0px 100px;">
+                <label class="h3 title_ins">{{instalador}}</label>
+                <div class='row'>
+                    <div class="col" style="display: flex; align-items: center;">
+                        <label class="h6">Módulos Programados</label>
+                        <canvas onmouseenter="moveIn({{i}},'banco')" onmouseout="moveOut({{i}}, 'banco')" class="banco"
+                            width="fit-content" height="fit-content"></canvas>
+                        <input type="hidden" value="{{qtd_banco}}" class="qtd_banco">
+                    </div>
+                    <div class="col" style="display: flex; align-items: center;">
+                        <label class="h6">Módulos Instalados</label>
+                        <canvas onmouseenter="moveIn({{i}},'real')" onmouseout="moveOut({{i}}, 'real')" class="real"
+                            width="" height=""></canvas>
+                        <input type="hidden" value="{{qtd_real}}" class="qtd_real">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            {{else}}
+            <div style="padding: 100px;">
+                <label class="h1" style="text-align: center;">{{mensagem}}</label>
+            </div>
+            {{/each}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        let x = $('.ins').length;
+        let qtd_banco = $('.qtd_banco');
+        let qtd_real = $('.qtd_real');
+
+        for (let i = 0; i < x; i++) {
+
+            let c_banco = $(".banco").get(i).getContext('2d');
+            c_banco.beginPath();
+            c_banco.arc(95, 50, 45, 8, 1 * Math.PI);
+            c_banco.strokeStyle = '#283759'
+            c_banco.lineWidth = '5'
+            c_banco.stroke();
+            let val_banco = qtd_banco.eq(i).val()
+            c_banco.beginPath();
+            c_banco.font = "50px Poppins"
+            c_banco.fillStyle = '#283759'
+            c_banco.fillText(String(val_banco), 73, 60);
+            c_banco.stroke();
+
+            let c_real = $(".real").get(i).getContext('2d');
+            c_real.beginPath();
+            c_real.arc(95, 50, 45, 8, 1 * Math.PI);
+            c_real.strokeStyle = '#283759'
+            c_real.lineWidth = '5'
+            c_real.stroke();
+            let val_real = qtd_real.eq(i).val()
+            c_real.beginPath();
+            c_real.fillStyle = '#283759'
+            c_real.font = "50px Poppins"
+            c_real.fillText(String(val_real), 73, 60);
+            c_real.stroke();
+
+        }
+    })
+
+    function moveIn(i, qtd) {
+
+        let x = document.getElementsByClassName(qtd)
+        let movein = x[i].getContext('2d')
+        movein.beginPath();
+        movein.arc(95, 50, 47, 8, 1 * Math.PI);
+        movein.strokeStyle = 'white'
+        movein.lineWidth = '10'
+        movein.stroke();
+
+
+        let y = document.getElementsByClassName(qtd)
+        let moveout = y[i].getContext('2d')
+        moveout.beginPath();
+        moveout.arc(95, 50, 47, 3, 2 * Math.PI);
+        moveout.strokeStyle = '#847af4'
+        moveout.lineWidth = '5'
+        moveout.stroke();
+
+
+    }
+
+    function moveOut(i, qtd) {
+
+        let x = document.getElementsByClassName(qtd)
+        let movein = x[i].getContext('2d')
+        movein.beginPath();
+        movein.arc(95, 50, 47, 3, 2 * Math.PI);
+        movein.strokeStyle = 'white'
+        movein.lineWidth = '10'
+        movein.stroke();
+
+
+        let y = document.getElementsByClassName(qtd)
+        let moveout = y[i].getContext('2d')
+        moveout.beginPath();
+        moveout.arc(95, 50, 47, 8, 1 * Math.PI);
+        moveout.strokeStyle = 'black'
+        moveout.lineWidth = '5'
+        moveout.stroke();
+
+    }
+
+</script>
+
+<style>
+    #body-dash-instalador {
+        display: flex;
+    }
+
+    .dashInstalador {
+        width: 100%;
+        padding: 10px 50px 50px 50px;
+        margin: auto;
+        align-content: center;
+        style="background-color: #e3e3e3;  
+
+    }
+
+    .ins {
+        position: relative;
+        display: flex;
+    }
+
+    .title_ins {
+        background: -webkit-linear-gradient(#283759 50%, #847af4 110%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+
+    .title {
+        background: linear-gradient(to left, #847af4 0%, #283759 112%);
+        border-radius: 20px;
+        display: flex;
+        width: 100%;
+    }
+
+    .title label {
+        padding: 10px 0px 0px 10px;
+        color: white;
+        font-weight: bold;
+    }
+
+    .icon {
+        display: flex;
+        font-size: 40px;
+        color: white;
+        justify-content: flex-end;
+        margin: 10px 10px 0px 0px;
+    }
+
+    .title-filter {
+          font-size: 20px; 
+          text-transform: uppercase;
+          font-weight: bold;
+    }
+
+    .btn-group button:hover{
+       background: -webkit-linear-gradient(#283759 50%, #847af4 110%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+    }
+</style>

@@ -60,10 +60,6 @@ li {
     list-style-type: none;
 }
 
-i {
-    font-size: 25px;
-}
-
 #mouse {
     display: block;
     width: 22px;
@@ -153,7 +149,8 @@ i {
     width: 40px;
     border-radius: 40px;
     background-color: rgba(46, 255, 102, 0.6);
-    box-shadow: 3px 1px 5px rgba(200, 200, 200, 0.8)
+    box-shadow: 3px 1px 5px rgba(200, 200, 200, 0.8);
+    align-items: center;
 }
 
 #aguardando {
@@ -180,7 +177,7 @@ i {
     border-radius: 40px;
     background-color: rgba(255, 43, 43, 0.6);
     color: white;
-    cursor: pointer;
+    align-items: center;    
 }
 
 #homologado {

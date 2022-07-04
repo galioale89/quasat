@@ -518,6 +518,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                         user: id,
                         tarefa: { $exists: false },
                         nome_projeto: { $exists: true },
+                        baixada: {$ne: true},
                         "dtfimbusca": {
                             $gte: dtini,
                             $lte: dtfim,
@@ -629,6 +630,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                                 sistema, modulos, potencia, inversor, deadline, addInstalador,
                                 dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
                             })
+
                             addInstalador = []
                         }
                     }
@@ -1753,7 +1755,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                                         // console.log('e.nome=>' + e.nome)
                                                                         texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                             'O orçamento ' + novo_projeto.seq + ' para o cliente ' + novo_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
-                                                                            'Acesse https://integracao.vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
+                                                                            'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
                                                                         // console.log('pessoa.celular=>' + pessoa.celular)
                                                                         client.messages
                                                                             .create({
@@ -4612,7 +4614,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                 // console.log(pessoa.celular)
                                                 mensagem = 'Olá ' + projetista.nome + ',' + '\n' +
                                                     'O levantamento de rede da proposta ' + prj.seq + ' foi adicionado.' + '\n' +
-                                                    'Acesse: https://integracao.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
+                                                    'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
                                                 client.messages
                                                     .create({
                                                         body: mensagem,
@@ -4682,9 +4684,10 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 // console.log('concluido=>' + JSON.stringify(concluido))
                                 // console.log('req.body.id=>' + req.body.id)
                                 Tarefas.findOneAndUpdate({ _id: req.body.id }, concluido).then((e) => {
-                                    Tarefas.find({ projeto: req.body.idprj }).then((lista_tarefas) => {
+                                    Tarefas.find({ projeto: req.body.idprj }).then(async (lista_tarefas) => {
                                         if (ativo == true) {
                                             req.flash('success_msg', 'Imagem(ns) da(s) instalação aprovada(s)')
+                                            await Projeto.findOneAndUpdate({_id: req.body.idprj},{$set: {instalado: true}})
                                         }
 
                                         lista_tarefas.forEach((e) => {
@@ -8994,7 +8997,6 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                     } else {
                                                         if ((e.futuro == true) && (e.status == 'Futuro')) {
                                                             listaFuturos.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
-                                                            listaOrcado.push({ id: e._id, logado: pessoa, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, nome_responsavel, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                                         } else {
                                                             // console.log('e.execucao=>' + e.execucao)
                                                             if (e.baixada == true) {
@@ -9511,6 +9513,374 @@ router.get('/removeInstalador/:id', ehAdmin, (req, res) => {
                     res.redirect('/gerenciamento/emandamento')
                 })
             })
+        })
+    })
+})
+
+router.get('/dashInstalador', ehAdmin, async (req, res) => {
+    const { user } = req.user
+    const { _id } = req.user
+    let id
+
+    if (naoVazio(user)) {
+        id = user
+    } else {
+        id = _id
+    }
+
+    let lista_instaladores = []
+
+    let mestitulo
+
+    let date = new Date()
+
+    let diafim
+    let diaini = '01'
+    let mes = date.getMonth()
+    if (mes < 10) {
+        mes = '0' + String(mes)
+    }
+    mes = String(mes)
+
+    let ano = date.getFullYear()
+    let janeiro
+    let fevereiro
+    let marco
+    let abril
+    let maio
+    let junho
+    let julho
+    let agosto
+    let setembro
+    let outubro
+    let novembro
+    let dezembro
+    switch (mes) {
+        case '01':
+            diafim = '31'
+            mestitulo = 'Janeiro'
+            janeiro = 'active'
+            break;
+        case '02':
+            diafim = '28'
+            mestitulo = 'Fevereiro'
+            fevereiro = 'active'
+            break;
+        case '03':
+            diafim = '31'
+            mestitulo = 'Março'
+            marco = 'active'
+            break;
+        case '04':
+            diafim = '30'
+            mestitulo = 'Abril'
+            abril = 'active'
+            break;
+        case '05':
+            diafim = '31'
+            mestitulo = 'Maio'
+            maio = 'active'
+            break;
+        case '06':
+            diafim = '30'
+            mestitulo = 'Junho'
+            junho = 'active'
+            break;
+        case '07':
+            diafim = '31'
+            mestitulo = 'Julho'
+            julho = 'active'
+            break;
+        case '08':
+            diafim = '31'
+            mestitulo = 'Agosto'
+            agosto = 'active'
+            break;
+        case '09':
+            diafim = '30'
+            mestitulo = 'Setembro'
+            setembro = 'active'
+            break;
+        case '10':
+            diafim = '31'
+            mestitulo = 'Outubro'
+            outubro = 'active'
+            break;
+        case '11':
+            diafim = '30'
+            mestitulo = 'Novembro'
+            novembro = 'active'
+            break;
+        case '12':
+            diafim = '31'
+            mestitulo = 'Dezembro'
+            dezembro = 'active'
+            break;
+    }
+
+    let dtini = ano + mes + diaini
+    dtini = parseFloat(dtini)
+    let dtfim = ano + mes + diafim
+    dtfim = parseFloat(dtfim)
+
+    Equipe.aggregate([
+        {
+            $match: {
+                user: id,
+                "dtfimbusca": {
+                    $gte: dtini,
+                    $lte: dtfim
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$insres",
+                totalQtd: { $sum: "$qtdmod" },
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $lookup: {
+                from: 'projetos',
+                let: { ins_real: "$_id" },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ["$ins_banco", "$$ins_real"]
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$ins_banco",
+                        total_qtd_banco: { $sum: "$plaQtdMod" }
+                    }
+                }],
+                as: "banco"
+            }
+        },
+        {
+            $replaceRoot: {
+                newRoot: {
+                    $mergeObjects: [{
+                        $arrayElemAt:
+                            ["$banco", 0]
+                    },
+                        "$$ROOT"]
+                }
+            }
+        },
+        {
+            $project: {
+                banco: 0
+            }
+        }
+    ]).then(async data => {
+        let i = 0
+        for (let ins of data) {
+            let nome_ins = await Pessoa.findById(ins._id)
+            let qtd_real = await ins.totalQtd
+            let qtd_banco = await ins.total_qtd_banco
+            if (naoVazio(nome_ins)) {
+                lista_instaladores.push({ instalador: nome_ins.nome, qtd_real, qtd_banco, i })
+                i++
+            }
+        }
+        res.render('principal/dashInstalador', {
+            lista_instaladores, mestitulo, ano,
+            janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro
+        })
+    })
+})
+
+router.post('/dashInstalador', ehAdmin, async (req, res) => {
+    const { user } = req.user
+    const { _id } = req.user
+    let id
+
+    if (naoVazio(user)) {
+        id = user
+    } else {
+        id = _id
+    }
+
+    let lista_instaladores = []
+
+    let mes
+    let ano = req.body.ano
+
+    let janeiro
+    let fevereiro
+    let marco
+    let abril
+    let maio
+    let junho
+    let julho
+    let agosto
+    let setembro
+    let outubro
+    let novembro
+    let dezembro
+    let todos
+
+    let diafim
+
+    console.log(req.body.mes)
+
+    switch (req.body.mes) {
+        case 'Janeiro':
+            diafim = '31'
+            mes = '01'
+            janeiro = 'active'
+            break;
+        case 'Fevereiro':
+            diafim = '28'
+            mes = '02'
+            fevereiro = 'active'
+            break;
+        case 'Março':
+            diafim = '31'
+            mes = '03'
+            marco = 'active'
+            break;
+        case 'Abril':
+            diafim = '30'
+            mes = '04'
+            abril = 'active'
+            break;
+        case 'Maio':
+            diafim = '31'
+            mes = '05'
+            maio = 'active'
+            break;
+        case 'Junho':
+            diafim = '30'
+            mes = '06'
+            junho = 'active'
+            break;
+        case 'Julho':
+            diafim = '31'
+            mes = '07'
+            julho = 'active'
+            break;
+        case 'Agosto':
+            diafim = '31'
+            mes = '08'
+            agosto = 'active'
+            break;
+        case 'Setembro':
+            diafim = '30'
+            mes = '09'
+            setembro = 'active'
+            break;
+        case 'Outubro':
+            diafim = '31'
+            mes = '10'
+            outubro = 'active'
+            break;
+        case 'Novembro':
+            diafim = '30'
+            mes = '11'
+            novembro = 'active'
+            break;
+        case 'Dezembro':
+            diafim = '31'
+            mes = '12'
+            dezembro = 'active'
+            break;
+        default:
+            diafim = '31'
+            todos = 'active'
+            break;
+    }
+    let dtini
+    let dtfim
+
+    if (todos == 'active') {
+        dtini = Number(`${ano}0101`)
+        dtfim = Number(`${ano}1231`)        
+    } else {
+        dtini = Number(`${ano}${mes}01`)
+        dtfim = Number(`${ano}${mes}${diafim}`)
+    }
+
+    Equipe.aggregate([
+        {
+            $match: {
+                user: id,
+                "dtfimbusca": {
+                    $gte: dtini,
+                    $lte: dtfim
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$insres",
+                totalQtd: { $sum: "$qtdmod" },
+                count: { $sum: 1 }
+            }
+        },
+        {
+            $lookup: {
+                from: 'projetos',
+                let: { ins_real: "$_id" },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ["$ins_banco", "$$ins_real"]
+                        }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$ins_banco",
+                        total_qtd_banco: { $sum: "$plaQtdMod" }
+                    }
+                }],
+                as: "banco"
+            }
+        },
+        {
+            $replaceRoot: {
+                newRoot: {
+                    $mergeObjects: [
+                        {
+                            $arrayElemAt:
+                                ["$banco", 0]
+                        },
+                        "$$ROOT"]
+                }
+            }
+        },
+        {
+            $project: {
+                banco: 0
+            }
+        }
+    ]).then(async data => {
+        let i = 0
+        let mensagem
+
+        if (naoVazio(data)) {
+            for (let ins of data) {
+                let nome_ins = await Pessoa.findById(ins._id)
+                let qtd_real = await ins.totalQtd
+                let qtd_banco = await ins.total_qtd_banco
+                if (naoVazio(nome_ins)) {
+                    lista_instaladores.push({ instalador: nome_ins.nome, qtd_real, qtd_banco, i })
+                    i++
+                }
+            }
+        } else {
+            mensagem = 'Não existem instaladores com programação para este mês.'
+        }
+        res.render('principal/dashInstalador', {
+            mensagem,
+            lista_instaladores, mestitulo: req.body.mes, ano,
+            janeiro, fevereiro, marco, abril, maio, junho, julho,
+            agosto, setembro, outubro, novembro, dezembro, todos
         })
     })
 })

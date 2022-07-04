@@ -398,18 +398,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                         cliente: nome_cliente,
                                                                                         cadastro: dataMsgNum(e.datacad)
                                                                                     })
-                                                                                    listaOrcado.push({
-                                                                                        id: e._id,
-                                                                                        logado: pessoa,
-                                                                                        idcliente: e.cliente,
-                                                                                        idvendedor: e.vendedor,
-                                                                                        seq: e.seq,
-                                                                                        nome_responsavel,
-                                                                                        resp: e.responsavel,
-                                                                                        pro: e.proposta,
-                                                                                        cliente: nome_cliente,
-                                                                                        cadastro: dataMsgNum(e.datacad)
-                                                                                    })
                                                                                 } else {
                                                                                     if (e.baixada) {
                                                                                         listaBaixado.push({
@@ -693,7 +681,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                         })
                 }
             })
-
     } else {
         Projeto.find({ user: id })
             .then((projeto) => {
@@ -893,8 +880,15 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                     }
 
                                                                 }
-
-                                                                listaOrcado.push({ id: e._id, seq: e.seq, resp: e.responsavel, nome_responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(e.datacad) })
+                                                                listaOrcado.push({ 
+                                                                    id: e._id, 
+                                                                    seq: e.seq, 
+                                                                    resp: e.responsavel, 
+                                                                    nome_responsavel, 
+                                                                    pro: e.proposta, 
+                                                                    cliente: nome_cliente, 
+                                                                    cadastro: dataMsgNum(e.datacad)
+                                                                })
                                                             }
                                                         } else {
                                                             if (e.baixado == true) {

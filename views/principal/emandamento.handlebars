@@ -42,6 +42,10 @@
         text-decoration: none;
         color: rgb(40, 55, 86);
     }
+
+    i {
+        font-size: 25px;
+    }
 </style>
 <script>
     window.onload = function () {
@@ -85,7 +89,7 @@
     <form action='/gerenciamento/emandamento/' method='post' class="no-print">
         <input type='hidden' name='tipo' value='emandamento'>
         <div class='row'>
-            <div class='col'>
+            <div class='col-md-5'>
                 <label class='col-form-label col-form-label-sm fw-bold'>Instalador</label>
                 <select name='instalador' class='form-select form-select-sm'>
                     {{#if installer_name}}
@@ -112,23 +116,24 @@
                     <option value='Parado'>Parado</option>
                 </select>
             </div>
-            <div style="width: 160px;">
+            <div style="width: 140px;">
                 <label class="col-form-label col-form-label-sm">Data Inicial</label>
                 <input type='date' class='form-control form-control-sm' name='dataini' id='dataini' value='{{dataini}}'>
             </div>
-            <div style="width: 160px;">
+            <div style="width: 140px;">
                 <label class="col-form-label col-form-label-sm">Data Final</label>
                 <input type='date' class='form-control form-control-sm' name='datafim' id='datafim' value='{{datafim}}'>
             </div>
-            <div style="width: 70px;">
-                <button type='submit' class='mt-3 botaofiltrar'><i class='bi bi-search iconefiltrar'
-                        style="display: flex;"></i></button>
+            <div class="col mt-4" style='display: flex;justify-content: center;'>
+                <button type='submit' class='botaofiltrar'>
+                    <i class='bi bi-search iconefiltrar' style="display: flex;padding: 0px 0px 0px 0px"></i>
+                </button>
+                <a href='/' class='no-print' style="color: rgb(40, 55, 86);display: flex;padding: 0px 5px 0px 5px"
+                    title="Imprimir Relatório" onclick="window.print();return false"><i class="bi bi-printer"></i></a>
+                <a href='/gerenciamento/dashInstalador' class='no-print'
+                    style="color: rgb(40, 55, 86);display: flex;padding: 0px 5px 0px 5px" title="Abrir Dashboard">
+                    <i class="bi bi-window"></i></a>
             </div>
-            <div style='width: 70px;' class="mt-3">
-                <a href='/' class='no-print mt-4' style="color: rgb(40, 55, 86)" value="Imprimir"
-                    onclick="window.print();return false"><i class="bi bi-printer"></i></a>
-            </div>
-
         </div>
     </form>
     <div style="margin-bottom: 4%;margin-top: 1%;">
@@ -183,14 +188,23 @@
                 </td>
                 <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{nome_ins_banco}}</a></td>
                 <td style="text-align: center;">
-                    <i {{#if autorizado}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
-                        {{/if}} style="display: flex;justify-content: center;margin: auto;padding-top: 10px;"></i>
+                    <button class="btn">
+                    <i style="display: flex;justify-content: center;margin: auto;" {{#if
+                        autorizado}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
+                        {{/if}}>
+                    </i>
+                    </button>
                 </td>
                 <td style="text-align: center;">
-                    <i {{#if pagamento}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
-                        {{/if}} style="display: flex;justify-content: center;margin: auto;padding-top: 10px;"></i>
+                    <button class="btn">
+                    <i style="display: flex;justify-content: center;margin: auto;" {{#if
+                        pagamento}}class="bi bi-check" id='execucao'{{else}}class="bi bi-stop-fill" id='parado'
+                        {{/if}}>
+                    </i>
+                    </button>
                 </td>
-                <td style="text-align: center;">{{dtfim}}</td>
+                <td style=" text-align: center;">{{dtfim}}
+                </td>
             </tr>
             {{/each}}
         </table>
@@ -262,6 +276,7 @@
             dtfim.val(deadline)
         }
 
+
         const qtdmod = $('#qtdmod')
         qtdmod.val(modulos)
 
@@ -304,7 +319,6 @@
 
         iconAuth.removeClass()
         buttonAuth.removeClass()
-        buttonAuth.text('')
         sendTeam.hide()
 
         if (lengthInstal.length > 0) {
