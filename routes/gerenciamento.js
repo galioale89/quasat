@@ -1258,23 +1258,23 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
 
         if (naoVazio(cpf) && cpf != 0) {
             documento = true
-            sql_aux = { user: id, cpf: cpf }
+            sql = { user: id, cpf: cpf }
         } else {
             if (naoVazio(cnpj) && cnpj != 0) {
                 documento = true
-                sql_aux = { user: id, cnpj: cnpj }
+                sql = { user: id, cnpj: cnpj }
             } else {
-                sql_aux = { user: id }
+                sql = { user: id }
             }
         }
-
-        Object.assign(sql, sql_aux, { vendedor: pessoa })
-
 
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             const vendedor_cliente = await Cliente.findOne(sql)
             try {
-                if (vendedor_cliente != null) {
+                console.log(vendedor_cliente._id)
+                console.log(pessoa)
+                
+                if (vendedor_cliente._id == pessoa) {
                     console.log('entrou')
                     const p = await Pessoa.findOne({ _id: req.body.vendedor })
                     const empresa = await Empresa.findOne({ user: id })
