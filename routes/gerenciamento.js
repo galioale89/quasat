@@ -1271,7 +1271,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             const achou_cliente = await Cliente.findOne(sql)
             try {
-                const vendedor_cliente = await Pessoa.findOne({_id: achou_cliente.vendedor})
                 if (achou_cliente._id == pessoa || achou_cliente == null) {
                     console.log('entrou')
                     const p = await Pessoa.findOne({ _id: pessoa })
@@ -1323,7 +1322,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                 projeto = {
                                     user: id,
                                     cliente: achou_cliente._id,
-                                    vendedor: req.body.vendedor,
+                                    vendedor: pessoa,
                                     datacad: dataBusca(dataHoje()),
                                     endereco: endereco,
                                     numero: numero,
@@ -1772,8 +1771,15 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                     }
 
                 } else {
-                    req.flash('aviso_msg', `O cliente ${achou_cliente.nome} pertence ao vendedor: ${vendedor_cliente.nome}`)
-                    res.redirect('/gerenciamento/orcamento')
+                    const vendedor_cliente = await Pessoa.findOne({ _id: achou_cliente.vendedor })
+                    try {
+                        req.flash('aviso_msg', `O cliente ${achou_cliente.nome} pertence ao vendedor: ${vendedor_cliente.nome}`)
+                        res.redirect('/gerenciamento/orcamento')
+                    } catch (error) {
+                        req.flash('error_msg', 'Vendeor não encontrado: ' + error)
+                        req.res('/gerenciamento/orcamento')
+                    }
+
                 }
             } catch (error) {
                 req.flash('error_msg', 'Cliente não encontrado: ' + error)
