@@ -1084,8 +1084,8 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
     var texto
 
     var id
-    var sql_aux = []
-    var sql = []
+    var sql_aux = {}
+    var sql = {}
     var params = []
     var material = []
     var dados
