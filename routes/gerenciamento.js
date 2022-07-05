@@ -8718,11 +8718,11 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
     }
 
     if (vendedor) {
-        list.getClients(id, pessoa)
+        // list.getClients(id, pessoa)
         sqlcli = { user: id, vendedor: pessoa, lead: true }
         render = 'dashvendedor'
     } else {
-        list.getClients(id)
+        // list.getClients(id)
         sqlcli = { user: id, lead: true }
         render = 'dashboard'
     }
