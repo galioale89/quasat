@@ -1293,7 +1293,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                     try {
                     const vendedor_cliente = await Cliente.findOne(sql)
                     console.log(vendedor_cliente)
-                        if (naoVazio(vendedor_cliente)) {
+                        if (vendedor_cliente != null) {
                             dados = req.body.campos
                             dados_desc = req.body.dados_desc
                             dados_qtd = req.body.dados_qtd
@@ -1312,9 +1312,9 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                     // console.log('dados_qtd[]=>' + dados_qtd[i])
                                     material.push({ desc: dados_desc[i], qtd: dados_qtd[i] })
                                 }
-                                if (naoVazio(achou_cliente) && achou_cliente.lead == false) {
-                                    if (achou_cliente.cnpj == cnpj || achou_cliente.cpf == cpf) {
-                                        req.flash('aviso_msg', 'Foi gerado mais um orçamento para o cliente: ' + achou_cliente.nome)
+                                if (naoVazio(vendedor_cliente) && vendedor_cliente.lead == false) {
+                                    if (vendedor_cliente.cnpj == cnpj || vendedor_cliente.cpf == cpf) {
+                                        req.flash('aviso_msg', 'Foi gerado mais um orçamento para o cliente: ' + vendedor_cliente.nome)
                                     }
                                     if (tipo == 'novo') {
                                         novo = true
@@ -1328,7 +1328,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                     }
                                     projeto = {
                                         user: id,
-                                        cliente: achou_cliente._id,
+                                        cliente: vendedor_cliente._id,
                                         vendedor: req.body.vendedor,
                                         datacad: dataBusca(dataHoje()),
                                         endereco: endereco,
@@ -1388,7 +1388,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                             Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
                                                                 // console.log('pessoa=>' + pessoa)
                                                                 texto = 'Olá ' + pessoa.nome + ',' + '\n' +
-                                                                    'O orçamento ' + novo_projeto.seq + ' para o cliente ' + achou_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
+                                                                    'O orçamento ' + novo_projeto.seq + ' para o cliente ' + vendedor_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
                                                                     'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
                                                                 // console.log('pessoa.celular=>'+pessoa.celular)
                                                                 client.messages
@@ -1435,26 +1435,26 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                     })
 
                                 } else {
-                                    if (naoVazio(achou_cliente) && achou_cliente.lead == true) {
-                                        achou_cliente.nome = buscaPrimeira(req.body.nome)
-                                        achou_cliente.endereco = buscaPrimeira(req.body.endereco)
-                                        achou_cliente.numero = req.body.numero
-                                        achou_cliente.bairro = req.body.bairro
-                                        achou_cliente.cep = req.body.cep
-                                        achou_cliente.complemento = req.body.complemento
-                                        achou_cliente.cidade = req.body.cidade
-                                        achou_cliente.uf = req.body.uf
-                                        achou_cliente.contato = buscaPrimeira(req.body.contato)
-                                        achou_cliente.celular = req.body.celular
-                                        achou_cliente.email = req.body.email
-                                        achou_cliente.lead = false
-                                        if (achou_cliente.novo == 'checked') {
+                                    if (naoVazio(vendedor_cliente) && vendedor_cliente.lead == true) {
+                                        vendedor_cliente.nome = buscaPrimeira(req.body.nome)
+                                        vendedor_cliente.endereco = buscaPrimeira(req.body.endereco)
+                                        vendedor_cliente.numero = req.body.numero
+                                        vendedor_cliente.bairro = req.body.bairro
+                                        vendedor_cliente.cep = req.body.cep
+                                        vendedor_cliente.complemento = req.body.complemento
+                                        vendedor_cliente.cidade = req.body.cidade
+                                        vendedor_cliente.uf = req.body.uf
+                                        vendedor_cliente.contato = buscaPrimeira(req.body.contato)
+                                        vendedor_cliente.celular = req.body.celular
+                                        vendedor_cliente.email = req.body.email
+                                        vendedor_cliente.lead = false
+                                        if (vendedor_cliente.novo == 'checked') {
                                             novo = true
                                         }
-                                        if (achou_cliente.ampliacao == 'checked') {
+                                        if (vendedor_cliente.ampliacao == 'checked') {
                                             amplia = true
                                         }
-                                        achou_cliente.save().then(() => {
+                                        vendedor_cliente.save().then(() => {
                                             if (tipo == 'novo') {
                                                 novo = true
                                             } else {
@@ -1467,7 +1467,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                             }
                                             projeto = {
                                                 user: id,
-                                                cliente: achou_cliente._id,
+                                                cliente: vendedor_cliente._id,
                                                 vendedor: req.body.vendedor,
                                                 datacad: dataBusca(dataHoje()),
                                                 endereco: endereco,
