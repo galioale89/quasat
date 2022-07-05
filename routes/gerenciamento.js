@@ -1290,8 +1290,8 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                     }
                     // console.log('sql=>' + JSON.stringify(sql))
                     Cliente.findOne(sql).then((achou_cliente) => {
-                        if (achou_cliente && achou_cliente.vendedor != pessoa) {
-                            req.flash('aviso_msg', `O cliente${achou_cliente.nome} pertence ao vendedor: ${p.nome}`)
+                        if (achou_cliente && achou_cliente._id != pessoa) {
+                            req.flash('aviso_msg', `O cliente${achou_cliente.nome} pertence ao vendedor: ${achou_cliente.nome}`)
                             req.res('/gerenciamento/orcamento')
                         } else {
                             dados = req.body.campos
