@@ -1270,13 +1270,14 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
 
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             const vendedor_cliente = await Cliente.findOne(sql)
+            const p = await Pessoa.findOne({ _id: req.body.vendedor })
             try {
                 console.log(vendedor_cliente._id)
                 console.log(pessoa)
 
                 if (vendedor_cliente._id == pessoa) {
                     console.log('entrou')
-                    const p = await Pessoa.findOne({ _id: req.body.vendedor })
+                    
                     const empresa = await Empresa.findOne({ user: id })
                     try {
                         if (naoVazio(empresa.seq)) {
@@ -1779,7 +1780,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                     }
 
                 } else {
-                    req.flash('aviso_msg', `O cliente${vendedor_cliente.nome} pertence ao vendedor: ${vendedor_cliente.nome}`)
+                    req.flash('aviso_msg', `O cliente ${vendedor_cliente.nome} pertence ao vendedor: ${p.nome}`)
                     res.redirect('/gerenciamento/orcamento')
                 }
             } catch (error) {
