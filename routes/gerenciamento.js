@@ -1274,7 +1274,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                 console.log(achou_cliente._id)
                 console.log(pessoa)
                 const vendedor_cliente = await Pessoa.findOne({_id: achou_cliente.vendedor})
-                if (achou_cliente._id == pessoa) {
+                if (achou_cliente._id == pessoa || achou_cliente == null) {
                     console.log('entrou')
                     const p = await Pessoa.findOne({ _id: pessoa })
                     const empresa = await Empresa.findOne({ user: id })
