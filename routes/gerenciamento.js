@@ -1084,10 +1084,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
     var texto
 
     var id
+    var sql_aux = []
     var sql = []
     var params = []
     var material = []
-    var tarefa = []
     var dados
     var dados_desc
     var dados_qtd
@@ -1103,11 +1103,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
     if (tipo == 'ampliacao') {
         amplia = true
     }
-
-    if (typeof user == 'undefined') {
-        id = _id
-    } else {
+    if (naoVazio(user)) {
         id = user
+    } else {
+        id = _id
     }
 
     var erros = []
@@ -1118,9 +1117,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
     var cliente = []
     var temvendedor = []
     idprojeto = req.body.id
-    // console.log('idprojeto=>' + idprojeto)
     idprojeto = String(idprojeto).split(',')
-    // console.log('idprojeto[0]=>' + idprojeto[0])
 
     if (naoVazio(idprojeto[0])) {
         Projeto.findOne({ _id: idprojeto[0] }).then((projeto) => {
@@ -1261,15 +1258,18 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
 
         if (naoVazio(cpf) && cpf != 0) {
             documento = true
-            sql = { user: id, cpf: cpf }
+            sql_aux = { user: id, cpf: cpf }
         } else {
             if (naoVazio(cnpj) && cnpj != 0) {
                 documento = true
-                sql = { user: id, cnpj: cnpj }
+                sql_aux = { user: id, cnpj: cnpj }
             } else {
-                sql = { user: id }
+                sql_aux = { user: id }
             }
         }
+
+        Object.assign(sql, sql_aux, {vendedor: pessoa} )
+        
 
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             Pessoa.findOne({ _id: req.body.vendedor }).then((p) => {
@@ -1290,8 +1290,8 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                         }
                         empresa.seq = 1
                     }
-                    // console.log('sql=>' + JSON.stringify(sql))
-                    Cliente.findOne({ vendedor: pessoa }).then((vendedor_cliente) => {
+                    console.log('pessoa=>' + pessoa)
+                    Cliente.findOne(sql).then((vendedor_cliente) => {
                         if (vendedor_cliente) {
                             dados = req.body.campos
                             dados_desc = req.body.dados_desc
