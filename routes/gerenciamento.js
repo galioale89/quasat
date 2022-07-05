@@ -1290,7 +1290,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                         }
                         empresa.seq = 1
                     }
-                    console.log('pessoa=>' + pessoa)
+                    console.log(JSON.stringify(sql))
                     Cliente.findOne(sql).then((vendedor_cliente) => {
                         if (vendedor_cliente) {
                             dados = req.body.campos
