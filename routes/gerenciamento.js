@@ -1780,11 +1780,11 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
 
                 } else {
                     req.flash('aviso_msg', `O cliente${vendedor_cliente.nome} pertence ao vendedor: ${vendedor_cliente.nome}`)
-                    req.redirect('/gerenciamento/orcamento')
+                    res.redirect('/gerenciamento/orcamento')
                 }
             } catch (error) {
                 req.flash('error_msg', 'Cliente não encontrado: ' + error)
-                req.redirect('/gerenciamento/orcamento')
+                res.redirect('/gerenciamento/orcamento')
             }
         } else {
             erros.push({ texto: 'Os campos marcados com asterisco são obrigatórios' })
