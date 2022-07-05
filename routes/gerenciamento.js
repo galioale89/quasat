@@ -37,8 +37,8 @@ var excel = require('exceljs')
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const client = require('twilio')(accountSid, authToken)
-const ListInput = require('../api')
-const list = new ListInput(mongoose, app)
+// const ListInput = require('../api')
+// const list = new ListInput(mongoose, app)
 
 const Usuario = mongoose.model('usuario')
 const Acesso = mongoose.model('acesso')
