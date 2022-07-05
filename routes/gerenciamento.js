@@ -518,7 +518,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                         user: id,
                         tarefa: { $exists: false },
                         nome_projeto: { $exists: true },
-                        baixada: {$ne: true},
+                        baixada: { $ne: true },
                         "dtfimbusca": {
                             $gte: dtini,
                             $lte: dtfim,
@@ -1077,10 +1077,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
     const { user } = req.user
     const { pessoa } = req.user
     const { vendedor } = req.user
-    const { funges } = req.user
-    const { instalador } = req.user
-    const { orcamentista } = req.user
-    const { servico } = req.user
+
     var q = 0
     var texto
 
@@ -1260,8 +1257,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
         var email = req.body.email
         var documento = false
 
-        // console.log(cpf)
-        // console.log(cnpj)
         if (naoVazio(cpf) && cpf != 0) {
             documento = true
             sql = { user: id, cpf: cpf }
@@ -1273,16 +1268,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                 sql = { user: id }
             }
         }
-        // console.log('nome=>' + nome)
-        // console.log('contato=>' + contato)
-        // console.log('celular=>' + celular)
-        // console.log('documento=>'+documento)
-        // if (naoVazio(nome) && naoVazio(endereco) && naoVazio(uf) && naoVazio(cidade) && naoVazio(contato) && naoVazio(celular) && documento == true) {
 
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             Pessoa.findOne({ _id: req.body.vendedor }).then((p) => {
                 Empresa.findOne({ user: id }).then((empresa) => {
-                    // console.log('seq=>' + empresa.seq)
                     if (naoVazio(empresa.seq)) {
                         seq = parseFloat(empresa.seq) + 1
                         if (naoVazio(empresa.const)) {
@@ -1301,55 +1290,29 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                     }
                     // console.log('sql=>' + JSON.stringify(sql))
                     Cliente.findOne(sql).then((achou_cliente) => {
-                        // console.log('nome=>' + nome)
-                        // console.log('endereco=>' + endereco)
-                        // console.log('numero=>' + numero)
-                        // console.log('bairro=>' + bairro)
-                        // console.log('cep=>' + cep)
-                        // console.log('complemento=>' + complemento)
-                        // console.log('cidade=>' + cidade)
-                        // console.log('uf=>' + uf)
-
-                        // console.log('cnpj=>' + cnpj)
-                        // console.log('cpf=>' + cpf)
-                        // console.log('contato=>' + contato)
-                        // console.log('achou_cliente=>' + achou_cliente)
-                        // console.log('achou_cliente.lead=>' + achou_cliente.lead)
-                        dados = req.body.campos
-                        dados_desc = req.body.dados_desc
-                        dados_qtd = req.body.dados_qtd
-                        // console.log('tipo=>' + tipo)
-                        Parametros.find({ user: id, tipo: 'solar' }).then((lista_params) => {
-                            // console.log('lista_params=>' + lista_params)
-                            dados = dados.split(';')
-                            // console.log('lista_params.length=>' + lista_params.length)
-                            for (let i = 0; i < lista_params.length; i++) {
-                                // console.log('lista_params[]._id=>' + lista_params[i]._id)
-                                // console.log('lista_params[].descricao=>' + lista_params[i].descricao)
-                                // console.log('dados[]=>' + dados[i])
-                                params.push({ descricao: lista_params[i].descricao, tipo: lista_params[i].opcao, valor: dados[i] })
-                            }
-
-                            // console.log('dados_desc=>' + req.body.dados_desc)
-
-                            dados_desc = dados_desc.split(';')
-                            dados_qtd = dados_qtd.split(';')
-                            // console.log('dados_desc.length=>' + dados_desc.length)
-                            // if (dados_desc.length > 1) {
-                            // console.log('dados_desc[]=>' + dados_desc[0])
-                            for (let i = 0; i < dados_desc.length; i++) {
-                                // console.log('dados_desc[]=>' + dados_desc[i])
-                                // console.log('dados_qtd[]=>' + dados_qtd[i])
-                                material.push({ desc: dados_desc[i], qtd: dados_qtd[i] })
-                            }
-                            // } else {
-                            //     material.push({ desc: req.body.dados_desc, qdt: req.body.dados_qtd })
-                            // }
-                            if (naoVazio(achou_cliente) && achou_cliente.lead == false) {
-                                if (achou_cliente.vendedor != req.body.vendedor) {
-                                    req.flash('aviso_msg', `O cliente${achou_cliente.nome} pertence ao vendedor: ${p.nome}`)
-                                    req.res('/gerenciamento/orcamento')
-                                } else {
+                        if (achou_cliente && achou_cliente.vendedor != pessoa) {
+                            req.flash('aviso_msg', `O cliente${achou_cliente.nome} pertence ao vendedor: ${p.nome}`)
+                            req.res('/gerenciamento/orcamento')
+                        } else {
+                            dados = req.body.campos
+                            dados_desc = req.body.dados_desc
+                            dados_qtd = req.body.dados_qtd
+                            Parametros.find({ user: id, tipo: 'solar' }).then((lista_params) => {
+                                dados = dados.split(';')
+                                for (let i = 0; i < lista_params.length; i++) {
+                                    // console.log('lista_params[]._id=>' + lista_params[i]._id)
+                                    // console.log('lista_params[].descricao=>' + lista_params[i].descricao)
+                                    // console.log('dados[]=>' + dados[i])
+                                    params.push({ descricao: lista_params[i].descricao, tipo: lista_params[i].opcao, valor: dados[i] })
+                                }
+                                dados_desc = dados_desc.split(';')
+                                dados_qtd = dados_qtd.split(';')
+                                for (let i = 0; i < dados_desc.length; i++) {
+                                    // console.log('dados_desc[]=>' + dados_desc[i])
+                                    // console.log('dados_qtd[]=>' + dados_qtd[i])
+                                    material.push({ desc: dados_desc[i], qtd: dados_qtd[i] })
+                                }
+                                if (naoVazio(achou_cliente) && achou_cliente.lead == false) {
                                     if (achou_cliente.cnpj == cnpj || achou_cliente.cpf == cpf) {
                                         req.flash('aviso_msg', 'Foi gerado mais um orçamento para o cliente: ' + achou_cliente.nome)
                                     }
@@ -1470,200 +1433,28 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                         req.flash('error_msg', 'Houve um erro ao salvar a projeto.')
                                         res.redirect('/dashboard')
                                     })
-                                }
-                            } else {
-                                if (naoVazio(achou_cliente) && achou_cliente.lead == true) {
-                                    achou_cliente.nome = buscaPrimeira(req.body.nome)
-                                    achou_cliente.endereco = buscaPrimeira(req.body.endereco)
-                                    achou_cliente.numero = req.body.numero
-                                    achou_cliente.bairro = req.body.bairro
-                                    achou_cliente.cep = req.body.cep
-                                    achou_cliente.complemento = req.body.complemento
-                                    achou_cliente.cidade = req.body.cidade
-                                    achou_cliente.uf = req.body.uf
-                                    achou_cliente.contato = buscaPrimeira(req.body.contato)
-                                    achou_cliente.celular = req.body.celular
-                                    achou_cliente.email = req.body.email
-                                    achou_cliente.lead = false
-                                    if (achou_cliente.novo == 'checked') {
-                                        novo = true
-                                    }
-                                    if (achou_cliente.ampliacao == 'checked') {
-                                        amplia = true
-                                    }
-                                    achou_cliente.save().then(() => {
-                                        if (tipo == 'novo') {
-                                            novo = true
-                                        } else {
-                                            novo = false
-                                        }
-                                        if (tipo == 'ampliacao') {
-                                            amplia = true
-                                        } else {
-                                            amplia = false
-                                        }
-                                        projeto = {
-                                            user: id,
-                                            cliente: achou_cliente._id,
-                                            vendedor: req.body.vendedor,
-                                            datacad: dataBusca(dataHoje()),
-                                            endereco: endereco,
-                                            numero: numero,
-                                            bairro: bairro,
-                                            cep: cep,
-                                            complemento: complemento,
-                                            cidade: cidade,
-                                            uf: uf,
-                                            ganho: false,
-                                            encerrado: false,
-                                            baixada: false,
-                                            execucao: false,
-                                            parado: false,
-                                            entregue: false,
-                                            instalado: false,
-                                            autorizado: false,
-                                            pago: false,
-                                            checkpedido: false,
-                                            seq: numprj,
-                                            status: 'Enviado',
-                                            params: params,
-                                            material: material,
-                                            descuc: req.body.descuc,
-                                            descug: req.body.descug,
-                                            novo: novo,
-                                            ampliacao: amplia
-                                        }
-                                        if (vendedor == false) {
-                                            corpoVen = {
-                                                plaQtdMod: req.body.plaQtdMod,
-                                                plaWattMod: req.body.plaWattMod,
-                                                plaQtdInv: req.body.plaQtdInv,
-                                                plaKwpInv: req.body.plaKwpInv,
-                                                plaDimArea: req.body.plaDimArea,
-                                                plaQtdString: req.body.plaQtdString,
-                                                plaModString: req.body.plaModString,
-                                                plaQtdEst: req.body.plaQtdEst,
-                                                valor: req.body.valor,
-                                                telhado: req.body.telhado,
-                                                orientacao: req.body.orientacao,
-                                                valor: req.body.valor,
-                                                estrutura: req.body.estrutura,
-                                                concessionaria: req.body.concessionaria
-                                            }
-                                            corpo = Object.assign(corpo, projeto, corpoVen)
-                                        } else {
-                                            corpo = projeto
-                                        }
-                                        // console.log('corpo=>'+JSON.stringify(corpo))
-                                        new Projeto(corpo).save().then(() => {
-                                            Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
-                                                Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
-                                                    empresa.save().then(() => {
-                                                        q = 0
-                                                        Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                            // console.log('acesso=>' + acesso)
-                                                            if (naoVazio(acesso)) {
-                                                                acesso.forEach((e) => {
-                                                                    Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                                        // console.log('pessoa=>' + pessoa)
-                                                                        texto = 'Olá ' + pessoa.nome + ',' + '\n' +
-                                                                            'O orçamento ' + novo_projeto.seq + ' para o cliente ' + cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
-                                                                            'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                                        // console.log('pessoa.celular=>'+pessoa.celular)
-                                                                        client.messages
-                                                                            .create({
-                                                                                body: texto,
-                                                                                from: 'whatsapp:+554991832978',
-                                                                                to: 'whatsapp:+55' + pessoa.celular
-                                                                            })
-                                                                            .then((message) => {
-                                                                                q++
-                                                                                // console.log('q=>' + q)
-                                                                                // console.log('acesso.length=>' + acesso.length)
-                                                                                if (q == acesso.length) {
-                                                                                    // console.log(message.sid)
-                                                                                    req.flash('success_msg', 'Proposta adicionada com sucesso')
-                                                                                    res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
-                                                                                }
-                                                                            }).done()
 
-                                                                    }).catch((err) => {
-                                                                        req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
-                                                                        res.redirect('/dashboard')
-                                                                    })
-                                                                })
-                                                            } else {
-                                                                req.flash('success_msg', 'Proposta adicionada com sucesso')
-                                                                res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
-                                                            }
-                                                        }).catch((err) => {
-                                                            req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
-                                                            res.redirect('/dashboard')
-                                                        })
-                                                    }).catch((err) => {
-                                                        req.flash('error_msg', 'Houve um erro ao salvar a pessoa.')
-                                                        res.redirect('/dashboard')
-                                                    })
-
-                                                }).catch((err) => {
-                                                    req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
-                                                    res.redirect('/dashboard')
-                                                })
-                                            }).catch((err) => {
-                                                req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
-                                                res.redirect('/dashboard')
-                                            })
-                                        }).catch((err) => {
-                                            req.flash('error_msg', 'Houve um erro ao salvar a projeto.')
-                                            res.redirect('/dashboard')
-                                        })
-                                    }).catch((err) => {
-                                        req.flash('error_msg', 'Houve um erro ao salvar o cliente.')
-                                        res.redirect('/dashboard')
-                                    })
                                 } else {
-                                    // console.log("entrou ")
-                                    // console.log("tipo=>" + tipo)
-
-                                    if (tipo == 'novo') {
-                                        novo = 'checked'
-                                    } else {
-                                        novo = 'unchecked'
-                                    }
-                                    if (tipo == 'ampliacao') {
-                                        amplia = 'checked'
-                                    } else {
-                                        amplia = 'unchecked'
-                                    }
-
-                                    corpo = {
-                                        user: id,
-                                        nome: nome,
-                                        endereco: endereco,
-                                        numero: numero,
-                                        bairro: bairro,
-                                        cep: cep,
-                                        complemento: complemento,
-                                        cidade: cidade,
-                                        uf: uf,
-                                        cnpj: cnpj,
-                                        cpf: cpf,
-                                        contato: contato,
-                                        celular: celular,
-                                        email: email,
-                                        lead: false,
-                                    }
-
-                                    // console.log('pessoa=>'+pessoa)
-                                    if (vendedor) {
-                                        Object.assign(cliente, corpo, { vendedor: pessoa })
-                                    } else {
-                                        Object.assign(cliente, corpo, { vendedor: req.body.vendedor })
-                                    }
-                                    new Cliente(cliente).save().then(() => {
-                                        Cliente.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_cliente) => {
-                                            // console.log('cliente cadastrado')
-
+                                    if (naoVazio(achou_cliente) && achou_cliente.lead == true) {
+                                        achou_cliente.nome = buscaPrimeira(req.body.nome)
+                                        achou_cliente.endereco = buscaPrimeira(req.body.endereco)
+                                        achou_cliente.numero = req.body.numero
+                                        achou_cliente.bairro = req.body.bairro
+                                        achou_cliente.cep = req.body.cep
+                                        achou_cliente.complemento = req.body.complemento
+                                        achou_cliente.cidade = req.body.cidade
+                                        achou_cliente.uf = req.body.uf
+                                        achou_cliente.contato = buscaPrimeira(req.body.contato)
+                                        achou_cliente.celular = req.body.celular
+                                        achou_cliente.email = req.body.email
+                                        achou_cliente.lead = false
+                                        if (achou_cliente.novo == 'checked') {
+                                            novo = true
+                                        }
+                                        if (achou_cliente.ampliacao == 'checked') {
+                                            amplia = true
+                                        }
+                                        achou_cliente.save().then(() => {
                                             if (tipo == 'novo') {
                                                 novo = true
                                             } else {
@@ -1674,20 +1465,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                             } else {
                                                 amplia = false
                                             }
-
-                                            if (vendedor) {
-                                                selvendedor = pessoa
-                                            } else {
-                                                selvendedor = req.body.vendedor
-                                            }
-
-                                            // console.log('params=>' + JSON.stringify(params))
-                                            var ganho
-                                            var status
-
                                             projeto = {
                                                 user: id,
-                                                cliente: novo_cliente._id,
+                                                cliente: achou_cliente._id,
+                                                vendedor: req.body.vendedor,
                                                 datacad: dataBusca(dataHoje()),
                                                 endereco: endereco,
                                                 numero: numero,
@@ -1702,24 +1483,19 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                 execucao: false,
                                                 parado: false,
                                                 entregue: false,
-                                                checkpedido: false,
                                                 instalado: false,
                                                 autorizado: false,
                                                 pago: false,
+                                                checkpedido: false,
                                                 seq: numprj,
+                                                status: 'Enviado',
                                                 params: params,
                                                 material: material,
-                                                status: 'Enviado',
+                                                descuc: req.body.descuc,
+                                                descug: req.body.descug,
                                                 novo: novo,
-                                                ampliacao: amplia,
-                                                telhado: req.body.telhado,
-                                                orientacao: req.body.orientacao,
-                                                estrutura: req.body.estrutura,
-                                                concessionaria: req.body.concessionaria
+                                                ampliacao: amplia
                                             }
-
-                                            Object.assign(temvendedor, projeto, { vendedor: selvendedor })
-
                                             if (vendedor == false) {
                                                 corpoVen = {
                                                     plaQtdMod: req.body.plaQtdMod,
@@ -1730,70 +1506,72 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                     plaQtdString: req.body.plaQtdString,
                                                     plaModString: req.body.plaModString,
                                                     plaQtdEst: req.body.plaQtdEst,
-                                                    valor: req.body.valor
+                                                    valor: req.body.valor,
+                                                    telhado: req.body.telhado,
+                                                    orientacao: req.body.orientacao,
+                                                    valor: req.body.valor,
+                                                    estrutura: req.body.estrutura,
+                                                    concessionaria: req.body.concessionaria
                                                 }
-                                                Object.assign(corpo, temvendedor, corpoVen)
+                                                corpo = Object.assign(corpo, projeto, corpoVen)
                                             } else {
-                                                corpo = temvendedor
+                                                corpo = projeto
                                             }
-
-                                            // console.log('corpo=>' + JSON.stringify(corpo))
-
                                             // console.log('corpo=>'+JSON.stringify(corpo))
                                             new Projeto(corpo).save().then(() => {
                                                 Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
-                                                    // Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
-                                                    empresa.save().then(() => {
-                                                        q = 0
+                                                    Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
+                                                        empresa.save().then(() => {
+                                                            q = 0
+                                                            Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
+                                                                // console.log('acesso=>' + acesso)
+                                                                if (naoVazio(acesso)) {
+                                                                    acesso.forEach((e) => {
+                                                                        Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
+                                                                            // console.log('pessoa=>' + pessoa)
+                                                                            texto = 'Olá ' + pessoa.nome + ',' + '\n' +
+                                                                                'O orçamento ' + novo_projeto.seq + ' para o cliente ' + cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
+                                                                                'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
+                                                                            // console.log('pessoa.celular=>'+pessoa.celular)
+                                                                            client.messages
+                                                                                .create({
+                                                                                    body: texto,
+                                                                                    from: 'whatsapp:+554991832978',
+                                                                                    to: 'whatsapp:+55' + pessoa.celular
+                                                                                })
+                                                                                .then((message) => {
+                                                                                    q++
+                                                                                    // console.log('q=>' + q)
+                                                                                    // console.log('acesso.length=>' + acesso.length)
+                                                                                    if (q == acesso.length) {
+                                                                                        // console.log(message.sid)
+                                                                                        req.flash('success_msg', 'Proposta adicionada com sucesso')
+                                                                                        res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
+                                                                                    }
+                                                                                }).done()
 
-                                                        Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                            // console.log('acesso=>' + acesso)
-                                                            if (naoVazio(acesso)) {
-                                                                acesso.forEach((e) => {
-                                                                    Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                                        // console.log('pessoa=>' + pessoa)
-                                                                        // console.log('e.nome=>' + e.nome)
-                                                                        texto = 'Olá ' + pessoa.nome + ',' + '\n' +
-                                                                            'O orçamento ' + novo_projeto.seq + ' para o cliente ' + novo_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
-                                                                            'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                                        // console.log('pessoa.celular=>' + pessoa.celular)
-                                                                        client.messages
-                                                                            .create({
-                                                                                body: texto,
-                                                                                from: 'whatsapp:+554991832978',
-                                                                                to: 'whatsapp:+55' + pessoa.celular
-                                                                            })
-                                                                            .then((message) => {
-                                                                                q++
-                                                                                // console.log('q=>' + q)
-                                                                                // console.log('acesso.length=>' + acesso.length)
-                                                                                if (q == acesso.length) {
-                                                                                    req.flash('success_msg', 'Proposta adicionada com sucesso')
-                                                                                    res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
-                                                                                }
-                                                                            }).done()
-
-                                                                    }).catch((err) => {
-                                                                        req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
-                                                                        res.redirect('/dashboard')
+                                                                        }).catch((err) => {
+                                                                            req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
+                                                                            res.redirect('/dashboard')
+                                                                        })
                                                                     })
-                                                                })
-                                                            } else {
-                                                                req.flash('success_msg', 'Proposta adicionada com sucesso')
-                                                                res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
-                                                            }
+                                                                } else {
+                                                                    req.flash('success_msg', 'Proposta adicionada com sucesso')
+                                                                    res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
+                                                                }
+                                                            }).catch((err) => {
+                                                                req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
+                                                                res.redirect('/dashboard')
+                                                            })
                                                         }).catch((err) => {
-                                                            req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
+                                                            req.flash('error_msg', 'Houve um erro ao salvar a pessoa.')
                                                             res.redirect('/dashboard')
                                                         })
+
                                                     }).catch((err) => {
-                                                        req.flash('error_msg', 'Houve um erro ao salvar a pessoa.')
+                                                        req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
                                                         res.redirect('/dashboard')
                                                     })
-                                                    // }).catch((err) => {
-                                                    //     req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
-                                                    //     res.redirect('/dashboard')
-                                                    // })
                                                 }).catch((err) => {
                                                     req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
                                                     res.redirect('/dashboard')
@@ -1803,19 +1581,202 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                 res.redirect('/dashboard')
                                             })
                                         }).catch((err) => {
-                                            req.flash('error_msg', 'Não foi possível encontrar o cliente.')
+                                            req.flash('error_msg', 'Houve um erro ao salvar o cliente.')
+                                            res.redirect('/dashboard')
+                                        })
+                                    } else {
+                                        if (tipo == 'novo') {
+                                            novo = 'checked'
+                                        } else {
+                                            novo = 'unchecked'
+                                        }
+                                        if (tipo == 'ampliacao') {
+                                            amplia = 'checked'
+                                        } else {
+                                            amplia = 'unchecked'
+                                        }
+
+                                        corpo = {
+                                            user: id,
+                                            nome: nome,
+                                            endereco: endereco,
+                                            numero: numero,
+                                            bairro: bairro,
+                                            cep: cep,
+                                            complemento: complemento,
+                                            cidade: cidade,
+                                            uf: uf,
+                                            cnpj: cnpj,
+                                            cpf: cpf,
+                                            contato: contato,
+                                            celular: celular,
+                                            email: email,
+                                            lead: false,
+                                        }
+
+                                        // console.log('pessoa=>'+pessoa)
+                                        if (vendedor) {
+                                            Object.assign(cliente, corpo, { vendedor: pessoa })
+                                        } else {
+                                            Object.assign(cliente, corpo, { vendedor: req.body.vendedor })
+                                        }
+                                        new Cliente(cliente).save().then(() => {
+                                            Cliente.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_cliente) => {
+                                                // console.log('cliente cadastrado')
+
+                                                if (tipo == 'novo') {
+                                                    novo = true
+                                                } else {
+                                                    novo = false
+                                                }
+                                                if (tipo == 'ampliacao') {
+                                                    amplia = true
+                                                } else {
+                                                    amplia = false
+                                                }
+
+                                                if (vendedor) {
+                                                    selvendedor = pessoa
+                                                } else {
+                                                    selvendedor = req.body.vendedor
+                                                }
+
+                                                // console.log('params=>' + JSON.stringify(params))
+                                                var ganho
+                                                var status
+
+                                                projeto = {
+                                                    user: id,
+                                                    cliente: novo_cliente._id,
+                                                    datacad: dataBusca(dataHoje()),
+                                                    endereco: endereco,
+                                                    numero: numero,
+                                                    bairro: bairro,
+                                                    cep: cep,
+                                                    complemento: complemento,
+                                                    cidade: cidade,
+                                                    uf: uf,
+                                                    ganho: false,
+                                                    encerrado: false,
+                                                    baixada: false,
+                                                    execucao: false,
+                                                    parado: false,
+                                                    entregue: false,
+                                                    checkpedido: false,
+                                                    instalado: false,
+                                                    autorizado: false,
+                                                    pago: false,
+                                                    seq: numprj,
+                                                    params: params,
+                                                    material: material,
+                                                    status: 'Enviado',
+                                                    novo: novo,
+                                                    ampliacao: amplia,
+                                                    telhado: req.body.telhado,
+                                                    orientacao: req.body.orientacao,
+                                                    estrutura: req.body.estrutura,
+                                                    concessionaria: req.body.concessionaria
+                                                }
+
+                                                Object.assign(temvendedor, projeto, { vendedor: selvendedor })
+
+                                                if (vendedor == false) {
+                                                    corpoVen = {
+                                                        plaQtdMod: req.body.plaQtdMod,
+                                                        plaWattMod: req.body.plaWattMod,
+                                                        plaQtdInv: req.body.plaQtdInv,
+                                                        plaKwpInv: req.body.plaKwpInv,
+                                                        plaDimArea: req.body.plaDimArea,
+                                                        plaQtdString: req.body.plaQtdString,
+                                                        plaModString: req.body.plaModString,
+                                                        plaQtdEst: req.body.plaQtdEst,
+                                                        valor: req.body.valor
+                                                    }
+                                                    Object.assign(corpo, temvendedor, corpoVen)
+                                                } else {
+                                                    corpo = temvendedor
+                                                }
+
+                                                // console.log('corpo=>' + JSON.stringify(corpo))
+
+                                                // console.log('corpo=>'+JSON.stringify(corpo))
+                                                new Projeto(corpo).save().then(() => {
+                                                    Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
+                                                        // Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
+                                                        empresa.save().then(() => {
+                                                            q = 0
+
+                                                            Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
+                                                                // console.log('acesso=>' + acesso)
+                                                                if (naoVazio(acesso)) {
+                                                                    acesso.forEach((e) => {
+                                                                        Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
+                                                                            // console.log('pessoa=>' + pessoa)
+                                                                            // console.log('e.nome=>' + e.nome)
+                                                                            texto = 'Olá ' + pessoa.nome + ',' + '\n' +
+                                                                                'O orçamento ' + novo_projeto.seq + ' para o cliente ' + novo_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
+                                                                                'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
+                                                                            // console.log('pessoa.celular=>' + pessoa.celular)
+                                                                            client.messages
+                                                                                .create({
+                                                                                    body: texto,
+                                                                                    from: 'whatsapp:+554991832978',
+                                                                                    to: 'whatsapp:+55' + pessoa.celular
+                                                                                })
+                                                                                .then((message) => {
+                                                                                    q++
+                                                                                    // console.log('q=>' + q)
+                                                                                    // console.log('acesso.length=>' + acesso.length)
+                                                                                    if (q == acesso.length) {
+                                                                                        req.flash('success_msg', 'Proposta adicionada com sucesso')
+                                                                                        res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
+                                                                                    }
+                                                                                }).done()
+
+                                                                        }).catch((err) => {
+                                                                            req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
+                                                                            res.redirect('/dashboard')
+                                                                        })
+                                                                    })
+                                                                } else {
+                                                                    req.flash('success_msg', 'Proposta adicionada com sucesso')
+                                                                    res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
+                                                                }
+                                                            }).catch((err) => {
+                                                                req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
+                                                                res.redirect('/dashboard')
+                                                            })
+                                                        }).catch((err) => {
+                                                            req.flash('error_msg', 'Houve um erro ao salvar a pessoa.')
+                                                            res.redirect('/dashboard')
+                                                        })
+                                                        // }).catch((err) => {
+                                                        //     req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
+                                                        //     res.redirect('/dashboard')
+                                                        // })
+                                                    }).catch((err) => {
+                                                        req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
+                                                        res.redirect('/dashboard')
+                                                    })
+                                                }).catch((err) => {
+                                                    req.flash('error_msg', 'Houve um erro ao salvar a projeto.')
+                                                    res.redirect('/dashboard')
+                                                })
+                                            }).catch((err) => {
+                                                req.flash('error_msg', 'Não foi possível encontrar o cliente.')
+                                                res.redirect('/cliente/novo')
+                                            })
+                                        }).catch((err) => {
+                                            req.flash('error_msg', 'Não foi possível cadastrar o cliente.')
                                             res.redirect('/cliente/novo')
                                         })
-                                    }).catch((err) => {
-                                        req.flash('error_msg', 'Não foi possível cadastrar o cliente.')
-                                        res.redirect('/cliente/novo')
-                                    })
+                                    }
                                 }
-                            }
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Não foi possível encontrar os parâmetros.')
-                            res.redirect('/cliente/novo')
-                        })
+                            }).catch((err) => {
+                                req.flash('error_msg', 'Não foi possível encontrar os parâmetros.')
+                                res.redirect('/cliente/novo')
+                            })
+                        }
                     }).catch((err) => {
                         req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
                         res.redirect('/dashboard')
@@ -4687,7 +4648,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                     Tarefas.find({ projeto: req.body.idprj }).then(async (lista_tarefas) => {
                                         if (ativo == true) {
                                             req.flash('success_msg', 'Imagem(ns) da(s) instalação aprovada(s)')
-                                            await Projeto.findOneAndUpdate({_id: req.body.idprj},{$set: {instalado: true}})
+                                            await Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { instalado: true } })
                                         }
 
                                         lista_tarefas.forEach((e) => {
@@ -9646,6 +9607,7 @@ router.get('/dashInstalador', ehAdmin, async (req, res) => {
                 let: { ins_real: "$_id" },
                 pipeline: [{
                     $match: {
+                        instalado: false,
                         $expr: {
                             $eq: ["$ins_banco", "$$ins_real"]
                         }
@@ -9799,7 +9761,7 @@ router.post('/dashInstalador', ehAdmin, async (req, res) => {
 
     if (todos == 'active') {
         dtini = Number(`${ano}0101`)
-        dtfim = Number(`${ano}1231`)        
+        dtfim = Number(`${ano}1231`)
     } else {
         dtini = Number(`${ano}${mes}01`)
         dtfim = Number(`${ano}${mes}${diafim}`)
@@ -9828,6 +9790,7 @@ router.post('/dashInstalador', ehAdmin, async (req, res) => {
                 let: { ins_real: "$_id" },
                 pipeline: [{
                     $match: {
+                        instalado: false,
                         $expr: {
                             $eq: ["$ins_banco", "$$ins_real"]
                         }
