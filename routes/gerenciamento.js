@@ -1291,11 +1291,8 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                         empresa.seq = 1
                     }
                     // console.log('sql=>' + JSON.stringify(sql))
-                    Cliente.findOne(sql).then((achou_cliente) => {
-                        if (achou_cliente && achou_cliente._id != pessoa) {
-                            req.flash('aviso_msg', `O cliente${achou_cliente.nome} pertence ao vendedor: ${achou_cliente.nome}`)
-                            req.res('/gerenciamento/orcamento')
-                        } else {
+                    Cliente.findOne({ vendedor: pessoa }).then((vendedor_cliente) => {
+                        if (vendedor_cliente) {
                             dados = req.body.campos
                             dados_desc = req.body.dados_desc
                             dados_qtd = req.body.dados_qtd
@@ -1774,6 +1771,9 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                 req.flash('error_msg', 'Não foi possível encontrar os parâmetros.')
                                 res.redirect('/cliente/novo')
                             })
+                        } else {
+                            req.flash('aviso_msg', `O cliente${vendedor_cliente.nome} pertence ao vendedor: ${vendedor_cliente.nome}`)
+                            req.res('/gerenciamento/orcamento')
                         }
                     }).catch((err) => {
                         req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
@@ -8716,15 +8716,15 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
         id = _id
         sql = { user: id }
     }
-    
+
     if (vendedor) {
         list.getClients(id, pessoa)
         sqlcli = { user: id, vendedor: pessoa, lead: true }
-        render = 'dashvendedor'        
+        render = 'dashvendedor'
     } else {
         list.getClients(id)
         sqlcli = { user: id, lead: true }
-        render = 'dashboard'        
+        render = 'dashboard'
     }
 
     var data = new Date()
