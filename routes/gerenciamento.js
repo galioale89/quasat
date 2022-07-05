@@ -1273,7 +1273,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
 
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             Pessoa.findOne({ _id: req.body.vendedor }).then((p) => {
-                Empresa.findOne({ user: id }).then((empresa) => {
+                Empresa.findOne({ user: id }).then(async (empresa) => {
                     if (naoVazio(empresa.seq)) {
                         seq = parseFloat(empresa.seq) + 1
                         if (naoVazio(empresa.const)) {
@@ -1290,9 +1290,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                         }
                         empresa.seq = 1
                     }
-                    console.log(JSON.stringify(sql))
-                    Cliente.findOne(sql).then((vendedor_cliente) => {
-                        if (vendedor_cliente) {
+                    try {
+                    const vendedor_cliente = await Cliente.findOne(sql_aux)
+                    console.log(vendedor_cliente)
+                        if (naoVazio(vendedor_cliente)) {
                             dados = req.body.campos
                             dados_desc = req.body.dados_desc
                             dados_qtd = req.body.dados_qtd
@@ -1775,10 +1776,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                             req.flash('aviso_msg', `O cliente${vendedor_cliente.nome} pertence ao vendedor: ${vendedor_cliente.nome}`)
                             req.res('/gerenciamento/orcamento')
                         }
-                    }).catch((err) => {
-                        req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
-                        res.redirect('/dashboard')
-                    })
+                    } catch (error) {
+                        req.flash('error_msg', 'Cliente não encontrado: ' + error)
+                        req.res('/gerenciamento/orcamento')
+                    }
                 }).catch((err) => {
                     req.flash('error_msg', 'Houve um erro ao encontrar a empresa.')
                     res.redirect('/dashboard')
