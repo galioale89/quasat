@@ -37,6 +37,8 @@ var excel = require('exceljs')
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const client = require('twilio')(accountSid, authToken)
+const ListInput = require('./api')
+const list = new ListInput(mongoose, app)
 
 const Usuario = mongoose.model('usuario')
 const Acesso = mongoose.model('acesso')
@@ -1750,10 +1752,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                             req.flash('error_msg', 'Houve um erro ao salvar a pessoa.')
                                                             res.redirect('/dashboard')
                                                         })
-                                                        // }).catch((err) => {
-                                                        //     req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
-                                                        //     res.redirect('/dashboard')
-                                                        // })
                                                     }).catch((err) => {
                                                         req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
                                                         res.redirect('/dashboard')
@@ -8718,13 +8716,15 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
         id = _id
         sql = { user: id }
     }
-
+    
     if (vendedor) {
+        list.getClients(id, pessoa)
         sqlcli = { user: id, vendedor: pessoa, lead: true }
-        render = 'dashvendedor'
+        render = 'dashvendedor'        
     } else {
+        list.getClients(id)
         sqlcli = { user: id, lead: true }
-        render = 'dashboard'
+        render = 'dashboard'        
     }
 
     var data = new Date()
