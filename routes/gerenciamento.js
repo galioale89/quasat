@@ -1273,10 +1273,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
             try {
                 console.log(achou_cliente._id)
                 console.log(pessoa)
-                const vendedor_cliente = await Pessoa.findOne({_id: pessoa})
+                const vendedor_cliente = await Pessoa.findOne({_id: achou_cliente.vendedor})
                 if (achou_cliente._id == pessoa) {
                     console.log('entrou')
-                    const p = await Pessoa.findOne({ _id: req.body.vendedor })
+                    const p = await Pessoa.findOne({ _id: pessoa })
                     const empresa = await Empresa.findOne({ user: id })
                     try {
                         if (naoVazio(empresa.seq)) {
