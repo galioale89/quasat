@@ -1301,16 +1301,11 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                         Parametros.find({ user: id, tipo: 'solar' }).then((lista_params) => {
                             dados = dados.split(';')
                             for (let i = 0; i < lista_params.length; i++) {
-                                // console.log('lista_params[]._id=>' + lista_params[i]._id)
-                                // console.log('lista_params[].descricao=>' + lista_params[i].descricao)
-                                // console.log('dados[]=>' + dados[i])  
                                 params.push({ descricao: lista_params[i].descricao, tipo: lista_params[i].opcao, valor: dados[i] })
                             }
                             dados_desc = dados_desc.split(';')
                             dados_qtd = dados_qtd.split(';')
                             for (let i = 0; i < dados_desc.length; i++) {
-                                // console.log('dados_desc[]=>' + dados_desc[i])
-                                // console.log('dados_qtd[]=>' + dados_qtd[i])
                                 material.push({ desc: dados_desc[i], qtd: dados_qtd[i] })
                             }
                             if (naoVazio(achou_cliente) && achou_cliente.lead == false) {
