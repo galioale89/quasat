@@ -1267,11 +1267,16 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                 sql = { user: id }
             }
         }
-
+        let sameCliente = false
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             const achou_cliente = await Cliente.findOne(sql)
             try {
-                if (achou_cliente._id == pessoa || achou_cliente == null) {
+                if (achou_cliente != null){
+                    if (achou_cliente._id == pessoa){
+                       sameCliente = true
+                    }
+                }
+                if ( sameCliente || achou_cliente == null) {
                     console.log('entrou')
                     const p = await Pessoa.findOne({ _id: pessoa })
                     const empresa = await Empresa.findOne({ user: id })
