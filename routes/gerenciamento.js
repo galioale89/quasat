@@ -1273,7 +1273,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
             try {
                 console.log(vendedor_cliente._id)
                 console.log(pessoa)
-                
+
                 if (vendedor_cliente._id == pessoa) {
                     console.log('entrou')
                     const p = await Pessoa.findOne({ _id: req.body.vendedor })
@@ -1295,7 +1295,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                             }
                             empresa.seq = 1
                         }
-                        console.log('entrou')
                         dados = req.body.campos
                         dados_desc = req.body.dados_desc
                         dados_qtd = req.body.dados_qtd
@@ -1304,7 +1303,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                             for (let i = 0; i < lista_params.length; i++) {
                                 // console.log('lista_params[]._id=>' + lista_params[i]._id)
                                 // console.log('lista_params[].descricao=>' + lista_params[i].descricao)
-                                // console.log('dados[]=>' + dados[i])
+                                // console.log('dados[]=>' + dados[i])  
                                 params.push({ descricao: lista_params[i].descricao, tipo: lista_params[i].opcao, valor: dados[i] })
                             }
                             dados_desc = dados_desc.split(';')
@@ -1781,11 +1780,11 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
 
                 } else {
                     req.flash('aviso_msg', `O cliente${vendedor_cliente.nome} pertence ao vendedor: ${vendedor_cliente.nome}`)
-                    req.res('/gerenciamento/orcamento')
+                    req.redirect('/gerenciamento/orcamento')
                 }
             } catch (error) {
                 req.flash('error_msg', 'Cliente não encontrado: ' + error)
-                req.res('/gerenciamento/orcamento')
+                req.redirect('/gerenciamento/orcamento')
             }
         } else {
             erros.push({ texto: 'Os campos marcados com asterisco são obrigatórios' })
