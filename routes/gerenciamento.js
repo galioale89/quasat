@@ -1291,7 +1291,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                         empresa.seq = 1
                     }
                     try {
-                    const vendedor_cliente = await Cliente.findOne(sql_aux)
+                    const vendedor_cliente = await Cliente.findOne(sql)
                     console.log(vendedor_cliente)
                         if (naoVazio(vendedor_cliente)) {
                             dados = req.body.campos
