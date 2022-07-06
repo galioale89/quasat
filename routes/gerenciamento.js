@@ -134,7 +134,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
     if (gestor) {
         sql = { user: id, dataApro: { $exists: true }, encerrado: false }
     } else {
-        sql = { user: id, vendedor: pessoa, dataApro: { $exists: true }, encerrado: false }
+        sql = { user: id, vendedor: pessoa, dataTroca: { $exists: true }, encerrado: false }
     }
 
     Projeto.find(sql).then((projeto) => {
@@ -145,18 +145,21 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     if (naoVazio(e.dataApro)) {
                         dataAprova = e.dataApro
                     }
+                    console.log('dataAprova=>'+dataAprova)
                     if (naoVazio(e.datacad)) {
                         datacad = dataMensagem(e.datacad)
                     }                    
-
+                    console.log('datacad=>'+datacad)
                     let tamTermo = e.termo
+                    console.log('tamTermo.length=>'+tamTermo.length)
                     if (tamTermo.length > 0) {
                         if (naoVazio(tamTermo[0].data)) {
                             datatermo = tamTermo[0].data
                         }
                     }
+                    console.log('datatermo=>'+datatermo)
+                    console.log('projeto_dataTroca=>'+e.dataTroca)
 
-                    if (naoVazio(e.dataTroca)) {
                         dataTroca = e.dataTroca
                         if (naoVazio(datatermo)) {
                             contaDias = diferencaDias(e.dataTroca, datatermo)
@@ -165,13 +168,15 @@ router.get('/termos/', ehAdmin, (req, res) => {
                             contaDias = diferencaDias(e.dataTroca, dataHoje())
                             termo = false
                         }
-
+                        console.log('contaDias=>'+contaDias)
+                        console.log('termo=>'+termo)
+                        
                         if (contaDias > 7){
                             alerta = true
                         }
 
                         projetos.push({ id: e._id, termo, alerta, contaDias, seq: e.seq, cadastro: datacad, cliente: cliente.nome, datatermo: dataMensagem(datatermo), dataapro: dataMensagem(dataAprova), datatroca: dataMensagem(dataTroca) })
-                    }
+                    
                     if (q == projeto.length) {
                         res.render('principal/termos', { projetos })
                     }
