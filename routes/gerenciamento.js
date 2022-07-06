@@ -123,17 +123,20 @@ router.get('/termos/', ehAdmin, (req, res) => {
     let projetos = []
     let contaDias = 0
     let termo = false
-    let datatermo = ''
-    let alerta = true
+    let datatermo = '00/00/0000'
+    let alerta = false
     let idtermo = []
     let sql = {}
-    let dataAprova = ''
-    let dataTroca = ''
+    let dataAprova = '00/00/0000'
+    let dataTroca = '00/00/0000'
+    let datacad = '00/00/0000'
+
     if (gestor) {
         sql = { user: id, dataApro: { $exists: true }, encerrado: false }
     } else {
         sql = { user: id, vendedor: pessoa, dataApro: { $exists: true }, encerrado: false }
     }
+
     Projeto.find(sql).then((projeto) => {
         if (naoVazio(projeto)) {
             projeto.forEach((e) => {
@@ -141,22 +144,19 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     q++
                     if (naoVazio(e.dataApro)) {
                         dataAprova = e.dataApro
-                    } else {
-                        dataAprova = '0000-00-00'
                     }
+                    if (naoVazio(e.datacad)) {
+                        datacad = dataMensagem(e.datacad)
+                    }                    
 
                     let tamTermo = e.termo
                     if (tamTermo.length > 0) {
                         if (naoVazio(tamTermo[0].data)) {
                             datatermo = tamTermo[0].data
-                        } else {
-                            datatermo = ''
                         }
-                    } else {
-                        datatermo = ''
                     }
 
-                    if (naoVazio(e.dataTroca) && naoVazio(e.dataTroca)) {
+                    if (naoVazio(e.dataTroca)) {
                         dataTroca = e.dataTroca
                         if (naoVazio(datatermo)) {
                             contaDias = diferencaDias(e.dataTroca, datatermo)
@@ -164,6 +164,10 @@ router.get('/termos/', ehAdmin, (req, res) => {
                         } else {
                             contaDias = diferencaDias(e.dataTroca, dataHoje())
                             termo = false
+                        }
+
+                        if (contaDias > 7){
+                            alerta = true
                         }
 
                         projetos.push({ id: e._id, termo, alerta, contaDias, seq: e.seq, cadastro: datacad, cliente: cliente.nome, datatermo: dataMensagem(datatermo), dataapro: dataMensagem(dataAprova), datatroca: dataMensagem(dataTroca) })
