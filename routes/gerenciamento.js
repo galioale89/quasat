@@ -112,7 +112,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
     const { pessoa } = req.user
     const { funges } = req.user
     let gestor
-    
+
     if (naoVazio(user)) {
         id =user
         gestor = funges
@@ -140,6 +140,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
         sql = { user: id, vendedor: pessoa, dataTroca: { $exists: true }, encerrado: false }
     }
 
+    console.log(JSON.stringify(sql))
     Projeto.find(sql).then((projeto) => {
         if (naoVazio(projeto)) {
             projeto.forEach((e) => {
