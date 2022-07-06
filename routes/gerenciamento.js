@@ -111,25 +111,27 @@ router.get('/termos/', ehAdmin, (req, res) => {
     const { _id } = req.user
     const { pessoa } = req.user
     const { funges } = req.user
-    let q = 0
-    let gestor
-    if (typeof user == 'undefined') {
+
+    if (naoVazio(user)) {
+        id =user
+        gestor = funges
+    } else {
         id = _id
         gestor = true
-    } else {
-        id = user
-        gestor = funges
     }
+
     let projetos = []
     let contaDias = 0
-    let termo = false
+    let tamTermo
+    let termo
     let datatermo = '00/00/0000'
     let alerta = false
-    let idtermo = []
     let sql = {}
     let dataAprova = '00/00/0000'
     let dataTroca = '00/00/0000'
     let datacad = '00/00/0000'
+    let q = 0
+    let gestor
 
     if (gestor) {
         sql = { user: id, dataApro: { $exists: true }, encerrado: false }
@@ -145,38 +147,50 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     if (naoVazio(e.dataApro)) {
                         dataAprova = e.dataApro
                     }
-                    console.log('dataAprova=>'+dataAprova)
-                    if (naoVazio(e.datacad)) {
-                        datacad = dataMensagem(e.datacad)
-                    }                    
-                    console.log('datacad=>'+datacad)
-                    let tamTermo = e.termo
-                    console.log('tamTermo.length=>'+tamTermo.length)
+                    console.log('dataAprova=>' + dataAprova)
+                    // if (naoVazio(e.datacad)) {
+                    //     datacad = dataMensagem(e.datacad)
+                    // }
+                    // console.log('datacad=>' + datacad)
+
+                    tamTermo = e.termo
+                    console.log('tamTermo.length=>' + tamTermo.length)
                     if (tamTermo.length > 0) {
                         if (naoVazio(tamTermo[0].data)) {
                             datatermo = tamTermo[0].data
                         }
                     }
-                    console.log('datatermo=>'+datatermo)
-                    console.log('projeto_dataTroca=>'+e.dataTroca)
+                    console.log('datatermo=>' + datatermo)
+                    console.log('projeto_dataTroca=>' + e.dataTroca)
 
-                        dataTroca = e.dataTroca
-                        if (naoVazio(datatermo)) {
-                            contaDias = diferencaDias(e.dataTroca, datatermo)
-                            termo = true
-                        } else {
-                            contaDias = diferencaDias(e.dataTroca, dataHoje())
-                            termo = false
-                        }
-                        console.log('contaDias=>'+contaDias)
-                        console.log('termo=>'+termo)
-                        
-                        if (contaDias > 7){
-                            alerta = true
-                        }
+                    dataTroca = e.dataTroca
+                    if (naoVazio(datatermo)) {
+                        contaDias = diferencaDias(e.dataTroca, datatermo)
+                        termo = true
+                    } else {
+                        contaDias = diferencaDias(e.dataTroca, dataHoje())
+                        termo = false
+                    }
+                    console.log('contaDias=>' + contaDias)
+                    console.log('termo=>' + termo)
 
-                        projetos.push({ id: e._id, termo, alerta, contaDias, seq: e.seq, cadastro: datacad, cliente: cliente.nome, datatermo: dataMensagem(datatermo), dataapro: dataMensagem(dataAprova), datatroca: dataMensagem(dataTroca) })
-                    
+                    if (contaDias > 7) {
+                        alerta = true
+                    }
+
+                    projetos.push({ 
+                        id: e._id, 
+                        termo, 
+                        alerta, 
+                        contaDias, 
+                        seq: e.seq, 
+                        cliente: cliente.nome, 
+                        datatermo: dataMensagem(datatermo), 
+                        dataapro: dataMensagem(dataAprova), 
+                        datatroca: dataMensagem(dataTroca) 
+                    })
+                    // cadastro: datacad, 
+
                     if (q == projeto.length) {
                         res.render('principal/termos', { projetos })
                     }
@@ -1280,12 +1294,12 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
             const achou_cliente = await Cliente.findOne(sql)
             try {
-                if (achou_cliente != null){
-                    if (achou_cliente._id == pessoa){
-                       sameCliente = true
+                if (achou_cliente != null) {
+                    if (achou_cliente._id == pessoa) {
+                        sameCliente = true
                     }
                 }
-                if ( sameCliente || achou_cliente == null) {
+                if (sameCliente || achou_cliente == null) {
                     console.log('entrou')
                     const p = await Pessoa.findOne({ _id: pessoa })
                     const empresa = await Empresa.findOne({ user: id })
