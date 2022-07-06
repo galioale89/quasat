@@ -150,10 +150,6 @@ router.get('/termos/', ehAdmin, (req, res) => {
                         dataAprova = e.dataApro
                     }
                     console.log('dataAprova=>' + dataAprova)
-                    // if (naoVazio(e.datacad)) {
-                    //     datacad = dataMensagem(e.datacad)
-                    // }
-                    // console.log('datacad=>' + datacad)
 
                     tamTermo = e.termo
                     console.log('tamTermo.length=>' + tamTermo.length)
@@ -166,7 +162,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     console.log('projeto_dataTroca=>' + e.dataTroca)
 
                     dataTroca = e.dataTroca
-                    if (naoVazio(datatermo)) {
+                    if (datatermo != '00/00/0000') {
                         contaDias = diferencaDias(e.dataTroca, datatermo)
                         termo = true
                     } else {
@@ -176,14 +172,13 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     console.log('contaDias=>' + contaDias)
                     console.log('termo=>' + termo)
 
-                    if (contaDias > 7) {
-                        alerta = true
-                    }
+                    // if (contaDias > 7) {
+                    //     alerta = true
+                    // }
 
                     projetos.push({ 
                         id: e._id, 
                         termo, 
-                        alerta, 
                         contaDias, 
                         seq: e.seq, 
                         cliente: cliente.nome, 
@@ -191,7 +186,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
                         dataapro: dataMensagem(dataAprova), 
                         datatroca: dataMensagem(dataTroca) 
                     })
-                    // cadastro: datacad, 
+
                     console.log('q=>'+q)
                     if (q == projeto.length) {
                         res.render('principal/termos', { projetos })
