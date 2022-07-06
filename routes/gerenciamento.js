@@ -192,7 +192,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
                         datatroca: dataMensagem(dataTroca) 
                     })
                     // cadastro: datacad, 
-
+                    console.log('q=>'+q)
                     if (q == projeto.length) {
                         res.render('principal/termos', { projetos })
                     }
