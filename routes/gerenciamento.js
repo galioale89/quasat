@@ -162,6 +162,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     console.log('projeto_dataTroca=>' + e.dataTroca)
 
                     dataTroca = e.dataTroca
+                    if (naoVazio(dataTroca)){
                     if (datatermo != '00/00/0000') {
                         contaDias = diferencaDias(e.dataTroca, datatermo)
                         termo = true
@@ -171,6 +172,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     }
                     console.log('contaDias=>' + contaDias)
                     console.log('termo=>' + termo)
+                }
 
                     // if (contaDias > 7) {
                     //     alerta = true
