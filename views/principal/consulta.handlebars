@@ -223,11 +223,11 @@
             <tr>
                 <th style="width: 15%;">Status</th>
                 <th style="width: 5%;">Proposta</th>
-                <th style="width: 10%;">Local</th>
+                <th style="width: 15%;">Local</th>
                 <th style="width: 20%;">Cliente</th>
                 <th style="width: 10%;">Vendedor</th>
                 <th style="width: 10%;text-align: right;">Valor R$</th>
-                <th style="width: 10%;text-align: right;">Cadastro</th>
+                <th style="width: 5%;text-align: right;">Cadastro</th>
                 {{!-- <th style="width: 5%;"></th> --}}
             </tr>
             {{#each lista}}
@@ -238,7 +238,7 @@
                 <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{cliente}}</a></td>
                 <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{nome_vendedor}}</a></td>
                 <td style="text-align: right;"><a href='/gerenciamento/orcamento/{{id}}'>{{valor}}</a></td>
-                <td style="text-align: left;"><a href='/gerenciamento/orcamento/{{id}}'>{{cadastro}}</a></td>
+                <td style="text-align: right;"><a href='/gerenciamento/orcamento/{{id}}'>{{cadastro}}</a></td>
             </tr>
             {{else}}
             <label>Nenhuma proposta encontrada.</label>
