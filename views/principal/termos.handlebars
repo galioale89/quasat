@@ -37,7 +37,7 @@
     </div>
     <div class="row text-center" style="width: 100%">
         {{#each projetos}}
-        <div class="col-md-3 text-center" id={{#if termo}}'execucao'{{else}}'realizado'{{/if}}
+        <div class="col-md-3 text-center mb-4" id={{#if termo}}'execucao'{{else}}'realizado'{{/if}}
             style="text-align: center;transform: scale(1);height: 90px;margin-left: 20px;">
             <div style="padding: 10px;">
                 <a href='/gerenciamento/orcamento/{{id}}'
@@ -52,7 +52,6 @@
                 {{/if}}
             </div>
         </div>
-        <hr>
         {{/each}}
     </div>
 </div>
