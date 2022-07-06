@@ -111,7 +111,8 @@ router.get('/termos/', ehAdmin, (req, res) => {
     const { _id } = req.user
     const { pessoa } = req.user
     const { funges } = req.user
-
+    let gestor
+    
     if (naoVazio(user)) {
         id =user
         gestor = funges
@@ -131,7 +132,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
     let dataTroca = '00/00/0000'
     let datacad = '00/00/0000'
     let q = 0
-    let gestor
+
 
     if (gestor) {
         sql = { user: id, dataApro: { $exists: true }, encerrado: false }
