@@ -1294,6 +1294,8 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
             try {
                 const achou_cliente = await Cliente.findOne(sql)
                 if (achou_cliente != null) {
+                    console.log(achou_cliente.vendedor)
+                    console.log(pessoa)
                     if (achou_cliente.vendedor == pessoa) {
                         sameCliente = true
                     }
