@@ -1291,18 +1291,18 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
         }
         let sameCliente = false
         if (naoVazio(nome) && naoVazio(celular) && documento == true) {
-            const achou_cliente = await Cliente.findOne(sql)
             try {
+                const achou_cliente = await Cliente.findOne(sql)
                 if (achou_cliente != null) {
-                    if (achou_cliente._id == pessoa) {
+                    if (achou_cliente.vendedor == pessoa) {
                         sameCliente = true
                     }
                 }
                 if (sameCliente || achou_cliente == null) {
                     console.log('entrou')
-                    const p = await Pessoa.findOne({ _id: pessoa })
-                    const empresa = await Empresa.findOne({ user: id })
                     try {
+                        const p = await Pessoa.findOne({ _id: pessoa })
+                        const empresa = await Empresa.findOne({ user: id })
                         if (naoVazio(empresa.seq)) {
                             seq = parseFloat(empresa.seq) + 1
                             if (naoVazio(empresa.const)) {
