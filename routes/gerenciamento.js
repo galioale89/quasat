@@ -1300,6 +1300,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                         sameCliente = true
                     }
                 }
+                console.log(sameCliente)
                 if (sameCliente || achou_cliente == null) {
                     console.log('entrou')
                     try {
