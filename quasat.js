@@ -353,7 +353,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                     cliente: cliente.nome,
                                                                                     desctermo,
                                                                                     seq: e.seq,
-                                                                                    cadastro: dataMsgNum(datacad),
+                                                                                    cadastro: dafunasstaMsgNum(datacad),
                                                                                     aprovacao: dataMensagem(dataAprova),
                                                                                     vistoria,
                                                                                     parado: e.parado,
@@ -362,6 +362,21 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                 })
                                                                             }
                                                                             //FIM TERMOS
+
+                                                                            if (e.ganho == false){
+                                                                                listaOrcado.push({
+                                                                                    id: e._id,
+                                                                                    logado: pessoa,
+                                                                                    idcliente: e.cliente,
+                                                                                    idvendedor: e.vendedor,
+                                                                                    seq: e.seq,
+                                                                                    resp: e.responsavel,
+                                                                                    nome_responsavel,
+                                                                                    pro: e.proposta,
+                                                                                    cliente: nome_cliente,
+                                                                                    cadastro: dataMsgNum(datacad)
+                                                                                })                                                                                
+                                                                            }
 
                                                                             if ((e.entregue) && (e.status == 'Enviado')) {
                                                                                 alerta = false
@@ -538,19 +553,6 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                                             cadastro: dataMsgNum(datacad)
                                                                                                         })
                                                                                                     }
-                                                                                                    listaOrcado.push({
-                                                                                                        id: e._id,
-                                                                                                        logado: pessoa,
-                                                                                                        idcliente: e.cliente,
-                                                                                                        idvendedor: e.vendedor,
-                                                                                                        seq: e.seq,
-                                                                                                        resp: e.responsavel,
-                                                                                                        nome_responsavel,
-                                                                                                        pro: e.proposta,
-                                                                                                        cliente: nome_cliente,
-                                                                                                        cadastro: dataMsgNum(datacad)
-                                                                                                    })
-
                                                                                                 }
                                                                                             }
                                                                                         }
@@ -637,18 +639,16 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                         equipe.forEach((e) => {
                                             Projeto.findOne({ equipe: e._id })
                                                 .then((projeto) => {
-                                                    Pessoa.findOne({ _id: projeto.vendedor })
-                                                        .then((pes_ven) => {
+                                                    // Pessoa.findOne({ _id: projeto.vendedor })
+                                                    //     .then((pes_ven) => {
                                                             Cliente.findOne({ _id: projeto.cliente })
                                                                 .then((cliente) => {
-                                                                    // console.log('e._id=>'+e._id)
-                                                                    // console.log('projeto._id=>'+projeto._id)
                                                                     clientes.push({ id: cliente.id, nome: cliente.nome })
                                                                     if (e.prjfeito == 'true') {
                                                                         listaEncerrado.push({ ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim) })
                                                                     } else {
                                                                         listaAberto.push({
-                                                                            ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, vendedor: pes_ven.nome, telhado: projeto.telhado, estrutura: projeto.telhado, inversor: projeto.plaKwpInv, modulos: projeto.plaQtdMod, potencia: projeto.plaWattMod, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim)
+                                                                            ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, telhado: projeto.telhado, estrutura: projeto.telhado, inversor: projeto.plaKwpInv, modulos: projeto.plaQtdMod, potencia: projeto.plaWattMod, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim)
                                                                         })
                                                                     }
                                                                     q++
@@ -666,7 +666,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                     }
                                                                 })
                                                         })
-                                                })
+                                                // })
                                         })
                                     })
                             } else {

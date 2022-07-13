@@ -5910,20 +5910,17 @@ router.get('/leads', ehAdmin, (req, res) => {
     var clientes = []
     var q = 0
 
-    if (typeof user == 'undefined') {
-        id = _id
-        sql = { user: id }
-    } else {
-        // console.log('entrou')
+    if (naoVazio(user)) {
         id = user
         idpes = pessoa
-        // var ven = vendedor]
-        // console.log('ven=>'+ven)
         if (vendedor == true) {
             sql = { user: id, vendedor: idpes, lead: true }
         } else {
             sql = { user: id, lead: true }
-        }
+        }        
+    } else {
+        id = _id
+        sql = { user: id, lead: true }   
     }
     Cliente.find(sql).lean().then((cliente) => {
         if (naoVazio(cliente)) {
