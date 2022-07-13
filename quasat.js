@@ -641,16 +641,17 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                 .then((projeto) => {
                                                     // Pessoa.findOne({ _id: projeto.vendedor })
                                                     //     .then((pes_ven) => {
-                                                            Cliente.findOne({ _id: projeto.cliente })
-                                                                .then((cliente) => {
-                                                                    clientes.push({ id: cliente.id, nome: cliente.nome })
+                                                    //         Cliente.findOne({ _id: projeto.cliente })
+                                                    //             .then((cliente) => {
+                                                    //                 clientes.push({ id: cliente.id, nome: cliente.nome })
                                                                     if (e.prjfeito == 'true') {
-                                                                        listaEncerrado.push({ ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim) })
+                                                                        listaEncerrado.push({ ativo: e.ativo, id: projeto._id, seq: projeto.seq,  endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim) })
                                                                     } else {
                                                                         listaAberto.push({
-                                                                            ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, telhado: projeto.telhado, estrutura: projeto.telhado, inversor: projeto.plaKwpInv, modulos: projeto.plaQtdMod, potencia: projeto.plaWattMod, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim)
+                                                                            ativo: e.ativo, id: projeto._id, seq: projeto.seq, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, telhado: projeto.telhado, estrutura: projeto.telhado, inversor: projeto.plaKwpInv, modulos: projeto.plaQtdMod, potencia: projeto.plaWattMod, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim)
                                                                         })
                                                                     }
+                                                                    // cliente: cliente.nome,
                                                                     q++
                                                                     if (q == equipe.length) {
                                                                         listaAberto.sort(comparaNum)
@@ -658,14 +659,15 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                         Empresa.findOne()
                                                                             .sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
                                                                                 if (naoVazio(empresa)) {
-                                                                                    res.render('dashinsobra', { id: _id, empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, clientes, listaAberto, listaEncerrado })
+                                                                                    res.render('dashinsobra', { id: _id, empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, listaAberto, listaEncerrado })
                                                                                 } else {
-                                                                                    res.render('dashinsobra', { id: _id, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, clientes, listaAberto, listaEncerrado })
+                                                                                    res.render('dashinsobra', { id: _id, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, listaAberto, listaEncerrado })
                                                                                 }
                                                                             })
+                                                                            // clientes,
                                                                     }
                                                                 })
-                                                        })
+                                                //         })
                                                 // })
                                         })
                                     })
