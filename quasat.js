@@ -638,30 +638,55 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                         {
                             $lookup: {
                                 from: 'projetos',
-                                localField: '_id',
-                                foreignField: 'equipe',
+                                let: {equipe: '$_id'},
+                                pipeline: [
+                                    {
+                                        $match:{
+                                            $expr: {
+                                                $eq: ['$equipe','$$_id']
+                                            }
+                                        }
+                                    },
+                                    {
+                                            $lookup: {
+                                                from: 'pessoas',
+                                                localField: 'vendedor',
+                                                foreignField: '_id',
+                                                as: 'vendedor'
+                                            },
+                                        },
+
+                                ],
                                 as: 'projeto'
-                            },
-                        },
-                        { $unwind: '$equipe_projeto' },
-                        {
-                            $lookup: {
-                                from: 'pessoas',
-                                localField: 'equipe_projeto.vendedor',
-                                foreignField: '_id',
-                                as: 'vendedor'
-                            },
-                        },
-                        { $unwind: '$vendedor_projeto' },
-                        {
-                            $lookup: {
-                                from: 'clientes',
-                                localField: 'equipe_projeto.cliente',
-                                foreignField: '_id',
-                                as: 'cliente'
                             }
                         },
-                        { $unwind: '$cliete_projeto' },
+                        // {
+                        //     $lookup: {
+                        //         from: 'projetos',
+                        //         localField: '_id',
+                        //         foreignField: 'equipe',
+                        //         as: 'projeto'
+                        //     },
+                        // },
+                        // { $unwind: '$equipe_projeto' },
+                        // {
+                        //     $lookup: {
+                        //         from: 'pessoas',
+                        //         localField: 'equipe_projeto.vendedor',
+                        //         foreignField: '_id',
+                        //         as: 'vendedor'
+                        //     },
+                        // },
+                        // { $unwind: '$vendedor_projeto' },
+                        // {
+                        //     $lookup: {
+                        //         from: 'clientes',
+                        //         localField: 'equipe_projeto.cliente',
+                        //         foreignField: '_id',
+                        //         as: 'cliente'
+                        //     }
+                        // },
+                        // { $unwind: '$cliete_projeto' },
                         // {$project: {
 
                         // }
@@ -787,7 +812,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                             if (naoVazio(e.valor)) {
                                                                 totGanho = totGanho + e.valor
                                                             }
-                                                        } else {
+                                                        } else {    
                                                             if (e.baixada == true) {
                                                                 if (naoVazio(e.valor)) {
                                                                     totPerdido = totPerdido + e.valor
