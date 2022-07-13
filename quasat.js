@@ -128,6 +128,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
     // console.log('entrou app')
 
     const { _id } = req.user
+    console.log(_id)
     const { user } = req.user
     const { ehAdmin } = req.user
     const { nome } = req.user
@@ -659,12 +660,13 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                         Empresa.findOne()
                                                                             .sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
                                                                                 if (naoVazio(empresa)) {
-                                                                                    res.render('dashinsobra', { id: _id, empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, listaAberto, listaEncerrado })
+                                                                                    res.render('dashinsobra', {empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, listaAberto, listaEncerrado })
                                                                                 } else {
-                                                                                    res.render('dashinsobra', { id: _id, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, listaAberto, listaEncerrado })
+                                                                                    res.render('dashinsobra', {instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, listaAberto, listaEncerrado })
                                                                                 }
                                                                             })
                                                                             // clientes,
+                                                                            // id: _id,
                                                                     }
                                                                 })
                                                 //         })
