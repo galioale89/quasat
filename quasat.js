@@ -364,7 +364,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                             }
                                                                             //FIM TERMOS
 
-                                                                            if (e.ganho == false){
+                                                                            if (e.ganho == false) {
                                                                                 listaOrcado.push({
                                                                                     id: e._id,
                                                                                     logado: pessoa,
@@ -376,7 +376,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                                     pro: e.proposta,
                                                                                     cliente: nome_cliente,
                                                                                     cadastro: dataMsgNum(datacad)
-                                                                                })                                                                                
+                                                                                })
                                                                             }
 
                                                                             if ((e.entregue) && (e.status == 'Enviado')) {
@@ -618,47 +618,56 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                     //SE FOR INSTALADOR
                     var clientes = []
                     Equipe.aggregate([
-                    {
-                        $match: {
-                            user: id,
-                            insres: pessoa,
-                            feito: true,
-                            liberar: true,
-                            nome_projeto: { $exists: true },
-                            $and: [
-                                {
-                                    'dtinicio': { $ne: '' }
-                                },
-                                {
-                                    'dtinicio': { $ne: '0000-00-00' }
-                                }
-                            ]
-                        },
-                        $lookup: {
-                            from: 'projetos',
-                            let: {equipe: '_id'},
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ['$equipe', '$$equipe']
-                                        }
+                        {
+                            $match: {
+                                user: id,
+                                insres: pessoa,
+                                feito: true,
+                                liberar: true,
+                                nome_projeto: { $exists: true },
+                                $and: [
+                                    {
+                                        'dtinicio': { $ne: '' }
                                     },
-                                    $lookup: {
-                                        from: 'pessoas',
-                                        let: {vendedor: '$vendedor'},
-                                        pipeline: [{
-                                            $match: {
-                                                $eq: ['$_id','$$vendedor']
-                                            }
-                                        }]
+                                    {
+                                        'dtinicio': { $ne: '0000-00-00' }
                                     }
-                                }
-                            ]
+                                ]
+                            }
+                        }, 
+                        {
+                            $lookup: {
+                                from: 'projetos',
+                                localField: '_id',
+                                foreignField: 'equipe',
+                                as: 'projeto'
+                            },
                         },
-                    }
-                    ]).then(data =>{
-                        console.log(data)   
+                        { $unwind: '$equipe_projeto' },
+                        {
+                            $lookup: {
+                                from: 'pessoas',
+                                localField: '$equipe_projeto.vendedor',
+                                foreignField: '_id',
+                                as: 'vendedor'
+                            },
+                        },
+                        { $unwind: '$vendedor_projeto' },
+                        {
+                            $lookup: {
+                                from: 'clientes',
+                                localField: '$equipe_projeto.cliente',
+                                foreignField: '_id',
+                                as: 'cliente'
+                            }
+                        },
+                        { $unwind: '$cliete_projeto' },
+                        // {$project: {
+
+                        // }
+                        // }
+                    ]).then(data => {
+                        console.log()
                     })
                     // Equipe.find(
                     //     {
@@ -928,13 +937,13 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                                     }
 
                                                                 }
-                                                                listaOrcado.push({ 
-                                                                    id: e._id, 
-                                                                    seq: e.seq, 
-                                                                    resp: e.responsavel, 
-                                                                    nome_responsavel, 
-                                                                    pro: e.proposta, 
-                                                                    cliente: nome_cliente, 
+                                                                listaOrcado.push({
+                                                                    id: e._id,
+                                                                    seq: e.seq,
+                                                                    resp: e.responsavel,
+                                                                    nome_responsavel,
+                                                                    pro: e.proposta,
+                                                                    cliente: nome_cliente,
                                                                     cadastro: dataMsgNum(e.datacad)
                                                                 })
                                                             }
