@@ -647,7 +647,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                         {
                             $lookup: {
                                 from: 'pessoas',
-                                localField: '$equipe_projeto.vendedor',
+                                localField: 'equipe_projeto.vendedor',
                                 foreignField: '_id',
                                 as: 'vendedor'
                             },
@@ -656,7 +656,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                         {
                             $lookup: {
                                 from: 'clientes',
-                                localField: '$equipe_projeto.cliente',
+                                localField: 'equipe_projeto.cliente',
                                 foreignField: '_id',
                                 as: 'cliente'
                             }
