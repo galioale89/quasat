@@ -676,10 +676,11 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                             } else {
                                 Empresa.findOne().sort({ field: 'asc', _id: -1 }).then((empresa) => {
                                     if (naoVazio(empresa)) {
-                                        res.render('dashinsobra', { id: _id, empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true })
+                                        res.render('dashinsobra', { empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true })
                                     } else {
-                                        res.render('dashinsobra', { id: _id, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true })
+                                        res.render('dashinsobra', { instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true })
                                     }
+                                    // id: _id,
                                 })
                             }
                         })
