@@ -667,7 +667,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                         // }
                         // }
                     ]).then(data => {
-                        console.log()
+                        console.log(data)
                     })
                     // Equipe.find(
                     //     {
