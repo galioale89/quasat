@@ -859,7 +859,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     //     console.log(error)
                     // }
                 });
-                try {
                     listaAberto.sort(comparaNum);
                     listaEncerrado.sort(comparaNum);
                     const instalador = await Pessoa.findById(pessoa)
@@ -898,10 +897,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                 listaAberto,
                                 listaEncerrado
                             });
-                    }
-                } catch (error) {
-                    console.log(error);
-                }                
+                    }              
             } catch (error) {
                 console.log(error);
             }
