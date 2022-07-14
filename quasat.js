@@ -732,8 +732,8 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         }
                     ]
                 ).then(async data => {
-                    for (item of data){
-                        try {
+                    for (item of data) {
+                        // try {
                             let id_cliente = await item.cliente_projeto[0]._id;
                             let nome_cliente = await item.cliente_projeto[0].nome;
                             clientes.push({ id: id_cliente, nome: nome_cliente });
@@ -774,51 +774,47 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     }
                                 );
                             }
-                        } catch (error) {
-                            console.log(error)
-                        }
+                        // } catch (error) {
+                        //     console.log(error)
+                        // }
                     }
-                    try {
-                        listaAberto.sort(comparaNum)
-                        listaEncerrado.sort(comparaNum)
-                        console.log(listaEncerrado)
-                        const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
-                        if (naoVazio(ult_empresa)) {
-                            res.render('dashinsobra',
-                                {
-                                    id: _id,
-                                    empresa: ult_empresa,
-                                    instalador: true,
-                                    vendedor: false,
-                                    orcamentista: false,
-                                    ehMaster,
-                                    owner: owner,
-                                    ano,
-                                    block: true,
-                                    nome: nome_instalador,
-                                    clientes,
-                                    listaAberto,
-                                    listaEncerrado
-                                })
-                        } else {
-                            res.render('dashinsobra',
-                                {
-                                    id: _id,
-                                    instalador: true,
-                                    vendedor: false,
-                                    orcamentista: false,
-                                    ehMaster,
-                                    owner: owner,
-                                    ano,
-                                    block: true,
-                                    nome: nome_instalador,
-                                    clientes,
-                                    listaAberto,
-                                    listaEncerrado
-                                })
-                        }
-                    } catch (error) {
-                        console.log(error)
+                    listaAberto.sort(comparaNum)
+                    listaEncerrado.sort(comparaNum)
+                    console.log(listaEncerrado)
+                    const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
+                    if (naoVazio(ult_empresa)) {
+                        res.render('dashinsobra',
+                            {
+                                id: _id,
+                                empresa: ult_empresa,
+                                instalador: true,
+                                vendedor: false,
+                                orcamentista: false,
+                                ehMaster,
+                                owner: owner,
+                                ano,
+                                block: true,
+                                nome: nome_instalador,
+                                clientes,
+                                listaAberto,
+                                listaEncerrado
+                            })
+                    } else {
+                        res.render('dashinsobra',
+                            {
+                                id: _id,
+                                instalador: true,
+                                vendedor: false,
+                                orcamentista: false,
+                                ehMaster,
+                                owner: owner,
+                                ano,
+                                block: true,
+                                nome: nome_instalador,
+                                clientes,
+                                listaAberto,
+                                listaEncerrado
+                            })
                     }
                 });
             } catch (error) {
