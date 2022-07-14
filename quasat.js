@@ -630,9 +630,9 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                 pipeline: [
                                     {
                                         $match: {
-                                            insres: pessoa,
-                                            feito: true,
-                                            liberar: true,
+                                            // insres: pessoa,
+                                            // feito: true,
+                                            // liberar: true,
                                             $expr: {
                                                 $eq: ['$projeto', '$$equipe']
                                             }
@@ -641,26 +641,25 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                 ],
                                 as: 'equipe'
                             },
-                        },
-                        { $unwind: '$equipe_projeto' },
-                        {
-                            $lookup: {
-                                from: 'pessoas',
-                                localField: 'vendedor',
-                                foreignField: '_id',
-                                as: 'vendedor'
-                            },
-                        },
-                        { $unwind: '$vendedor_projeto' },
-                        {
-                            $lookup: {
-                                from: 'clientes',
-                                localField: 'cliente',
-                                foreignField: '_id',
-                                as: 'cliente'
-                            }
-                        },
-                        { $unwind: '$cliete_projeto' }
+                        }
+                        // {
+                        //     $lookup: {
+                        //         from: 'pessoas',
+                        //         localField: 'vendedor',
+                        //         foreignField: '_id',
+                        //         as: 'vendedor'
+                        //     },
+                        // },
+                        // { $unwind: '$vendedor_projeto' },
+                        // {
+                        //     $lookup: {
+                        //         from: 'clientes',
+                        //         localField: 'cliente',
+                        //         foreignField: '_id',
+                        //         as: 'cliente'
+                        //     }
+                        // },
+                        // { $unwind: '$cliente_projeto' }
                     ]).then(data => {
                         console.log(data)
                     })
