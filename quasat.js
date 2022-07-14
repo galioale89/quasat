@@ -352,7 +352,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                             cliente: cliente.nome,
                                                                             desctermo,
                                                                             seq: e.seq,
-                                                                            cadastro: dafunasstaMsgNum(datacad),
+                                                                            cadastro: dataMsgNum(datacad),
                                                                             aprovacao: dataMensagem(dataAprova),
                                                                             vistoria,
                                                                             parado: e.parado,
