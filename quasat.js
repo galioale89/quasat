@@ -732,8 +732,15 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     ]
                 ).then(data => {
                     data.map(item => {
-                        console.log(item.cliente_projeto)
-                        // clientes.push({ id: item.cliente_projeto._id, nome: item.cliente_projeto.nome });
+                        let item_cliente = item.cliente_projeto
+                        // item_cliente.map(i => {
+                        //     idCliente = i._id,
+                        //     nome_cliente = i.nome
+                        // })
+
+                        console.log(item.cliente_projeto[0]);
+                        // console.log(nome_cliente);
+                        // clientes.push({ id: id_cliente, nome: nome_cliente });
                         // if (item.prjfeito == 'true') {
                         //     listaEncerrado.push(
                         //         {
