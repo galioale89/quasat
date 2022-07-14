@@ -738,6 +738,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             let nome_cliente = await item.cliente_projeto[0].nome;
                             clientes.push({ id: id_cliente, nome: nome_cliente });
 
+                            console.log(prfjeito)
 
                             if (item.prjfeito == 'true') {
                                 listaEncerrado.push(
@@ -775,6 +776,8 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     }
                                 );
                             }
+
+                            console.log(listaAberto)
                         } catch (error) {
                             console.log(error)
                         }
