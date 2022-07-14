@@ -650,7 +650,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                 as: 'vendedor'
                             },
                         },
-                        // { $unwind: '$vendedor_projeto' },
+                        { $unwind: '$vendedor_projeto' },
                         // {
                         //     $lookup: {
                         //         from: 'clientes',
