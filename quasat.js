@@ -731,7 +731,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             }
                         }
                     ]
-                ).then(data => {
+                ).then(async data => {
                     data.map(async item => {
                         try {
                             let id_cliente = await item.cliente_projeto[0]._id;
