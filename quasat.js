@@ -859,50 +859,49 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     //     console.log(error)
                     // }
                 });
-            } catch (error) {
-                console.log(error);
-            }
-
-            try {
-                listaAberto.sort(comparaNum);
-                listaEncerrado.sort(comparaNum);
-                const instalador = await Pessoa.findById(pessoa)
-                const nome_instalador = instalador.nome
-                const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
-                if (naoVazio(ult_empresa)) {
-                    res.render('dashinsobra',
-                        {
-                            id: _id,
-                            empresa: ult_empresa,
-                            instalador: true,
-                            vendedor: false,
-                            orcamentista: false,
-                            ehMaster,
-                            owner: owner,
-                            ano,
-                            block: true,
-                            nome: nome_instalador,
-                            clientes,
-                            listaAberto,
-                            listaEncerrado
-                        });
-                } else {
-                    res.render('dashinsobra',
-                        {
-                            id: _id,
-                            instalador: true,
-                            vendedor: false,
-                            orcamentista: false,
-                            ehMaster,
-                            owner: owner,
-                            ano,
-                            block: true,
-                            nome: nome_instalador,
-                            clientes,
-                            listaAberto,
-                            listaEncerrado
-                        });
-                }
+                try {
+                    listaAberto.sort(comparaNum);
+                    listaEncerrado.sort(comparaNum);
+                    const instalador = await Pessoa.findById(pessoa)
+                    const nome_instalador = instalador.nome
+                    const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
+                    if (naoVazio(ult_empresa)) {
+                        res.render('dashinsobra',
+                            {
+                                id: _id,
+                                empresa: ult_empresa,
+                                instalador: true,
+                                vendedor: false,
+                                orcamentista: false,
+                                ehMaster,
+                                owner: owner,
+                                ano,
+                                block: true,
+                                nome: nome_instalador,
+                                clientes,
+                                listaAberto,
+                                listaEncerrado
+                            });
+                    } else {
+                        res.render('dashinsobra',
+                            {
+                                id: _id,
+                                instalador: true,
+                                vendedor: false,
+                                orcamentista: false,
+                                ehMaster,
+                                owner: owner,
+                                ano,
+                                block: true,
+                                nome: nome_instalador,
+                                clientes,
+                                listaAberto,
+                                listaEncerrado
+                            });
+                    }
+                } catch (error) {
+                    console.log(error);
+                }                
             } catch (error) {
                 console.log(error);
             }
