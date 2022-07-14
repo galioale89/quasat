@@ -630,9 +630,9 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                 pipeline: [
                                     {
                                         $match: {
-                                            // insres: pessoa,
-                                            // feito: true,
-                                            // liberar: true,
+                                            insres: pessoa,
+                                            feito: true,
+                                            liberar: true,
                                             $expr: {
                                                 $eq: ['$projeto', '$$equipe']
                                             }
