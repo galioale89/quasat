@@ -738,15 +738,13 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             let nome_cliente = await item.cliente_projeto[0].nome;
                             clientes.push({ id: id_cliente, nome: nome_cliente });
 
-                            console.log(item.prjfeito)
-
-                            let dtini = '00/00/0000'
-                            let dtfim = '00/00/0000'
+                            let dtini = '00/00/0000';
+                            let dtfim = '00/00/0000';
                             if (naoVazio(item.dtinicio)) {
-                                dtini = item.dtinicio
+                                dtini = dataMensagem(item.dtinicio);
                             }
                             if (naoVazio(item.dtfim)) {
-                                dtfim = item.dtfim
+                                dtfim = dataMensagem(item.dtfim);
                             }
 
                             if (item.prjfeito) {
@@ -785,10 +783,8 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     }
                                 );
                             }
-
-                            console.log(listaAberto)
                         } catch (error) {
-                            console.log(error)
+                            console.log(error);
                         }
                     });
 
@@ -810,9 +806,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         });
 
                     if (naoVazio(equipes)) {
-                        console.log(equipes)
                         equipes.map(async item_equipe => {
-                            console.log(item_equipe._id)
                             try {
                                 let projeto = await Projeto.findOne({ equipe: item_equipe._id });
                                 let vendedor = await Pessoa.findById(projeto.vendedor);
