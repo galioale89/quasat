@@ -735,7 +735,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     data.map(item => {
                         let id_cliente = item.cliente_projeto[0]._id;
                         let nome_cliente = item.cliente_projeto[0].nome;
-                        console.log(nome_cliente);
                         clientes.push({ id: id_cliente, nome: nome_cliente });
                         if (item.prjfeito == 'true') {
                             listaEncerrado.push(
@@ -774,45 +773,46 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             );
                         }
                     });
-                    // listaAberto.sort(comparaNum)
-                    // listaEncerrado.sort(comparaNum)
-                    // Empresa.findOne()
-                    //     .sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
-                    //         if (naoVazio(empresa)) {
-                    //             res.render('dashinsobra',
-                    //                 {
-                    //                     id: _id,
-                    //                     empresa,
-                    //                     instalador: true,
-                    //                     vendedor: false,
-                    //                     orcamentista: false,
-                    //                     ehMaster,
-                    //                     owner: owner,
-                    //                     ano,
-                    //                     block: true,
-                    //                     nome: nome_instalador,
-                    //                     clientes,
-                    //                     listaAberto,
-                    //                     listaEncerrado
-                    //                 })
-                    //         } else {
-                    //             res.render('dashinsobra',
-                    //                 {
-                    //                     id: _id,
-                    //                     instalador: true,
-                    //                     vendedor: false,
-                    //                     orcamentista: false,
-                    //                     ehMaster,
-                    //                     owner: owner,
-                    //                     ano,
-                    //                     block: true,
-                    //                     nome: nome_instalador,
-                    //                     clientes,
-                    //                     listaAberto,
-                    //                     listaEncerrado
-                    //                 })
-                    //         }
-                    //     })                    
+                    listaAberto.sort(comparaNum)
+                    listaEncerrado.sort(comparaNum)
+                    console.log(listaEncerrado)
+                    Empresa.findOne()
+                        .sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
+                            if (naoVazio(empresa)) {
+                                res.render('dashinsobra',
+                                    {
+                                        id: _id,
+                                        empresa,
+                                        instalador: true,
+                                        vendedor: false,
+                                        orcamentista: false,
+                                        ehMaster,
+                                        owner: owner,
+                                        ano,
+                                        block: true,
+                                        nome: nome_instalador,
+                                        clientes,
+                                        listaAberto,
+                                        listaEncerrado
+                                    })
+                            } else {
+                                res.render('dashinsobra',
+                                    {
+                                        id: _id,
+                                        instalador: true,
+                                        vendedor: false,
+                                        orcamentista: false,
+                                        ehMaster,
+                                        owner: owner,
+                                        ano,
+                                        block: true,
+                                        nome: nome_instalador,
+                                        clientes,
+                                        listaAberto,
+                                        listaEncerrado
+                                    })
+                            }
+                        })                    
                 })
             } catch (error) {
                 console.log(error)
