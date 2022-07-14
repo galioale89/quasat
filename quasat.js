@@ -139,10 +139,10 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
     const { funass } = req.user
     const { instalador } = req.user
     const { orcamentista } = req.user
-    var id
-    var sql = []
-    var sqlcli = []
-    var render = ''
+    let id
+    let sql = []
+    let sqlcli = []
+    let render = ''
 
     if (naoVazio(user)) {
         id = user
@@ -160,43 +160,43 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
         sqlcli = { user: id, lead: true }
     }
 
-    var hoje = dataHoje()
-    var data1 = 0
-    var data2 = 0
-    var days = 0
-    var dif = 0
-    var alerta
-    var ano = hoje.substring(0, 4)
-    var dtfim
+    let hoje = dataHoje()
+    let data1 = 0
+    let data2 = 0
+    let days = 0
+    let dif = 0
+    let alerta
+    let ano = hoje.substring(0, 4)
+    let dtfim
     // console.log(id)
-    var q = 0
-    var listaOrcado = []
-    var listaGanho = []
-    var listaBaixado = []
-    var listaAberto = []
-    var listaExecucao = []
-    var listaTermos = []
-    var listaEncerrado = []
-    var listaEntregue = []
-    var listaEnviado = []
-    var listaNegociando = []
-    var listaFuturos = []
-    var notpro = []
-    var atrasado = []
-    var deadlineIns = []
-    var dtcadastro = ''
-    var dtvalidade = ''
-    var nome_cliente
-    var nome_instalador
-    var dataAprova
-    var datacad
+    let q = 0
+    let listaOrcado = []
+    let listaGanho = []
+    let listaBaixado = []
+    let listaAberto = []
+    let listaExecucao = []
+    let listaTermos = []
+    let listaEncerrado = []
+    let listaEntregue = []
+    let listaEnviado = []
+    let listaNegociando = []
+    let listaFuturos = []
+    let notpro = []
+    let atrasado = []
+    let deadlineIns = []
+    let dtcadastro = ''
+    let dtvalidade = ''
+    let nome_cliente
+    let nome_instalador
+    let dataAprova
+    let datacad
 
-    var totEnviado = 0
-    var totGanho = 0
-    var totNegociando = 0
-    var totPerdido = 0
+    let totEnviado = 0
+    let totGanho = 0
+    let totNegociando = 0
+    let totPerdido = 0
 
-    var ehMaster
+    let ehMaster
     if (ehAdmin == 0) {
         ehMaster = true
     } else {
