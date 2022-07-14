@@ -617,207 +617,203 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
             var clientes = []
             try {
                 const instalador = await Pessoa.findById(pessoa)
-                console.log(instalador.nome)
                 const nome_instalador = instalador.nome
+                Projeto.aggregate(
+                    [
+                        {
+                            $match: {
+                                user: id,
+                            }
+                        },
+                        {
+                            $project: {
+                                seq: 1,
+                                endereco: 1,
+                                cidade: 1,
+                                _id: 1,
+                                seq: 1,
+                                uf: 1,
+                                telhado: 1,
+                                inversor: 1,
+                                plaQtdInv: 1,
+                                plaWattMod: 1,
+                                equipe: 1,
+                                vendedor: 1,
+                                cliente: 1
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "equipes",
+                                let: { id_equipe: "$equipe" },
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            insres: pessoa,
+                                            feito: true,
+                                            liberar: true,
+                                            $expr: {
+                                                $eq: ["$_id", "$$id_equipe"]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            insres: 1,
+                                            prjFeito: 1,
+                                            ativo: 1,
+                                            dtinicio: 1,
+                                            dtfim: 1
+                                        }
+                                    }
+                                ],
+                                as: "equipe_projeto"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "pessoas",
+                                let: { id_vendedor: "$vendedor" },
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            $expr: {
+                                                $eq: ["$_id", "$$id_vendedor"]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            nome: 1
+                                        }
+                                    }
+                                ],
+                                as: "vendedor_projeto"
+                            }
+                        },
+                        {
+                            $lookup: {
+                                from: "clientes",
+                                let: { id_cliente: "$cliente" },
+                                pipeline: [
+                                    {
+                                        $match: {
+                                            $expr: {
+                                                $eq: ["$_id", "$$id_cliente"]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            nome: 1,
+                                            _id
+                                        }
+                                    }
+                                ],
+                                as: "cliente_projeto"
+                            }
+                        },
+                        {
+                            $replaceRoot: {
+                                newRoot: {
+                                    $mergeObjects: [
+                                        { $arrayElemAt: ["$equipe_projeto", 0] },
+                                        { $arrayElemAt: ["$vendedor_projeto", 0] },
+                                        "$$ROOT"]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                vendedor_projeto: 0,
+                                equipe_projeto: 0
+                            }
+                        }
+                    ]
+                ).then(data => {
+                    data.map(item => {
+                        console.log(item.cliente_projeto.id)
+                        // clientes.push({ id: item.cliente_projeto.id, nome: item.cliente_projeto.nome });
+                        // if (item.prjfeito == 'true') {
+                        //     listaEncerrado.push(
+                        //         {
+                        //             ativo: item.ativo,
+                        //             id: item._id,
+                        //             seq: item.seq,
+                        //             cliente: item.cliente_projeto.nome,
+                        //             endereco: item.endereco,
+                        //             cidade: item.cidade,
+                        //             uf: item.uf,
+                        //             dtini: dataMensagem(item.dtinicio),
+                        //             dtfim: dataMensagem(item.dtfim)
+                        //         }
+                        //     );
+                        // }
+                        // if (item.prjFeito == 'false') {
+                        //     listaAberto.push(
+                        //         {
+                        //             ativo: item.ativo,
+                        //             id: item._id,
+                        //             seq: item.seq,
+                        //             cliente: item.cliente_projeto.nome,
+                        //             endereco: item.endereco,
+                        //             cidade: item.cidade,
+                        //             uf: item.uf,
+                        //             vendedor: item.nome,
+                        //             telhado: item.telhado,
+                        //             estrutura: item.telhado,
+                        //             inversor: item.plaKwpInv,
+                        //             modulos: item.plaQtdMod,
+                        //             potencia: item.plaWattMod,
+                        //             dtini: dataMensagem(item.dtinicio),
+                        //             dtfim: dataMensagem(item.dtfim)
+                        //         }
+                        //     );
+                        // }
+                    });
+                    // listaAberto.sort(comparaNum)
+                    // listaEncerrado.sort(comparaNum)
+                    // Empresa.findOne()
+                    //     .sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
+                    //         if (naoVazio(empresa)) {
+                    //             res.render('dashinsobra',
+                    //                 {
+                    //                     id: _id,
+                    //                     empresa,
+                    //                     instalador: true,
+                    //                     vendedor: false,
+                    //                     orcamentista: false,
+                    //                     ehMaster,
+                    //                     owner: owner,
+                    //                     ano,
+                    //                     block: true,
+                    //                     nome: nome_instalador,
+                    //                     clientes,
+                    //                     listaAberto,
+                    //                     listaEncerrado
+                    //                 })
+                    //         } else {
+                    //             res.render('dashinsobra',
+                    //                 {
+                    //                     id: _id,
+                    //                     instalador: true,
+                    //                     vendedor: false,
+                    //                     orcamentista: false,
+                    //                     ehMaster,
+                    //                     owner: owner,
+                    //                     ano,
+                    //                     block: true,
+                    //                     nome: nome_instalador,
+                    //                     clientes,
+                    //                     listaAberto,
+                    //                     listaEncerrado
+                    //                 })
+                    //         }
+                    //     })                    
+                })
             } catch (error) {
                 console.log(error)
             }
-
-            console.log(nome_instalador)
-            Projeto.aggregate(
-                [
-                    {
-                        $match: {
-                            user: id,
-                        }
-                    },
-                    {
-                        $project: {
-                            seq: 1,
-                            endereco: 1,
-                            cidade: 1,
-                            _id: 1,
-                            seq: 1,
-                            uf: 1,
-                            telhado: 1,
-                            inversor: 1,
-                            plaQtdInv: 1,
-                            plaWattMod: 1,
-                            equipe: 1,
-                            vendedor: 1,
-                            cliente: 1
-                        }
-                    },
-                    {
-                        $lookup: {
-                            from: "equipes",
-                            let: { id_equipe: "$equipe" },
-                            pipeline: [
-                                {
-                                    $match: {
-                                        insres: pessoa,
-                                        feito: true,
-                                        liberar: true,
-                                        $expr: {
-                                            $eq: ["$_id", "$$id_equipe"]
-                                        }
-                                    }
-                                },
-                                {
-                                    $project: {
-                                        insres: 1,
-                                        prjFeito: 1,
-                                        ativo: 1,
-                                        dtinicio: 1,
-                                        dtfim: 1
-                                    }
-                                }
-                            ],
-                            as: "equipe_projeto"
-                        }
-                    },
-                    {
-                        $lookup: {
-                            from: "pessoas",
-                            let: { id_vendedor: "$vendedor" },
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ["$_id", "$$id_vendedor"]
-                                        }
-                                    }
-                                },
-                                {
-                                    $project: {
-                                        nome: 1
-                                    }
-                                }
-                            ],
-                            as: "vendedor_projeto"
-                        }
-                    },
-                    {
-                        $lookup: {
-                            from: "clientes",
-                            let: { id_cliente: "$cliente" },
-                            pipeline: [
-                                {
-                                    $match: {
-                                        $expr: {
-                                            $eq: ["$_id", "$$id_cliente"]
-                                        }
-                                    }
-                                },
-                                {
-                                    $project: {
-                                        nome: 1,
-                                        _id
-                                    }
-                                }
-                            ],
-                            as: "cliente_projeto"
-                        }
-                    },
-                    {
-                        $replaceRoot: {
-                            newRoot: {
-                                $mergeObjects: [
-                                    { $arrayElemAt: ["$equipe_projeto", 0] },
-                                    { $arrayElemAt: ["$vendedor_projeto", 0] },
-                                    "$$ROOT"]
-                            }
-                        }
-                    },
-                    {
-                        $project: {
-                            vendedor_projeto: 0,
-                            equipe_projeto: 0
-                        }
-                    }
-                ]
-            ).then(data => {
-                data.map(item => {
-                    // console.log(item)
-                    // clientes.push({ id: item.cliente_projeto.id, nome: item.cliente_projeto.nome });
-                    // if (item.prjfeito == 'true') {
-                    //     listaEncerrado.push(
-                    //         {
-                    //             ativo: item.ativo,
-                    //             id: item._id,
-                    //             seq: item.seq,
-                    //             cliente: item.cliente_projeto.nome,
-                    //             endereco: item.endereco,
-                    //             cidade: item.cidade,
-                    //             uf: item.uf,
-                    //             dtini: dataMensagem(item.dtinicio),
-                    //             dtfim: dataMensagem(item.dtfim)
-                    //         }
-                    //     );
-                    // }
-                    // if (item.prjFeito == 'false') {
-                    //     listaAberto.push(
-                    //         {
-                    //             ativo: item.ativo,
-                    //             id: item._id,
-                    //             seq: item.seq,
-                    //             cliente: item.cliente_projeto.nome,
-                    //             endereco: item.endereco,
-                    //             cidade: item.cidade,
-                    //             uf: item.uf,
-                    //             vendedor: item.nome,
-                    //             telhado: item.telhado,
-                    //             estrutura: item.telhado,
-                    //             inversor: item.plaKwpInv,
-                    //             modulos: item.plaQtdMod,
-                    //             potencia: item.plaWattMod,
-                    //             dtini: dataMensagem(item.dtinicio),
-                    //             dtfim: dataMensagem(item.dtfim)
-                    //         }
-                    //     );
-                    // }
-                });
-
-                // listaAberto.sort(comparaNum)
-                // listaEncerrado.sort(comparaNum)
-                // Empresa.findOne()
-                //     .sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
-                //         if (naoVazio(empresa)) {
-                //             res.render('dashinsobra',
-                //                 {
-                //                     id: _id,
-                //                     empresa,
-                //                     instalador: true,
-                //                     vendedor: false,
-                //                     orcamentista: false,
-                //                     ehMaster,
-                //                     owner: owner,
-                //                     ano,
-                //                     block: true,
-                //                     nome: nome_instalador,
-                //                     clientes,
-                //                     listaAberto,
-                //                     listaEncerrado
-                //                 })
-                //         } else {
-                //             res.render('dashinsobra',
-                //                 {
-                //                     id: _id,
-                //                     instalador: true,
-                //                     vendedor: false,
-                //                     orcamentista: false,
-                //                     ehMaster,
-                //                     owner: owner,
-                //                     ano,
-                //                     block: true,
-                //                     nome: nome_instalador,
-                //                     clientes,
-                //                     listaAberto,
-                //                     listaEncerrado
-                //                 })
-                //         }
-                //     })
-            });
 
             // Equipe.find(
             //     {
