@@ -1238,21 +1238,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
         // console.log('novo projeto')
         var seq
         var numprj
-        // console.log('vendedor=>' + req.body.vendedor)
-        // console.log('req.body.nome=>' + req.body.nome)
-        // console.log('req.body.endereco=>' + req.body.endereco)
-        // console.log('req.body.numero=>' + req.body.numero)
-        // console.log('req.body.bairro=>' + req.body.bairro)
-        // console.log('req.body.cep=>' + req.body.cep)
-        // console.log('req.body.complemento=>' + req.body.complemento)
-        // console.log('req.body.cidade=>' + req.body.cidade)
-        // console.log('req.body.uf=>' + req.body.uf)
-        // console.log('req.body.cnpj=>' + req.body.cnpj)
-        // console.log('req.body.cpf=>' + req.body.cpf)
-        // console.log('req.body.contato=>' + req.body.contato)
-        // console.log('req.body.celular=>' + req.body.celular)
-        // console.log('req.body.email=>' + req.body.email)
-        //var potencia = Math.trunc(parseFloat(req.body.plaQtdMod) * parseFloat(req.body.plaWattMod), 1) / 1000
 
         var nome = buscaPrimeira(req.body.nome)
         // var sobrenome = req.body.sobrenome
