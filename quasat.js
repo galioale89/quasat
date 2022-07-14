@@ -732,12 +732,11 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         }
                     ]
                 ).then(async data => {
-                    data.map(async item => {
+                    for (item of data){
                         try {
                             let id_cliente = await item.cliente_projeto[0]._id;
                             let nome_cliente = await item.cliente_projeto[0].nome;
                             clientes.push({ id: id_cliente, nome: nome_cliente });
-
 
                             if (item.prjfeito == 'true') {
                                 listaEncerrado.push(
@@ -778,7 +777,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         } catch (error) {
                             console.log(error)
                         }
-                    });
+                    }
                     try {
                         listaAberto.sort(comparaNum)
                         listaEncerrado.sort(comparaNum)
@@ -788,7 +787,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             res.render('dashinsobra',
                                 {
                                     id: _id,
-                                    empresa,
+                                    empresa: ult_empresa,
                                     instalador: true,
                                     vendedor: false,
                                     orcamentista: false,
