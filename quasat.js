@@ -783,7 +783,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     listaAberto.sort(comparaNum)
                     listaEncerrado.sort(comparaNum)
                     console.log(listaEncerrado)
-                    
+
                     try {
                         const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
                         if (naoVazio(ult_empresa)) {
@@ -821,7 +821,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                 })
                         }
                     } catch (error) {
-                        console.og(error)
+                        console.log(error)
                     }
                 });
             } catch (error) {
