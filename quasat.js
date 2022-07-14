@@ -740,7 +740,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
 
                             console.log(item.prjfeito)
 
-                            if (item.prjfeito == 'true') {
+                            if (item.prjfeito) {
                                 listaEncerrado.push(
                                     {
                                         ativo: item.ativo,
@@ -755,7 +755,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     }
                                 );
                             }
-                            if (item.prjfeito == 'false') {
+                            if (!item.prjfeito) {
                                 listaAberto.push(
                                     {
                                         ativo: item.ativo,
