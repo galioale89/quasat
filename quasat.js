@@ -738,7 +738,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             let nome_cliente = await item.cliente_projeto[0].nome;
                             clientes.push({ id: id_cliente, nome: nome_cliente });
 
-                            console.log(prfjeito)
+                            console.log(item.prjfeito)
 
                             if (item.prjfeito == 'true') {
                                 listaEncerrado.push(
