@@ -362,7 +362,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                     }
                                                                     //FIM TERMOS
 
-                                                                    if (e.ganho == false && e.futuro == false && e.status == 'Enviado' && e.baixado == false && e.encerrado == false) {
+                                                                    if (!e.ganho, !e.entregue, !e.baixada, e.status == 'Enviado') {
                                                                         listaOrcado.push({
                                                                             id: e._id,
                                                                             logado: pessoa,
@@ -786,118 +786,117 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     listaAberto.sort(comparaNum);
                     listaEncerrado.sort(comparaNum);
                     console.log(listaEncerrado);
-
-                    try {
-                        const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
-                        if (naoVazio(ult_empresa)) {
-                            res.render('dashinsobra',
-                                {
-                                    id: _id,
-                                    empresa: ult_empresa,
-                                    instalador: true,
-                                    vendedor: false,
-                                    orcamentista: false,
-                                    ehMaster,
-                                    owner: owner,
-                                    ano,
-                                    block: true,
-                                    nome: nome_instalador,
-                                    clientes,
-                                    listaAberto,
-                                    listaEncerrado
-                                });
-                        } else {
-                            res.render('dashinsobra',
-                                {
-                                    id: _id,
-                                    instalador: true,
-                                    vendedor: false,
-                                    orcamentista: false,
-                                    ehMaster,
-                                    owner: owner,
-                                    ano,
-                                    block: true,
-                                    nome: nome_instalador,
-                                    clientes,
-                                    listaAberto,
-                                    listaEncerrado
-                                });
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
                 });
             } catch (error) {
                 console.log(error);
             }
 
-            // Equipe.find(
-            //     {
-            //         user: id,
-            //         insres: pessoa,
-            //         feito: true,
-            //         liberar: true,
-            //         nome_projeto: { $exists: true },
-            //         $and: [
-            //             {
-            //                 'dtinicio': { $ne: '' }
-            //             },
-            //             {
-            //                 'dtinicio': { $ne: '0000-00-00' }
-            //             }
-            //         ]
-            //     })
-            //     .then((equipe) => {
-            //         if (naoVazio(equipe)) {
-            //             Pessoa.findOne({ _id: pessoa })
-            //                 .then((pes_ins) => {
-            //                     equipe.forEach((e) => {
-            //                         Projeto.findOne({ equipe: e._id })
-            //                             .then((projeto) => {
-            //                                 Pessoa.findOne({ _id: projeto.vendedor })
-            //                                     .then((pes_ven) => {
-            //                                         Cliente.findOne({ _id: projeto.cliente })
-            //                                             .then((cliente) => {
-            //                                                 // console.log('e._id=>'+e._id)
-            //                                                 // console.log('projeto._id=>'+projeto._id)
-            //                                                 clientes.push({ id: cliente.id, nome: cliente.nome })
-            //                                                 if (e.prjfeito == 'true') {
-            //                                                     listaEncerrado.push({ ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim) })
-            //                                                 } else {
-            //                                                     listaAberto.push({
-            //                                                         ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, vendedor: pes_ven.nome, telhado: projeto.telhado, estrutura: projeto.telhado, inversor: projeto.plaKwpInv, modulos: projeto.plaQtdMod, potencia: projeto.plaWattMod, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim)
-            //                                                     })
-            //                                                 }
-            //                                                 q++
-            //                                                 if (q == equipe.length) {
-            //                                                     listaAberto.sort(comparaNum)
-            //                                                     listaEncerrado.sort(comparaNum)
-            //                                                     Empresa.findOne()
-            //                                                         .sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
-            //                                                             if (naoVazio(empresa)) {
-            //                                                                 res.render('dashinsobra', { id: _id, empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, clientes, listaAberto, listaEncerrado })
-            //                                                             } else {
-            //                                                                 res.render('dashinsobra', { id: _id, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, clientes, listaAberto, listaEncerrado })
-            //                                                             }
-            //                                                         })
-            //                                                 }
-            //                                             })
-            //                                     })
-            //                             })
-            //                     })
-            //                 })
-            //         } else {
-            //             Empresa.findOne().sort({ field: 'asc', _id: -1 }).then((empresa) => {
-            //                 if (naoVazio(empresa)) {
-            //                     res.render('dashinsobra', { id: _id, empresa, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true })
-            //                 } else {
-            //                     res.render('dashinsobra', { id: _id, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true })
-            //                 }
-            //             })
-            //         }
-            //     })
-        }
+            const equipes = Equipe.find(
+                {
+                    user: id,
+                    insres: pessoa,
+                    feito: true,
+                    liberar: true,
+                    nome_projeto: { $exists: true },
+                    $and: [
+                        {
+                            'dtinicio': { $ne: '' }
+                        },
+                        {
+                            'dtinicio': { $ne: '0000-00-00' }
+                        }
+                    ]
+                });
 
+            if (naoVazio(equipes)) {
+                for (item of equipes) {
+                    try {
+                        let projeto = await Projeto.findOne({ equipe: item._id });
+                        let vendedor = await Pessoa.findById(projeto.vendedor);
+                        let cliente = await Cliente.findById(projeto.cliente);
+
+                        if (item.prjfeito) {
+                            listaEncerrado.push(
+                                {
+                                    ativo: item.ativo,
+                                    id: projeto._id,
+                                    seq: projeto.seq,
+                                    cliente: cliente.nome,
+                                    endereco: projeto.endereco,
+                                    cidade: projeto.cidade,
+                                    uf: projeto.uf,
+                                    dtini: dataMensagem(item.dtinicio),
+                                    dtfim: dataMensagem(item.dtfim)
+                                }
+                            );
+                        }
+                        if (!item.prjfeito) {
+                            listaAberto.push(
+                                {
+                                    ativo: item.ativo,
+                                    id: projeto._id,
+                                    seq: projeto.seq,
+                                    cliente: nome_cliente,
+                                    endereco: projeto.endereco,
+                                    cidade: projeto.cidade,
+                                    uf: projeto.uf,
+                                    vendedor: vendedor.nome,
+                                    telhado: projeto.telhado,
+                                    estrutura: projeto.estrutura,
+                                    inversor: projeto.plaKwpInv,
+                                    modulos: projeto.plaQtdMod,
+                                    potencia: projeto.plaWattMod,
+                                    dtini: dataMensagem(item.dtinicio),
+                                    dtfim: dataMensagem(item.dtfim)
+                                }
+                            );
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+            }
+
+            try {
+                const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
+                if (naoVazio(ult_empresa)) {
+                    res.render('dashinsobra',
+                        {
+                            id: _id,
+                            empresa: ult_empresa,
+                            instalador: true,
+                            vendedor: false,
+                            orcamentista: false,
+                            ehMaster,
+                            owner: owner,
+                            ano,
+                            block: true,
+                            nome: nome_instalador,
+                            clientes,
+                            listaAberto,
+                            listaEncerrado
+                        });
+                } else {
+                    res.render('dashinsobra',
+                        {
+                            id: _id,
+                            instalador: true,
+                            vendedor: false,
+                            orcamentista: false,
+                            ehMaster,
+                            owner: owner,
+                            ano,
+                            block: true,
+                            nome: nome_instalador,
+                            clientes,
+                            listaAberto,
+                            listaEncerrado
+                        });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
     } else {
         Projeto.find({ user: id })
             .then((projeto) => {
