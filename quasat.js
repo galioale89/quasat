@@ -794,76 +794,81 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                 console.log(error);
             }
 
-            const equipes = Equipe.find(
-                {
-                    user: id,
-                    insres: pessoa,
-                    feito: true,
-                    liberar: true,
-                    nome_projeto: { $exists: true },
-                    $and: [
-                        {
-                            'dtinicio': { $ne: '' }
-                        },
-                        {
-                            'dtinicio': { $ne: '0000-00-00' }
-                        }
-                    ]
-                });
-
-            if (naoVazio(equipes)) {
-                console.log(equipes)
-                equipes.map(async item => {
-                    console.log(item._id)
-                    try {
-                        let projeto = await Projeto.findOne({ equipe: item._id });
-                        let vendedor = await Pessoa.findById(projeto.vendedor);
-                        let cliente = await Cliente.findById(projeto.cliente);
-
-                        if (item.prjfeito) {
-                            listaEncerrado.push(
-                                {
-                                    ativo: item.ativo,
-                                    id: projeto._id,
-                                    seq: projeto.seq,
-                                    cliente: cliente.nome,
-                                    endereco: projeto.endereco,
-                                    cidade: projeto.cidade,
-                                    uf: projeto.uf,
-                                    dtini: dataMensagem(item.dtinicio),
-                                    dtfim: dataMensagem(item.dtfim)
-                                }
-                            );
-                        }
-                        if (!item.prjfeito) {
-                            listaAberto.push(
-                                {
-                                    ativo: item.ativo,
-                                    id: projeto._id,
-                                    seq: projeto.seq,
-                                    cliente: nome_cliente,
-                                    endereco: projeto.endereco,
-                                    cidade: projeto.cidade,
-                                    uf: projeto.uf,
-                                    vendedor: vendedor.nome,
-                                    telhado: projeto.telhado,
-                                    estrutura: projeto.estrutura,
-                                    inversor: projeto.plaKwpInv,
-                                    modulos: projeto.plaQtdMod,
-                                    potencia: projeto.plaWattMod,
-                                    dtini: dataMensagem(item.dtinicio),
-                                    dtfim: dataMensagem(item.dtfim)
-                                }
-                            );
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                });
-            }
-            const instalador = await Pessoa.findById(pessoa)
-            const nome_instalador = instalador.nome
             try {
+                const equipes = await Equipe.find(
+                    {
+                        user: id,
+                        insres: pessoa,
+                        feito: true,
+                        liberar: true,
+                        nome_projeto: { $exists: true },
+                        $and: [
+                            {
+                                'dtinicio': { $ne: '' }
+                            },
+                            {
+                                'dtinicio': { $ne: '0000-00-00' }
+                            }
+                        ]
+                    });
+    
+                if (naoVazio(equipes)) {
+                    console.log(equipes)
+                    equipes.map(async item => {
+                        console.log(item._id)
+                        try {
+                            let projeto = await Projeto.findOne({ equipe: item._id });
+                            let vendedor = await Pessoa.findById(projeto.vendedor);
+                            let cliente = await Cliente.findById(projeto.cliente);
+    
+                            if (item.prjfeito) {
+                                listaEncerrado.push(
+                                    {
+                                        ativo: item.ativo,
+                                        id: projeto._id,
+                                        seq: projeto.seq,
+                                        cliente: cliente.nome,
+                                        endereco: projeto.endereco,
+                                        cidade: projeto.cidade,
+                                        uf: projeto.uf,
+                                        dtini: dataMensagem(item.dtinicio),
+                                        dtfim: dataMensagem(item.dtfim)
+                                    }
+                                );
+                            }
+                            if (!item.prjfeito) {
+                                listaAberto.push(
+                                    {
+                                        ativo: item.ativo,
+                                        id: projeto._id,
+                                        seq: projeto.seq,
+                                        cliente: nome_cliente,
+                                        endereco: projeto.endereco,
+                                        cidade: projeto.cidade,
+                                        uf: projeto.uf,
+                                        vendedor: vendedor.nome,
+                                        telhado: projeto.telhado,
+                                        estrutura: projeto.estrutura,
+                                        inversor: projeto.plaKwpInv,
+                                        modulos: projeto.plaQtdMod,
+                                        potencia: projeto.plaWattMod,
+                                        dtini: dataMensagem(item.dtinicio),
+                                        dtfim: dataMensagem(item.dtfim)
+                                    }
+                                );
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.log(error)
+            }
+            
+            try {
+                const instalador = await Pessoa.findById(pessoa)
+                const nome_instalador = instalador.nome
                 const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
                 if (naoVazio(ult_empresa)) {
                     res.render('dashinsobra',
