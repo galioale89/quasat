@@ -812,7 +812,9 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                 });
 
             if (naoVazio(equipes)) {
-                for (item of equipes) {
+                console.log(equipes)
+                equipes.map(item => {
+                    console.log(item._id)
                     try {
                         let projeto = await Projeto.findOne({ equipe: item._id });
                         let vendedor = await Pessoa.findById(projeto.vendedor);
@@ -857,7 +859,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     } catch (error) {
                         console.log(error);
                     }
-                }
+                });
             }
             const instalador = await Pessoa.findById(pessoa)
             const nome_instalador = instalador.nome
