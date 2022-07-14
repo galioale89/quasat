@@ -616,8 +616,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
             //SE FOR INSTALADOR
             var clientes = []
             try {
-                const instalador = await Pessoa.findById(pessoa)
-                const nome_instalador = instalador.nome
                 Projeto.aggregate(
                     [
                         {
@@ -856,7 +854,8 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     }
                 }
             }
-
+            const instalador = await Pessoa.findById(pessoa)
+            const nome_instalador = instalador.nome
             try {
                 const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
                 if (naoVazio(ult_empresa)) {
