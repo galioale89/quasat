@@ -617,80 +617,48 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                 } else {
                     //SE FOR INSTALADOR
                     var clientes = []
-                    Equipe.aggregate([
+                    Projeto.aggregate([
                         {
-                            $match: {
-                                user: id,
-                                insres: pessoa,
-                                feito: true,
-                                liberar: true,
-                                nome_projeto: { $exists: true },
-                                $and: [
-                                    {
-                                        'dtinicio': { $ne: '' }
-                                    },
-                                    {
-                                        'dtinicio': { $ne: '0000-00-00' }
-                                    }
-                                ]
-                            }
-                        }, 
+                            user: id,
+                        },
                         {
                             $lookup: {
-                                from: 'projetos',
-                                let: {equipe: '$_id'},
+                                from: 'equipes',
+                                let: { equipe: '$_id' },
                                 pipeline: [
                                     {
-                                        $match:{
+                                        $match: {
+                                            insres: pessoa,
+                                            feito: true,
+                                            liberar: true,
                                             $expr: {
-                                                $eq: ['$equipe','$$_id']
+                                                $eq: ['$projeto', '$$equipe']
                                             }
                                         }
-                                    },
-                                    {
-                                            $lookup: {
-                                                from: 'pessoas',
-                                                localField: 'vendedor',
-                                                foreignField: '_id',
-                                                as: 'vendedor'
-                                            },
-                                        },
-
+                                    }
                                 ],
-                                as: 'projeto'
+                                as: 'equipe'
+                            },
+                        },
+                        { $unwind: '$equipe_projeto' },
+                        {
+                            $lookup: {
+                                from: 'pessoas',
+                                localField: 'vendedor',
+                                foreignField: '_id',
+                                as: 'vendedor'
+                            },
+                        },
+                        { $unwind: '$vendedor_projeto' },
+                        {
+                            $lookup: {
+                                from: 'clientes',
+                                localField: 'cliente',
+                                foreignField: '_id',
+                                as: 'cliente'
                             }
                         },
-                        // {
-                        //     $lookup: {
-                        //         from: 'projetos',
-                        //         localField: '_id',
-                        //         foreignField: 'equipe',
-                        //         as: 'projeto'
-                        //     },
-                        // },
-                        // { $unwind: '$equipe_projeto' },
-                        // {
-                        //     $lookup: {
-                        //         from: 'pessoas',
-                        //         localField: 'equipe_projeto.vendedor',
-                        //         foreignField: '_id',
-                        //         as: 'vendedor'
-                        //     },
-                        // },
-                        // { $unwind: '$vendedor_projeto' },
-                        // {
-                        //     $lookup: {
-                        //         from: 'clientes',
-                        //         localField: 'equipe_projeto.cliente',
-                        //         foreignField: '_id',
-                        //         as: 'cliente'
-                        //     }
-                        // },
-                        // { $unwind: '$cliete_projeto' },
-                        // {$project: {
-
-                        // }
-                        // }
+                        { $unwind: '$cliete_projeto' }
                     ]).then(data => {
                         console.log(data)
                     })
@@ -812,7 +780,7 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                                             if (naoVazio(e.valor)) {
                                                                 totGanho = totGanho + e.valor
                                                             }
-                                                        } else {    
+                                                        } else {
                                                             if (e.baixada == true) {
                                                                 if (naoVazio(e.valor)) {
                                                                     totPerdido = totPerdido + e.valor
