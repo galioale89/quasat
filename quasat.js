@@ -738,7 +738,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         //     nome_cliente = i.nome
                         // })
 
-                        console.log(item.cliente_projeto[0]);
+                        console.log(item.cliente_projeto[0]._id);
                         // console.log(nome_cliente);
                         // clientes.push({ id: id_cliente, nome: nome_cliente });
                         // if (item.prjfeito == 'true') {
