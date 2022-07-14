@@ -735,8 +735,15 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             let id_cliente = await item.cliente_projeto[0]._id;
                             let nome_cliente = await item.cliente_projeto[0].nome;
                             clientes.push({ id: id_cliente, nome: nome_cliente });
-
-                            console.log(item.prjfeito)
+                            
+                            let dtini = '00/00/0000'
+                            let dtfim = '00/00/0000'
+                            if (naoVazio(item.dtinicio)){
+                                dtini = dataMensagem(item.dtinicio)
+                            }
+                            if (naoVazio(item.dtfim)){
+                                dtfim = dataMensagem(item.dtfim)
+                            }
 
                             if (item.prjfeito) {
                                 listaEncerrado.push(
@@ -748,11 +755,12 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                         endereco: item.endereco,
                                         cidade: item.cidade,
                                         uf: item.uf,
-                                        dtini: dataMensagem(item.dtinicio),
-                                        dtfim: dataMensagem(item.dtfim)
+                                        dtini: dtini,
+                                        dtfim: dtfim
                                     }
                                 );
                             }
+
                             if (!item.prjfeito) {
                                 listaAberto.push(
                                     {
@@ -769,13 +777,11 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                         inversor: item.plaKwpInv,
                                         modulos: item.plaQtdMod,
                                         potencia: item.plaWattMod,
-                                        dtini: dataMensagem(item.dtinicio),
-                                        dtfim: dataMensagem(item.dtfim)
+                                        dtini: dtini,
+                                        dtfim: dtfim
                                     }
                                 );
                             }
-
-                            console.log(listaAberto)
                         } catch (error) {
                             console.log(error)
                         }
@@ -783,7 +789,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
 
                     listaAberto.sort(comparaNum);
                     listaEncerrado.sort(comparaNum);
-                    console.log(listaEncerrado);
                 });
             } catch (error) {
                 console.log(error);
