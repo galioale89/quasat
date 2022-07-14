@@ -787,77 +787,77 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         }
                     });
 
-                    try {
-                        const equipes = await Equipe.find(
-                            {
-                                user: id,
-                                insres: pessoa,
-                                feito: true,
-                                liberar: true,
-                                nome_projeto: { $exists: true },
-                                $and: [
-                                    {
-                                        'dtinicio': { $ne: '' }
-                                    },
-                                    {
-                                        'dtinicio': { $ne: '0000-00-00' }
-                                    }
-                                ]
-                            });
+                    // try {
+                    //     const equipes = await Equipe.find(
+                    //         {
+                    //             user: id,
+                    //             insres: pessoa,
+                    //             feito: true,
+                    //             liberar: true,
+                    //             nome_projeto: { $exists: true },
+                    //             $and: [
+                    //                 {
+                    //                     'dtinicio': { $ne: '' }
+                    //                 },
+                    //                 {
+                    //                     'dtinicio': { $ne: '0000-00-00' }
+                    //                 }
+                    //             ]
+                    //         });
 
-                        if (naoVazio(equipes)) {
-                            console.log(equipes)
-                            equipes.map(async item_equipe => {
-                                console.log(item_equipe._id)
-                                try {
-                                    let projeto = await Projeto.findOne({ equipe: item_equipe._id });
-                                    let vendedor = await Pessoa.findById(projeto.vendedor);
-                                    let cliente = await Cliente.findById(projeto.cliente);
+                    //     if (naoVazio(equipes)) {
+                    //         console.log(equipes)
+                    //         equipes.map(async item_equipe => {
+                    //             console.log(item_equipe._id)
+                    //             try {
+                    //                 let projeto = await Projeto.findOne({ equipe: item_equipe._id });
+                    //                 let vendedor = await Pessoa.findById(projeto.vendedor);
+                    //                 let cliente = await Cliente.findById(projeto.cliente);
 
-                                    if (item_equipe.prjfeito) {
-                                        listaEncerrado.push(
-                                            {
-                                                ativo: item_equipe.ativo,
-                                                id: projeto._id,
-                                                seq: projeto.seq,
-                                                cliente: cliente.nome,
-                                                endereco: projeto.endereco,
-                                                cidade: projeto.cidade,
-                                                uf: projeto.uf,
-                                                dtini: dataMensagem(item_equipe.dtinicio),
-                                                dtfim: dataMensagem(item_equipe.dtfim)
-                                            }
-                                        );
-                                    }
-                                    if (!item_equipe.prjfeito) {
-                                        listaAberto.push(
-                                            {
-                                                ativo: item_equipe.ativo,
-                                                id: projeto._id,
-                                                seq: projeto.seq,
-                                                cliente: nome_cliente,
-                                                endereco: projeto.endereco,
-                                                cidade: projeto.cidade,
-                                                uf: projeto.uf,
-                                                vendedor: vendedor.nome,
-                                                telhado: projeto.telhado,
-                                                estrutura: projeto.estrutura,
-                                                inversor: projeto.plaKwpInv,
-                                                modulos: projeto.plaQtdMod,
-                                                potencia: projeto.plaWattMod,
-                                                dtini: dataMensagem(item_equipe.dtinicio),
-                                                dtfim: dataMensagem(item_equipe.dtfim)
-                                            }
-                                        );
-                                    }
-                                } catch (error) {
-                                    console.log(error);
-                                }
-                            });
-                        }
-                    } catch (error) {
-                        console.log(error)
-                    }
+                    //                 if (item_equipe.prjfeito) {
+                    //                     listaEncerrado.push(
+                    //                         {
+                    //                             ativo: item_equipe.ativo,
+                    //                             id: projeto._id,
+                    //                             seq: projeto.seq,
+                    //                             cliente: cliente.nome,
+                    //                             endereco: projeto.endereco,
+                    //                             cidade: projeto.cidade,
+                    //                             uf: projeto.uf,
+                    //                             dtini: dataMensagem(item_equipe.dtinicio),
+                    //                             dtfim: dataMensagem(item_equipe.dtfim)
+                    //                         }
+                    //                     );
+                    //                 }
+                    //                 if (!item_equipe.prjfeito) {
+                    //                     listaAberto.push(
+                    //                         {
+                    //                             ativo: item_equipe.ativo,
+                    //                             id: projeto._id,
+                    //                             seq: projeto.seq,
+                    //                             cliente: nome_cliente,
+                    //                             endereco: projeto.endereco,
+                    //                             cidade: projeto.cidade,
+                    //                             uf: projeto.uf,
+                    //                             vendedor: vendedor.nome,
+                    //                             telhado: projeto.telhado,
+                    //                             estrutura: projeto.estrutura,
+                    //                             inversor: projeto.plaKwpInv,
+                    //                             modulos: projeto.plaQtdMod,
+                    //                             potencia: projeto.plaWattMod,
+                    //                             dtini: dataMensagem(item_equipe.dtinicio),
+                    //                             dtfim: dataMensagem(item_equipe.dtfim)
+                    //                         }
+                    //                     );
+                    //                 }
+                    //             } catch (error) {
+                    //                 console.log(error);
+                    //             }
+                    //         });
+                    //     }
+                    // } catch (error) {
+                    //     console.log(error)
+                    // }
                 });
             } catch (error) {
                 console.log(error);
