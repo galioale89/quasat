@@ -619,7 +619,9 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                     var clientes = []
                     Projeto.aggregate([
                         {
-                            user: id,
+                            $match:{
+                                user: id,
+                            },
                         },
                         {
                             $lookup: {
