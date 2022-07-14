@@ -139,10 +139,10 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
     const { funass } = req.user
     const { instalador } = req.user
     const { orcamentista } = req.user
-    let id
-    let sql = []
-    let sqlcli = []
-    let render = ''
+    var id
+    var sql = []
+    var sqlcli = []
+    var render = ''
 
     if (naoVazio(user)) {
         id = user
@@ -160,43 +160,43 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
         sqlcli = { user: id, lead: true }
     }
 
-    let hoje = dataHoje()
-    let data1 = 0
-    let data2 = 0
-    let days = 0
-    let dif = 0
-    let alerta
-    let ano = hoje.substring(0, 4)
-    let dtfim
+    var hoje = dataHoje()
+    var data1 = 0
+    var data2 = 0
+    var days = 0
+    var dif = 0
+    var alerta
+    var ano = hoje.substring(0, 4)
+    var dtfim
     // console.log(id)
-    let q = 0
-    let listaOrcado = []
-    let listaGanho = []
-    let listaBaixado = []
-    let listaAberto = []
-    let listaExecucao = []
-    let listaTermos = []
-    let listaEncerrado = []
-    let listaEntregue = []
-    let listaEnviado = []
-    let listaNegociando = []
-    let listaFuturos = []
-    let notpro = []
-    let atrasado = []
-    let deadlineIns = []
-    let dtcadastro = ''
-    let dtvalidade = ''
-    let nome_cliente
-    let nome_instalador
-    let dataAprova
-    let datacad
+    var q = 0
+    var listaOrcado = []
+    var listaGanho = []
+    var listaBaixado = []
+    var listaAberto = []
+    var listaExecucao = []
+    var listaTermos = []
+    var listaEncerrado = []
+    var listaEntregue = []
+    var listaEnviado = []
+    var listaNegociando = []
+    var listaFuturos = []
+    var notpro = []
+    var atrasado = []
+    var deadlineIns = []
+    var dtcadastro = ''
+    var dtvalidade = ''
+    var nome_cliente
+    var nome_instalador
+    var dataAprova
+    var datacad
 
-    let totEnviado = 0
-    let totGanho = 0
-    let totNegociando = 0
-    let totPerdido = 0
+    var totEnviado = 0
+    var totGanho = 0
+    var totNegociando = 0
+    var totPerdido = 0
 
-    let ehMaster
+    var ehMaster
     if (ehAdmin == 0) {
         ehMaster = true
     } else {
@@ -661,7 +661,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     {
                                         $project: {
                                             insres: 1,
-                                            prjFeito: 1,
+                                            prjfeito: 1,
                                             ativo: 1,
                                             dtinicio: 1,
                                             dtfim: 1
@@ -732,11 +732,12 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         }
                     ]
                 ).then(async data => {
-                    for (item of data) {
-                        // try {
+                    data.map(async item => {
+                        try {
                             let id_cliente = await item.cliente_projeto[0]._id;
                             let nome_cliente = await item.cliente_projeto[0].nome;
                             clientes.push({ id: id_cliente, nome: nome_cliente });
+
 
                             if (item.prjfeito == 'true') {
                                 listaEncerrado.push(
@@ -753,7 +754,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     }
                                 );
                             }
-                            if (item.prjFeito == 'false') {
+                            if (item.prjfeito == 'false') {
                                 listaAberto.push(
                                     {
                                         ativo: item.ativo,
@@ -774,47 +775,53 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     }
                                 );
                             }
-                        // } catch (error) {
-                        //     console.log(error)
-                        // }
-                    }
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    });
+
                     listaAberto.sort(comparaNum)
                     listaEncerrado.sort(comparaNum)
                     console.log(listaEncerrado)
-                    const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
-                    if (naoVazio(ult_empresa)) {
-                        res.render('dashinsobra',
-                            {
-                                id: _id,
-                                empresa: ult_empresa,
-                                instalador: true,
-                                vendedor: false,
-                                orcamentista: false,
-                                ehMaster,
-                                owner: owner,
-                                ano,
-                                block: true,
-                                nome: nome_instalador,
-                                clientes,
-                                listaAberto,
-                                listaEncerrado
-                            })
-                    } else {
-                        res.render('dashinsobra',
-                            {
-                                id: _id,
-                                instalador: true,
-                                vendedor: false,
-                                orcamentista: false,
-                                ehMaster,
-                                owner: owner,
-                                ano,
-                                block: true,
-                                nome: nome_instalador,
-                                clientes,
-                                listaAberto,
-                                listaEncerrado
-                            })
+                    
+                    try {
+                        const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
+                        if (naoVazio(ult_empresa)) {
+                            res.render('dashinsobra',
+                                {
+                                    id: _id,
+                                    empresa,
+                                    instalador: true,
+                                    vendedor: false,
+                                    orcamentista: false,
+                                    ehMaster,
+                                    owner: owner,
+                                    ano,
+                                    block: true,
+                                    nome: nome_instalador,
+                                    clientes,
+                                    listaAberto,
+                                    listaEncerrado
+                                })
+                        } else {
+                            res.render('dashinsobra',
+                                {
+                                    id: _id,
+                                    instalador: true,
+                                    vendedor: false,
+                                    orcamentista: false,
+                                    ehMaster,
+                                    owner: owner,
+                                    ano,
+                                    block: true,
+                                    nome: nome_instalador,
+                                    clientes,
+                                    listaAberto,
+                                    listaEncerrado
+                                })
+                        }
+                    } catch (error) {
+                        console.og(error)
                     }
                 });
             } catch (error) {
