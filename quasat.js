@@ -813,7 +813,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
 
             if (naoVazio(equipes)) {
                 console.log(equipes)
-                equipes.map(item => {
+                equipes.map(async item => {
                     console.log(item._id)
                     try {
                         let projeto = await Projeto.findOne({ equipe: item._id });
