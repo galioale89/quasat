@@ -362,7 +362,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                     }
                                                                     //FIM TERMOS
 
-                                                                    if (!e.ganho, !e.entregue, !e.baixada, e.status=='Enviado') {
+                                                                    if (!e.ganho, !e.entregue, !e.baixada, e.status == 'Enviado') {
                                                                         listaOrcado.push({
                                                                             id: e._id,
                                                                             logado: pessoa,
@@ -740,6 +740,15 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
 
                             console.log(item.prjfeito)
 
+                            let dtini = '00/00/0000'
+                            let dtfim = '00/00/0000'
+                            if (naoVazio(item.dtinicio)) {
+                                dtini = item.dtinicio
+                            }
+                            if (naoVazio(item.dtfim)) {
+                                dtfim = item.dtfim
+                            }
+
                             if (item.prjfeito) {
                                 listaEncerrado.push(
                                     {
@@ -750,8 +759,8 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                         endereco: item.endereco,
                                         cidade: item.cidade,
                                         uf: item.uf,
-                                        dtini: dataMensagem(item.dtinicio),
-                                        dtfim: dataMensagem(item.dtfim)
+                                        dtini: dtini,
+                                        dtfim: dtfim
                                     }
                                 );
                             }
@@ -771,8 +780,8 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                         inversor: item.plaKwpInv,
                                         modulos: item.plaQtdMod,
                                         potencia: item.plaWattMod,
-                                        dtini: dataMensagem(item.dtinicio),
-                                        dtfim: dataMensagem(item.dtfim)
+                                        dtini: dtini,
+                                        dtfim: dtfim
                                     }
                                 );
                             }
@@ -783,6 +792,73 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         }
                     });
 
+                    const equipes = await Equipe.find(
+                        {
+                            user: id,
+                            insres: pessoa,
+                            feito: true,
+                            liberar: true,
+                            nome_projeto: { $exists: true },
+                            $and: [
+                                {
+                                    'dtinicio': { $ne: '' }
+                                },
+                                {
+                                    'dtinicio': { $ne: '0000-00-00' }
+                                }
+                            ]
+                        });
+
+                    if (naoVazio(equipes)) {
+                        console.log(equipes)
+                        equipes.map(async item_equipe => {
+                            console.log(item_equipe._id)
+                            try {
+                                let projeto = await Projeto.findOne({ equipe: item_equipe._id });
+                                let vendedor = await Pessoa.findById(projeto.vendedor);
+                                let cliente = await Cliente.findById(projeto.cliente);
+
+                                if (item_equipe.prjfeito) {
+                                    listaEncerrado.push(
+                                        {
+                                            ativo: item_equipe.ativo,
+                                            id: projeto._id,
+                                            seq: projeto.seq,
+                                            cliente: cliente.nome,
+                                            endereco: projeto.endereco,
+                                            cidade: projeto.cidade,
+                                            uf: projeto.uf,
+                                            dtini: dataMensagem(item_equipe.dtinicio),
+                                            dtfim: dataMensagem(item_equipe.dtfim)
+                                        }
+                                    );
+                                }
+                                if (!item_equipe.prjfeito) {
+                                    listaAberto.push(
+                                        {
+                                            ativo: item_equipe.ativo,
+                                            id: projeto._id,
+                                            seq: projeto.seq,
+                                            cliente: nome_cliente,
+                                            endereco: projeto.endereco,
+                                            cidade: projeto.cidade,
+                                            uf: projeto.uf,
+                                            vendedor: vendedor.nome,
+                                            telhado: projeto.telhado,
+                                            estrutura: projeto.estrutura,
+                                            inversor: projeto.plaKwpInv,
+                                            modulos: projeto.plaQtdMod,
+                                            potencia: projeto.plaWattMod,
+                                            dtini: dataMensagem(item_equipe.dtinicio),
+                                            dtfim: dataMensagem(item_equipe.dtfim)
+                                        }
+                                    );
+                                }
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        });
+                    }
                     listaAberto.sort(comparaNum);
                     listaEncerrado.sort(comparaNum);
                     console.log(listaEncerrado);
