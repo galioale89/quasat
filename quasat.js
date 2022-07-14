@@ -732,12 +732,12 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         }
                     ]
                 ).then(data => {
-                    data.map(item => {
-                        let id_cliente = item.cliente_projeto[0]._id;
-                        let nome_cliente = item.cliente_projeto[0].nome;
+                    data.map(async item => {
+                        let id_cliente = await item.cliente_projeto[0]._id;
+                        let nome_cliente = await item.cliente_projeto[0].nome;
                         clientes.push({ id: id_cliente, nome: nome_cliente });
                         if (item.prjfeito == 'true') {
-                            listaEncerrado.push(
+                            await listaEncerrado.push(
                                 {
                                     ativo: item.ativo,
                                     id: item._id,
@@ -752,7 +752,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             );
                         }
                         if (item.prjFeito == 'false') {
-                            listaAberto.push(
+                            await listaAberto.push(
                                 {
                                     ativo: item.ativo,
                                     id: item._id,
