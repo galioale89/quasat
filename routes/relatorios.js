@@ -7040,7 +7040,7 @@ router.post('/filtrarAberto', ehAdmin, (req, res) => {
 
 })
 
-router.post('/filtraInstalador', ehAdmin, (req, res) => {
+router.post('/filtraInstalador', ehAdmin, async (req, res) => {
     const { _id } = req.user
     const { user } = req.user
     const { ehAdmin } = req.user
@@ -7066,22 +7066,6 @@ router.post('/filtraInstalador', ehAdmin, (req, res) => {
         ehMaster = true
     } else {
         ehMaster = false
-    }
-
-    var data = new Date()
-    var hora = data.getHours()
-
-    //ajuste da hora no servidor para horário do cliente brasília
-    hora = hora - 3
-
-    if (hora >= 18 && hora <= 24) {
-        saudacao = 'Boa Noite '
-    }
-    if (hora >= 12 && hora < 18) {
-        saudacao = 'Boa tarde '
-    }
-    if (hora >= 0 && hora < 12) {
-        saudacao = 'Bom dia '
     }
 
     var clientes = []
