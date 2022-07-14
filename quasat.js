@@ -779,10 +779,10 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             console.log(error)
                         }
                     });
-                    listaAberto.sort(comparaNum)
-                    listaEncerrado.sort(comparaNum)
-                    console.log(listaEncerrado)
                     try {
+                        listaAberto.sort(comparaNum)
+                        listaEncerrado.sort(comparaNum)
+                        console.log(listaEncerrado)
                         const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
                         if (naoVazio(ult_empresa)) {
                             res.render('dashinsobra',
@@ -819,7 +819,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                 })
                         }
                     } catch (error) {
-                        console.og(error)
+                        console.log(error)
                     }
                 });
             } catch (error) {
