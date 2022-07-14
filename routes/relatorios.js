@@ -323,7 +323,7 @@ router.get('/analiseproposta', ehAdmin, (req, res) => {
     var totalAnali = 0
     var totalCompa = 0
     var totalReduc = 0
-    var total 
+    var total
 
     var baixado
     var dataini
@@ -411,9 +411,9 @@ router.get('/analiseproposta', ehAdmin, (req, res) => {
             if (naoVazio(projeto)) {
                 Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((pessoa) => {
                     pessoa.forEach((e) => {
-                        console.log('e.nome=>'+e.nome)
+                        console.log('e.nome=>' + e.nome)
                         Projeto.find({ user: id, vendedor: e._id, datacad: { $lte: datafim, $gte: dataini } }).then((pr) => {
-                            console.log('pr.length=>'+pr.length)
+                            console.log('pr.length=>' + pr.length)
                             if (pr.length > 0) {
                                 pr.forEach((p) => {
                                     q++
@@ -587,8 +587,8 @@ router.get('/analiseproposta', ehAdmin, (req, res) => {
                                 })
                             } else {
                                 q++
-                                console.log('q=>'+q)
-                                console.log('pr.length=>'+ pr.length)
+                                console.log('q=>' + q)
+                                console.log('pr.length=>' + pr.length)
                                 if (q == pr.length || pr.length == 0) {
                                     q = 0
                                     x++
@@ -752,37 +752,37 @@ router.get('/pedido/:id', ehAdmin, (req, res) => {
             Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente) => {
                 Pessoa.findOne({ _id: projeto.vendedor }).lean().then((ven) => {
                     Mensagem.find({ user: id }).lean().then((mensagem) => {
-                        Pedido.findOne({_id: projeto.pedido}).lean().then((pedido)=>{
-                        //console.log('empresa=>' + empresa)
-                        //console.log('logo=>' + empresa.logo)
-                        if (cliente.cpf != 0) {
-                            ehCPF = true
-                        }
-                        res.render('relatorios/pedido', {
-                            cliente,
-                            projeto,
-                            mensagem,
-                            vendedor,
-                            instalador,
-                            orcamentista,
-                            funges,
-                            funpro,
-                            ehCPF,
-                            pedido,
-                            vlrServico: mascaraDecimal(pedido.vlrServico),
-                            vlrKit: mascaraDecimal(pedido.vlrKit),
-                            vlrTotal: mascaraDecimal(pedido.vlrTotal),
-                            vendedor: ven.nome,
-                            logo: empresa.logo,
-                            nome: empresa.nome,
-                            cnpj: empresa.cnpj,
-                            endereco: empresa.endereco,
-                            cidade: empresa.cidade,
-                            uf: empresa.uf,
-                            celular: empresa.celular,
-                            telefone: empresa.telefone,
-                            website: empresa.website
-                        })
+                        Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
+                            //console.log('empresa=>' + empresa)
+                            //console.log('logo=>' + empresa.logo)
+                            if (cliente.cpf != 0) {
+                                ehCPF = true
+                            }
+                            res.render('relatorios/pedido', {
+                                cliente,
+                                projeto,
+                                mensagem,
+                                vendedor,
+                                instalador,
+                                orcamentista,
+                                funges,
+                                funpro,
+                                ehCPF,
+                                pedido,
+                                vlrServico: mascaraDecimal(pedido.vlrServico),
+                                vlrKit: mascaraDecimal(pedido.vlrKit),
+                                vlrTotal: mascaraDecimal(pedido.vlrTotal),
+                                vendedor: ven.nome,
+                                logo: empresa.logo,
+                                nome: empresa.nome,
+                                cnpj: empresa.cnpj,
+                                endereco: empresa.endereco,
+                                cidade: empresa.cidade,
+                                uf: empresa.uf,
+                                celular: empresa.celular,
+                                telefone: empresa.telefone,
+                                website: empresa.website
+                            })
                         })
                     })
                 })
@@ -7055,10 +7055,8 @@ router.post('/filtraInstalador', ehAdmin, (req, res) => {
 
     if (naoVazio(user)) {
         id = user
-        sql = { user: id, responsavel: pessoa }
     } else {
         id = _id
-        sql = { user: id }
     }
 
     var hoje = dataHoje()
@@ -7086,31 +7084,297 @@ router.post('/filtraInstalador', ehAdmin, (req, res) => {
         saudacao = 'Bom dia '
     }
 
-    Equipe.find({ user: id, insres: pessoa, feito: true, liberar: true, nome_projeto: { $exists: true }, $and: [{ 'dtinicio': { $ne: '' } }, { 'dtinicio': { $ne: '0000-00-00' } }] }).then((equipe) => {
-        Pessoa.findOne({ _id: pessoa }).then((pes_ins) => {
-            //console.log('pessoa.nome=>'+pessoa.nome)
-            equipe.forEach((e) => {
-                Projeto.findOne({ equipe: e._id }).then((projeto) => {
-                    Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                        console.log('cliente.nome =>' + cliente.nome)
-                        console.log('req.body.cliente =>' + req.body.cliente)
-                        clientes.push({ id: cliente.id, nome: cliente.nome })
+    var clientes = []
+    try {
+        const instalador = await Pessoa.findById(pessoa)
+        const nome_instalador = instalador.nome
+        Projeto.aggregate(
+            [
+                {
+                    $match: {
+                        user: id,
+                    }
+                },
+                {
+                    $project: {
+                        seq: 1,
+                        endereco: 1,
+                        cidade: 1,
+                        _id: 1,
+                        seq: 1,
+                        uf: 1,
+                        telhado: 1,
+                        estrutura: 1,
+                        inversor: 1,
+                        plaQtdInv: 1,
+                        plaWattMod: 1,
+                        equipe: 1,
+                        vendedor: 1,
+                        cliente: 1
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "equipes",
+                        let: { id_equipe: "$equipe" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    insres: pessoa,
+                                    feito: true,
+                                    liberar: true,
+                                    $expr: {
+                                        $eq: ["$_id", "$$id_equipe"]
+                                    }
+                                }
+                            },
+                            {
+                                $project: {
+                                    insres: 1,
+                                    prjfeito: 1,
+                                    ativo: 1,
+                                    dtinicio: 1,
+                                    dtfim: 1
+                                }
+                            }
+                        ],
+                        as: "equipe_projeto"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "pessoas",
+                        let: { id_vendedor: "$vendedor" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $eq: ["$_id", "$$id_vendedor"]
+                                    }
+                                }
+                            },
+                            {
+                                $project: {
+                                    nome: 1
+                                }
+                            }
+                        ],
+                        as: "vendedor_projeto"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "clientes",
+                        let: { id_cliente: "$cliente" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $eq: ["$_id", "$$id_cliente"]
+                                    }
+                                }
+                            },
+                            {
+                                $project: {
+                                    nome: 1,
+                                    _id: 1
+                                }
+                            }
+                        ],
+                        as: "cliente_projeto"
+                    }
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: {
+                            $mergeObjects: [
+                                { $arrayElemAt: ["$equipe_projeto", 0] },
+                                { $arrayElemAt: ["$vendedor_projeto", 0] },
+                                "$$ROOT"]
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        vendedor_projeto: 0,
+                        equipe_projeto: 0
+                    }
+                }
+            ]
+        ).then(async data => {
+            data.map(async item => {
+                try {
+                    let id_cliente = await item.cliente_projeto[0]._id;
+                    let nome_cliente = await item.cliente_projeto[0].nome;
+                    clientes.push({ id: id_cliente, nome: nome_cliente });
+
+                    let dtini = '00/00/0000';
+                    let dtfim = '00/00/0000';
+                    if (naoVazio(item.dtinicio)) {
+                        dtini = dataMensagem(item.dtinicio);
+                    }
+                    if (naoVazio(item.dtfim)) {
+                        dtfim = dataMensagem(item.dtfim);
+                    }
+
+                    if (id_cliente == req.body.cliente) {
+                        if (item.prjfeito) {
+                            listaEncerrado.push(
+                                {
+                                    ativo: item.ativo,
+                                    id: item._id,
+                                    seq: item.seq,
+                                    cliente: nome_cliente,
+                                    endereco: item.endereco,
+                                    cidade: item.cidade,
+                                    uf: item.uf,
+                                    dtini: dtini,
+                                    dtfim: dtfim
+                                }
+                            );
+                        }
+                        if (item.prjfeito == false) {
+                            listaAberto.push(
+                                {
+                                    ativo: item.ativo,
+                                    id: item._id,
+                                    seq: item.seq,
+                                    cliente: nome_cliente,
+                                    endereco: item.endereco,
+                                    cidade: item.cidade,
+                                    uf: item.uf,
+                                    vendedor: item.nome,
+                                    telhado: item.telhado,
+                                    estrutura: item.estrutura,
+                                    inversor: item.plaKwpInv,
+                                    modulos: item.plaQtdMod,
+                                    potencia: item.plaWattMod,
+                                    dtini: dtini,
+                                    dtfim: dtfim
+                                }
+                            );
+                        }
+                    }
+
+                } catch (error) {
+                    console.log(error);
+                }
+            });
+
+            const equipes = await Equipe.find(
+                {
+                    user: id,
+                    insres: pessoa,
+                    feito: true,
+                    liberar: true,
+                    nome_projeto: { $exists: true },
+                    $and: [
+                        {
+                            'dtinicio': { $ne: '' }
+                        },
+                        {
+                            'dtinicio': { $ne: '0000-00-00' }
+                        }
+                    ]
+                });
+
+            if (naoVazio(equipes)) {
+                equipes.map(async item_equipe => {
+                    try {
+                        let projeto = await Projeto.findOne({ equipe: item_equipe._id });
+                        let vendedor = await Pessoa.findById(projeto.vendedor);
+                        let cliente = await Cliente.findById(projeto.cliente);
+
                         if (cliente._id == req.body.cliente) {
-                            if (e.prjFeito == 'true') {
-                                listaEncerrado.push({ id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim) })
-                            } else {
-                                listaAberto.push({ id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim) })
+                            if (item_equipe.prjfeito) {
+                                listaEncerrado.push(
+                                    {
+                                        ativo: item_equipe.ativo,
+                                        id: projeto._id,
+                                        seq: projeto.seq,
+                                        cliente: cliente.nome,
+                                        endereco: projeto.endereco,
+                                        cidade: projeto.cidade,
+                                        uf: projeto.uf,
+                                        dtini: dataMensagem(item_equipe.dtinicio),
+                                        dtfim: dataMensagem(item_equipe.dtfim)
+                                    }
+                                );
+                            }
+                            if (item_equipe.prjfeito == false) {
+                                listaAberto.push(
+                                    {
+                                        ativo: item_equipe.ativo,
+                                        id: projeto._id,
+                                        seq: projeto.seq,
+                                        cliente: nome_cliente,
+                                        endereco: projeto.endereco,
+                                        cidade: projeto.cidade,
+                                        uf: projeto.uf,
+                                        vendedor: vendedor.nome,
+                                        telhado: projeto.telhado,
+                                        estrutura: projeto.estrutura,
+                                        inversor: projeto.plaKwpInv,
+                                        modulos: projeto.plaQtdMod,
+                                        potencia: projeto.plaWattMod,
+                                        dtini: dataMensagem(item_equipe.dtinicio),
+                                        dtfim: dataMensagem(item_equipe.dtfim)
+                                    }
+                                );
                             }
                         }
-                        q++
-                        if (q == equipe.length) {
-                            res.render('dashboard', { id: _id, instalador: true, vendedor: false, orcamentista: false, ehMaster, owner: owner, ano, block: true, nome: pes_ins.nome, clientes, listaAberto, listaEncerrado })
-                        }
-                    })
-                })
-            })
-        })
-    })
+                    } catch (error) {
+                        console.log(error);
+                    }
+                });
+            }
+            listaAberto.sort(comparaNum);
+            listaEncerrado.sort(comparaNum);
+            console.log(listaEncerrado);
+
+            try {
+                const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
+                if (naoVazio(ult_empresa)) {
+                    res.render('dashinsobra',
+                        {
+                            id: _id,
+                            empresa: ult_empresa,
+                            instalador: true,
+                            vendedor: false,
+                            orcamentista: false,
+                            ehMaster,
+                            owner: owner,
+                            ano,
+                            block: true,
+                            nome: nome_instalador,
+                            clientes,
+                            listaAberto,
+                            listaEncerrado
+                        });
+                } else {
+                    res.render('dashinsobra',
+                        {
+                            id: _id,
+                            instalador: true,
+                            vendedor: false,
+                            orcamentista: false,
+                            ehMaster,
+                            owner: owner,
+                            ano,
+                            block: true,
+                            nome: nome_instalador,
+                            clientes,
+                            listaAberto,
+                            listaEncerrado
+                        });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 router.post('/filtrar', ehAdmin, (req, res) => {
