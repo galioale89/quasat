@@ -641,15 +641,15 @@ app.get('/dashboard', ehAdmin, (req, res) => {
                                 ],
                                 as: 'equipe'
                             },
-                        }
-                        // {
-                        //     $lookup: {
-                        //         from: 'pessoas',
-                        //         localField: 'vendedor',
-                        //         foreignField: '_id',
-                        //         as: 'vendedor'
-                        //     },
-                        // },
+                        },
+                        {
+                            $lookup: {
+                                from: 'pessoas',
+                                localField: 'vendedor',
+                                foreignField: '_id',
+                                as: 'vendedor'
+                            },
+                        },
                         // { $unwind: '$vendedor_projeto' },
                         // {
                         //     $lookup: {
