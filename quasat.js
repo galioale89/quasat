@@ -780,9 +780,9 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                         }
                     });
 
-                    listaAberto.sort(comparaNum)
-                    listaEncerrado.sort(comparaNum)
-                    console.log(listaEncerrado)
+                    listaAberto.sort(comparaNum);
+                    listaEncerrado.sort(comparaNum);
+                    console.log(listaEncerrado);
 
                     try {
                         const ult_empresa = await Empresa.findOne().sort({ field: 'asc', _id: -1 })
@@ -790,7 +790,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                             res.render('dashinsobra',
                                 {
                                     id: _id,
-                                    empresa,
+                                    empresa: ult_empresa,
                                     instalador: true,
                                     vendedor: false,
                                     orcamentista: false,
@@ -802,7 +802,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     clientes,
                                     listaAberto,
                                     listaEncerrado
-                                })
+                                });
                         } else {
                             res.render('dashinsobra',
                                 {
@@ -818,14 +818,14 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     clientes,
                                     listaAberto,
                                     listaEncerrado
-                                })
+                                });
                         }
                     } catch (error) {
-                        console.log(error)
+                        console.log(error);
                     }
                 });
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
 
             // Equipe.find(
