@@ -634,6 +634,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                 seq: 1,
                                 uf: 1,
                                 telhado: 1,
+                                estrutura: 1,
                                 inversor: 1,
                                 plaQtdInv: 1,
                                 plaWattMod: 1,
@@ -732,51 +733,46 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                     ]
                 ).then(data => {
                     data.map(item => {
-                        let item_cliente = item.cliente_projeto
-                        // item_cliente.map(i => {
-                        //     idCliente = i._id,
-                        //     nome_cliente = i.nome
-                        // })
-
-                        console.log(item.cliente_projeto[0]._id);
-                        // console.log(nome_cliente);
-                        // clientes.push({ id: id_cliente, nome: nome_cliente });
-                        // if (item.prjfeito == 'true') {
-                        //     listaEncerrado.push(
-                        //         {
-                        //             ativo: item.ativo,
-                        //             id: item._id,
-                        //             seq: item.seq,
-                        //             cliente: item.cliente_projeto.nome,
-                        //             endereco: item.endereco,
-                        //             cidade: item.cidade,
-                        //             uf: item.uf,
-                        //             dtini: dataMensagem(item.dtinicio),
-                        //             dtfim: dataMensagem(item.dtfim)
-                        //         }
-                        //     );
-                        // }
-                        // if (item.prjFeito == 'false') {
-                        //     listaAberto.push(
-                        //         {
-                        //             ativo: item.ativo,
-                        //             id: item._id,
-                        //             seq: item.seq,
-                        //             cliente: item.cliente_projeto.nome,
-                        //             endereco: item.endereco,
-                        //             cidade: item.cidade,
-                        //             uf: item.uf,
-                        //             vendedor: item.nome,
-                        //             telhado: item.telhado,
-                        //             estrutura: item.telhado,
-                        //             inversor: item.plaKwpInv,
-                        //             modulos: item.plaQtdMod,
-                        //             potencia: item.plaWattMod,
-                        //             dtini: dataMensagem(item.dtinicio),
-                        //             dtfim: dataMensagem(item.dtfim)
-                        //         }
-                        //     );
-                        // }
+                        let id_cliente = item.cliente_projeto[0]._id;
+                        let nome_cliente = item.cliente_projeto[0].nome;
+                        console.log(nome_cliente);
+                        clientes.push({ id: id_cliente, nome: nome_cliente });
+                        if (item.prjfeito == 'true') {
+                            listaEncerrado.push(
+                                {
+                                    ativo: item.ativo,
+                                    id: item._id,
+                                    seq: item.seq,
+                                    cliente: nome_cliente,
+                                    endereco: item.endereco,
+                                    cidade: item.cidade,
+                                    uf: item.uf,
+                                    dtini: dataMensagem(item.dtinicio),
+                                    dtfim: dataMensagem(item.dtfim)
+                                }
+                            );
+                        }
+                        if (item.prjFeito == 'false') {
+                            listaAberto.push(
+                                {
+                                    ativo: item.ativo,
+                                    id: item._id,
+                                    seq: item.seq,
+                                    cliente: nome_cliente,
+                                    endereco: item.endereco,
+                                    cidade: item.cidade,
+                                    uf: item.uf,
+                                    vendedor: item.nome,
+                                    telhado: item.telhado,
+                                    estrutura: item.estrutura,
+                                    inversor: item.plaKwpInv,
+                                    modulos: item.plaQtdMod,
+                                    potencia: item.plaWattMod,
+                                    dtini: dataMensagem(item.dtinicio),
+                                    dtfim: dataMensagem(item.dtfim)
+                                }
+                            );
+                        }
                     });
                     // listaAberto.sort(comparaNum)
                     // listaEncerrado.sort(comparaNum)
