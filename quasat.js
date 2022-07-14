@@ -764,7 +764,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                     }
                                 );
                             }
-                            if (!item.prjfeito) {
+                            if (item.prjfeito == false) {
                                 listaAberto.push(
                                     {
                                         ativo: item.ativo,
@@ -833,7 +833,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                         }
                                     );
                                 }
-                                if (!item_equipe.prjfeito) {
+                                if (item_equipe.prjfeito == false) {
                                     listaAberto.push(
                                         {
                                             ativo: item_equipe.ativo,
