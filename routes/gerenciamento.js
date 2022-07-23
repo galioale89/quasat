@@ -114,7 +114,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
     let gestor
 
     if (naoVazio(user)) {
-        id =user
+        id = user
         gestor = funges
     } else {
         id = _id
@@ -162,34 +162,34 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     console.log('projeto_dataTroca=>' + e.dataTroca)
 
                     dataTroca = e.dataTroca
-                    if (naoVazio(dataTroca)){
-                    if (datatermo != '00/00/0000') {
-                        contaDias = diferencaDias(e.dataTroca, datatermo)
-                        termo = true
-                    } else {
-                        contaDias = diferencaDias(e.dataTroca, dataHoje())
-                        termo = false
+                    if (naoVazio(dataTroca)) {
+                        if (datatermo != '00/00/0000') {
+                            contaDias = diferencaDias(e.dataTroca, datatermo)
+                            termo = true
+                        } else {
+                            contaDias = diferencaDias(e.dataTroca, dataHoje())
+                            termo = false
+                        }
+                        console.log('contaDias=>' + contaDias)
+                        console.log('termo=>' + termo)
                     }
-                    console.log('contaDias=>' + contaDias)
-                    console.log('termo=>' + termo)
-                }
 
                     // if (contaDias > 7) {
                     //     alerta = true
                     // }
 
-                    projetos.push({ 
-                        id: e._id, 
-                        termo, 
-                        contaDias, 
-                        seq: e.seq, 
-                        cliente: cliente.nome, 
-                        datatermo: dataMensagem(datatermo), 
-                        dataapro: dataMensagem(dataAprova), 
-                        datatroca: dataMensagem(dataTroca) 
+                    projetos.push({
+                        id: e._id,
+                        termo,
+                        contaDias,
+                        seq: e.seq,
+                        cliente: cliente.nome,
+                        datatermo: dataMensagem(datatermo),
+                        dataapro: dataMensagem(dataAprova),
+                        datatroca: dataMensagem(dataTroca)
                     })
 
-                    console.log('q=>'+q)
+                    console.log('q=>' + q)
                     if (q == projeto.length) {
                         res.render('principal/termos', { projetos })
                     }
@@ -218,17 +218,19 @@ router.get('/confirmaexclusao/:id', ehAdmin, (req, res) => {
 
 router.get('/selecao', ehAdmin, (req, res) => {
 
-    var id
+    let id
     const { _id } = req.user
     const { user } = req.user
     const { pessoa } = req.user
     const { vendedor } = req.user
     const { funges } = req.user
 
-    var totEnviado = 0
-    var totNegociando = 0
-    var totPerdido = 0
-    var totGanho = 0
+    let totEnviado = 0
+    let totNegociando = 0
+    let totPerdido = 0
+    let totGanho = 0
+
+    let ehMaster = ""
 
     if (naoVazio(user)) {
         id = user
@@ -238,203 +240,232 @@ router.get('/selecao', ehAdmin, (req, res) => {
         ehMaster = true
     }
 
-    var enviado = []
-    var negociando = []
-    var baixado = []
-    var ganho = []
-    var hoje = dataHoje()
-    var mes = hoje.substring(5, 7)
-    var ano = hoje.substring(0, 4)
-    var dataini = String(ano) + String(mes) + '01'
-    var datafim = String(ano) + String(mes) + '31'
-    var cliente
-    var q = 0
+    let enviado = []
+    let negociando = []
+    let baixado = []
+    let ganho = []
+    let hoje = dataHoje()
+    let mes = hoje.substring(5, 7)
+    let ano = hoje.substring(0, 4)
+    let cliente
 
-    var data
-    var mestitulo
-    var ano
-    var janeiro
-    var fevereiro
-    var marco
-    var abril
-    var maio
-    var junho
-    var julho
-    var agosto
-    var setembro
-    var outubro
-    var novembro
-    var dezembro
+    let mestitulo
+    let janeiro
+    let fevereiro
+    let marco
+    let abril
+    let maio
+    let junho
+    let julho
+    let agosto
+    let setembro
+    let outubro
+    let novembro
+    let dezembro
 
-    var sql = {}
-    var idpedido = ''
+    let match = {}
+    let diaini = '01'
+    let diafim = ''
 
     switch (String(mes)) {
         case '01':
             janeiro = 'active'
             mestitulo = 'Janeiro'
-            trintaeum = true
+            diafim = '31'
             break;
         case '02':
             fevereiro = 'active'
             mestitulo = 'Fevereiro'
-            bisexto = true
+            diafim = '28'
             break;
         case '03':
             marco = 'active'
             mestitulo = 'Março'
-            trintaeum = true
+            diafim = '31'
             break;
         case '04':
             abril = 'active'
             mestitulo = 'Abril'
+            diafim = '30'
             break;
         case '05':
             maio = 'active'
             mestitulo = 'Maio'
-            trintaeum = true
+            diafim = '31'
             break;
         case '06':
             junho = 'active'
             mestitulo = 'Junho'
+            diafim = '30'
             break;
         case '07':
             julho = 'active'
             mestitulo = 'Julho'
-            trintaeum = true
+            diafim = '31'
             break;
         case '08':
             agosto = 'active'
             mestitulo = 'Agosto'
-            trintaeum = true
+            diafim = '31'
             break;
         case '09':
             setembro = 'active'
-            mestitulo = 'Setembro'
+            diafim = '30'
             break;
         case '10':
             outubro = 'active'
             mestitulo = 'Outubro'
-            trintaeum = true
+            diafim = '31'
             break;
         case '11':
             novembro = 'active'
             mestitulo = 'Novembro'
+            diafim = '30'
             break;
         case '12':
             dezembro = 'active'
             mestitulo = 'Dezembro'
-            trintaeum = true
+            diafim = '31'
             break;
     }
 
+    let dataini = String(ano) + String(mes) + diaini
+    let datafim = String(ano) + String(mes) + diafim
 
     if (naoVazio(vendedor)) {
-        dataini = String(ano) + '01' + '01'
-        datafim = String(ano) + '12' + '31'
-        sql = { user: id, vendedor: pessoa }
+        match = { user: id, vendedor: pessoa }
     } else {
-        sql = { user: id }
+        match = { user: id }
     }
-    console.log('sql=>' + JSON.stringify(sql))
-    Projeto.find(sql).then((projeto) => {
-        //
-        if (naoVazio(projeto)) {
-            projeto.forEach((e) => {
-                Cliente.findOne({ _id: e.cliente }).then((cli) => {
-                    q++
-                    if (naoVazio(cli)) {
-                        cliente = cli.nome
-                    } else {
-                        cliente = 'Sem cliente'
-                    }
-                    if (naoVazio(e.pedido)) {
-                        idpedido = e.pedido
-                    } else {
-                        idpedido = '111111111111111111111111'
-                    }
-                    if (e.datacad < parseFloat(datafim) && e.datacad > parseFloat(dataini)) {
-                        if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
-                            if (naoVazio(e.valor)) {
-                                totEnviado = totEnviado + e.valor
-                            }
-                            enviado.push({ id: e._id, cliente, seq: e.seq, status: e.status })
-                        }
-
-                        if (e.ganho == true) {
-                            if (naoVazio(e.valor)) {
-                                totGanho = totGanho + e.valor
-                            }
-                            ganho.push({ id: e._id, cliente, seq: e.seq, status: e.status })
-                        } else {
-                            if (e.baixada == true) {
-                                if (naoVazio(e.valor)) {
-                                    totPerdido = totPerdido + e.valor
-                                }
-                                baixado.push({ id: e._id, cliente, seq: e.seq, status: e.status, motivo: e.motivo })
-                            } else {
-                                if (e.status == 'Negociando' || e.status == 'Analisando Financiamento' || e.status == 'Comparando Propostas' || e.status == 'Aguardando redução de preço') {
-                                    var totAnalise = 0
-                                    var totComparando = 0
-                                    var totPreco = 0
-                                    if (naoVazio(e.valor)) {
-                                        if (e.status == 'Comparando Propostas') {
-                                            totComparando = totComparando + e.valor
-                                        }
-                                        if (e.status == 'Analisando Financiamento') {
-                                            totAnalise = totAnalise + e.valor
-                                        }
-                                        if (e.status == 'Aguardando redução de preço') {
-                                            totPreco = totPreco + e.valor
-                                        }
-                                        totNegociando = totNegociando + e.valor
-                                    }
-                                    negociando.push({ id: e._id, cliente, seq: e.seq, status: e.status })
-                                }
+    Projeto.aggregate([
+        {
+            $match: match
+        },
+        {
+            $lookup: {
+                from: 'clientes',
+                let: { id_cliente: "$cliente" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$_id", "$$id_cliente"]
                             }
                         }
+                    },
+                    {
+                        $project: {
+                            nome: 1
+                        }
+                    }],
+                as: 'clientes'
+            }
+        },
+        {
+            $lookup: {
+                from: 'pedidos',
+                let: {
+                    id_pedido: "$pedido"
+                },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ["$_id", "$$id_pedido"]
+                        }
                     }
-                    if (q == projeto.length) {
-
-                        totEnviado = mascaraDecimal(totEnviado)
-                        totGanho = mascaraDecimal(totGanho)
-                        totPerdido = mascaraDecimal(totPerdido)
-                        totNegociando = mascaraDecimal(totNegociando)
-
-                        enviado.sort(comparaNum)
-                        negociando.sort(comparaNum)
-                        ganho.sort(comparaNum)
-                        baixado.sort(comparaNum)
-
-                        if (naoVazio(totComparando)) {
-                            totComparando = mascaraDecimal(totComparando)
-                        }
-                        if (naoVazio(totAnalise)) {
-                            totAnalise = mascaraDecimal(totAnalise)
-                        }
-                        if (naoVazio(totPreco)) {
-                            totPreco = mascaraDecimal(totPreco)
-                        }
-                        res.render('principal/selecao', {
-                            enviado, negociando, ganho, baixado, mestitulo, ano, vendedor, funges,
-                            janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro,
-                            totEnviado, totGanho, totPerdido, totNegociando, totComparando, totAnalise, totPreco
-                        })
-                    }
-                }).catch((err) => {
-                    req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                    res.redirect('/')
-                })
-            })
-        } else {
-            res.render('principal/selecao', {
-                enviado, negociando, ganho, baixado, mestitulo, ano, vendedor, funges, ehMaster,
-                janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro
-            })
+                },
+                {
+                    $project: { data: 1 }
+                }
+                ],
+                as: "pedidos"
+            }
+        },
+        {
+            $project: {
+                seq: 1,
+                status: 1,
+                ganho: 1,
+                baixada: 1,
+                valor: 1,
+                clientes: 1,
+                pedidos: 1
+            }
         }
-    }).catch((err) => {
-        req.flash('error_msg', 'Falha ao encontrar a projeto<gs>.')
-        res.redirect('/')
+    ]).then(result => {
+        result.map(item => {
+            if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
+                if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
+                    if (naoVazio(item.valor)) {
+                        totEnviado = totEnviado + item.valor
+                    }
+                    enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                }
+            }
+            if (item.ganho == true) {
+                if (dataBusca(item.pedidos.data) < parseFloat(datafim) && dataBusca(item.pedidos.data) > parseFloat(dataini)) {
+                    if (naoVazio(item.valor)) {
+                        totGanho = totGanho + item.valor
+                    }
+                    ganho.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                }
+            } else {
+                if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
+                    if (item.baixada == true) {
+                        if (naoVazio(item.valor)) {
+                            totPerdido = totPerdido + item.valor
+                        }
+                        baixado.push({ id: item._id, cliente, seq: item.seq, status: item.status, motivo: item.motivo })
+                    } else {
+                        if (item.status == 'Negociando' || item.status == 'Analisando Financiamento' || item.status == 'Comparando Propostas' || item.status == 'Aguardando redução de preço') {
+                            var totAnalise = 0
+                            var totComparando = 0
+                            var totPreco = 0
+                            if (naoVazio(item.valor)) {
+                                if (item.status == 'Comparando Propostas') {
+                                    totComparando = totComparando + item.valor
+                                }
+                                if (item.status == 'Analisando Financiamento') {
+                                    totAnalise = totAnalise + item.valor
+                                }
+                                if (item.status == 'Aguardando redução de preço') {
+                                    totPreco = totPreco + item.valor
+                                }
+                                totNegociando = totNegociando + item.valor
+                            }
+                            negociando.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                        }
+                    }
+                }
+            }
+        })
+
+        totEnviado = mascaraDecimal(totEnviado)
+        totGanho = mascaraDecimal(totGanho)
+        totPerdido = mascaraDecimal(totPerdido)
+        totNegociando = mascaraDecimal(totNegociando)
+
+        enviado.sort(comparaNum)
+        negociando.sort(comparaNum)
+        ganho.sort(comparaNum)
+        baixado.sort(comparaNum)
+
+        // console.log('totComparando=>' + totComparando)
+        if (naoVazio(totComparando)) {
+            totComparando = mascaraDecimal(totComparando)
+        }
+        if (naoVazio(totAnalise)) {
+            totAnalise = mascaraDecimal(totAnalise)
+        }
+        if (naoVazio(totPreco)) {
+            totPreco = mascaraDecimal(totPreco)
+        }
+
+        res.render('principal/selecao', {
+            enviado, negociando, ganho, baixado, mestitulo, ano,
+            janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro, todos,
+            totEnviado, totGanho, totPerdido, totNegociando, totComparando, totAnalise, totPreco, funges, ehMaster
+        })
     })
 })
 
@@ -1174,8 +1205,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                 projeto.valor = req.body.valor
             }
 
-            // console.log('req.body.descuc=>' + req.body.descuc)
-            // console.log('req.body.descug=>' + req.body.descug)
             projeto.descuc = req.body.descuc
             projeto.descug = req.body.descug
             // projeto.obsgeral = req.body.obsgeral
@@ -1186,21 +1215,16 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
             dados = req.body.campos
             dados_desc = req.body.dados_desc
             dados_qtd = req.body.dados_qtd
-            // console.log('tipo=>' + tipo)
+
             projeto.save().then(() => {
                 Parametros.find({ user: id, tipo: 'solar' }).then((lista_params) => {
-                    // console.log('lista_params=>' + lista_params)
-                    // console.log('dados_campos=>' + dados)
                     dados = dados.split(';')
-                    // console.log('lista_params.length=>' + lista_params.length)
                     for (let i = 0; i < lista_params.length; i++) {
                         // console.log('lista_params[]._id=>' + lista_params[i]._id)
                         // console.log('lista_params[].descricao=>' + lista_params[i].descricao)
                         // console.log('dados[]=>' + dados[i])
                         params.push({ descricao: lista_params[i].descricao, tipo: lista_params[i].opcao, valor: dados[i] })
                     }
-
-                    // console.log('dados_desc=>' + req.body.dados_desc)
 
                     dados_desc = dados_desc.split(';')
                     dados_qtd = dados_qtd.split(';')
@@ -1215,7 +1239,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                     // } else {
                     //     material.push({ desc: req.body.dados_desc, qdt: req.body.dados_qtd })
                     // 
-
                     Projeto.findOneAndUpdate({ _id: projeto._id }, { $set: { params: params } }).then(() => {
                         Projeto.findOneAndUpdate({ _id: projeto._id }, { $push: { material: material } }).then(() => {
                             req.flash('success_msg', 'Proposta salva com sucesso.')
@@ -1235,7 +1258,6 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
             res.redirect('/gerenciamento/orcamento/' + idprojeto[0])
         })
     } else {
-        // console.log('novo projeto')
         var seq
         var numprj
 
@@ -1287,7 +1309,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                 }
                 console.log(sameCliente)
                 if (sameCliente || achou_cliente == null) {
-                    console.log('entrou')   
+                    console.log('entrou')
                     try {
                         const p = await Pessoa.findOne({ _id: pessoa })
                         const empresa = await Empresa.findOne({ user: id })
@@ -5902,10 +5924,10 @@ router.get('/leads', ehAdmin, (req, res) => {
             sql = { user: id, vendedor: idpes, lead: true }
         } else {
             sql = { user: id, lead: true }
-        }        
+        }
     } else {
         id = _id
-        sql = { user: id, lead: true }   
+        sql = { user: id, lead: true }
     }
     Cliente.find(sql).lean().then((cliente) => {
         if (naoVazio(cliente)) {
@@ -6937,14 +6959,13 @@ router.post('/vermais/', ehAdmin, (req, res) => {
 })
 
 router.post('/aplicaSelecao', ehAdmin, (req, res) => {
-    var id
+    let id
     const { _id } = req.user
     const { user } = req.user
     const { funges } = req.user
     const { vendedor } = req.user
 
-    var ehMaster
-    var funcaoGes
+    let ehMaster
 
     if (naoVazio(user)) {
         id = user
@@ -6954,110 +6975,110 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
         ehMaster = true
     }
 
-    var enviado = []
-    var negociando = []
-    var baixado = []
-    var ganho = []
-    var dataini
-    var datafim
-    var ano = req.body.ano
-    var mes = req.body.mes
-    var cliente
-    var q = 0
+    let enviado = []
+    let negociando = []
+    let baixado = []
+    let ganho = []
+    let dataini
+    let datafim
+    let ano = req.body.ano
+    let mes = req.body.mes
+    let cliente
 
-    var janeiro
-    var fevereiro
-    var marco
-    var abril
-    var maio
-    var junho
-    var julho
-    var agosto
-    var setembro
-    var outubro
-    var novembro
-    var dezembro
-    var todos
+    let janeiro
+    let fevereiro
+    let marco
+    let abril
+    let maio
+    let junho
+    let julho
+    let agosto
+    let setembro
+    let outubro
+    let novembro
+    let dezembro
+    let todos
 
-    var mestitulo = ''
+    let mestitulo = ''
 
-    var totEnviado = 0
-    var totNegociando = 0
-    var totPerdido = 0
-    var totGanho = 0
+    let totEnviado = 0
+    let totNegociando = 0
+    let totPerdido = 0
+    let totGanho = 0
+    let diaini = '01'
 
     switch (String(mes)) {
         case 'Janeiro':
             janeiro = 'active'
             mestitulo = 'Janeiro'
-            dataini = String(ano) + '01' + '01'
-            datafim = String(ano) + '01' + '31'
+            mes = '01'
+            diafim = '31'
             break;
         case 'Fevereiro':
             fevereiro = 'active'
             mestitulo = 'Fevereiro'
-            dataini = String(ano) + '02' + '01'
-            datafim = String(ano) + '02' + '28'
+            mes = '02'
+            diafim = '28'
             break;
         case 'Março':
             marco = 'active'
             mestitulo = 'Março'
-            dataini = String(ano) + '03' + '01'
-            datafim = String(ano) + '03' + '31'
+            mes = '03'
+            diafim = '31'
             break;
         case 'Abril':
             abril = 'active'
             mestitulo = 'Abril'
-            dataini = String(ano) + '04' + '01'
-            datafim = String(ano) + '04' + '30'
+            mes = '04'
+            diafim = '30'
             break;
         case 'Maio':
             maio = 'active'
             mestitulo = 'Maio'
-            dataini = String(ano) + '05' + '01'
-            datafim = String(ano) + '05' + '31'
+            mes = '05'
+            diafim = '31'
             break;
         case 'Junho':
             junho = 'active'
             mestitulo = 'Junho'
-            dataini = String(ano) + '06' + '01'
-            datafim = String(ano) + '06' + '30'
+            mes = '06'
+            diafim = '30'
             break;
         case 'Julho':
             julho = 'active'
             mestitulo = 'Julho'
-            dataini = String(ano) + '07' + '01'
-            datafim = String(ano) + '07' + '31'
+            mes = '07'
+            diafim = '31'
             break;
         case 'Agosto':
             agosto = 'active'
             mestitulo = 'Agosto'
-            dataini = String(ano) + '08' + '01'
-            datafim = String(ano) + '08' + '31'
+            mes = '08'
+            diafim = '31'
             break;
         case 'Setembro':
             setembro = 'active'
             mestitulo = 'Setembro'
-            dataini = String(ano) + '09' + '01'
-            datafim = String(ano) + '09' + '30'
+            mes = '09'
+            diafim = '30'
             break;
         case 'Outubro':
             outubro = 'active'
             mestitulo = 'Outubro'
-            dataini = String(ano) + '10' + '01'
-            datafim = String(ano) + '10' + '31'
+            mes = '10'
+            diafim = '31'
             break;
         case 'Novembro':
             novembro = 'active'
             mestitulo = 'Novembro'
-            dataini = String(ano) + '11' + '01'
-            datafim = String(ano) + '11' + '30'
+            mes = '11'
+            diafim = '30'
             break;
         case 'Dezembro':
             dezembro = 'active'
             mestitulo = 'Dezembro'
-            dataini = String(ano) + '12' + '01'
-            datafim = String(ano) + '12' + '31'
+            mes = '12'
+            diafim = '31'
             break;
         case 'Todos':
             todos = 'active'
@@ -7067,107 +7088,153 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
             break;
     }
 
-    Projeto.find({ user: id }).then((projeto) => {
-        if (naoVazio(projeto)) {
-            projeto.forEach((e) => {
-                // console.log('e._id=>' + e._id)
-                // console.log('e.cliente=>' + e.cliente)
-                // console.log('e.baixada=>' + e.baixada)
-                // console.log('e.ganho=>' + e.ganho)
-                Cliente.findOne({ _id: e.cliente }).then((cli) => {
-                    q++
-                    cliente = cli.nome
+    req.body.diafim != '' ? diafim = req.body.diafim : ''
+    req.body.diaini != '' ? diaini = req.body.diaini : ''
 
-                    if (e.datacad < parseFloat(datafim) && e.datacad > parseFloat(dataini)) {
-                        if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
-                            if (naoVazio(e.valor)) {
-                                totEnviado = totEnviado + e.valor
+    console.log('diafim=>'+diafim)
+    console.log('diaini=>'+diaini)
+
+    dataini = String(ano) + mes + diaini
+    datafim = String(ano) + mes + diafim
+    
+    console.log('datafim=>'+datafim)
+    console.log('dataini=>'+dataini)
+
+    if (naoVazio(vendedor)) {
+        match = { user: id, vendedor: pessoa }
+    } else {
+        match = { user: id }
+    }
+
+    Projetos.aggregate([
+        {
+            $match: match
+        },
+        {
+            $lookup: {
+                from: 'clientes',
+                let: { id_cliente: "$cliente" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$_id", "$$id_cliente"]
                             }
-                            enviado.push({ id: e._id, cliente, seq: e.seq, status: e.status })
                         }
-
-                        if (e.ganho == true) {
-                            if (naoVazio(e.valor)) {
-                                totGanho = totGanho + e.valor
-                            }
-                            ganho.push({ id: e._id, cliente, seq: e.seq, status: e.status })
-                        } else {
-                            if (e.baixada == true) {
-                                if (naoVazio(e.valor)) {
-                                    totPerdido = totPerdido + e.valor
-                                }
-                                baixado.push({ id: e._id, cliente, seq: e.seq, status: e.status, motivo: e.motivo })
-                            } else {
-                                if (e.status == 'Negociando' || e.status == 'Analisando Financiamento' || e.status == 'Comparando Propostas' || e.status == 'Aguardando redução de preço') {
-                                    var totAnalise = 0
-                                    var totComparando = 0
-                                    var totPreco = 0
-                                    if (naoVazio(e.valor)) {
-                                        if (e.status == 'Comparando Propostas') {
-                                            totComparando = totComparando + e.valor
-                                        }
-                                        if (e.status == 'Analisando Financiamento') {
-                                            totAnalise = totAnalise + e.valor
-                                        }
-                                        if (e.status == 'Aguardando redução de preço') {
-                                            totPreco = totPreco + e.valor
-                                        }
-                                        totNegociando = totNegociando + e.valor
-                                    }
-                                    negociando.push({ id: e._id, cliente, seq: e.seq, status: e.status })
-                                }
-                            }
+                    },
+                    {
+                        $project: {
+                            nome: 1
+                        }
+                    }],
+                as: 'clientes'
+            }
+        },
+        {
+            $lookup: {
+                from: 'pedidos',
+                let: {
+                    id_pedido: "$pedido"
+                },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ["$_id", "$$id_pedido"]
                         }
                     }
-
-                    // console.log('q=>' + q)
-                    // console.log('projeto.length=>' + projeto.length)
-                    if (q == projeto.length) {
-                        totEnviado = mascaraDecimal(totEnviado)
-                        totGanho = mascaraDecimal(totGanho)
-                        totPerdido = mascaraDecimal(totPerdido)
-                        totNegociando = mascaraDecimal(totNegociando)
-
-                        enviado.sort(comparaNum)
-                        negociando.sort(comparaNum)
-                        ganho.sort(comparaNum)
-                        baixado.sort(comparaNum)
-
-                        // console.log('totComparando=>' + totComparando)
-                        if (naoVazio(totComparando)) {
-                            totComparando = mascaraDecimal(totComparando)
-                        }
-                        if (naoVazio(totAnalise)) {
-                            totAnalise = mascaraDecimal(totAnalise)
-                        }
-                        if (naoVazio(totPreco)) {
-                            totPreco = mascaraDecimal(totPreco)
-                        }
-                        if (naoVazio(user)) {
-                            funcaoGes = funges
-                        } else {
-                            funcaoGes = true
-                        }
-                        res.render('principal/selecao', {
-                            enviado, negociando, ganho, baixado, mestitulo, ano,
-                            janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro, todos,
-                            totEnviado, totGanho, totPerdido, totNegociando, totComparando, totAnalise, totPreco, funges: funcaoGes, ehMaster
-                        })
-                    }
-                }).catch((err) => {
-                    req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                    res.redirect('/')
-                })
-            })
-        } else {
-            res.render('principal/selecao', {
-                enviado, negociando, ganho, baixado, mestitulo, ano,
-                janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro,
-            })
+                },
+                {
+                    $project: { data: 1 }
+                }
+                ],
+                as: "pedidos"
+            }
+        },
+        {
+            $project: {
+                seq: 1,
+                status: 1,
+                ganho: 1,
+                baixada: 1,
+                valor: 1,
+                clientes: 1,
+                pedidos: 1
+            }
         }
-    }).catch((err) => {
-        req.flash('error_msg', 'Falha ao encontrar a projeto<ap.')
-        res.redirect('/')
+    ]).then(result => {
+        result.map(item => {
+            if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
+                if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
+                    if (naoVazio(item.valor)) {
+                        totEnviado = totEnviado + item.valor
+                    }
+                    enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                }
+            }
+            if (item.ganho == true) {
+                if (dataBusca(item.pedidos.data) < parseFloat(datafim) && dataBusca(item.pedidos.data) > parseFloat(dataini)) {
+                    if (naoVazio(item.valor)) {
+                        totGanho = totGanho + item.valor
+                    }
+                    ganho.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                }
+            } else {
+                if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
+                    if (item.baixada == true) {
+                        if (naoVazio(item.valor)) {
+                            totPerdido = totPerdido + item.valor
+                        }
+                        baixado.push({ id: item._id, cliente, seq: item.seq, status: item.status, motivo: item.motivo })
+                    } else {
+                        if (item.status == 'Negociando' || item.status == 'Analisando Financiamento' || item.status == 'Comparando Propostas' || item.status == 'Aguardando redução de preço') {
+                            var totAnalise = 0
+                            var totComparando = 0
+                            var totPreco = 0
+                            if (naoVazio(item.valor)) {
+                                if (item.status == 'Comparando Propostas') {
+                                    totComparando = totComparando + item.valor
+                                }
+                                if (item.status == 'Analisando Financiamento') {
+                                    totAnalise = totAnalise + item.valor
+                                }
+                                if (item.status == 'Aguardando redução de preço') {
+                                    totPreco = totPreco + item.valor
+                                }
+                                totNegociando = totNegociando + item.valor
+                            }
+                            negociando.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                        }
+                    }
+                }
+            }
+        })
+
+        totEnviado = mascaraDecimal(totEnviado)
+        totGanho = mascaraDecimal(totGanho)
+        totPerdido = mascaraDecimal(totPerdido)
+        totNegociando = mascaraDecimal(totNegociando)
+
+        enviado.sort(comparaNum)
+        negociando.sort(comparaNum)
+        ganho.sort(comparaNum)
+        baixado.sort(comparaNum)
+
+        // console.log('totComparando=>' + totComparando)
+        if (naoVazio(totComparando)) {
+            totComparando = mascaraDecimal(totComparando)
+        }
+        if (naoVazio(totAnalise)) {
+            totAnalise = mascaraDecimal(totAnalise)
+        }
+        if (naoVazio(totPreco)) {
+            totPreco = mascaraDecimal(totPreco)
+        }
+
+        res.render('principal/selecao', {
+            enviado, negociando, ganho, baixado, mestitulo, ano,
+            janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro, todos,
+            totEnviado, totGanho, totPerdido, totNegociando, totComparando, totAnalise, totPreco, funges, ehMaster
+        })
     })
 })
 

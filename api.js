@@ -24,7 +24,7 @@ class ListInput {
                     if (clients == null || typeof projects == undefined) {
                         reject('Não foram encontrados clientes')
                     } else {
-                        let listName = clients.filter(function (a){
+                        let listName = clients.filter(a => {
                             return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true)  
                         },Object.create(null));
                         resolve(listName)
