@@ -397,68 +397,72 @@ router.get('/selecao', ehAdmin, (req, res) => {
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
-                        totEnviado = totEnviado + item.valor
+                        totEnviado = totEnviado + item.valor;
                     }
-                    enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                    enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status });
                 }
             }
+            let database = item.datacad;
+            if (item.pedido != ""){
+                datapedido = item.pedidos.data;
+            }
             if (item.ganho == true) {
-                if (dataBusca(item.pedidos.data) < parseFloat(datafim) && dataBusca(item.pedidos.data) > parseFloat(dataini)) {
+                if (dataBusca(database) < parseFloat(datafim) && dataBusca(database) > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
-                        totGanho = totGanho + item.valor
+                        totGanho = totGanho + item.valor;
                     }
-                    ganho.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                    ganho.push({ id: item._id, cliente, seq: item.seq, status: item.status });
                 }
             } else {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (item.baixada == true) {
                         if (naoVazio(item.valor)) {
-                            totPerdido = totPerdido + item.valor
+                            totPerdido = totPerdido + item.valor;
                         }
                         baixado.push({ id: item._id, cliente, seq: item.seq, status: item.status, motivo: item.motivo })
                     } else {
                         if (item.status == 'Negociando' || item.status == 'Analisando Financiamento' || item.status == 'Comparando Propostas' || item.status == 'Aguardando redução de preço') {
-                            var totAnalise = 0
-                            var totComparando = 0
-                            var totPreco = 0
+                            var totAnalise = 0;
+                            var totComparando = 0;
+                            var totPreco = 0;
                             if (naoVazio(item.valor)) {
                                 if (item.status == 'Comparando Propostas') {
-                                    totComparando = totComparando + item.valor
+                                    totComparando = totComparando + item.valor;
                                 }
                                 if (item.status == 'Analisando Financiamento') {
-                                    totAnalise = totAnalise + item.valor
+                                    totAnalise = totAnalise + item.valor;
                                 }
                                 if (item.status == 'Aguardando redução de preço') {
-                                    totPreco = totPreco + item.valor
+                                    totPreco = totPreco + item.valor;
                                 }
-                                totNegociando = totNegociando + item.valor
+                                totNegociando = totNegociando + item.valor;
                             }
-                            negociando.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                            negociando.push({ id: item._id, cliente, seq: item.seq, status: item.status });
                         }
                     }
                 }
             }
         })
 
-        totEnviado = mascaraDecimal(totEnviado)
-        totGanho = mascaraDecimal(totGanho)
-        totPerdido = mascaraDecimal(totPerdido)
-        totNegociando = mascaraDecimal(totNegociando)
+        totEnviado = mascaraDecimal(totEnviado);
+        totGanho = mascaraDecimal(totGanho);
+        totPerdido = mascaraDecimal(totPerdido);
+        totNegociando = mascaraDecimal(totNegociando);
 
-        enviado.sort(comparaNum)
-        negociando.sort(comparaNum)
-        ganho.sort(comparaNum)
-        baixado.sort(comparaNum)
+        enviado.sort(comparaNum);
+        negociando.sort(comparaNum);
+        ganho.sort(comparaNum);
+        baixado.sort(comparaNum);
 
         // console.log('totComparando=>' + totComparando)
         if (naoVazio(totComparando)) {
-            totComparando = mascaraDecimal(totComparando)
+            totComparando = mascaraDecimal(totComparando);
         }
         if (naoVazio(totAnalise)) {
-            totAnalise = mascaraDecimal(totAnalise)
+            totAnalise = mascaraDecimal(totAnalise);
         }
         if (naoVazio(totPreco)) {
-            totPreco = mascaraDecimal(totPreco)
+            totPreco = mascaraDecimal(totPreco);
         }
 
         res.render('principal/selecao', {
@@ -7171,12 +7175,16 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
                     enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status })
                 }
             }
+            let database = item.datacad;
+            if (item.pedido != ""){
+                datapedido = item.pedidos.data;
+            }
             if (item.ganho == true) {
-                if (dataBusca(item.pedidos.data) < parseFloat(datafim) && dataBusca(item.pedidos.data) > parseFloat(dataini)) {
+                if (dataBusca(database) < parseFloat(datafim) && dataBusca(database) > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
-                        totGanho = totGanho + item.valor
+                        totGanho = totGanho + item.valor;
                     }
-                    ganho.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                    ganho.push({ id: item._id, cliente, seq: item.seq, status: item.status });
                 }
             } else {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
