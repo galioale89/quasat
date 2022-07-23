@@ -402,8 +402,11 @@ router.get('/selecao', ehAdmin, (req, res) => {
                     enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status });
                 }
             }
+
             let database = item.datacad;
             if (item.pedido != ""){
+                console.log('item.datacad=>'+item.datacad)
+                console.log('item.pedidos.data=>'+item.pedidos.data)
                 datapedido = item.pedidos.data;
             }
             if (item.ganho == true) {

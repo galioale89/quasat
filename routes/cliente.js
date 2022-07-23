@@ -911,10 +911,10 @@ router.get('/remover/:id', ehAdmin, (req, res) => {
     const { user } = req.user
     const { _id } = req.user
     var id
-    if (typeof user == 'undefined') {
-        id = _id
-    } else {
+    if (naoVazio(user)) {
         id = user
+    } else {
+        id = _id
     }
     Projeto.findOneAndDelete({ cliente: req.params.id }).then(() => {
         Cliente.findOneAndDelete({ _id: req.params.id }).then(() => {
