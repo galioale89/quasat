@@ -389,6 +389,7 @@ router.get('/selecao', ehAdmin, (req, res) => {
                 baixada: 1,
                 valor: 1,
                 clientes: 1,
+                datacad: 1,
                 pedidos: 1
             }
         }
@@ -7164,6 +7165,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
                 ganho: 1,
                 baixada: 1,
                 valor: 1,
+                datacad: 1,
                 clientes: 1,
                 pedidos: 1
             }
