@@ -401,7 +401,7 @@ router.get('/selecao', ehAdmin, (req, res) => {
     ]).then(result => {
         result.map(item => {
             let dataCliente = item.clientes
-            dataCliente.map(i=> cliente = i.nome);
+            dataCliente.map(i => cliente = i.nome);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
@@ -413,7 +413,7 @@ router.get('/selecao', ehAdmin, (req, res) => {
 
             let database = item.datacad;
             let dataPedido = item.pedidos;
-            if (dataPedido.length > 0){
+            if (dataPedido.length > 0) {
                 dataPedido.map(i => database = dataBusca(i.data));
             }
             if (item.ganho == true) {
@@ -474,7 +474,7 @@ router.get('/selecao', ehAdmin, (req, res) => {
         let numdiaini = parseFloat(diaini);
         let numdiafim = parseFloat(diafim);
         res.render('principal/selecao', {
-            enviado, negociando, ganho, baixado, mestitulo, ano, numdiaini , numdiafim,
+            enviado, negociando, ganho, baixado, mestitulo, ano, numdiaini, numdiafim,
             janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro, todos,
             totEnviado, totGanho, totPerdido, totNegociando, totComparando, totAnalise, totPreco, funges, ehMaster
         })
@@ -7105,18 +7105,30 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
             break;
     }
 
-    req.body.diafim != '' ? diafim = req.body.diafim : '';
-    req.body.diaini != '' ? diaini = req.body.diaini : '';
+    if (naoVazio(req.body.diafim)) {
+        if (req.body.diafim < 10) {
+            diafim = "0" + String(req.body.diafim)
+        } else {
+            diafim = String(req.body.diafim)
+        }
+    }
+    if (noVazio(req.body.diaini)) {
+        if (req.body.diaini < 10) {
+            diaini = "0" + String(req.body.diaini)
+        } else {
+            diaini = String(req.body.diaini)
+        }
+    }
 
-    console.log('diafim=>'+diafim)
-    console.log('diaini=>'+diaini)
+    console.log('diafim=>' + diafim)
+    console.log('diaini=>' + diaini)
 
     dataini = String(ano) + mes + diaini
     datafim = String(ano) + mes + diafim
-    
-    console.log('datafim=>'+datafim)
-    console.log('dataini=>'+dataini)
-    
+
+    console.log('datafim=>' + datafim)
+    console.log('dataini=>' + dataini)
+
 
     if (naoVazio(vendedor)) {
         match = { user: id, vendedor: pessoa }
@@ -7183,7 +7195,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     ]).then(result => {
         result.map(item => {
             let dataCliente = item.clientes
-            dataCliente.map(i=> cliente = i.nome);
+            dataCliente.map(i => cliente = i.nome);
             console.log(cliente);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
@@ -7196,10 +7208,10 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
 
             let database = item.datacad;
             let dataPedido = item.pedidos;
-            if (dataPedido.length > 0){
+            if (dataPedido.length > 0) {
                 dataPedido.map(i => database = dataBusca(i.data));
-                console.log('item.datacad=>'+item.datacad)
-                console.log('item.pedidos.data=>'+item.pedidos.data)
+                console.log('item.datacad=>' + item.datacad)
+                console.log('item.pedidos.data=>' + item.pedidos.data)
             }
             if (item.ganho == true) {
                 if (database < parseFloat(datafim) && database > parseFloat(dataini)) {
