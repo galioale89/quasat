@@ -7181,7 +7181,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
                 }
             }
             let database = item.datacad;
-            if (item.pedido != ""){
+            if (naoVazio(item.pedido)){
                 datapedido = item.pedidos.data;
             }
             if (item.ganho == true) {
