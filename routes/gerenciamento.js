@@ -401,7 +401,7 @@ router.get('/selecao', ehAdmin, (req, res) => {
     ]).then(result => {
         result.map(item => {
             cliente = item.clientes.nome;
-
+            console.log(cliente);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
@@ -7183,6 +7183,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     ]).then(result => {
         result.map(item => {
             cliente = item.clientes.nome;
+            console.log(cliente)
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
