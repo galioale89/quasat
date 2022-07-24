@@ -77,13 +77,17 @@
             <label style="font-size: 20px; text-transform: uppercase;" class='fw-bold mt-1'>{{mestitulo}} de
                 {{ano}}</label>
         </div>
-        <div class='row mt-2' style="display: flex;">
-            <div style="display: flex;justify-content: 'center';width: 150px">
-                <label>Dia: </label>
+        <div class='row mt-2' style="display: flex;align-content: center;">
+            <div style="display: flex;justify-content: 'center';width: 200px">
+                <label>Dia:&nbsp&nbsp</label>
                 <input type='number' class='form-control form-control-sm' name='diaini' value='{{diaini}}'>
-                <label>até</label>
+                <label>até&nbsp&nbsp</label>
                 <input type='number' class='form-control form-control-sm' name='diafim' value='{{diafim}}'>
             </div>
+            <div style="display: flex;justify-content: center;width: 120px;">
+                <label>Ano:&nbsp&nbsp</label>
+                <input type='number' class='form-control form-control-sm' name='ano' value='{{ano}}'>
+            </div>             
             <div class='col-md-9'>
                 <div class="btn-toolbar">
                     <div class="btn-group gap-2 col-12">
@@ -122,11 +126,7 @@
                         {{/if}}                  
                     </div>
                 </div>
-            </div>
-            <div style="display: flex;justify-content: center;width: 150px;">
-                <label>Ano: </label>
-                <input type='number' class='form-control form-control-sm' name='ano' value='{{ano}}'>
-            </div>            
+            </div>           
         </div>
     </form>
     <form method="post" action='/gerenciamento/selecao'>
