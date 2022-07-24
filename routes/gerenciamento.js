@@ -405,7 +405,7 @@ router.get('/selecao', ehAdmin, (req, res) => {
             }
 
             let database = item.datacad;
-            if (item.pedido != ""){
+            if (naoVazio(item.pedido)){
                 console.log('item.datacad=>'+item.datacad)
                 console.log('item.pedidos.data=>'+item.pedidos.data)
                 database = dataBusca(item.pedidos.data);
