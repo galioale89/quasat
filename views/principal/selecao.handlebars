@@ -78,12 +78,13 @@
                 {{ano}}</label>
         </div>
         <div class='row md-1 mt-2'>
-            <div class='col-md-1 text-start'>
-                <input type='number' class='form-control form-control-sm' name='ano' value='{{ano}}'>
+            <div class='col-md-2 text-start' style="flex-direction: row;display: flex;">
+                <label>Dia: </label>
                 <input type='number' class='form-control form-control-sm' name='diaini' value='{{diaini}}'>
+                <label>até</label>
                 <input type='number' class='form-control form-control-sm' name='diafim' value='{{diafim}}'>
             </div>
-            <div class='col-md-11'>
+            <div class='col-md-10'>
                 <div class="btn-toolbar">
                     <div class="btn-group gap-2 col-12">
                         <input type='hidden' name='mes' id='mes' value=''>
@@ -122,6 +123,10 @@
                     </div>
                 </div>
             </div>
+            <div class='col-md-1 text-start' style="flex-direction: row;display: flex;">
+                <label>Ano: </label>
+                <input type='number' class='form-control form-control-sm' name='ano' value='{{ano}}'>
+            </div>            
         </div>
     </form>
     <form method="post" action='/gerenciamento/selecao'>

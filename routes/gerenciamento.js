@@ -400,6 +400,8 @@ router.get('/selecao', ehAdmin, (req, res) => {
         }
     ]).then(result => {
         result.map(item => {
+            cliente = item.clientes.nome;
+
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
@@ -7003,7 +7005,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     let mes = req.body.mes
     let mestitulo = ''
     let diaini = '01'
-    
+
     let cliente
 
     let janeiro
@@ -7180,6 +7182,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
         }
     ]).then(result => {
         result.map(item => {
+            cliente = item.clientes.nome;
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
