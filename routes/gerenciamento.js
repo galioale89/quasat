@@ -7120,16 +7120,9 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
                 diaini = String(req.body.diaini)
             }
         }
+        dataini = String(ano) + mes + diaini
+        datafim = String(ano) + mes + diafim
     }
-
-    console.log('diafim=>' + diafim)
-    console.log('diaini=>' + diaini)
-
-    dataini = String(ano) + mes + diaini
-    datafim = String(ano) + mes + diafim
-
-    console.log('datafim=>' + datafim)
-    console.log('dataini=>' + dataini)
 
 
     if (naoVazio(vendedor)) {
