@@ -408,10 +408,10 @@ router.get('/selecao', ehAdmin, (req, res) => {
             if (item.pedido != ""){
                 console.log('item.datacad=>'+item.datacad)
                 console.log('item.pedidos.data=>'+item.pedidos.data)
-                datapedido = item.pedidos.data;
+                database = dataBusca(item.pedidos.data);
             }
             if (item.ganho == true) {
-                if (dataBusca(database) < parseFloat(datafim) && dataBusca(database) > parseFloat(dataini)) {
+                if (database < parseFloat(datafim) && database > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
                         totGanho = totGanho + item.valor;
                     }
@@ -7182,7 +7182,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
             }
             let database = item.datacad;
             if (naoVazio(item.pedido)){
-                datapedido = item.pedidos.data;
+                database = item.pedidos.data;
             }
             if (item.ganho == true) {
                 if (dataBusca(database) < parseFloat(datafim) && dataBusca(database) > parseFloat(dataini)) {
