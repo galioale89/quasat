@@ -400,7 +400,8 @@ router.get('/selecao', ehAdmin, (req, res) => {
         }
     ]).then(result => {
         result.map(item => {
-            cliente = item.clientes.nome;
+            let dataCliente = item.clientes
+            dataCliente.map(i=> cliente = i.nome);
             console.log(cliente);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
@@ -412,10 +413,11 @@ router.get('/selecao', ehAdmin, (req, res) => {
             }
 
             let database = item.datacad;
-            if (naoVazio(item.pedido)){
+            let dataPedido = item.pedidos;
+            if (dataPedido.length > 0){
+                dataPedido.map(i => database = dataBusca(i.data));
                 console.log('item.datacad=>'+item.datacad)
                 console.log('item.pedidos.data=>'+item.pedidos.data)
-                database = dataBusca(item.pedidos.data);
             }
             if (item.ganho == true) {
                 if (database < parseFloat(datafim) && database > parseFloat(dataini)) {
