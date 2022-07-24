@@ -402,7 +402,6 @@ router.get('/selecao', ehAdmin, (req, res) => {
         result.map(item => {
             let dataCliente = item.clientes
             dataCliente.map(i=> cliente = i.nome);
-            console.log(cliente);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
@@ -416,8 +415,6 @@ router.get('/selecao', ehAdmin, (req, res) => {
             let dataPedido = item.pedidos;
             if (dataPedido.length > 0){
                 dataPedido.map(i => database = dataBusca(i.data));
-                console.log('item.datacad=>'+item.datacad)
-                console.log('item.pedidos.data=>'+item.pedidos.data)
             }
             if (item.ganho == true) {
                 if (database < parseFloat(datafim) && database > parseFloat(dataini)) {
@@ -474,9 +471,10 @@ router.get('/selecao', ehAdmin, (req, res) => {
         if (naoVazio(totPreco)) {
             totPreco = mascaraDecimal(totPreco);
         }
-
+        let numdiaini = parseFloat(diaini);
+        let numdiafim = parseFloat(diafim);
         res.render('principal/selecao', {
-            enviado, negociando, ganho, baixado, mestitulo, ano,
+            enviado, negociando, ganho, baixado, mestitulo, ano, numdiaini , numdiafim,
             janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro, todos,
             totEnviado, totGanho, totPerdido, totNegociando, totComparando, totAnalise, totPreco, funges, ehMaster
         })
@@ -7107,8 +7105,8 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
             break;
     }
 
-    req.body.diafim != '' ? diafim = req.body.diafim : ''
-    req.body.diaini != '' ? diaini = req.body.diaini : ''
+    req.body.diafim != '' ? diafim = req.body.diafim : '';
+    req.body.diaini != '' ? diaini = req.body.diaini : '';
 
     console.log('diafim=>'+diafim)
     console.log('diaini=>'+diaini)
@@ -7126,7 +7124,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
         match = { user: id }
     }
 
-    Projetos.aggregate([
+    Projeto.aggregate([
         {
             $match: match
         },
@@ -7184,19 +7182,24 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
         }
     ]).then(result => {
         result.map(item => {
-            cliente = item.clientes.nome;
-            console.log(cliente)
+            let dataCliente = item.clientes
+            dataCliente.map(i=> cliente = i.nome);
+            console.log(cliente);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
-                        totEnviado = totEnviado + item.valor
+                        totEnviado = totEnviado + item.valor;
                     }
-                    enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status })
+                    enviado.push({ id: item._id, cliente, seq: item.seq, status: item.status });
                 }
             }
+
             let database = item.datacad;
-            if (naoVazio(item.pedido)){
-                database = dataBusca(item.pedidos.data);
+            let dataPedido = item.pedidos;
+            if (dataPedido.length > 0){
+                dataPedido.map(i => database = dataBusca(i.data));
+                console.log('item.datacad=>'+item.datacad)
+                console.log('item.pedidos.data=>'+item.pedidos.data)
             }
             if (item.ganho == true) {
                 if (database < parseFloat(datafim) && database > parseFloat(dataini)) {
@@ -7256,9 +7259,10 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
         if (naoVazio(totPreco)) {
             totPreco = mascaraDecimal(totPreco)
         }
-
+        let numdiaini = parseFloat(diaini);
+        let numdiafim = parseFloat(diafim);
         res.render('principal/selecao', {
-            enviado, negociando, ganho, baixado, mestitulo, ano,
+            enviado, negociando, ganho, baixado, mestitulo, ano, numdiaini, numdiafim,
             janeiro, fevereiro, marco, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro, todos,
             totEnviado, totGanho, totPerdido, totNegociando, totComparando, totAnalise, totPreco, funges, ehMaster
         })
