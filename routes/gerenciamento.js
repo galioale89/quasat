@@ -7112,7 +7112,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
             diafim = String(req.body.diafim)
         }
     }
-    if (noVazio(req.body.diaini)) {
+    if (naoVazio(req.body.diaini)) {
         if (req.body.diaini < 10) {
             diaini = "0" + String(req.body.diaini)
         } else {
