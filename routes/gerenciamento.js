@@ -225,16 +225,11 @@ router.get('/selecao', ehAdmin, (req, res) => {
     const { vendedor } = req.user
     const { funges } = req.user
 
-    let totEnviado = 0
-    let totNegociando = 0
-    let totPerdido = 0
-    let totGanho = 0
-
-    let ehMaster = ""
+    let ehMaster
 
     if (naoVazio(user)) {
         id = user
-        ehMatesr = false
+        ehMaster = false
     } else {
         id = _id
         ehMaster = true
@@ -244,12 +239,19 @@ router.get('/selecao', ehAdmin, (req, res) => {
     let negociando = []
     let baixado = []
     let ganho = []
+    let totEnviado = 0
+    let totNegociando = 0
+    let totPerdido = 0
+    let totGanho = 0
+    var totAnalise = 0;
+    var totComparando = 0;
+    var totPreco = 0;
+
     let hoje = dataHoje()
     let mes = hoje.substring(5, 7)
     let ano = hoje.substring(0, 4)
     let cliente
 
-    let mestitulo
     let janeiro
     let fevereiro
     let marco
@@ -262,10 +264,13 @@ router.get('/selecao', ehAdmin, (req, res) => {
     let outubro
     let novembro
     let dezembro
+    let todos
 
-    let match = {}
+    let mestitulo = ''
     let diaini = '01'
     let diafim = ''
+
+    let match = {}
 
     switch (String(mes)) {
         case '01':
@@ -426,9 +431,6 @@ router.get('/selecao', ehAdmin, (req, res) => {
                         baixado.push({ id: item._id, cliente, seq: item.seq, status: item.status, motivo: item.motivo })
                     } else {
                         if (item.status == 'Negociando' || item.status == 'Analisando Financiamento' || item.status == 'Comparando Propostas' || item.status == 'Aguardando redução de preço') {
-                            var totAnalise = 0;
-                            var totComparando = 0;
-                            var totPreco = 0;
                             if (naoVazio(item.valor)) {
                                 if (item.status == 'Comparando Propostas') {
                                     totComparando = totComparando + item.valor;
@@ -6987,10 +6989,21 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     let negociando = []
     let baixado = []
     let ganho = []
+    let totEnviado = 0;
+    let totNegociando = 0;
+    let totPerdido = 0;
+    let totGanho = 0;
+    var totAnalise = 0;
+    var totComparando = 0;
+    var totPreco = 0;
+
     let dataini
     let datafim
     let ano = req.body.ano
     let mes = req.body.mes
+    let mestitulo = ''
+    let diaini = '01'
+    
     let cliente
 
     let janeiro
@@ -7007,13 +7020,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     let dezembro
     let todos
 
-    let mestitulo = ''
-
-    let totEnviado = 0
-    let totNegociando = 0
-    let totPerdido = 0
-    let totGanho = 0
-    let diaini = '01'
+    let match = {}
 
     switch (String(mes)) {
         case 'Janeiro':
@@ -7107,6 +7114,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     
     console.log('datafim=>'+datafim)
     console.log('dataini=>'+dataini)
+    
 
     if (naoVazio(vendedor)) {
         match = { user: id, vendedor: pessoa }
