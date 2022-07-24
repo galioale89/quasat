@@ -7105,18 +7105,20 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
             break;
     }
 
-    if (naoVazio(req.body.diafim)) {
-        if (req.body.diafim < 10) {
-            diafim = "0" + String(req.body.diafim)
-        } else {
-            diafim = String(req.body.diafim)
+    if (String(mes) != 'Todos') {
+        if (naoVazio(req.body.diafim)) {
+            if (req.body.diafim < 10) {
+                diafim = "0" + String(req.body.diafim)
+            } else {
+                diafim = String(req.body.diafim)
+            }
         }
-    }
-    if (naoVazio(req.body.diaini)) {
-        if (req.body.diaini < 10) {
-            diaini = "0" + String(req.body.diaini)
-        } else {
-            diaini = String(req.body.diaini)
+        if (naoVazio(req.body.diaini)) {
+            if (req.body.diaini < 10) {
+                diaini = "0" + String(req.body.diaini)
+            } else {
+                diaini = String(req.body.diaini)
+            }
         }
     }
 
