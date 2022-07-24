@@ -400,8 +400,8 @@ router.get('/selecao', ehAdmin, (req, res) => {
         }
     ]).then(result => {
         result.map(item => {
-            cliente = item.clientes.nome;
-            console.log(cliente);
+            cliente = item.clientes;
+            console.log(item.clientes);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
