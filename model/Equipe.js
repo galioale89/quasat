@@ -82,6 +82,10 @@ const Equipe = new Schema({
     type: String,
     require: false
   },
+  observacao: {
+    type: String,
+    require: false
+  },
   dtinibusca: {
     type: Number,
     require: false

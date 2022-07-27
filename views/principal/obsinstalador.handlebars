@@ -1,0 +1,43 @@
+<style>
+    .container {
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+    }
+
+    .border {
+        border: 1px solid '#e3e3e3';
+        font-size: 15px;
+    }
+
+    .align {
+        background-color: #847AF4;
+        justify-content: center;
+        flex-direction: row;
+        display: flex;
+        padding: 10px;
+    }
+
+    .button {
+        background-color: #847AF4;
+    }
+</style>
+
+<div class="container">
+    <form action="/gerenciamento/obsinstaldor" method="post">
+        <div class="card" style="padding: 10px;">
+            <div class="h3">Observação da Instalação</div>
+            <textarea name="obsins" id="" cols="30" rows="18" class="border"
+                placeholder="Descreva neste campo comentários relevantes sobre o pré e pós obras">
+        </textarea>
+        </div>
+        <div class="align">
+            <button type="submit" class='button' href='/gerenciamento/obsinstalacao/{{projeto._id}}/'>
+                <i class="icone-button-obra bi bi-save2"></i>
+            </button>
+            <a href='/dashboard' style="padding-right: 10px;">
+                <i class="icone-button-obra bi bi-arrow-left-circle"></i>
+            </a>
+        </div>
+    </form>
+</div>

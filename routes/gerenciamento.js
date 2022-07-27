@@ -86,6 +86,46 @@ const upload = multer({
     })
 })
 
+router.get('/obsinstalacao/:id', ehAdmin, async (req, res) => {
+    let observacao;
+    let ObjectId = mongoose.Types.ObjectId;
+    let reg = await Projeto.aggregate([
+        {
+            $match: {
+                _id: ObjectId(String(req.params.id))
+            }
+        },
+        {
+            $lookup: {
+                from: 'equipes',
+                let: { id_equipe: '$equipe' },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ['$_id', "$$id_equipe"]
+                        }
+                    }
+                }],
+                as: 'equipes'
+            }
+        }
+    ]);
+    reg.map(async item => {
+        if (item.equipes.length > 0) {
+            let equipes = item.equipes;
+            equipes.map(async i=>{
+                console.log('i.observacao=>'+i.observacao)
+                observacao = i.observacao;                 
+            })
+        } else {
+            let equipe = await Equipe.findOne({ projeto: req.body.id });
+            console.log('equipe.observacao=>'+equipe.observacao)
+            observacao = equipe.observacao; 
+        }
+    })
+    console.log(observacao);
+    res.render('principal/obsinstalador', { idprj: req.params.id, observacao });
+})
 
 router.get('/mensagem/', ehAdmin, (req, res) => {
     var id
@@ -9961,6 +10001,44 @@ router.post('/dashInstalador', ehAdmin, async (req, res) => {
             agosto, setembro, outubro, novembro, dezembro, todos
         })
     })
+})
+
+router.post('/obsinstalacao', ehAdmin, async (req, res) => {
+    let ObjectId = mongoose.Types.ObjectId;
+    let reg = await Projeto.aggregate([
+        {
+            $match: {
+                _id: ObjectId(String(req.body.id))
+            }
+        },
+        {
+            $lookup: {
+                from: 'equipes',
+                let: { id_equipe: '$equipe' },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ['$_id', "$$id_equipe"]
+                        }
+                    }
+                }],
+                as: 'equipes'
+            }
+        }
+    ]);
+    reg.map(async item => {
+        if (item.equipes.length > 0) {
+            let equipes = item.equipes;
+            equipes.map(async i=>{
+                await Equipe.updateOne({ _id: i._id }, { $set: { observacao: req.body.obsins } });                   
+            })
+        } else {
+            let equipe = await Equipe.findOne({ projeto: req.body.id });
+            await Equipe.updateOne({ _id: equipe._id }, { $set: { observacao: req.body.obsins } });   
+        }
+    })
+   
+    res.render('principal/obsinstalador', { idprj: req.body.id, observacao: req.body.obsins }); 
 })
 
 module.exports = router 

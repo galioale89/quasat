@@ -609,6 +609,15 @@ a {
     font-size: 20px;
 }
 
+.icone-button-obra {
+        display: flex;
+        font-size: 32px;
+        color: white;
+        margin-right: 10px;
+        margin-left: 10px;
+        background-color: #847AF4;
+}
+
 .icone {
     color: white;
     padding-left: 15%;

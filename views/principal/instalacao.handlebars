@@ -10,6 +10,7 @@
 </style>
 
 <script>
+
     window.onload = function () {
 
         var bloquear = document.getElementById('bloquear')
@@ -26,14 +27,13 @@
         <label style="font-size: 25px;">{{cliente_projeto.nome}}&nbsp{{projeto.seq}} </label>
     </div>
     {{#if instalador}}
-    <label style="font-size: 30px;font-weight: 600;padding: 10px;margin-bottom: 30px;">Obra</label><br>
     <div class="mt-4">
         <table>
             <tr>
                 {{#if projeto.instalado}}
                 {{else}}
-                <td style="width: 200px;">
-                    <label style="font-size: 16px;text-align: center;">Em execução</label>
+                <td style="width: 100px;">
+                    <label style="font-size: 16px;text-align: center;">Ativo</label>
                 </td>
                 {{/if}}
                 <td>
@@ -45,22 +45,67 @@
                 {{#if projeto.instalado}}
                 {{else}}
                 <td>
-                    <input class="" style="transform: scale(3)" type="checkbox" {{check}}
+                    <input class="" style="transform: scale(2)" type="checkbox" {{check}}
                         onclick='window.location.href="/gerenciamento/checkAtv/{{id}}"'>
                 </td>
                 {{/if}}
                 <td>
                     <a href='/gerenciamento/mostrarFotos/tarefa@{{id}}@{{../projeto._id}}'
                         class="btn btn-primary mb-1 fw-bold" {{#if
-                        checkAtv}}style="width: 300px;height: 50px;padding: 10px;font-size: 20px;"
-                        {{else}}style="width: 300px;height: 50px;padding: 10px;opacity: 50%;font-size: 20px;pointer-events: none"
+                        checkAtv}}style="width: 230px;height: 50px;padding: 10px;font-size: 20px;"
+                        {{else}}style="width: 230px;height: 50px;padding: 10px;opacity: 50%;font-size: 20px;pointer-events: none"
                         {{/if}}>{{descricao}}</a>
                 </td>
             </tr>
             {{/each}}
         </table>
     </div>
-    <a href='/dashboard' style="font-size: 40px;"><i class='bi bi-arrow-left-circle'></i></a>
+    <div style="display: flex; justify-content: center;width: 100%;margin-top: 10px;margin-bottom: 50px">
+        <a href='/dashboard'>
+            <i class='icone-button-obra bi bi-arrow-left-circle' style="display: flex; font-size: 40px; background-color: white;color: #847AF4">
+            </i>
+        </a>
+    </div>
+    {{else}}
+    {{#if funges}}
+    {{#if projeto.ganho}}
+    <div class='row'>
+        <div class="col">
+            <a href='/gerenciamento/orcamento/{{projeto._id}}'
+                class='{{#if projeto.ganho}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-funnel d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProposta </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
+    </div>
+    {{else}}
+    <div class="btn-group col-12 gap-2 ativo">
+        <a href='/gerenciamento/orcamento/{{projeto._id}}' style="font-size: 20px;color: white;font-weight: 700;"
+            class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
+            <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
+        </a>
+        <a href='/gerenciamento/ganho/{{projeto._id}}/'>
+            <i class="bi bi-check" style="font-size: 30px;color: white"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
+    </div>
+    {{/if}}
     {{else}}
     {{#if funpro}}
     <div class="row">
@@ -111,46 +156,9 @@
         </div>
         {{/if}}
     </div>
-    {{else}}
-    {{#if projeto.ganho}}
-    <div class='row'>
-        <div class="col">
-            <a href='/gerenciamento/orcamento/{{projeto._id}}'
-                class='{{#if projeto.ganho}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
-                style="border-radius: 200px;"><i class="bi bi-funnel d-flex align-items-center"></i>
-                <label class='col-form-label' style="cursor: pointer;">&nbspProposta </label>
-            </a>
-        </div>
-        <div class="col">
-            <a href='/gerenciamento/projeto/{{projeto._id}}'
-                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
-                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
-                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
-            </a>
-        </div>
-        <div class="col">
-            <a href='/gerenciamento/instalacao/{{projeto._id}}'
-                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
-                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
-                <label class='col-form-label'>&nbspInstalação </label>
-            </a>
-        </div>
-    </div>
-    {{else}}
-    <div class="btn-group col-12 gap-2 ativo">
-        <a href='/gerenciamento/orcamento/{{projeto._id}}' style="font-size: 20px;color: white;font-weight: 700;"
-            class='btn btn-sm d-flex align-items-center'>&nbsp&nbsp
-            <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
-        </a>
-        <a href='/gerenciamento/ganho/{{projeto._id}}/'>
-            <i class="bi bi-check" style="font-size: 30px;color: white"></i>
-        </a>
-        <a href='/dashboard/' style="padding-right: 10px;">
-            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
-        </a>
-    </div>
     {{/if}}
     {{/if}}
+
     <label style="font-size: 40px;font-weight: 800;" class="mt-4">Checklist e Fotos</label>
     <div class="row mt-4 mb-4">
         {{#if projeto.encerrado}}

@@ -153,6 +153,7 @@
                 <th style="width: 6%;" rowspan="2">Projeto</th>
                 <th style="width: 6%;" rowspan="2">Pagamento</th>
                 <th style="width: 10%" rowspan="2">Data Final</th>
+                <th style="width: 10%" rowspan="2">Observação</th>
             </tr>
             <tr>
                 <th style="width: 8%;">Quantidade</th>
@@ -205,6 +206,17 @@
                 </td>
                 <td style=" text-align: center;">{{dtfim}}
                 </td>
+                <td style=" text-align: center">
+                    <button class='btn'
+                        onclick='getObsInstalacao("observacao{{seq}}","{{observacao}}")'
+                        data-bs-toggle="modal" data-bs-target="#obsinstalacao">
+                        <i class='bi bi-stickies instalador' id='selinstalador'
+                            style="display: flex;justify-content: center;margin: auto;padding-top: 10px;"></i>
+                        <div id="observacao{{seq}}" style="display: none;">
+                            {{observacao}}
+                        </div>
+                    </button>                    
+                </td>                
             </tr>
             {{/each}}
         </table>
@@ -259,6 +271,17 @@
             form.hide()
         }
     }
+
+    
+    function getObsInstalacao(projeto, observacao){
+        const listObs = $('#obsinstal')
+        alert(projeto)
+        const content = document.getElementById(projeto)
+         alert('content=>'+content.innerHTML)
+        listObs.val(content.innerHTML)
+
+    }
+
 
     function getInstaler(projeto, id, modulos, execucao, parado, instalado, autorizado, pago, encerrado, deadline, check, nome_ins, id_ins) {
         const listInstallers = $("#modal-body-installers")
