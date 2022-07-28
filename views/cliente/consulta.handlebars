@@ -51,11 +51,18 @@
             <input type="hidden" name="tipo" value='{{tipo}}'> 
                 <div class="row d-flex align-items-center">
                     <div class="col-md-1">
+                        {{#if lead}}
+                        <h5 class='titulo-inicio mt-2'>Leads</h5>
+                        {{else}}
                         <h5 class='titulo-inicio mt-2'>Clientes</h5>
+                        {{/if}}
                     </div>
+                    {{#if lead}}
+                    {{else}}
                     <div class="col">
                         <a href="/cliente/novo" style="font-size: 20px;" title="Adicionar Cliente"><i class='bi bi-person-plus'></i></a>
                     </div>
+                    {{/if}}
                 </div>
 
                 <div class="row">
@@ -98,10 +105,9 @@
             <tr style="line-height: 20px;">
                 <th>Nome</th>
                 <th>Cidade</th>
-                <th style="width: 10%;">Estado</th>
-                <th>Contato</th>
+                <th>Estado</th>
+                <th>E-mail</th>
                 <th>Celular</th>
-                <th>Vendedor</th>
                 <th style="width: 2%;"></th>
             </tr>
             {{#each clientes}}
@@ -109,13 +115,12 @@
                 <td style="text-align: left;"><a href='/cliente/edicao/{{_id}}'>{{nome}}</a></td>
                 <td style="text-align: left;"><a href='/cliente/edicao/{{_id}}'>{{cidade}}</a></td>
                 <td style="text-align: left;"><a href='/cliente/edicao/{{_id}}'>{{uf}}</a></td>
-                <td style="text-align: left;"><a href='/cliente/edicao/{{_id}}'>{{contato}}</a></td>
+                <td style="text-align: left;"><a href='/cliente/edicao/{{_id}}'>{{email}}</a></td>
                 <td style="text-align: left;"><a href='/cliente/edicao/{{_id}}'>{{celular}}</a></td>
-                <td style="text-align: left;"><a href='/cliente/edicao/{{_id}}'>{{vendedor}}</a></td>
                 <td>
-                    <div class='btn-group col-12 gap-2' role='group'>                        
-                        <a href='/cliente/confirmaexclusao/{{_id}}' class='botao-tabela ativado' title="excluir ciente"> <i
-                                class='bi bi-trash icone'></i> </a>
+                    <div class='btn-group col-12 gap-2' role='group'>
+                        <a href='/cliente/confirmaexclusao/{{_id}}' class='botao-tabela ativado'> 
+                            <i style="display: flex;margin-top: 7px;" class='bi bi-trash icone'></i> 
                         </a>
                     </div>
                 </td>

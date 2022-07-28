@@ -907,28 +907,28 @@ router.post('/editusina', (req, res) => {
     })
 })
 
-router.get('/remover/:id', ehAdmin, (req, res) => {
+router.get('/remover/:id', ehAdmin, async (req, res) => {
     const { user } = req.user
     const { _id } = req.user
     var id
-    if (naoVazio(user)) {
-        id = user
-    } else {
+    if (typeof user == 'undefined') {
         id = _id
+    } else {
+        id = user
     }
-    Projeto.findOneAndDelete({ cliente: req.params.id }).then(() => {
-        Cliente.findOneAndDelete({ _id: req.params.id }).then(() => {
-            req.flash('success_msg', 'Cliente excluido com sucesso')
-            res.redirect('/cliente/consulta')
-        }).catch((err) => {
-            req.flash('error_msg', 'Houve um erro ao excluir a Cliente.')
-            res.redirect('/cliente/consulta')
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Houve um erro ao excluir o projeto.')
-        res.redirect('/cliente/consulta')
+    Projeto.findOne({ cliente: req.params.id}).then(async p => {
+        console.log('p.equipe=>'+p.equipe)
+        if (naoVazio(p.equipe)){
+            await Equipe.findOneAndDelete({ _id: p.equipe });
+        }else{
+            await Equipe.findOneAndDelete({ projeto: p.equipe });
+        }
     })
+    await Projeto.findOneAndDelete({ cliente: req.params.id });
+    await Cliente.findOneAndDelete({ _id: req.params.id });
 
+    req.flash('success_msg', 'Cliente excluido com sucesso')
+    res.redirect('/cliente/consulta')
 })
 
 router.post('/filtrar', ehAdmin, (req, res) => {

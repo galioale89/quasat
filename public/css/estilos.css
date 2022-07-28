@@ -621,6 +621,7 @@ a {
 .icone {
     color: white;
     padding-left: 15%;
+    justify-content: center;
 }
 
 .iconefiltrar {
