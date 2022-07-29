@@ -7016,6 +7016,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     const { user } = req.user
     const { funges } = req.user
     const { vendedor } = req.user
+    const { pessoa } = req.user
 
     let ehMaster
 

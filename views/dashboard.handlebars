@@ -378,7 +378,7 @@
                                     </tr>
                                     {{#each listaEnviado}}
                                     <tr>
-                                        <td id='{{#if resp}}{{#if pedido}}execucao{{else}}{{#if pro}}homologado{{else}}aguardando{{/if}}{{/if}}{{else}}parado{{/if}}'
+                                        <td {{#if resp}}{{#if pedido}}id='execucao' title="Pedido Realizado" {{else}}{{#if pro}}id='homologado' title='Proposta Enviada'{{else}}id='aguardando' title='Orçamento em Andamento'{{/if}}{{/if}}{{else}}id='parado' title='Orçamento Solicitado'{{/if}}
                                             style="text-align: center;" class='d-flex align-items-center'>
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;font-weight: 600;font-size: 15px;color: rgb(44,55,89);">{{seq}}</a>
@@ -435,8 +435,8 @@
                                     </tr>
                                     {{#each listaEntregue}}
                                     <tr>
-                                        <td style="text-align: center" id={{#if
-                                            alerta}}'parado'{{else}}'realizado'{{/if}}
+                                        <td style="text-align: center" {{#if
+                                            alerta}}id='parado' title='Passou 7 dias da entrega'{{else}}id='realizado' title='Proposta Entregue'{{/if}}
                                             class="d-flex align-items-center">
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;font-weight: 600;color: rgb(44,55,89);">{{seq}}</a>
@@ -496,8 +496,8 @@
                                     </tr>
                                     {{#each listaNegociando}}
                                     <tr>
-                                        <td style="text-align: center" id={{#if
-                                            alerta}}'parado'{{else}}'homologado'{{/if}}
+                                        <td style="text-align: center" {{#if
+                                            alerta}}id='parado' title='Passou 3 dias da interação'{{else}}id='homologado' title='Negociando'{{/if}}
                                             class="d-flex align-items-center">
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;color: rgb(44,55,89);font-weight: 600;">{{seq}}</a>
@@ -615,7 +615,7 @@
                                     </tr>
                                     {{#each listaGanho}}
                                     <tr>
-                                        <td id='{{#if auth}}execucao{{else}}{{#if leva}}aguardando{{else}}levantamento{{/if}}{{/if}}'
+                                        <td {{#if auth}}id='execucao' title='Autorizado Pelo Projetista'{{else}}{{#if leva}}id='aguardando' title='Levantamento Realizado'{{else}}id='levantamento' title='Falta Fazer o Levantamento'{{/if}}{{/if}}
                                             style="text-align: center" class='d-flex align-items-center'>
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;color: rgb(44,55,89);font-weight: 600;">{{seq}}</a>
