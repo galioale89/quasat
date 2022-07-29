@@ -833,7 +833,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                             ativo: item_equipe.ativo,
                                             id: projeto._id,
                                             seq: projeto.seq,
-                                            cliente: nome_cliente,
+                                            cliente: cliente.nome,
                                             endereco: projeto.endereco,
                                             cidade: projeto.cidade,
                                             uf: projeto.uf,
