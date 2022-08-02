@@ -155,6 +155,10 @@ const Projeto = new Schema({
         type: String,
         require: false
     },
+    obsprojetista: {
+        type: String,
+        require: false
+    },     
     uc: [{
         seq: {
             type: Number,

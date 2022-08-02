@@ -71,49 +71,45 @@
     }
     window.onload = function () {
         var ehmobile = document.getElementById('ehmobile')
-        var mostra = document.getElementById('mostraMenu')
+        var site = document.getElementById('site')
         var mostrabanner = document.getElementById('mostrabanner')
         if (screen.width < 640 || screen.height < 480) {
-            ehmobile.style.display = 'none'
-            mostra.style.display = 'flex'
+            ehmobile.style.display = ''
+            site.style.display = 'none'
             mostrabanner.style.display = ''
         } else {
             mostrabanner.style.display = 'flex'
-            ehmobile.style.display = ''
-            mostra.style.display = 'none'
+            ehmobile.style.display = 'none'
+            site.style.display = ''
             var img = document.getElementById('img')
             var banner = document.getElementById('banner')
             var titulo = document.getElementById('titulo')
             var subtitulo = document.getElementById('subtitulo')
             var tam = screen.width - (screen.width * 0.5)
             img.style.width = String(tam) + 'px'
-            banner.style.width = String(tam) + 'px'
             titulo.style.left = '127px'
             subtitulo.style.marginLeft = '127px'
-            var altura = document.getElementById('altura')
+
             var offset = document.getElementsByTagName('header')[0].offsetTop;
             var menu = document.getElementsByTagName('header')[0];
             var sobre = menu.getElementsByTagName('a')[0]
             var solucao = menu.getElementsByTagName('a')[1]
             var contato = menu.getElementsByTagName('a')[2]
+
             document.addEventListener('scroll', function () {
                 if (document.body.scrollTop > offset || document.documentElement.scrollTop > offset) {
                     menu.style.backgroundColor = '#847AF4'
                     menu.style.boxShadow = '0px 3px 5px rgba(100,100,100,0.8)'
-                    menu.style.height = '60px'
-                    menu.style.padding = '5px 10px'
+                    menu.style.height = '100px'
                     sobre.style.color = 'white'
                     solucao.style.color = 'white'
                     contato.style.color = 'white'
-                    altura.className = 'row align-items-center'
                 } else {
                     menu.style.backgroundColor = 'white'
-                    menu.style.padding = '20px 10px'
                     sobre.style.color = '#847AF4'
                     menu.style.boxShadow = ''
                     solucao.style.color = '#847AF4'
                     contato.style.color = '#847AF4'
-                    altura.className = 'row align-items-center mt-4'
                 }
             })
         }
@@ -170,12 +166,12 @@
 
 <body style="line-height: 1.6875rem;width: 100%;">
     <header style="padding: 20px 10px;height: 120px;">
-        <div class="row align-items-center mt-4" id="altura">
-            <div class="col-md-3 text-center">
-                <h1 class="logo">VIMMUS<span>®</span></h1>
-            </div>
-            <div class="col-md-9 text-end">
-                <div id="ehmobile" style="padding-left: 400px;">
+        <div id="site">
+            <div class="row">
+                <div class="col-md-3 mt-2">
+                    <label class="logo">VIMMUS<span>®</span></label>
+                </div>
+                <div class="col-md-9">
                     <nav class="header-menu">
                         <ul>
                             <li>
@@ -188,35 +184,39 @@
                                 <a href="#contact">Contato</a>
                             </li>
                             <li>
-                                <button class="secondary-btn" type="button" title="Login" onclick="login()">
+                                <button class="secondary-btn mt-2" type="button" title="Login" onclick="login()">
                                     Login</button>
                             </li>
                         </ul>
                     </nav>
                 </div>
-                <div id="mostraMenu" style="display: none;padding-bottom: 200px;">
-                    <div class="dropdown">
-                        <button class="btn fw-bold" data-bs-toggle="dropdown" aria-expanded="false"
-                            style='font-size: 30px;'>
-                            <i class='bi bi-list d-flex align-items-center'></i>
-                        </button>
+            </div>
+        </div>
+        <div id="ehmobile">
+            <div style="display: flex;justify-content: center;margin-top: 50px;">
+            <div style="width: 100%;">
+                <label class="logo">VIMMUS<span>®</span></label>
+            </div>
+            <div class="dropdown" style="padding-right: 20px">
+                <button class="btn fw-bold" data-bs-toggle="dropdown" aria-expanded="false" style='font-size: 30px;'>
+                    <i class='bi bi-list d-flex align-items-center'></i>
+                </button>
 
-                        <ul class="dropdown-menu text-center">
-                            <li>
-                                <a href="#about">Sobre</a>
-                            </li>
-                            <li>
-                                <a href="#resource">Solução</a>
-                            </li>
-                            <li>
-                                <a href="#contact">Contato</a>
-                            </li>
-                            <li>
-                                <a onclick="login()" style="color:#847AF4;font-weight: 600;">Login<a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <ul class="dropdown-menu text-center">
+                    <li>
+                        <a href="#about">Sobre</a>
+                    </li>
+                    <li>
+                        <a href="#resource">Solução</a>
+                    </li>
+                    <li>
+                        <a href="#contact">Contato</a>
+                    </li>
+                    <li>
+                        <a onclick="login()" style="color:#847AF4;font-weight: 600;">Login<a>
+                    </li>
+                </ul>
+            </div>
             </div>
         </div>
     </header>

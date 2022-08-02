@@ -76,27 +76,27 @@
     {{else}}
     {{#if ehMaster}}
     <div class="row">
-    <div class="col">
-        <a href='/gerenciamento/orcamento/{{projeto._id}}'
-            class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
-            style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
-            <label class='col-form-label' style="cursor: pointer;">&nbspProposta </label>
-        </a>
-    </div>
-    <div class="col">
-        <a href='/gerenciamento/projeto/{{projeto._id}}'
-            class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
-            style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
-            <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
-        </a>
-    </div>
-    <div class="col">
-        <a href='/gerenciamento/instalacao/{{projeto._id}}'
-            class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
-            style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
-            <label class='col-form-label'>&nbspInstalação </label>
-        </a>
-    </div>
+        <div class="col">
+            <a href='/gerenciamento/orcamento/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProposta </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/projeto/{{projeto._id}}'
+                class='{{#if projeto.execucao}} check-menu-resume {{else}} botao-menu-resume {{/if}} ativo d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-journal-bookmark d-flex align-items-center"></i>
+                <label class='col-form-label' style="cursor: pointer;">&nbspProjeto </label>
+            </a>
+        </div>
+        <div class="col">
+            <a href='/gerenciamento/instalacao/{{projeto._id}}'
+                class='{{#if projeto.encerrado}} check-menu-resume {{else}} botao-menu-resume {{/if}} d-flex align-items-center'
+                style="border-radius: 200px;"><i class="bi bi-tools d-flex align-items-center"></i>
+                <label class='col-form-label'>&nbspInstalação </label>
+            </a>
+        </div>
     </div>
     {{/if}}
     {{/if}}
@@ -123,45 +123,69 @@
             <form action='/gerenciamento/projeto' method='post'>
                 <input type="hidden" name="id" value="{{projeto._id}}">
                 <div class="row">
-                    <div class="col text-end">
-                        <label class='col-form-label  fw-bold mb-1'>Status</label><br>
-                        <label class='col-form-label col-form-label-sm mb-1'>Projeto Postado:</label><br>
-                        <label class='col-form-label col-form-label-sm mb-1'>Vistoria Solicitada:</label><br>
-                        <label class='col-form-label col-form-label-sm mb-1'>Vistoria Aprovada:</label><br>
-                        <label class='col-form-label col-form-label-sm '>Troca do Medidor:</label>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col text-end">
+                                <label class='col-form-label  fw-bold mb-1'>Status</label><br>
+                                <label class='col-form-label col-form-label-sm mb-1'>Projeto Postado:</label><br>
+                                <label class='col-form-label col-form-label-sm mb-1'>Vistoria Solicitada:</label><br>
+                                <label class='col-form-label col-form-label-sm mb-1'>Vistoria Aprovada:</label><br>
+                                <label class='col-form-label col-form-label-sm '>Troca do Medidor:</label>
+                            </div>
+                            <div class="col">
+                                <label class='col-form-label fw-bold mb-1'>Entrega</label><br>
+                                <input type='date' name='dataPost' id='dataPost'
+                                    class='form-control form-control-sm mb-1' value="{{projeto.dataPost}}">
+                                <input type='date' name='dataSoli' id='dataSoli'
+                                    class='form-control form-control-sm mb-1' value="{{projeto.dataSoli}}">
+                                <input type='date' name='dataApro' id='dataApro'
+                                    class='form-control form-control-sm mb-1' value="{{projeto.dataApro}}">
+                                <input type='date' name='dataTroca' id='dataTroca'
+                                    class='form-control form-control-sm mb-1' value="{{projeto.dataTroca}}">
+                            </div>
+                            <div class="col text-start">
+                                <label class='col-form-label fw-bold mb-1'>Realizado</label><br>
+                                <div class="form-check mt-1" onclick="dataCheck('dataPost')">
+                                    <input class="form-check-input" style="margin-left: 5px" name='checkPost'
+                                        id='checkPost' type="checkbox" {{checkPost}}>
+                                </div>
+                                <div class="form-check mt-2" onclick="dataCheck('dataSoli')">
+                                    <input class="form-check-input" style="margin-left: 5px" name='checkSoli'
+                                        id='checkSoli' type="checkbox" {{checkSoli}}>
+                                </div>
+                                <div class="form-check mt-2" onclick="dataCheck('dataApro')">
+                                    <input class="form-check-input" style="margin-left: 5px" name='checkApro'
+                                        id='checkApro' type="checkbox" {{checkApro}}>
+                                </div>
+                                <div class="form-check mt-2" onclick="dataCheck('dataTroca')">
+                                    <input class="form-check-input" style="margin-left: 5px" name='checkTroca'
+                                        id='checkTroca' type="checkbox" {{checkTroca}}>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col">
-                        <label class='col-form-label fw-bold mb-1'>Entrega</label><br>
-                        <input type='date' name='dataPost' id='dataPost' class='form-control form-control-sm mb-1'
-                            value="{{projeto.dataPost}}">
-                        <input type='date' name='dataSoli' id='dataSoli' class='form-control form-control-sm mb-1'
-                            value="{{projeto.dataSoli}}">
-                        <input type='date' name='dataApro' id='dataApro' class='form-control form-control-sm mb-1'
-                            value="{{projeto.dataApro}}">
-                        <input type='date' name='dataTroca' id='dataTroca' class='form-control form-control-sm mb-1'
-                            value="{{projeto.dataTroca}}">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div style="flex">
+                                        <label style="width: 85%;" class="h6 fw-bold">Observação do Projeto</label>
+                                        <a class="btn btn-sm" id='btnovo' onclick="novoVoltar()">Novo</a>
+                                    </div>
+                                    <textarea class='form-control' readonly name="obsprojetista" id="obstext"
+                                        cols="70" rows="5">{{projeto.obsprojetista}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1" style="justify-items: center;">
+                            <button type="submit" style="height: 190px;"
+                                class='btn btn-sm btn-success mt-2'>Salvar</button>
+                        </div>
                     </div>
-                    <div class="col text-start">
-                        <label class='col-form-label fw-bold mb-1'>Realizado</label><br>
-                        <div class="form-check mt-1" onclick="dataCheck('dataPost')">
-                            <input class="form-check-input" style="margin-left: 5px" name='checkPost' id='checkPost'
-                                type="checkbox" {{checkPost}}>
-                        </div>
-                        <div class="form-check mt-2" onclick="dataCheck('dataSoli')">
-                            <input class="form-check-input" style="margin-left: 5px" name='checkSoli' id='checkSoli'
-                                type="checkbox" {{checkSoli}}>
-                        </div>
-                        <div class="form-check mt-2" onclick="dataCheck('dataApro')">
-                            <input class="form-check-input" style="margin-left: 5px" name='checkApro' id='checkApro'
-                                type="checkbox" {{checkApro}}>
-                        </div>
-                        <div class="form-check mt-2" onclick="dataCheck('dataTroca')">
-                            <input class="form-check-input" style="margin-left: 5px" name='checkTroca' id='checkTroca'
-                                type="checkbox" {{checkTroca}}>
-                        </div>
+                    <div class="col-md-1">
+                        <button type="submit" class='btn btn-sm btn-success mt-2'>Salvar</button>
                     </div>
                 </div>
-                <button type="submit" class='btn btn-sm btn-success mt-2'>Salvar</button>
             </form>
         </div>
     </div>

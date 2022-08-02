@@ -1,21 +1,66 @@
 {{#if success_msg}}
-<div class='alert alert-success alert-dismissible fade show' role='alert'>
-  <strong>{{success_msg}}</strong>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<script>
+  $(document).ready(function () {
+    $('#succesToast').toast("show");
+    $('.horaRegistro').text(String(new Date(Date.now()).toTimeString()).substring(0,5))
+  })
+</script>
+<div class="position-fixed top-16 end-0 p-3" style="z-index: 11">
+  <div class="toast" id="succesToast" style="background-color: #847AF4;" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="/img/sun.svg" class="rounded me-2">
+      <strong class="me-auto">Tudo certo!</strong>
+      <small class='horaRegistro'></small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <label style="font-weight: 600;font-size: medium;">{{success_msg}}</label>
+    </div>
+  </div>
 </div>
 {{/if}}
 
 {{#if error_msg}}
-<div class='alert alert-danger alert-dismissible fade show' role='alert' style="width: 100%;">
-  <strong>{{error_msg}}</strong>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<script>
+  $(document).ready(function () {
+    $('#errorToast').toast("show");
+    $('.horaRegistro').text(String(new Date(Date.now()).toTimeString()).substring(0,5))
+  })
+</script>
+<div class="position-fixed top-16 end-0 p-3" style="z-index: 11">
+  <div class="toast" id="errorToast" style="background-color: tomato;" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="/img/sun.svg" class="rounded me-2">
+      <strong class="me-auto">Opsss...Verifique o que aconteceu!</strong>
+      <small class='horaRegistro'></small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <label style="font-weight: 600;font-size: medium;">{{error_msg}}</label>
+    </div>
+  </div>
 </div>
 {{/if}}
 
 {{#if aviso_msg}}
-<div class='alert alert-warning alert-dismissible fade show' role='alert' style="width: 100%;">
-  <strong>{{aviso_msg}}</strong>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<script>
+  $(document).ready(function () {
+    $('#alertToast').toast("show");
+    $('.horaRegistro').text(String(new Date(Date.now()).toTimeString()).substring(0,5))
+  })
+</script>
+<div class="position-fixed top-16 end-0 p-3" style="z-index: 11">
+  <div class="toast" id="alertToast" style="background-color: rgba(255, 168, 70, 0.6);" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="/img/sun.svg" class="rounded me-2">
+      <strong class="me-auto">Alerta!</strong>
+      <small class='horaRegistro'></small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <label style="font-weight: 600;font-size: medium;">{{aviso_msg}}</label>
+    </div>
+  </div>
 </div>
 {{/if}}
 

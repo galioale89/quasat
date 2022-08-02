@@ -1,4 +1,10 @@
 <style>
+    #header {
+        width: 100%;
+        border-bottom: rgb(40, 55, 86) 0, 1px solid;
+        color: rgb(40, 55, 86);
+    }
+
     .instalador {
         background-color: #e3e3e3;
         justify-content: center;
@@ -8,12 +14,6 @@
         padding: 5px;
         max-width: 60px;
         border-radius: 30px;
-    }
-
-    #header {
-        width: 100%;
-        border-bottom: rgb(40, 55, 86) 0, 1px solid;
-        color: rgb(40, 55, 86);
     }
 
     .filtro-selecao {
@@ -153,7 +153,7 @@
                 <th style="width: 6%;" rowspan="2">Projeto</th>
                 <th style="width: 6%;" rowspan="2">Pagamento</th>
                 <th style="width: 10%" rowspan="2">Data Final</th>
-                <th style="width: 10%" rowspan="2">Observação</th>
+                <th style="width: 7%" rowspan="2">Observações</th>
             </tr>
             <tr>
                 <th style="width: 8%;">Quantidade</th>
@@ -190,33 +190,36 @@
                 <td style="text-align: center;"><a href='/gerenciamento/projeto/{{id}}'>{{nome_ins_banco}}</a></td>
                 <td style="text-align: center;">
                     <button class="btn">
-                    <i style="display: flex;justify-content: center;margin: auto;" {{#if
-                        autorizado}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
-                        {{/if}}>
-                    </i>
+                        <i style="display: flex;justify-content: center;margin: auto;" {{#if
+                            autorizado}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
+                            {{/if}}>
+                        </i>
                     </button>
                 </td>
                 <td style="text-align: center;">
                     <button class="btn">
-                    <i style="display: flex;justify-content: center;margin: auto;" {{#if
-                        pagamento}}class="bi bi-check" id='execucao'{{else}}class="bi bi-stop-fill" id='parado'
-                        {{/if}}>
-                    </i>
+                        <i style="display: flex;justify-content: center;margin: auto;" {{#if
+                            pagamento}}class="bi bi-check" id='execucao' {{else}}class="bi bi-stop-fill" id='parado'
+                            {{/if}}>
+                        </i>
                     </button>
                 </td>
                 <td style=" text-align: center;">{{dtfim}}
                 </td>
                 <td style=" text-align: center">
-                    <button class='btn'
-                        onclick='getObsInstalacao("observacao{{seq}}","{{observacao}}")'
-                        data-bs-toggle="modal" data-bs-target="#obsinstalacao">
+                    <button class='btn' onclick="getObservacao('{{seq}}')" data-bs-toggle="modal"
+                        data-bs-target="#obsinstalacao">
                         <i class='bi bi-stickies instalador' id='selinstalador'
                             style="display: flex;justify-content: center;margin: auto;padding-top: 10px;"></i>
+                        <div id="idprj{{seq}}" style="display: none;">{{id}}</div>
                         <div id="observacao{{seq}}" style="display: none;">
                             {{observacao}}
                         </div>
-                    </button>                    
-                </td>                
+                        <div id="obsprojetista{{seq}}" style="display: none;">
+                            {{obsprojetista}}
+                        </div>
+                    </button>
+                </td>
             </tr>
             {{/each}}
         </table>
@@ -272,14 +275,14 @@
         }
     }
 
-    
-    function getObsInstalacao(projeto, observacao){
-        const listObs = $('#obsinstal')
-        const content = document.getElementById(projeto)
-        listObs.val(content.innerHTML)
-
+    function getObservacao(seq) {
+        var contentobsins = $('#observacao' + seq).text();
+        var contentobspro = $('#obsprojetista' + seq).text();
+        var idprj = $('#idprj' + seq).text();
+        $('#obsprojetista').text(contentobspro);
+        $('#obsinstal').text(contentobsins);
+        $('#idprjmain').val(idprj);
     }
-
 
     function getInstaler(projeto, id, modulos, execucao, parado, instalado, autorizado, pago, encerrado, deadline, check, nome_ins, id_ins) {
         const listInstallers = $("#modal-body-installers")
@@ -296,7 +299,6 @@
             const dtfim = $('#dtfim')
             dtfim.val(deadline)
         }
-
 
         const qtdmod = $('#qtdmod')
         qtdmod.val(modulos)

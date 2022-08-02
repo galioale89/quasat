@@ -48,7 +48,7 @@
 
 <script>
     setTimeout(function () {
-        window.location.reload(1);
+        window.location.reload(1)
     }, 180000); // 3 minutos
 </script>
 
@@ -86,7 +86,7 @@
                             <li>
                                 <a href='/cliente/consulta/' class='botao_menu mb-1'>Clientes</a><br>
                             </li>
-                            {{/if}}                            
+                            {{/if}}
                             {{#if vendedor}}
                             <li>
                                 <a href='/cliente/consulta/' class='botao_menu mb-1'>Clientes</a><br>
@@ -229,8 +229,9 @@
                     {{/if}}
                 </div>
                 <input type='hidden' id='obra' value="false">
-                <div class="contorno-titulo-dem">
-                    <label class="titulo-inicio" style="color: white">Vendas</label>
+                <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                    <label class="titulo-inicio" style="color: white;width: 100%;">Venda</label>
+                    <button class="btn" onclick="showIndex('venda')"><i class="bi bi-stoplights icone"></i></button>
                 </div>
                 <div class="quadro-scroll" id="dim">
                     <table>
@@ -241,9 +242,9 @@
                         </tr>
                         {{#each listaOrcado}}
                         <tr>
-                            <td style="text-align: center"
-                                id='{{#if resp}}{{#if pro}}execucao{{else}}aguardando{{/if}}{{else}}parado{{/if}}'
-                                class="d-flex align-items-center">
+                            <td style="text-align: center" {{#if resp}}{{#if pro}}id='execucao' title='Proposta Enviada'
+                                {{else}}id='aguardando' title='Aguardando Proposta' {{/if}}{{else}}id='parado'
+                                title='Projeto sem responsável' {{/if}} class="d-flex align-items-center">
                                 <a onclick='entrarOrcamento("{{nome_responsavel}}","{{id}}","{{resp}}")'
                                     style="color: rgb(55,49,89);font-weight: 600;">&nbsp&nbsp{{seq}}&nbsp&nbsp&nbsp&nbsp</a>
                             </td>
@@ -260,8 +261,9 @@
                 <div class="mt-2 mb-2">
                     <label style="font-size: 16px;font-weight: 800;color: rgba(49,55,89)"></label>
                 </div>
-                <div class="contorno-titulo-dem">
-                    <label class="titulo-inicio" style="color: white">Termos de Entrega</label>
+                <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                    <label class="titulo-inicio" style="color: white;width: 100%;">Termos de Entrega</label>
+                    <button class="btn" onclick="showIndex('termos')"><i class="bi bi-stoplights icone"></i></button>
                 </div>
                 <div class="quadro-scroll" id="dim1">
                     <table>
@@ -275,7 +277,8 @@
 
                         {{#each listaTermos}}
                         <tr>
-                            <td style="text-align: center" {{#if termo}}id='execucao' {{else}}id='realizado' {{/if}}
+                            <td style="text-align: center" {{#if termo}}id='execucao' title='Termo Enviado'
+                                {{else}}id='realizado' title='Aguardando Termo' {{/if}}
                                 class="d-flex align-items-center">
                                 <a href='/gerenciamento/orcamento/{{id}}'
                                     style="color: rgb(55,49,89);font-weight: 600;">&nbsp&nbsp{{seq}}&nbsp&nbsp&nbsp&nbsp</a>
@@ -366,8 +369,12 @@
                         <div style="margin-bottom: 10px;">
                             <div class='quadro-scroll' style="padding-left: 5px;">
                                 <div class="mt-1 mb-3">
-                                    <label class="titulo">Orçamentos
-                                        Enviados</label>
+                                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                                        <label class="titulo-inicio" style="color: white;width: 100%;">Orçamentos
+                                            Enviados</label>
+                                        <button class="btn" onclick="showIndex('enviados')"><i
+                                                class="bi bi-stoplights icone" title="Legendas de Status"></i></button>
+                                    </div>
                                 </div>
                                 <table>
                                     <tr>
@@ -378,7 +385,10 @@
                                     </tr>
                                     {{#each listaEnviado}}
                                     <tr>
-                                        <td {{#if resp}}{{#if pedido}}id='execucao' title="Pedido Realizado" {{else}}{{#if pro}}id='homologado' title='Proposta Enviada'{{else}}id='aguardando' title='Orçamento em Andamento'{{/if}}{{/if}}{{else}}id='parado' title='Orçamento Solicitado'{{/if}}
+                                        <td {{#if resp}}{{#if pedido}}id='execucao' title="Pedido Realizado"
+                                            {{else}}{{#if pro}}id='homologado' title='Proposta Enviada'
+                                            {{else}}id='aguardando' title='Orçamento em Andamento'
+                                            {{/if}}{{/if}}{{else}}id='parado' title='Orçamento Solicitado' {{/if}}
                                             style="text-align: center;" class='d-flex align-items-center'>
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;font-weight: 600;font-size: 15px;color: rgb(44,55,89);">{{seq}}</a>
@@ -424,7 +434,12 @@
                         <div style="margin-bottom: 10px;">
                             <div class='quadro-scroll' style="padding-left: 5px;">
                                 <div class="text-center mt-1 mb-3">
-                                    <label class='titulo'>Orçamentos Entregues</label>
+                                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                                        <label class="titulo-inicio" style="color: white;width: 100%;">Orçamentos
+                                            Entregues</label>
+                                        <button class="btn" onclick="showIndex('entregue')"><i
+                                                class="bi bi-stoplights icone" title="Legendas de Status"></i></button>
+                                    </div>
                                 </div>
                                 <table>
                                     <tr>
@@ -435,9 +450,9 @@
                                     </tr>
                                     {{#each listaEntregue}}
                                     <tr>
-                                        <td style="text-align: center" {{#if
-                                            alerta}}id='parado' title='Passou 7 dias da entrega'{{else}}id='realizado' title='Proposta Entregue'{{/if}}
-                                            class="d-flex align-items-center">
+                                        <td style="text-align: center" {{#if alerta}}id='parado'
+                                            title='Passou 7 dias da entrega' {{else}}id='realizado'
+                                            title='Proposta Entregue' {{/if}} class="d-flex align-items-center">
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;font-weight: 600;color: rgb(44,55,89);">{{seq}}</a>
                                         </td>
@@ -485,7 +500,12 @@
                         <div style="margin-bottom: 10px;">
                             <div class='quadro-scroll' style="padding-left: 5px;">
                                 <div class="text-center mt-1 mb-3">
-                                    <label class='titulo'>Orçamentos Negociando</label>
+                                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                                        <label class="titulo-inicio" style="color: white;width: 100%;">Orçamentos
+                                            Negociando</label>
+                                        <button class="btn" onclick="showIndex('negociando')"><i
+                                                class="bi bi-stoplights icone" title="Legendas de Status"></i></button>
+                                    </div>
                                 </div>
                                 <table>
                                     <tr>
@@ -496,9 +516,9 @@
                                     </tr>
                                     {{#each listaNegociando}}
                                     <tr>
-                                        <td style="text-align: center" {{#if
-                                            alerta}}id='parado' title='Passou 3 dias da interação'{{else}}id='homologado' title='Negociando'{{/if}}
-                                            class="d-flex align-items-center">
+                                        <td style="text-align: center" {{#if alerta}}id='parado'
+                                            title='Passou 3 dias da interação' {{else}}id='homologado'
+                                            title='Negociando' {{/if}} class="d-flex align-items-center">
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;color: rgb(44,55,89);font-weight: 600;">{{seq}}</a>
                                         </td>
@@ -544,7 +564,10 @@
                         <div style="margin-bottom: 10px;">
                             <div class='quadro-scroll' style="padding-left: 5px;">
                                 <div class="text-center mt-1 mb-3">
-                                    <label class='titulo'>Orçamentos Futuros</label>
+                                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                                        <label class="titulo-inicio" style="color: white;width: 100%;">Orçamentos
+                                            Futuros</label>
+                                    </div>
                                 </div>
                                 <table>
                                     <tr>
@@ -604,7 +627,12 @@
                         <div style="margin-bottom: 10px;">
                             <div class='quadro-scroll' style="padding-left: 5px;">
                                 <div class="text-center mt-1 mb-3">
-                                    <label class='titulo'>Orçamentos Ganhos</label>
+                                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                                        <label class="titulo-inicio" style="color: white;width: 100%;">Orçamentos
+                                            Ganhos</label>
+                                        <button class="btn" onclick="showIndex('ganho')"><i
+                                                class="bi bi-stoplights icone" title="Legendas de Status"></i></button>
+                                    </div>
                                 </div>
                                 <table>
                                     <tr>
@@ -615,7 +643,9 @@
                                     </tr>
                                     {{#each listaGanho}}
                                     <tr>
-                                        <td {{#if auth}}id='execucao' title='Autorizado Pelo Projetista'{{else}}{{#if leva}}id='aguardando' title='Levantamento Realizado'{{else}}id='levantamento' title='Falta Fazer o Levantamento'{{/if}}{{/if}}
+                                        <td {{#if auth}}id='execucao' title='Autorizado Pelo Projetista' {{else}}{{#if
+                                            leva}}id='aguardando' title='Levantamento Realizado'
+                                            {{else}}id='levantamento' title='Falta Fazer o Levantamento' {{/if}}{{/if}}
                                             style="text-align: center" class='d-flex align-items-center'>
                                             <a href='/gerenciamento/orcamento/{{id}}'
                                                 style="width: 70px;color: rgb(44,55,89);font-weight: 600;">{{seq}}</a>
@@ -641,7 +671,10 @@
                         <div style="margin-bottom: 10px;">
                             <div class='quadro-scroll' style="padding-left: 5px;">
                                 <div class="text-center mt-1 mb-3">
-                                    <label class='titulo'>Orçamentos Perdidos</label>
+                                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                                        <label class="titulo-inicio" style="color: white;width: 100%;">Orçamentos
+                                            Perdidos</label>
+                                    </div>
                                 </div>
                                 <table>
                                     <tr>
@@ -844,8 +877,10 @@
             <div class="row mt-3">
                 <input type='hidden' id='obra' value="false">
                 <div class="col">
-                    <div class="contorno-titulo-dem">
-                        <label class="titulo-inicio" style="color: white">Projeto</label>
+                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                        <label class="titulo-inicio" style="color: white;width: 100%;">Projeto</label>
+                        <button class="btn" onclick="showIndex('projeto')"><i class="bi bi-stoplights icone"
+                                title="Legendas de Status"></i></button>
                     </div>
                     <div class="quadro-scroll" id='dim'>
                         <table>
@@ -856,8 +891,9 @@
                             </tr>
                             {{#each listaGanho}}
                             <tr>
-                                <td style="text-align: center"
-                                    id='{{#if auth}}execucao{{else}}{{#if leva}}aguardando{{else}}levantamento{{/if}}{{/if}}'
+                                <td style="text-align: center" {{#if auth}}id='execucao' title='Projeto Autorizado'
+                                    {{else}}{{#if leva}}id='aguardando' title='Levantamento Realizado'
+                                    {{else}}id='levantamento' title='Falta Fazer o Levantamento' {{/if}}{{/if}}
                                     class="d-flex align-items-center"><a href='/gerenciamento/projeto/{{id}}'
                                         style="font-weight: 600;color: rgb(44,55,89);padding-left: 10px;">{{seq}}</a>
                                 </td>
@@ -871,8 +907,10 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="contorno-titulo-dem">
-                        <label class="titulo-inicio" style="color: white">Instalação</label>
+                    <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                        <label class="titulo-inicio" style="color: white;width: 100%;">Instalação</label>
+                        <button class="btn" onclick="showIndex('instalacao')"><i class="bi bi-stoplights icone"
+                                title="Legendas de Status"></i></button>
                     </div>
                     <div class="quadro-scroll" id="dim1">
                         <table>
@@ -885,8 +923,9 @@
                             {{#each listaExecucao}}
                             <tr>
                                 <td class="d-flex align-items-center" {{#if vistoria}} {{#if parado}} id="aguardando"
-                                    {{else}} id="execucao" {{/if}} {{else}} {{#if parado }} id='parado' {{else}}
-                                    id='homologado' {{/if}}{{/if}}>
+                                    title="Aguardando Vistoria" {{else}} id="execucao" title='Projeto em Execução'
+                                    {{/if}} {{else}} {{#if parado }} id='parado' title="Projeto Parado" {{else}}
+                                    id='homologado' title='Aguardando Projeto' {{/if}}{{/if}}>
                                     <a href='/gerenciamento/instalacao/{{id}}'
                                         style="font-weight: 600;color: rgb(44,55,89)">{{#if vistoria}} {{#if
                                         parado}} &nbsp&nbsp&nbspP&nbsp&nbsp&nbsp{{else}}
@@ -977,8 +1016,9 @@
                 <div class="mt-2 mb-2">
                     <label style="font-size: 16px;font-weight: 800;color: rgba(49,55,89)"></label>
                 </div>
-                <div class="contorno-titulo-dem">
-                    <label class="titulo-inicio" style="color: white">Termos de Entrega</label>
+                <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                    <label class="titulo-inicio" style="color: white;width: 100%;">Termos de Entrega</label>
+                    <button class="btn" onclick="showIndex('termos')"><i class="bi bi-stoplights icone"></i></button>
                 </div>
                 <div class="quadro-scroll" id="dim1">
                     <table>
@@ -991,7 +1031,8 @@
                         </tr>
                         {{#each listaTermos}}
                         <tr>
-                            <td style="text-align: center" {{#if termo}}id='execucao' {{else}}id='realizado' {{/if}}
+                            <td style="text-align: center" {{#if termo}}id='execucao' title="Termo Enviado"
+                                {{else}}id='realizado' title="Aguardando o Termo" {{/if}}
                                 class="d-flex align-items-center">
                                 <a href='/gerenciamento/orcamento/{{id}}'
                                     style="color: rgb(55,49,89);font-weight: 600;">&nbsp&nbsp{{seq}}&nbsp&nbsp&nbsp&nbsp</a>
@@ -1068,10 +1109,10 @@
         <div class="row">
             <input type='hidden' id='obra' value="false">
             <div class="col-md-4">
-                <div class="contorno-titulo-dem">
-                    <label class="titulo-inicio" style="color: white">Vendas</label>
+                <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                    <label class="titulo-inicio" style="color: white;width: 100%;">Venda</label>
+                    <button class="btn" onclick="showIndex('venda')"><i class="bi bi-stoplights icone"></i></button>
                 </div>
-
                 <div class="quadro-scroll" id="dim">
                     <table>
                         <tr>
@@ -1097,8 +1138,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="contorno-titulo-dem">
-                    <label class="titulo-inicio" style="color: white">Projeto</label>
+                <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                    <label class="titulo-inicio" style="color: white;width: 100%;">Projeto</label>
+                    <button class="btn" onclick="showIndex('projeto')"><i class="bi bi-stoplights icone"
+                            title="Legendas de Status"></i></button>
                 </div>
                 <div class="quadro-scroll" id='dim1'>
                     <table>
@@ -1123,8 +1166,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="contorno-titulo-dem">
-                    <label class="titulo-inicio" style="color: white">Instalação</label>
+                <div class="contorno-titulo-dem" style="display: flex;justify-content: flex-end;">
+                    <label class="titulo-inicio" style="color: white;width: 100%;">Instalação</label>
+                    <button class="btn" onclick="showIndex('instalacao')"><i class="bi bi-stoplights icone"
+                            title="Legendas de Status"></i></button>
                 </div>
                 <div class="quadro-scroll" id="dim2">
                     <table>

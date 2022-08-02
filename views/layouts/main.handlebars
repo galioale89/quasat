@@ -71,7 +71,7 @@
   </div>
   <!-- Final Modal -->
 
-    <!-- Modal Instalador-->
+  <!-- Modal Instalador-->
   <div class="modal fade" id="instalador" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -82,26 +82,26 @@
         <div class="modal-body">
           <div class="card mb-2">
             <div class="card-body">
-          <form action="/gerenciamento/addInstalador" method="post">
-            <label class="col-form-label">Selecionar instalador</label>
-            <div id="addInstaller"></div>
-            <div style="display: flex;">
-              <select class="form-select form-select-sm" name="instalador" style="width: 38rem;margin: auto;">
-                {{#each todos_instaladores}}
-                <option value="{{_id}}">{{nome}}</option>
-                {{/each}}
-              </select>
-              <label class="col-form-label col-form-label-sm"
-                style="width: 22rem;margin: auto;padding-left: 50px;">Quantidade de Painéis: </label>
-              <input type="number" class="form-control form-control-sm" name="qtdmod" id="qtdmod"
-                style="width: 5rem;margin: auto;">
-              <button type="submit" style="display: flex; height: 2rem; border-color: white;margin: auto;"><i
-                  class="bi bi-plus" style="display: flex;margin: auto;"></i></button>
-              <a href="/gerenciamento/vermais" class="btn btn-primary d-flex items-align-center"
-                style="margin-left: 10px;height: 40px;margin-top: 5px;"><i class="bi bi-calendar2"></i></a>
+              <form action="/gerenciamento/addInstalador" method="post">
+                <label class="col-form-label">Selecionar instalador</label>
+                <div id="addInstaller"></div>
+                <div style="display: flex;">
+                  <select class="form-select form-select-sm" name="instalador" style="width: 38rem;margin: auto;">
+                    {{#each todos_instaladores}}
+                    <option value="{{_id}}">{{nome}}</option>
+                    {{/each}}
+                  </select>
+                  <label class="col-form-label col-form-label-sm"
+                    style="width: 22rem;margin: auto;padding-left: 50px;">Quantidade de Painéis: </label>
+                  <input type="number" class="form-control form-control-sm" name="qtdmod" id="qtdmod"
+                    style="width: 5rem;margin: auto;">
+                  <button type="submit" style="display: flex; height: 2rem; border-color: white;margin: auto;"><i
+                      class="bi bi-plus" style="display: flex;margin: auto;"></i></button>
+                  <a href="/gerenciamento/vermais" class="btn btn-primary d-flex items-align-center"
+                    style="margin-left: 10px;height: 40px;margin-top: 5px;"><i class="bi bi-calendar2"></i></a>
+                </div>
+              </form>
             </div>
-          </form>
-          </div>
           </div>
           <div class="card">
             <div class="card-body">
@@ -128,8 +128,10 @@
                 <div id="sendTeam" style="display: none;">
                   <div style="display: flex;position: relative;padding-top: 20px;">
                     <div id="insRealizado">
-                      <label class="col-form-label col-form-label-sm" style="width: 150px;">Instalador Realizado:</label>
-                      <select class="form-select form-select-sm" name="ins_realizado" id="sel_realizado" style="width: 250px;margin: auto;">
+                      <label class="col-form-label col-form-label-sm" style="width: 150px;">Instalador
+                        Realizado:</label>
+                      <select class="form-select form-select-sm" name="ins_realizado" id="sel_realizado"
+                        style="width: 250px;margin: auto;">
                         {{#each todos_instaladores}}
                         <option value="{{_id}}">{{nome}}</option>
                         {{/each}}
@@ -376,16 +378,40 @@
   </div>
   <!-- Fim Modal -->
 
-    <!-- Modal Observação Instalacao-->
+  <!-- Modal Observação Instalacao-->
   <div class='modal fade' id='obsinstalacao' tabindex="-1" aria-hidden="true">
-    <div class='modal-dialog modal-dialog-centered'>
+    <div class='modal-dialog modal-lg modal-dialog-centered'>
       <div class="modal-content">
         <div class="modal-header">
-          <label style="font-size: 20px;" class='modal-title fw-bold'>Observação do Instalador</label>
+          <div class="row">
+            <div class="col"></div>
+          </div>
+          <label style="font-size: 20px;" class='modal-title fw-bold'>Observações</label>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <textarea id="obsinstal" class='form-control mt-1 obsinstal' cols="30" rows="10"></textarea>
+          <div class="row">
+            <div class="col">
+              <form action="/gerenciamento/obsprojetista" method="post">
+                <input type='hidden' name='idprj' id='idprjmain' value="">
+                <input type='hidden' value='' id="modalseq">
+                <div class="div" style="display: flex;">
+                  <label style="width: 100%;" class="h5">Projeto</label>
+                </div>
+                <textarea id="" class='form-control mt-1 obsprojetista' readonly cols="30"
+                  rows="10"></textarea>
+                <textarea name="obsprojetista" id="obs" class='form-control mt-1' style="font-size: 12px;" cols="30"
+                  rows="4"></textarea>
+                <div style="display: flex;justify-content: center;">
+                  <button class="btn btn-success mt-2" style="margin-left: 10px;">Salvar</button>
+                </div>
+              </form>
+            </div>
+            <div class="col">
+              <div class="h5">Obra</div>
+              <textarea id="obsinstal" class='form-control mt-1 obsinstal' cols="30" rows="16"></textarea>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
         </div>
@@ -506,6 +532,146 @@
         tarefa.style.height = alttarefa
         grafico.style.height = alttarefa
       }
+    }
+  function showIndex(tipo) {
+      var html = '';
+      var title = '';
+      if (tipo == 'venda'){
+        title = 'Venda';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Aguardando Proposta</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Projeto Sem Responsável</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
+          "</tr>" +
+          "</table>";
+      }
+      if (tipo == 'termos'){
+        title = 'Termos de Entrega';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Termo Enviado</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Aguardando Termo</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
+          "</tr>" +
+          "</table>";
+      }      
+      if (tipo == 'projeto'){
+        title = 'Projeto';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Projeto Autorizado</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='levantamento'</td>" +
+          "</tr>" +         
+          "</table>";
+      }   
+      if (tipo == 'instalacao'){
+        title = 'Instalação';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Aguardando Vistoria</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Projeto em Execução</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Projeto Parado</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Aguardando Projeto</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
+          "</tr>" +          
+          "</table>";
+      }      
+      if (tipo == 'enviados'){
+        title = 'Orçamentos Enviados';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Pedido Realizado</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Orçamento em Andamento</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='aguardando'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Orçamento Solicitado</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
+          "</tr>" +          
+          "</table>";
+      }
+      if (tipo == 'entregue'){
+        title = 'Orçamentos Entregues';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Passou 7 dias da entrega</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Proposta Entregue</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
+          "</tr>" +       
+          "</table>";
+      }    
+      if (tipo == 'negociando'){
+        title = 'Orçamentos Negociando';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Passou 3 dias da interação</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Negociando</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
+          "</tr>" +       
+          "</table>";
+      }     
+      if (tipo == 'ganho'){
+        title = 'Orçamentos Ganhos';
+        html = "<table>" +
+          "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Autorizado Pelo Projetista</th>" +
+          "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+          "</tr>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+           "<tr style='display: flex; font-size: 12px'>" +
+          "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
+          "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='levantamento'</td>" +
+          "</tr>" +           
+          "</tr>" +       
+          "</table>";
+      }                            
+      Toast.fire({
+        html: html,
+        title: title
+      })
     }
   </script>
 

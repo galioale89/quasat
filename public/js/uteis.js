@@ -1,11 +1,15 @@
 $(document).ready(function () {
 
+    var inputsCEP = $('#rua', '#cidade', '#estado', '#bairro');
+    var inputsRUA = $('#cep', '#bairro');
+
     function limpa_formulário_cep() {
         // Limpa valores do formulário de cep.
-        $("#rua").val("");
-        $("#bairro").val("");
-        $("#cidade").val("");
-        $("#estado").val("");
+        // $("#rua").val("");
+        // $("#bairro").val("");
+        // $("#cidade").val("");
+        // $("#estado").val("");
+        inputsCEP.val('');
     }
 
     //Quando o campo cep perde o foco.
@@ -13,7 +17,6 @@ $(document).ready(function () {
 
         //Nova variável "cep" somente com dígitos.
         var cep = $(this).val().replace(/\D/g, '');
-
 
         //Verifica se campo cep possui valor informado.
         if (cep != "") {
@@ -25,10 +28,11 @@ $(document).ready(function () {
             if (validacep.test(cep)) {
 
                 //Preenche os campos com "..." enquanto consulta webservice.
-                $("#rua").val("...");
-                $("#bairro").val("...");
-                $("#cidade").val("...");
-                $("#estado").val("...");
+                // $("#rua").val("...");
+                // $("#bairro").val("...");
+                // $("#cidade").val("...");
+                // $("#estado").val("...");
+                inputsCEP.val('...');
 
                 //Consulta o webservice viacep.com.br/
                 $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
@@ -58,6 +62,33 @@ $(document).ready(function () {
             limpa_formulário_cep();
         }
     });
+
+    function get(url) {
+        $.get(url, function (data) {
+            if (!("erro" in data)) {
+                if (Object.prototype.toString.call(data) === '[object Array]') {
+                    var data = data[0];
+                }
+
+                $.each(data, function (nome, info) {
+                    $('#' + nome).val(nome == 'cep' ? info.replace(/\D/g, '') : info)
+                });
+            } else {
+                limpa_formulário_cep();
+            }
+        });
+    }
+
+    $('#rua').on('blur', function (e) {
+        if ($('#rua').val() !== '' && $('#rua').val() !== $('#rua').attr('info')
+            && $('#cidade').val() !== '' && $('#cidade').val() !== $('#cidade').attr('info')
+            && $('#estado').val() !== '' && $('#estado').val() !== $('#estado').attr('info')) {
+
+            inputsRUA.val('...')
+            get("https://viacep.com.br/ws/" + $('#estado').val() + '/' + $('#cidade').val() + '/' + $('#rua').val() + '/json/')
+        }
+    });
+
 });
 
 function valida_celular() {
@@ -192,9 +223,9 @@ function somaTotal() {
     var kitbase = document.getElementById('vlrKitBase')
     var soma = parseFloat(material.value) + parseFloat(servico.value)
     if (totalbase.value != total.value) {
-        if (parseFloat(kitbase.value) != parseFloat(material.value)){
+        if (parseFloat(kitbase.value) != parseFloat(material.value)) {
             total.value = parseFloat(material.value) + parseFloat(servico.value)
-        }else{
+        } else {
             material.value = parseFloat(total.value) - parseFloat(servico.value)
         }
     } else {
@@ -285,11 +316,11 @@ function termoEntrega() {
     })
 }
 
-function fieldValidation(field){
+function fieldValidation(field) {
     const fieldChange = document.getElementById(field)
-    if (fieldChange.value != ''){
+    if (fieldChange.value != '') {
         fieldChange.className = 'form-control form-control-sm is-valid'
-    }else{
+    } else {
         fieldChange.className = 'form-control form-control-sm is-invalid'
     }
 }
@@ -359,7 +390,7 @@ function salvarCampos() {
     // alert('params=>'+params)
     for (let i = 0; i < params.length; i++) {
         tag = params[i].tagName
-            valores = valores + params[i].value + ';'
+        valores = valores + params[i].value + ';'
     }
     campos.value = valores
     // alert('campos.value=>'+campos.value)
@@ -370,7 +401,7 @@ function salvarCampos() {
     //alert('qtd=>'+qtd)
     var dados_desc = document.getElementById('dados_desc')
     var dados_qtd = document.getElementById('dados_qtd')
-    
+
     valores = ''
     for (let i = 0; i < desc.length; i++) {
         valores = valores + desc[i].value + ';'
@@ -689,7 +720,7 @@ function manutencao() {
             icon: 'success',
             html: html,
             showCloseButton: true,
-            showConfirmButton: false,no
+            showConfirmButton: false, no
         })
     }
 }
@@ -984,3 +1015,14 @@ function imprimir() {
     data.style.display = 'none'
     descdata.style.display = ''
 }
+
+function novoVoltar() {
+    var status = $('#btnovo').text();
+    if (status == 'Novo') {
+        $('#obstext').val('');
+        $('#btnovo').text('Voltar');
+        $('#obstext').prop('readonly', false)
+    } else {
+        window.location.reload();
+    }
+}      
