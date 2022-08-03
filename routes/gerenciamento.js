@@ -4150,13 +4150,14 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
 })
 
 router.post('/projeto', ehAdmin, (req, res) => {
-    const { _id } = req.user
+    const { _id } = req.user;
+    const { pessoa } = req.user;
 
     var checkapr = false
     var checkpost = false
     var checksoli = false
-
-    Projeto.findOne({ _id: req.body.id }).lean().then((projeto) => {
+    console.log(req.body.id)
+    Projeto.findOne({ _id: req.body.id }).then((projeto) => {
 
         if (naoVazio(projeto.dataPost)) {
             checkpost = true
@@ -4170,32 +4171,35 @@ router.post('/projeto', ehAdmin, (req, res) => {
             checkapr = true
         }
 
-        if (req.body.checkPost != null && naoVazio(projeto.dataPost) == false) {
+        if (req.body.checkPost != null) {
             projeto.dataPost = dataHoje()
         } else {
             projeto.dataPost = req.body.dataPost
         }
 
-        if (req.body.checkSoli != null && naoVazio(projeto.dataSoli) == false) {
+        if (req.body.checkSoli != null) {
             projeto.dataSoli = dataHoje()
         } else {
             projeto.dataSoli = req.body.dataSoli
         }
 
-        if (req.body.checkApro != null && naoVazio(projeto.dataApro) == false) {
+        if (req.body.checkApro != null) {
             projeto.dataApro = dataHoje()
         } else {
             projeto.dataApro = req.body.dataApro
         }
 
-        if (req.body.checkTroca != null && naoVazio(projeto.dataTroca) == false) {
+        if (req.body.checkTroca != null) {
             projeto.dataTroca = dataHoje()
         } else {
             projeto.dataTroca = req.body.dataTroca
         }
 
-        projeto.save().then(() => {
-            if (req.body.salvarObs == '1') salvarObservacao(projeto, req.body.obsprojetista, req.body.id, pessoa);      
+        projeto.save().then(async () => {
+            var projetoobs = await Projeto.findById(req.body.id).lean();
+            console.log(req.body.salvarObs);
+            if (req.body.salvarObs == '1') salvarObservacao(projetoobs, req.body.obsprojetista, req.body.id, pessoa);
+            
             if (checkpost == false && naoVazio(req.body.dataPost)) {
                 // console.log('postado')
                 Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
@@ -4205,7 +4209,7 @@ router.post('/projeto', ehAdmin, (req, res) => {
                                 // console.log('vendedor.celular=>' + vendedor.celular)
                                 var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
                                     'O projeto ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi postado.' + '\n' +
-                                    'Acompanhe a proposta acessando: https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
+                                    'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
                                 // console.log(mensagem)
                                 client.messages
                                     .create({
@@ -4232,7 +4236,7 @@ router.post('/projeto', ehAdmin, (req, res) => {
                     })
                 }).catch(() => {
                     req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                    res.redirect('/gerenciamento/projeto/' + req.params.id)
+                    res.redirect('/gerenciamento/projeto/' + req.body.id)
                 })
             } else {
                 if (checksoli == false && naoVazio(req.body.dataSoli)) {
@@ -4244,7 +4248,7 @@ router.post('/projeto', ehAdmin, (req, res) => {
                                     // console.log('vendedor.celular=>' + vendedor.celular)
                                     var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
                                         'A vistoria da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi solicitada.' + '\n' +
-                                        'Acompanhe a proposta acessando: https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
+                                        'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
                                     // console.log(mensagem)
                                     client.messages
                                         .create({
@@ -4284,7 +4288,7 @@ router.post('/projeto', ehAdmin, (req, res) => {
                                         // console.log('vendedor.celular=>' + vendedor.celular)
                                         var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
                                             'A vistoria da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi aprovada.' + '\n' +
-                                            'Acompanhe a proposta acessando: https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
+                                            'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
                                         // console.log(mensagem)
                                         client.messages
                                             .create({
@@ -4319,6 +4323,9 @@ router.post('/projeto', ehAdmin, (req, res) => {
                     }
                 }
             }
+        }).catch((err) => {
+            req.flash('error_msg', 'Falha ao salvar o projeto.')
+            res.redirect('/gerenciamento/projeto/' + req.body.id)
         })
     }).catch(() => {
         req.flash('error_msg', 'Falha ao encontrar o projeto.')
