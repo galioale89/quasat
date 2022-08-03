@@ -1020,9 +1020,10 @@ function novoVoltar() {
     var status = $('#btnovo').text();
     if (status == 'Novo') {
         $('#obstext').val('');
+        $('#salvarObs').val('1');
         $('#btnovo').text('Voltar');
         $('#obstext').prop('readonly', false)
     } else {
         window.location.reload();
     }
-}      
+}     

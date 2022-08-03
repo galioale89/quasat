@@ -121,6 +121,7 @@
             </div>
             <hr>
             <form action='/gerenciamento/projeto' method='post'>
+                <input type="hidden" id="salvarObs" name="salvarObs" value="0">
                 <input type="hidden" name="id" value="{{projeto._id}}">
                 <div class="row">
                     <div class="col">
@@ -165,25 +166,19 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div style="flex">
-                                        <label style="width: 85%;" class="h6 fw-bold">Observação do Projeto</label>
-                                        <a class="btn btn-sm" id='btnovo' onclick="novoVoltar()">Novo</a>
-                                    </div>
-                                    <textarea class='form-control' readonly name="obsprojetista" id="obstext"
-                                        cols="70" rows="5">{{projeto.obsprojetista}}</textarea>
+                        <div class="card">
+                            <div class="card-body">
+                                <div style="flex">
+                                    <label style="width: 85%;" class="h6 fw-bold">Observação do Projeto</label>
+                                    <a class="btn btn-sm" id='btnovo' onclick="novoVoltar()">Novo</a>
                                 </div>
+                                <textarea class='form-control' readonly name="obsprojetista" id="obstext" cols="70"
+                                    rows="5">{{projeto.obsprojetista}}</textarea>
                             </div>
                         </div>
-                        <div class="col-md-1" style="justify-items: center;">
-                            <button type="submit" style="height: 190px;"
-                                class='btn btn-sm btn-success mt-2'>Salvar</button>
-                        </div>
                     </div>
-                    <div class="col-md-1">
-                        <button type="submit" class='btn btn-sm btn-success mt-2'>Salvar</button>
+                    <div class="col-md-1" style="justify-items: center;">
+                        <button type="submit" style="height: 190px;" class='btn btn-sm btn-success mt-2'>Salvar</button>
                     </div>
                 </div>
             </form>

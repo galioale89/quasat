@@ -4195,7 +4195,7 @@ router.post('/projeto', ehAdmin, (req, res) => {
         }
 
         projeto.save().then(() => {
-            salvarObservacao(projeto, req.body.obsprojetista, req.body.id, pessoa);      
+            if (req.body.salvarObs == '1') salvarObservacao(projeto, req.body.obsprojetista, req.body.id, pessoa);      
             if (checkpost == false && naoVazio(req.body.dataPost)) {
                 // console.log('postado')
                 Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
