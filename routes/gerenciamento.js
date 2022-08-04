@@ -2469,6 +2469,7 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
             const lista_proposta = projeto.proposta
             const lista_doc = listaFotos(projeto.documento)
+            const lista_local = listaFotos(projeto.local)
             const lista_entrada = listaFotos(projeto.entrada)
             const lista_disjuntor = listaFotos(projeto.disjuntor)
             const lista_trafo = listaFotos(projeto.trafo)
@@ -2486,8 +2487,8 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
             }
             res.render('principal/fotos', {
                 vendedor, orcamentista, funges, funpro, ehMaster, proandges, projeto, cliente_projeto,
-                lista_doc, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
-                seqdoc: lista_doc.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
+                lista_doc, lista_local, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
+                seqdoc: lista_doc.length, seqloc: lista_local.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
                 seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
             })
         }).catch((err) => {
