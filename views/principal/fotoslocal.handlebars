@@ -1,0 +1,21 @@
+<div style="width: 100%;">
+    <div class="card" style="margin: 20px;">
+        <div class="card-body">
+            <div style="display: flex;">
+                <label class="h3" style="width: 100%;">Fotos do Local</label>
+                <div class="col-md-1">
+                    <a href='/dashboard/' title="voltar">
+                        <i class="bi bi-arrow-left-circle" style="font-size: 40px;color: #847AF4;display: flex;"></i>
+                </div>
+                <hr>
+                <div class="row">
+                    {{#each lista_local}}
+                    <div class="col-md-3">
+                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>

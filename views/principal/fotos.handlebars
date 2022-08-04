@@ -129,49 +129,35 @@
             <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
         </a>
         <input type='hidden' value='{{agenda.descricao}}' id="descricao">
-        {{#if projeto.ganho}}
-        <!-- INICIO VALIDAÇÃO GANHO -->
         <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
                 style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        <a href='' class="mt-1" data-bs-toggle="modal" data-bs-target='#orcamento' title='orçamento'>
+            <i class='bi bi-eye' style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        {{#if projeto.ganho}}
+        <!-- INICIO VALIDAÇÃO GANHO -->
         <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
             <i class="bi bi-folder" style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
         </a>
-        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
-            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
-                style="font-size: 25px;color: white;padding-right: 10px;"></i>
-        </a>
-        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
-            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
-        </a>
         {{else}}
-        {{#if projeto.pedido}}
-        <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+        <a href='/gerenciamento/ganho/{{projeto._id}}/' style="margin-right: 10px;" class='mt-1'>
             <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
-        </a>
-        {{else}}
-        <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
-            <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
-        </a>
-        {{/if}}
-        <a href='' class="mt-1" data-bs-toggle="modal" data-bs-target='#orcamento' title='orçamento'>
-            <i class='bi bi-eye' style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
-        <a href='/gerenciamento/exportarOrcamento/{{projeto._id}}' class="mt-1">
-            <i class="bi bi-box-arrow-down" style="font-size: 25px;color: white;padding-right: 5px;"></i>
-        </a>
-        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
-            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
-                style="font-size: 25px;color: white;padding-right: 10px;"></i>
-        </a>
-        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
-            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
         </a>
         {{/if}}
         <!-- FIM VALIDAÇÃO GANHO -->
         <!-- FEATURES PADRÃO PARA AS DUAS SITUAÇÕES -->
+        {{#if crm}}
         <a onclick='agendar("{{projeto._id}}","{{projeto.cliente}}","{{projeto.vendedor}}","{{agenda.data}}","{{agenda._id}}")'
             style="cursor: pointer;" title='agenda'>
             <i class='bi bi-calendar-date d-flex align-items-center mt-2'
                 style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        {{/if}}
+        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
+            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
+                style="font-size: 25px;color: white;padding-right: 10px;"></i>
+        </a>
+        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
+            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
+        </a>
     </div>
     {{else}}
     <!-- INICIO ORÇAMENTISTA -->
@@ -182,28 +168,16 @@
             <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
         </a>
         <input type='hidden' value='{{agenda.descricao}}' id="descricao">
-        {{#if projeto.ganho}}
-        <!-- INICIO VALIDAÇÃO GANHO -->
         <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
                 style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        {{#if projeto.ganho}}
+        <!-- INICIO VALIDAÇÃO GANHO -->
         <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
             <i class="bi bi-folder" style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
         </a>
-        <a data-bs-toggle="modal" data-bs-target='#observacao' class='' title='observações' style="cursor: pointer;">
-            <i class='bi bi-chat-right-text d-flex align-items-center mt-2'
-                style="font-size: 25px;color: white;padding-right: 10px;"></i>
-        </a>
-        <a href='/dashboard/' style="padding-right: 10px;" class='mt-1' title="voltar">
-            <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
-        </a>
         {{else}}
-        {{#if projeto.pedido}}
-        <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+        <a href='/gerenciamento/ganho/{{projeto._id}}/' style="margin-right: 10px;" class='mt-1'>
             <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
-        </a>
-        {{else}}
-        <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
-            <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
         </a>
         {{/if}}
         <a href='' class="mt-1" data-bs-toggle="modal" data-bs-target='#orcamento' title='orçamento'>
@@ -219,8 +193,6 @@
             <i class="bi bi-arrow-left-circle" style="font-size: 25px;color: white;"></i>
         </a>
     </div>
-    {{/if}}
-    <!-- FIM VALIDAÇÃO GANHO -->
     {{else}}
     <!-- SE VENDEDOR -->
     <div class="btn-group col-12 gap-2 ativo mt-1" style="border-radius: 200px;">
@@ -229,22 +201,16 @@
             <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
         </a>
         <input type='hidden' value='{{agenda.descricao}}' id="descricao">
-        {{#if projeto.ganho}}
         <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
                 style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
+        {{#if projeto.ganho}}
         <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
             <i class="bi bi-folder" style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
         </a>
         {{else}}
-        {{#if projeto.pedido}}
-        <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
+        <a href='/gerenciamento/ganho/{{projeto._id}}/' style="margin-right: 10px;" class='mt-1'>
             <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
         </a>
-        {{else}}
-        <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
-            <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
-        </a>
-        {{/if}}
         {{/if}}
         <!-- FIM VALIDA GANHO -->
         <!-- FEATURES PADRÃO PARA AS DUAS SITUAÇÕES -->
@@ -264,8 +230,9 @@
     <!-- FIM VENDEDOR -->
     {{/if}}
     <!-- FIM ORÇAMENTISTA -->
-    {{/if}}
-    <!-- FIM MASTER -->
+    {{!-- {{/if}}
+    <!-- FIM MASTER --> --}}
+
     <!-- INICIO TABS -->
     <!-- GANHO -->
     {{#if projeto.ganho}}
@@ -321,6 +288,7 @@
                 href="/gerenciamento/fotos/{{projeto._id}}"><label
                     class="col-form-label titulo-inicio ulativo">Fotos</label></a>
         </li>
+        {{/if}}
         <!-- FIM VALIDAÇÃO -->
     </ul>
     {{/if}}
@@ -330,714 +298,840 @@
     {{/if}}
     <!-- FIM SENÃO É PROJETISTA OU GESTOR -->
 
-    <section id="topo">
-            <a href="#documento" class='btn btn-primary mb-1'>RG/CPF</a>
-            <a href="#entrada" class='btn btn-primary mb-1'>Padrão de Entrada</a>
-            <a href="#disjuntor" class='btn btn-primary mb-1'>Disjuntor</a>
-            <a href="#medidor" class='btn btn-primary mb-1'>Medidor</a>
-            <a href="#trafo" class='btn btn-primary mb-1'>Trafo</a>
-            <a href="#localizacao" class='btn btn-primary mb-1'>Localização</a>
-            <a href="#telhado" class='btn btn-primary mb-1'>Telhado</a>
-    </section>
-    <section id="documento">
-        <div class="card mt-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Adicionar RG/CPF</label>
+    <div>
+        <section id="topo">
+            <div class="col mt-1">
+                <a href="#documento" class='btn btn-primary mb-1'>RG/CPF</a>
+                <a href="#local" class='btn btn-primary mb-1'>Local</a>
+                <a href="#entrada" class='btn btn-primary mb-1'>Padrão de Entrada</a>
+                <a href="#disjuntor" class='btn btn-primary mb-1'>Disjuntor</a>
+                <a href="#medidor" class='btn btn-primary mb-1'>Medidor</a>
+                <a href="#trafo" class='btn btn-primary mb-1'>Trafo</a>
+                <a href="#telhado" class='btn btn-primary mb-1'>Telhado</a>
+                <a href="#localizacao" class='btn btn-primary mb-1'>Localização</a>
+            </div>
+        </section>
+        <section id="documento">
+            <div class="card mt-1">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar
+                            RG/CPF</label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
                     </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
-                </div>
-                <form action="/gerenciamento/salvarFotos" method="post">
-                    <input type="hidden" name="tipo" value="documento">
-                    <input type='hidden' name='id' value="{{projeto._id}}">
-                    <div>
-                        <div class="btn-group gap-2" id='bloquear'>
-                            <div class="btn start-video-doc" title='Ativar Câmera'><i style="font-size: 40px;"
-                                    class='bi bi-camera-video-fill'></i></div>
-                            <div class="btn picture-doc" title='Tirar uma foto'><i style="font-size: 40px;"
-                                    class='bi bi-camera'></i></div>
-                            <button type="submit" class="btn save-doc" title='Salvar Fotos' style="display: '';"
-                                id='upload-doc'><i style="font-size: 35px;" class='btn bi bi-save'></i> </button>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
-                        <div class="progress-bar" id="progress-doc"></div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col is-four-fifths">
-                                <video src="" width="300px" id="video-doc" style="display: none;" muted
-                                    autoplay></video>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="documento">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear'>
+                                <div class="btn start-video-doc" title='Ativar Câmera'><i style="font-size: 40px;"
+                                        class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-doc" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-doc" title='Salvar Fotos' style="display: '';"
+                                    id='upload-doc'><i style="font-size: 35px;" class='btn bi bi-save'></i> </button>
                             </div>
-                            <div class="col">
-                                <label style="display: none;font-size: 20px;padding-top: 30px;" id='lblscreen-doc'>Fotos
-                                    Tiradas</label>
-                                <div class="row" id="screen-doc">
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-doc"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-doc" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-doc'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-doc">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <canvas style="display: none;" id="canvas-doc"></canvas>
-                </form>
-                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
-                    id='bloquear1'>
-                    <input type="hidden" name='tipo' value='projeto'>
-                    <input type="hidden" name='caminho' value='documento'>
-                    <input type="hidden" name='seq' value='{{seqtra}}'>
-                    <input type='hidden' name='idprj' value="{{projeto._id}}">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
-                            <div>
-                                <input type="file" name="files" multiple class='form-control'>
-                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                {{#if projeto.documento}}
-                <div class="row mt-3">
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    {{#if lista_doc}}
-                    {{#each lista_doc}}
-                    <div class="col-md-3">
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        {{#if ehimagem}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
-                            </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
-                        {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf" width="100%"
-                            height="500">
-                            <p>Seu navegador não tem um plugin pra PDF</p>
-                        </object> --}}
-                        {{/if}}
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </section>
-    <section id="entrada">
-        <div class="card mt-4" style="margin-bottom: 50px;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Adicionar Padrão de
-                            Entrada</label>
-                    </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
-                </div>
-                <form action="/gerenciamento/salvarFotos" method="post">
-                    <input type="hidden" name="tipo" value="entrada">
-                    <input type='hidden' name='id' value="{{projeto._id}}">
-                    <div>
-                        <div class="btn-group gap-2" id='bloquear1'>
-                            <div class="btn start-video-entrada" title='Ativar Câmera'><i style="font-size: 40px;"
-                                    class='bi bi-camera-video-fill'></i></div>
-                            <div class="btn picture-entrada" title='Tirar uma foto'><i style="font-size: 40px;"
-                                    class='bi bi-camera'></i></div>
-                            <button type="submit" class="btn save-entrada" title='Salvar Fotos' style="display: '';"
-                                id='upload-entrada'><i style="font-size: 35px;" class='btn bi bi-save'></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
-                        <div class="progress-bar" id="progress-entrada"></div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col is-four-fifths">
-                                <video src="" width="300px" id="video-entrada" style="display: none;" muted
-                                    autoplay></video>
-                            </div>
-                            <div class="col">
-                                <label style="display: none;font-size: 20px;padding-top: 30px;"
-                                    id='lblscreen-entrada'>Fotos Tiradas</label>
-                                <div class="row" id="screen-entrada">
+                        <canvas style="display: none;" id="canvas-doc"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='documento'>
+                        <input type="hidden" name='seq' value='{{seqdoc}}'>
+                        <input type='hidden' name='idprj' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <canvas style="display: none;" id="canvas-entrada"></canvas>
-                </form>
-                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
-                    id='bloquear1'>
-                    <input type="hidden" name='tipo' value='projeto'>
-                    <input type="hidden" name='caminho' value='entrada'>
-                    <input type="hidden" name='seq' value='{{seqent}}'>
-                    <input type='hidden' name='idprj' value="{{projeto._id}}">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
-                            <div>
-                                <input type="file" name="files" multiple class='form-control'>
-                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
+                    </form>
+                    {{#if projeto.documento}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_doc}}
+                        {{#each lista_doc}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
                             </div>
-                        </div>
-                    </div>
-                </form>
-                {{#if projeto.entrada}}
-                <div class="row mt-3">
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    {{#if lista_entrada}}
-                    {{#each lista_entrada}}
-                    <div class="col-md-3">
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgentrada'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        {{#if ehimagem}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
-                            </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
-                        {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf" width="100%"
-                            height="500">
-                            <p>Seu navegador não tem um plugin pra PDF</p>
-                        </object> --}}
-                        {{/if}}
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </section>
-    <section id="disjuntor">
-        <div class="card mt-4" style="margin-bottom: 50px;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Adicionar Disjuntor </label>
-                    </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
-                </div>
-                <form action="/gerenciamento/salvarFotos" method="post">
-                    <input type="hidden" name="tipo" value="disjuntor">
-                    <input type='hidden' name='id' value="{{projeto._id}}">
-                    <div>
-                        <div class="btn-group gap-2" id='bloquear2'>
-                            <div class="btn start-video-disjuntor" title='Ativar Câmera'><i style="font-size: 40px;"
-                                    class='bi bi-camera-video-fill'></i></div>
-                            <div class="btn picture-disjuntor" title='Tirar uma foto'><i style="font-size: 40px;"
-                                    class='bi bi-camera'></i></div>
-                            <button type="submit" class="btn save-disjuntor" title='Salvar Fotos' style="display: '';"
-                                id='upload-disjuntor'><i style="font-size: 35px;" class='btn bi bi-save'></i> </button>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
-                        <div class="progress-bar" id="progress-disjuntor"></div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col is-four-fifths">
-                                <video src="" width="300px" id="video-disjuntor" style="display: none;" muted
-                                    autoplay></video>
-                            </div>
-                            <div class="col">
-                                <label style="display: none;font-size: 20px;padding-top: 30px;"
-                                    id='lblscreen-disjuntor'>Fotos Tiradas</label>
-                                <div class="row" id="screen-disjuntor">
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
                                 </div>
-                            </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf"
+                                width="100%" height="500">
+                                <p>Seu navegador não tem um plugin pra PDF</p>
+                            </object> --}}
+                            {{/if}}
                         </div>
-                    </div>
-                    <canvas style="display: none;" id="canvas-disjuntor"></canvas>
-                </form>
-                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
-                    id='bloquear1'>
-                    <input type="hidden" name='tipo' value='projeto'>
-                    <input type="hidden" name='caminho' value='disjuntor'>
-                    <input type="hidden" name='seq' value='{{seqdis}}'>
-                    <input type='hidden' name='idprj' value="{{projeto._id}}">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
-                            <div>
-                                <input type="file" name="files" multiple class='form-control'>
-                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                {{#if projeto.disjuntor}}
-                <div class="row mt-3">
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    {{#if lista_disjuntor}}
-                    {{#each lista_disjuntor}}
-                    <div class="col-md-3">
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdisjuntor'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        {{#if ehimagem}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
-                            </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
-                        {{/if}}
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </section>
-    <section id="medidor">
-        <div class="card mt-4" style="margin-bottom: 50px;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Adicionar Medidor </label>
-                    </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
-                </div>
-                <form action="/gerenciamento/salvarFotos" method="post">
-                    <input type="hidden" name="tipo" value="medidor">
-                    <input type='hidden' name='id' value="{{projeto._id}}">
-                    <div>
-                        <div class="btn-group gap-2" id='bloquear2'>
-                            <div class="btn start-video-medidor" title='Ativar Câmera'><i style="font-size: 40px;"
-                                    class='bi bi-camera-video-fill'></i></div>
-                            <div class="btn picture-medidor" title='Tirar uma foto'><i style="font-size: 40px;"
-                                    class='bi bi-camera'></i></div>
-                            <button type="submit" class="btn save-medidor" title='Salvar Fotos' style="display: '';"
-                                id='upload-medidor'><i style="font-size: 35px;" class='btn bi bi-save'></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
-                        <div class="progress-bar" id="progress-medidor"></div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col is-four-fifths">
-                                <video src="" width="300px" id="video-medidor" style="display: none;" muted
-                                    autoplay></video>
-                            </div>
-                            <div class="col">
-                                <label style="display: none;font-size: 20px;padding-top: 30px;"
-                                    id='lblscreen-medidor'>Fotos Tiradas</label>
-                                <div class="row" id="screen-medidor">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <canvas style="display: none;" id="canvas-medidor"></canvas>
-                </form>
-                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
-                    id='bloquear1'>
-                    <input type="hidden" name='tipo' value='projeto'>
-                    <input type="hidden" name='caminho' value='medidor'>
-                    <input type="hidden" name='seq' value='{{seqmed}}'>
-                    <input type='hidden' name='idprj' value="{{projeto._id}}">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
-                            <div>
-                                <input type="file" name="files" multiple class='form-control'>
-                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                {{#if projeto.medidor}}
-                <div class="row mt-3">
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    {{#if lista_medidor}}
-                    {{#each lista_medidor}}
-                    <div class="col-md-3">
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgmedidor'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        {{#if ehimagem}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
-                            </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
-                        {{/if}}
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </section>
-    <section id="trafo">
-        <div class="card mt-4" style="margin-bottom: 50px;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Adicionar Trafo </label>
-                    </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
-                </div>
-                <form action="/gerenciamento/salvarFotos" method="post">
-                    <input type="hidden" name="tipo" value="trafo">
-                    <input type='hidden' name='id' value="{{projeto._id}}">
-                    <div>
-                        <div class="btn-group gap-2" id='bloquear3'>
-                            <div class="btn start-video-trafo" title='Ativar Câmera'><i style="font-size: 40px;"
-                                    class='bi bi-camera-video-fill'></i></div>
-                            <div class="btn picture-trafo" title='Tirar uma foto'><i style="font-size: 40px;"
-                                    class='bi bi-camera'></i></div>
-                            <button type="submit" class="btn save-trafo" title='Salvar Fotos' style="display: '';"
-                                id='upload-trafo'><i style="font-size: 35px;" class='btn bi bi-save'></i> </button>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
-                        <div class="progress-bar" id="progress-trafo"></div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col is-four-fifths">
-                                <video src="" width="300px" id="video-trafo" style="display: none;" muted
-                                    autoplay></video>
-                            </div>
-                            <div class="col">
-                                <label style="display: none;font-size: 20px;padding-top: 30px;"
-                                    id='lblscreen-trafo'>Fotos Tiradas</label>
-                                <div class="row" id="screen-trafo">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <canvas style="display: none;" id="canvas-trafo"></canvas>
-                </form>
-                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
-                    id='bloquear1'>
-                    <input type="hidden" name='tipo' value='projeto'>
-                    <input type="hidden" name='caminho' value='trafo'>
-                    <input type="hidden" name='seq' value='{{seqtrf}}'>
-                    <input type='hidden' name='idprj' value="{{projeto._id}}">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
-                            <div>
-                                <input type="file" name="files" multiple class='form-control'>
-                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                {{#if projeto.trafo}}
-                <div class="row mt-3">
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    {{#if lista_trafo}}
-                    {{#each lista_trafo}}
-                    <div class="col-md-3">
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgtrafo'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        {{#if ehimagem}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
-                            </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
-                        {{/if}}
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </section>
-    <section id="telhado">
-        <div class="card mt-4" style="margin-bottom: 50px;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Adicionar Telhado
-                        </label>
-                    </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
-                </div>
-                <form action="/gerenciamento/salvarFotos" method="post">
-                    <input type="hidden" name="tipo" value="telhado">
-                    <input type='hidden' name='id' value="{{projeto._id}}">
-                    <div>
-                        <div class="btn-group gap-2" id='bloquear4'>
-                            <div class="btn start-video-telhado" title='Ativar Câmera'><i style="font-size: 40px;"
-                                    class='bi bi-camera-video-fill'></i></div>
-                            <div class="btn picture-telhado" title='Tirar uma foto'><i style="font-size: 40px;"
-                                    class='bi bi-camera'></i></div>
-                            <button type="submit" class="btn save-telhado" title='Salvar Fotos' style="display: '';"
-                                id='upload-telhado'><i style="font-size: 35px;" class='btn bi bi-save'></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
-                        <div class="progress-bar" id="progress-telhado"></div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col is-four-fifths">
-                                <video src="" width="300px" id="video-telhado" style="display: none;" muted
-                                    autoplay></video>
-                            </div>
-                            <div class="col">
-                                <label style="display: none;font-size: 20px;padding-top: 30px;"
-                                    id='lblscreen-telhado'>Fotos Tiradas</label>
-                                <div class="row" id="screen-telhado">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <canvas style="display: none;" id="canvas-telhado"></canvas>
-                </form>
-                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
-                    id='bloquear5'>
-                    <input type="hidden" name='tipo' value='projeto'>
-                    <input type="hidden" name='caminho' value='telhado'>
-                    <input type="hidden" name='seq' value='{{seqtel}}'>
-                    <input type='hidden' name='idprj' value="{{projeto._id}}">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
-                            <div>
-                                <input type="file" name="files" multiple class='form-control'>
-                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                {{#if projeto.telhado_foto}}
-                <div class="row mt-3">
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    {{#if lista_telhado}}
-                    {{#each lista_telhado}}
-                    <div class="col-md-3">
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgtelhado'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        {{#if ehimagem}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
-                            </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
-                        {{/if}}
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </section>
-    <section id="localizacao">
-        <div class="card mt-4" style="margin-bottom: 50px;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Adicionar Localização
-                        </label>
-                    </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
-                </div>
-                <form action="/gerenciamento/salvarFotos" method="post">
-                    <input type="hidden" name="tipo" value="localizacao">
-                    <input type='hidden' name='id' value="{{projeto._id}}">
-                    <div>
-                        <div class="btn-group gap-2" id='bloquear4'>
-                            <div class="btn start-video-localizacao" title='Ativar Câmera'><i style="font-size: 40px;"
-                                    class='bi bi-camera-video-fill'></i></div>
-                            <div class="btn picture-localizacao" title='Tirar uma foto'><i style="font-size: 40px;"
-                                    class='bi bi-camera'></i></div>
-                            <button type="submit" class="btn save-localizacao" title='Salvar Fotos' style="display: '';"
-                                id='upload-localizacao'><i style="font-size: 35px;" class='btn bi bi-save'></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
-                        <div class="progress-bar" id="progress-localizacao"></div>
-                    </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col is-four-fifths">
-                                <video src="" width="300px" id="video-localizacao" style="display: none;" muted
-                                    autoplay></video>
-                            </div>
-                            <div class="col">
-                                <label style="display: none;font-size: 20px;padding-top: 30px;"
-                                    id='lblscreen-localizacao'>Fotos Tiradas</label>
-                                <div class="row" id="screen-localizacao">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <canvas style="display: none;" id="canvas-localizacao"></canvas>
-                </form>
-                <form action="/gerenciamento/salvarImagem" class='bloquear' method="post" enctype="multipart/form-data"
-                    id='bloquear5'>
-                    <input type="hidden" name='tipo' value='projeto'>
-                    <input type="hidden" name='caminho' value='localizacao'>
-                    <input type="hidden" name='seq' value='{{seqloc}}'>
-                    <input type='hidden' name='idprj' value="{{projeto._id}}">
-                    <div class="card">
-                        <div class="card-body">
-                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
-                            <div>
-                                <input type="file" name="files" multiple class='form-control'>
-                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                {{#if projeto.localizacao}}
-                <div class="row mt-3">
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    {{#if lista_localizacao}}
-                    {{#each lista_localizacao}}
-                    <div class="col-md-3">
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimglocalizacao'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        {{#if ehimagem}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
-                            </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
-                        {{/if}}
-                    </div>
-                    {{/each}}
-                    {{/if}}
-                </div>
-                {{/if}}
-            </div>
-        </div>
-    </section>
-    <section id="orcamento">
-        <div class="card mt-4 mb-4">
-            <div class="card-body">
-                <div class="text-start">
-                    <label style="font-size: 30px;font-weight: 600;padding: 15px;">Proposta
-                    </label>
-                </div>
-                <div>
-                    <table>
-                        <tr>
-                            <th style="width: 10%;">Sequência</th>
-                            <th style="width: 40%;">Descrição</th>
-                            <th style="width: 10%;">Exibir</th>
-                            <th style="width: 10%;">Baixar</th>
-                        </tr>
-                        {{#each lista_proposta}}
-                        <tr>
-                            <td>{{seq}}</td>
-                            <td>{{arquivo}}</td>
-                            <td>
-                                <a class="btn btn-sm btn-primary" href='/gerenciamento/mostrarBucket/{{arquivo}}'
-                                    target="_blank"><i class='bi bi-eye'></i></a>
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-primary" href='/gerenciamento/mostrarBucket/{{arquivo}}'
-                                    download="{{arquivo}}"><i class='bi bi-arrow-down-circle'></i></a>
-                            </td>
-                        </tr>
                         {{/each}}
-                    </table>
+                        {{/if}}
+                    </div>
+                    {{/if}}
                 </div>
             </div>
-        </div>
-    </section>
-    <section id="pedido">
-        <div class="card mt-4" style="margin-bottom: 200px;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-2 text-start">
-                        <label style="font-size: 30px;font-weight: 600;padding: 15px;">Pedido
+        </section>
+        <section id="local">
+            <div class="card mt-1">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Fotos do
+                            Local</label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
+                    </div>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="local">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear'>
+                                <div class="btn start-video-local" title='Ativar Câmera'><i style="font-size: 40px;"
+                                        class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-local" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-local" title='Salvar Fotos' style="display: '';"
+                                    id='upload-local'><i style="font-size: 35px;" class='btn bi bi-save'></i> </button>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-local"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-local" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-local'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-local">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas-local"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='local'>
+                        <input type="hidden" name='seq' value='{{seqdoc}}'>
+                        <input type='hidden' name='idprj' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{#if projeto.local}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_doc}}
+                        {{#each lista_doc}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
+                            </div>
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf"
+                                width="100%" height="500">
+                                <p>Seu navegador não tem um plugin pra PDF</p>
+                            </object> --}}
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+        <section id="entrada">
+            <div class="card mt-1" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Padrão de
+                            Entrada</label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
+                    </div>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="entrada">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear1'>
+                                <div class="btn start-video-entrada" title='Ativar Câmera'><i style="font-size: 40px;"
+                                        class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-entrada" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-entrada" title='Salvar Fotos' style="display: '';"
+                                    id='upload-entrada'><i style="font-size: 35px;" class='btn bi bi-save'></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-entrada"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-entrada" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-entrada'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-entrada">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas-entrada"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='entrada'>
+                        <input type="hidden" name='seq' value='{{seqent}}'>
+                        <input type='hidden' name='idprj' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{#if projeto.entrada}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_entrada}}
+                        {{#each lista_entrada}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgentrada'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
+                            </div>
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf"
+                                width="100%" height="500">
+                                <p>Seu navegador não tem um plugin pra PDF</p>
+                            </object> --}}
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+        <section id="disjuntor">
+            <div class="card mt-1" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Disjuntor </label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
+                    </div>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="disjuntor">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear2'>
+                                <div class="btn start-video-disjuntor" title='Ativar Câmera'><i style="font-size: 40px;"
+                                        class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-disjuntor" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-disjuntor" title='Salvar Fotos'
+                                    style="display: '';" id='upload-disjuntor'><i style="font-size: 35px;"
+                                        class='btn bi bi-save'></i> </button>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-disjuntor"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-disjuntor" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-disjuntor'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-disjuntor">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas-disjuntor"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='disjuntor'>
+                        <input type="hidden" name='seq' value='{{seqdis}}'>
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{#if projeto.disjuntor}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_disjuntor}}
+                        {{#each lista_disjuntor}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdisjuntor'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
+                            </div>
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+        <section id="medidor">
+            <div class="card mt-1" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Medidor
                         </label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
                     </div>
-                    <div class="col">
-                        <a href='/relatorios/pedido/{{projeto._id}}' style="color: rgb(40, 55, 86);"><i
-                                style="font-size: 30px;" class="bi bi-printer d-flex align-items-left mt-3"></i></a>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="medidor">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear2'>
+                                <div class="btn start-video-medidor" title='Ativar Câmera'><i style="font-size: 40px;"
+                                        class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-medidor" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-medidor" title='Salvar Fotos' style="display: '';"
+                                    id='upload-medidor'><i style="font-size: 35px;" class='btn bi bi-save'></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-medidor"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-medidor" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-medidor'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-medidor">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas-medidor"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='medidor'>
+                        <input type="hidden" name='seq' value='{{seqmed}}'>
+                        <input type='hidden' name='idprj' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{#if projeto.medidor}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_medidor}}
+                        {{#each lista_medidor}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgmedidor'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
+                            </div>
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
                     </div>
-                    <div class='col-md-1 text-end'>
-                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 30px;"></i></a>
-                    </div>
+                    {{/if}}
                 </div>
             </div>
-        </div>
-    </section>
-</div>
+        </section>
+        <section id="trafo">
+            <div class="card mt-1" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Trafo
+                        </label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
+                    </div>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="trafo">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear3'>
+                                <div class="btn start-video-trafo" title='Ativar Câmera'><i style="font-size: 40px;"
+                                        class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-trafo" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-trafo" title='Salvar Fotos' style="display: '';"
+                                    id='upload-trafo'><i style="font-size: 35px;" class='btn bi bi-save'></i> </button>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-trafo"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-trafo" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-trafo'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-trafo">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas-trafo"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='trafo'>
+                        <input type="hidden" name='seq' value='{{seqtrf}}'>
+                        <input type='hidden' name='idprj' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{#if projeto.trafo}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_trafo}}
+                        {{#each lista_trafo}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgtrafo'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
+                            </div>
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+        <section id="telhado">
+            <div class="card mt-1" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Tellhado
+                        </label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
+                    </div>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="telhado">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear4'>
+                                <div class="btn start-video-telhado" title='Ativar Câmera'><i style="font-size: 40px;"
+                                        class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-telhado" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-telhado" title='Salvar Fotos' style="display: '';"
+                                    id='upload-telhado'><i style="font-size: 35px;" class='btn bi bi-save'></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-telhado"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-telhado" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-telhado'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-telhado">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas-telhado"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='telhado'>
+                        <input type="hidden" name='seq' value='{{seqtel}}'>
+                        <input type='hidden' name='idprj' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{#if projeto.telhado_foto}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_telhado}}
+                        {{#each lista_telhado}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgtelhado'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
+                            </div>
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+        <section id="localizacao">
+            <div class="card mt-1" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Localização
+                        </label>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
+                    </div>
+                    <form action="/gerenciamento/salvarFotos" method="post">
+                        <input type="hidden" name="tipo" value="localizacao">
+                        <input type='hidden' name='id' value="{{projeto._id}}">
+                        <div>
+                            <div class="btn-group gap-2" id='bloquear4'>
+                                <div class="btn start-video-localizacao" title='Ativar Câmera'><i
+                                        style="font-size: 40px;" class='bi bi-camera-video-fill'></i></div>
+                                <div class="btn picture-localizacao" title='Tirar uma foto'><i style="font-size: 40px;"
+                                        class='bi bi-camera'></i></div>
+                                <button type="submit" class="btn save-localizacao" title='Salvar Fotos'
+                                    style="display: '';" id='upload-localizacao'><i style="font-size: 35px;"
+                                        class='btn bi bi-save'></i> </button>
+                            </div>
+                        </div>
+                        <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                            <div class="progress-bar" id="progress-localizacao"></div>
+                        </div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col is-four-fifths">
+                                    <video src="" width="300px" id="video-localizacao" style="display: none;" muted
+                                        autoplay></video>
+                                </div>
+                                <div class="col">
+                                    <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                        id='lblscreen-localizacao'>Fotos Tiradas</label>
+                                    <div class="row" id="screen-localizacao">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <canvas style="display: none;" id="canvas-localizacao"></canvas>
+                    </form>
+                    <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                        enctype="multipart/form-data" id='bloquear1'>
+                        <input type="hidden" name='tipo' value='projeto'>
+                        <input type="hidden" name='caminho' value='localizacao'>
+                        <input type="hidden" name='seq' value='{{seqloc}}'>
+                        <input type='hidden' name='idprj' value="{{projeto._id}}">
+                        <div class="card">
+                            <div class="card-body">
+                                <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                                <div>
+                                    <input type="file" name="files" multiple class='form-control'>
+                                    <button type="submit" class='btn btn-success mt-1'><i
+                                            class='bi bi-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {{#if projeto.localizacao}}
+                    <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                        {{#if lista_localizacao}}
+                        {{#each lista_localizacao}}
+                        <div class="col-md-3">
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimglocalizacao'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
+                            </div>
+                            {{#if ehimagem}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;"
+                                    alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+        <section id="fotoped">
+            <div class="card mt-1" style="margin-bottom: 200px;">
+                <div class="card-body">
+                    <div style="display: flex">
+                        <div style="width: 100%;">
+                            <label style="font-size: 20px;font-weight: 600;padding: 15px;">Pedido</label>
+                            <a href='/relatorios/pedido/{{projeto._id}}'
+                                style="color: rgb(40, 55, 86);"><i
+                                    class="bi bi-printer" style="font-size: 20px;"></i></a>
+                        </div>
+                        <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
+                    </div>
+                </div>
+
+                {{!-- <form action="/gerenciamento/salvarFotos" method="post">
+                    <input type="hidden" name="tipo" value="fotoped">
+                    <input type='hidden' name='id' value="{{projeto._id}}">
+                    <div>
+                        <div class="btn-group gap-2" id='bloquear5'>
+                            <div class="btn start-video-fotoped" title='Ativar Câmera'><i style="font-size: 40px;"
+                                    class='bi bi-camera-video-fill'></i></div>
+                            <div class="btn picture-fotoped" title='Tirar uma foto'><i style="font-size: 40px;"
+                                    class='bi bi-camera'></i></div>
+                            <button type="submit" class="btn save-fotoped" title='Salvar Fotos' style="display: '';"
+                                id='upload-fotoped'><i style="font-size: 35px;" class='btn bi bi-save'></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="progress mb-3" style="width: 100px;margin-left: 125px;display: none">
+                        <div class="progress-bar" id="progress-fotoped"></div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col is-four-fifths">
+                                <video src="" width="300px" id="video-fotoped" style="display: none;" muted
+                                    autoplay></video>
+                            </div>
+                            <div class="col">
+                                <label style="display: none;font-size: 20px;padding-top: 30px;"
+                                    id='lblscreen-fotoped'>Fotos Tiradas</label>
+                                <div class="row" id="screen-fotoped">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas style="display: none;" id="canvas-fotoped"></canvas>
+                </form> --}}
+                {{!-- <form action="/gerenciamento/salvarImagem" class='bloquear' method="post"
+                    enctype="multipart/form-data" id='bloquear1'>
+                    <input type="hidden" name='tipo' value='projeto'>
+                    <input type="hidden" name='caminho' value='fotoped'>
+                    <input type='hidden' name='id' value="{{projeto._id}}">
+                    <div class="card">
+                        <div class="card-body">
+                            <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
+                            <div>
+                                <input type="file" name="files" multiple class='form-control'>
+                                <button type="submit" class='btn btn-success mt-1'><i class='bi bi-save'></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form> --}}
+                {{!-- {{#if projeto.fotoped}}
+                <div class="row mt-3">
+                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
+                    {{#if lista_fotoped}}
+                    {{#each lista_fotoped}}
+                    <div class="col-md-3">
+                        <div style="width: 1px;">
+                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}fotosped'
+                                class='botao-filter'><i class='bi bi-x-circle'
+                                    style="font-size: 20px;color: orangered"></i></a>
+                        </div>
+                        {{#if ehimagem}}
+                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                            <img src='/gerenciamento/mostrarBucket/{{desc}}' style="width: 80%;" alt='Minha Figura'></a>
+                        {{/if}}
+                        {{#if ehpdf}}
+                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                            <div style="font-size: 50px;">
+                                <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
+                            </div>
+                            <i class="bi bi-arrow-down-circle"></i>
+                        </a>
+                        {{/if}}
+                    </div>
+                    {{/each}}
+                    {{/if}}
+                </div>
+                {{/if}} --}}
+            </div>
+        </section>
+    </div>
 </div>
 
 <script>
@@ -1065,7 +1159,6 @@
             }
         })
     }
-
     function move(salvarId, progressId) {
         const btnsalvar = document.getElementById(salvarId)
         var elem = document.getElementById(progressId)
@@ -1146,7 +1239,8 @@
             imgblob.type = 'hidden'
             imgblob.value = url
 
-            var idiv = url.replace('blob:https://quasat.vimmus.com.br/', '')
+            var idiv = url.replace('blob:https://vimmus.com.br/', '')
+            //var idiv = url.replace('blob:http://  st:3001/', '')
 
             div0.className = 'row'
             div1.className = 'col-md-4'
@@ -1172,6 +1266,11 @@
         carregar('Capturando a imagem!')
     }
 
+    document.querySelector('.start-video-local').addEventListener('click', event => { startCamera('video-local', 'lblscreen-local') })
+
+    document.querySelector('.picture-local').addEventListener('click', event => { takePicture('screen-local', 'canvas-local', 'video-local', 'upload-local', 'progress-local') })
+
+    document.querySelector('.save-local').addEventListener('click', event => { carregar('Fazendo upload da(s) imagem(ns)!') })
 
     document.querySelector('.start-video-doc').addEventListener('click', event => { startCamera('video-doc', 'lblscreen-doc') })
 
@@ -1214,4 +1313,11 @@
     document.querySelector('.picture-telhado').addEventListener('click', event => { takePicture('screen-telhado', 'canvas-telhado', 'video-telhado', 'upload-telhado', 'progress-telhado') })
 
     document.querySelector('.save-telhado').addEventListener('click', event => { carregar('Fazendo upload da(s) imagem(ns)!') })
+
+    document.querySelector('.start-video-fotoped').addEventListener('click', event => { startCamera('video-fotoped', 'lblscreen-fotoped') })
+
+    document.querySelector('.picture-fotoped').addEventListener('click', event => { takePicture('screen-fotoped', 'canvas-fotoped', 'video-fotoped', 'upload-fotoped', 'progress-fotoped') })
+
+    document.querySelector('.save-fotoped').addEventListener('click', event => { carregar('Fazendo upload da(s) imagem(ns)!') })
+
 </script>

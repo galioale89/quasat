@@ -271,6 +271,16 @@ const Projeto = new Schema({
             require: false
         }
     }],
+    local: [{
+        desc: {
+            type: String,
+            require: false
+        },
+        data: {
+            type: String,
+            require: false
+        }
+    }],    
     telhado_foto: [{
         desc: {
             type: String,
