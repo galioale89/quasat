@@ -102,6 +102,15 @@ async function salvarObservacao(projeto, obsprojetista, id, pessoa) {
     }
 }
 
+router.get('/fotoslocal/:id', ehAdmin, async (req,res)=>{
+    const projeto = await Projeto.findById(req.params.id);
+    var lista_local = [];
+    if (naoVazio(projeto.local)){
+        lista_local = listaFotos(projeto.local);
+    }
+    res.render('principal/fotoslocal', {lista_local})
+})
+
 router.get('/obsinstalacao/:id', ehAdmin, async (req, res) => {
     let observacao;
     let ObjectId = mongoose.Types.ObjectId;
