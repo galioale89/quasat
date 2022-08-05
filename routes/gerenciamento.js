@@ -8085,9 +8085,9 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
 
     console.log('instalador=>' + typeof (req.body.instalador))
     // console.log('id=>'+typeof(id_ins._id))
-
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
+
             Equipe.aggregate([
                 {
                     $match: match
@@ -8114,103 +8114,104 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     observacao = item.observacao;
                     deadline = await item.dtfim;
                     if (naoVazio(deadline) == false) {
-                        deadline = '0000-00-00'
+                        deadline = '0000-00-00';
                     }
                     qtdmod = await item.qtdmod;
+
+
                     let projetos = await item.projeto;
+                    let instaladores = await item.instalador;
 
-                    projetos.map(async register => {
-                        id = register._id
-                        seq = register.seq
-                        cidade = register.cidade
-                        uf = register.uf
-                        telhado = register.telhado
-                        estrutura = register.estrutura
-                        inversor = register.plaKwpInv
-                        modulos = register.plaQtdMod
-                        potencia = register.plaWattMod
-                        instalado = register.instalado
-                        execucao = register.execucao
-                        parado = register.parado
-                        autorizado = register.autorizado
-                        pagamento = register.pago
-                        cliente = register.cliente
-                        ins_banco = register.ins_banco
-                        checkReal = register.ins_real
-                        obsprojetista = register.obsprojetista
+                    if (projetos.length > 0) {
 
-                        if (checkReal != true) {
-                            checkReal = 'unchecked'
-                        } else {
-                            checkReal = 'checked'
-                        }
+                        projetos.map(async register => {
+                            id = register._id
+                            seq = register.seq
+                            cidade = register.cidade
+                            uf = register.uf
+                            telhado = register.telhado
+                            estrutura = register.estrutura
+                            inversor = register.plaKwpInv
+                            modulos = register.plaQtdMod
+                            potencia = register.plaWattMod
+                            instalado = register.instalado
+                            execucao = register.execucao
+                            parado = register.parado
+                            autorizado = register.autorizado
+                            pagamento = register.pago
+                            cliente = register.cliente
+                            ins_banco = register.ins_banco
+                            checkReal = register.ins_real
+                            pedido = register.pedido
+                            obsprojetista = register.obsprojetista
 
-                        if (naoVazio(modulos) && naoVazio(potencia)) {
-                            sistema = ((modulos * potencia) / 1000).toFixed(2);
-                        } else {
-                            sistema = 0;
-                        }
-                    })
-
-                    let instaladores = await item.instalador
-
-                    instaladores.map(async register => {
-                        instalador = register.nome;
-
-                        nome_ins = instalador;
-                        id_ins = register._id;
-
-                        if (naoVazio(ins_banco)) {
-                            if (register._id == ins_banco) {
-                                addInstalador = [{ instalador, qtdmod }];
+                            if (checkReal != true) {
+                                checkReal = 'unchecked';
                             } else {
-                                let nome_instalador = await Pessoa.findById(ins_banco);
-                                addInstalador = [{ instalador: nome_instalador.nome, qtdmod }];
+                                checkReal = 'checked';
                             }
-                        } else {
-                            addInstalador = [{ instalador, qtdmod }];
-                        }
-                    })
 
+                            if (naoVazio(modulos) && naoVazio(potencia)) {
+                                sistema = ((modulos * potencia) / 1000).toFixed(2);
+                            } else {
+                                sistema = 0;
+                            }
 
-                    if (naoVazio(ins_banco)) {
-                        await Pessoa.findById(ins_banco).then(this_ins_banco => {
-                            nome_ins_banco = this_ins_banco.nome;
-                            id_ins_banco = this_ins_banco._id;
                         })
-                    } else {
-                        nome_ins_banco = '';
-                        id_ins_banco = '';
+
+                        if (naoVazio(pedido)) {
+
+                            instaladores.map(async register => {
+                                instalador = register.nome;
+
+                                nome_ins = instalador;
+                                id_ins = register._id;
+
+                                if (naoVazio(ins_banco)) {
+                                    if (register._id == ins_banco) {
+                                        addInstalador = [{ instalador, qtdmod }];
+                                    } else {
+                                        let nome_instalador = await Pessoa.findById(ins_banco);
+                                        addInstalador = [{ instalador: nome_instalador.nome, qtdmod }];
+                                    }
+                                } else {
+                                    addInstalador = [{ instalador, qtdmod }];
+                                }
+                            })
+
+                            if (naoVazio(ins_banco)) {
+                                await Pessoa.findById(ins_banco).then(this_ins_banco => {
+                                    nome_ins_banco = this_ins_banco.nome;
+                                    id_ins_banco = this_ins_banco._id;
+                                })
+                            } else {
+                                nome_ins_banco = '';
+                                id_ins_banco = '';
+                            }
+
+                            await Cliente.findById(cliente).then(this_cliente => {
+                                nome_cliente = this_cliente.nome;
+                            })
+
+                            listaAndamento.push({
+                                id, seq, parado, execucao, autorizado, pagamento, observacao, obsprojetista,
+                                instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+                                sistema, modulos, potencia, inversor, deadline, addInstalador,
+                                dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
+                            })
+
+                            addInstalador = [];
+                        }
                     }
-
-                    await Cliente.findById(cliente).then(this_cliente => {
-                        nome_cliente = this_cliente.nome;
-                    })
-
-                    listaAndamento.push({
-                        id, seq, parado, execucao, autorizado, pagamento, observacao, obsprojetista,
-                        instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
-                        sistema, modulos, potencia, inversor, deadline, addInstalador,
-                        dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
-                    })
-                    addInstalador = [];
                 }
 
                 listaAndamento.sort(comparaNum);
-
-                if (filter_installer != 'Todos') {
-                    const installer = await Pessoa.findById(filter_installer);
-                } else {
-                    installer_name = 'Todos';
-                }
-
                 res.render('principal/emandamento', {
-                    listaAndamento, todos_clientes, todos_instaladores,
-                    datafim, dataini,
-                    installer_id: filter_installer, installer_name,
-                    status: filter_status
+                    listaAndamento, todos_clientes,
+                    todos_instaladores, datafim, dataini
                 })
             })
+
         }).catch((err) => {
             req.flash('error_msg', 'Nenhum instalador encontrado.')
             res.redirect('/dashboard')
@@ -8219,6 +8220,139 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
         req.flash('error_msg', 'Nenhum cliente encontrado.')
         res.redirect('/dashboard')
     })
+    //     Cliente.find({ user: id }).lean().then((todos_clientes) => {
+    //         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
+    //             Equipe.aggregate([
+    //                 {
+    //                     $match: match
+    //                 },
+    //                 {
+    //                     $lookup: {
+    //                         from: 'projetos',
+    //                         localField: '_id',
+    //                         foreignField: 'equipe',
+    //                         as: 'projeto'
+    //                     }
+    //                 },
+    //                 {
+    //                     $lookup: {
+    //                         from: 'pessoas',
+    //                         localField: 'insres',
+    //                         foreignField: '_id',
+    //                         as: 'instalador',
+    //                     }
+    //                 }
+    //             ]).then(async list => {
+
+    //                 for (const item of list) {
+    //                     observacao = item.observacao;
+    //                     deadline = await item.dtfim;
+    //                     if (naoVazio(deadline) == false) {
+    //                         deadline = '0000-00-00'
+    //                     }
+    //                     qtdmod = await item.qtdmod;
+    //                     let projetos = await item.projeto;
+
+    //                     projetos.map(async register => {
+    //                         id = register._id
+    //                         seq = register.seq
+    //                         cidade = register.cidade
+    //                         uf = register.uf
+    //                         telhado = register.telhado
+    //                         estrutura = register.estrutura
+    //                         inversor = register.plaKwpInv
+    //                         modulos = register.plaQtdMod
+    //                         potencia = register.plaWattMod
+    //                         instalado = register.instalado
+    //                         execucao = register.execucao
+    //                         parado = register.parado
+    //                         autorizado = register.autorizado
+    //                         pagamento = register.pago
+    //                         cliente = register.cliente
+    //                         ins_banco = register.ins_banco
+    //                         checkReal = register.ins_real
+    //                         obsprojetista = register.obsprojetista
+
+    //                         if (checkReal != true) {
+    //                             checkReal = 'unchecked'
+    //                         } else {
+    //                             checkReal = 'checked'
+    //                         }
+
+    //                         if (naoVazio(modulos) && naoVazio(potencia)) {
+    //                             sistema = ((modulos * potencia) / 1000).toFixed(2);
+    //                         } else {
+    //                             sistema = 0;
+    //                         }
+    //                     })
+
+    //                     let instaladores = await item.instalador
+
+    //                     instaladores.map(async register => {
+    //                         instalador = register.nome;
+
+    //                         nome_ins = instalador;
+    //                         id_ins = register._id;
+
+    //                         if (naoVazio(ins_banco)) {
+    //                             if (register._id == ins_banco) {
+    //                                 addInstalador = [{ instalador, qtdmod }];
+    //                             } else {
+    //                                 let nome_instalador = await Pessoa.findById(ins_banco);
+    //                                 addInstalador = [{ instalador: nome_instalador.nome, qtdmod }];
+    //                             }
+    //                         } else {
+    //                             addInstalador = [{ instalador, qtdmod }];
+    //                         }
+    //                     })
+
+
+    //                     if (naoVazio(ins_banco)) {
+    //                         await Pessoa.findById(ins_banco).then(this_ins_banco => {
+    //                             nome_ins_banco = this_ins_banco.nome;
+    //                             id_ins_banco = this_ins_banco._id;
+    //                         })
+    //                     } else {
+    //                         nome_ins_banco = '';
+    //                         id_ins_banco = '';
+    //                     }
+
+    //                     await Cliente.findById(cliente).then(this_cliente => {
+    //                         nome_cliente = this_cliente.nome;
+    //                     })
+
+    //                     listaAndamento.push({
+    //                         id, seq, parado, execucao, autorizado, pagamento, observacao, obsprojetista,
+    //                         instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+    //                         sistema, modulos, potencia, inversor, deadline, addInstalador,
+    //                         dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
+    //                     })
+    //                     addInstalador = [];
+    //                 }
+
+    //                 listaAndamento.sort(comparaNum);
+
+    //                 if (filter_installer != 'Todos') {
+    //                     const installer = await Pessoa.findById(filter_installer);
+    //                 } else {
+    //                     installer_name = 'Todos';
+    //                 }
+
+    //                 res.render('principal/emandamento', {
+    //                     listaAndamento, todos_clientes, todos_instaladores,
+    //                     datafim, dataini,
+    //                     installer_id: filter_installer, installer_name,
+    //                     status: filter_status
+    //                 })
+    //             })
+    //         }).catch((err) => {
+    //             req.flash('error_msg', 'Nenhum instalador encontrado.')
+    //             res.redirect('/dashboard')
+    //         })
+    //     }).catch((err) => {
+    //         req.flash('error_msg', 'Nenhum cliente encontrado.')
+    //         res.redirect('/dashboard')
+    //     })
 })
 
 // router.post('/emandamento/', ehAdmin, async (req, res) => {
