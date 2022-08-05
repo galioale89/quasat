@@ -90,7 +90,147 @@ $(document).ready(function () {
     });
 
 });
-
+function showIndex(tipo) {
+    var html = '';
+    var title = '';
+    if (tipo == 'venda') {
+      title = 'Venda';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Aguardando Proposta</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Projeto Sem Responsável</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
+        "</tr>" +
+        "</table>";
+    }
+    if (tipo == 'termos') {
+      title = 'Termos de Entrega';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Termo Enviado</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Aguardando Termo</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
+        "</tr>" +
+        "</table>";
+    }
+    if (tipo == 'projeto') {
+      title = 'Projeto';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Projeto Autorizado</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='levantamento'</td>" +
+        "</tr>" +
+        "</table>";
+    }
+    if (tipo == 'instalacao') {
+      title = 'Instalação';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Aguardando Vistoria</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Projeto em Execução</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Projeto Parado</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Aguardando Projeto</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
+        "</tr>" +
+        "</table>";
+    }
+    if (tipo == 'enviados') {
+      title = 'Orçamentos Enviados';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Pedido Realizado</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Orçamento em Andamento</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='aguardando'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Orçamento Solicitado</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
+        "</tr>" +
+        "</table>";
+    }
+    if (tipo == 'entregue') {
+      title = 'Orçamentos Entregues';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Passou 7 dias da entrega</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Proposta Entregue</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
+        "</tr>" +
+        "</table>";
+    }
+    if (tipo == 'negociando') {
+      title = 'Orçamentos Negociando';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Passou 3 dias da interação</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Negociando</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
+        "</tr>" +
+        "</table>";
+    }
+    if (tipo == 'ganho') {
+      title = 'Orçamentos Ganhos';
+      html = "<table>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Autorizado Pelo Projetista</th>" +
+        "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+        "</tr>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+        "<tr style='display: flex; font-size: 12px'>" +
+        "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
+        "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='levantamento'</td>" +
+        "</tr>" +
+        "</tr>" +
+        "</table>";
+    }
+    Toast.fire({
+      html: html,
+      title: title
+    })
+  }
+  
 function valida_celular() {
     var cel = document.getElementById('celular')
     if (cel.value.length == 1) {
