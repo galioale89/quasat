@@ -102,13 +102,13 @@ async function salvarObservacao(projeto, obsprojetista, id, pessoa) {
     }
 }
 
-router.get('/fotoslocal/:id', ehAdmin, async (req,res)=>{
+router.get('/fotoslocal/:id', ehAdmin, async (req, res) => {
     const projeto = await Projeto.findById(req.params.id);
     var lista_local = [];
-    if (naoVazio(projeto.local)){
+    if (naoVazio(projeto.local)) {
         lista_local = listaFotos(projeto.local);
     }
-    res.render('principal/fotoslocal', {lista_local})
+    res.render('principal/fotoslocal', { lista_local })
 })
 
 router.get('/obsinstalacao/:id', ehAdmin, async (req, res) => {
@@ -138,14 +138,14 @@ router.get('/obsinstalacao/:id', ehAdmin, async (req, res) => {
     reg.map(async item => {
         if (item.equipes.length > 0) {
             let equipes = item.equipes;
-            equipes.map(async i=>{
-                console.log('i.observacao=>'+i.observacao)
-                observacao = i.observacao;                 
+            equipes.map(async i => {
+                console.log('i.observacao=>' + i.observacao)
+                observacao = i.observacao;
             })
         } else {
             let equipe = await Equipe.findOne({ projeto: req.body.id });
-            console.log('equipe.observacao=>'+equipe.observacao)
-            observacao = equipe.observacao; 
+            console.log('equipe.observacao=>' + equipe.observacao)
+            observacao = equipe.observacao;
         }
     })
     console.log(observacao);
@@ -2478,7 +2478,10 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
             const lista_proposta = projeto.proposta
             const lista_doc = listaFotos(projeto.documento)
-            const lista_local = listaFotos(projeto.local)
+            var lista_local = []
+            if (naoVazio(projeto.telhado_foto)) {
+                lista_local = listaFotos(projeto.local)
+            }
             const lista_entrada = listaFotos(projeto.entrada)
             const lista_disjuntor = listaFotos(projeto.disjuntor)
             const lista_trafo = listaFotos(projeto.trafo)
@@ -4209,7 +4212,7 @@ router.post('/projeto', ehAdmin, (req, res) => {
             var projetoobs = await Projeto.findById(req.body.id).lean();
             console.log(req.body.salvarObs);
             if (req.body.salvarObs == '1') salvarObservacao(projetoobs, req.body.obsprojetista, req.body.id, pessoa);
-            
+
             if (checkpost == false && naoVazio(req.body.dataPost)) {
                 // console.log('postado')
                 Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
@@ -4528,389 +4531,6 @@ router.post('/addInstalador/', ehAdmin, (req, res) => {
     })
 })
 
-// router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
-//     const { _id } = req.user
-//     const { user } = req.user
-//     var id
-//     var cont = 0
-//     var notimg = true
-//     var q = 0
-
-//     // console.log('req.file.path=>'+req.files.path)
-
-//     // (async() =>  {
-//     //     await sharp(req.files.path)
-//     //     .resize(540,960)
-//     //     .png({quality: 90})
-//     //     .toFile(
-//     //         path.resolve(req.file.destination, 'resize', image)
-//     //     )
-//     // })
-
-//     if (typeof user == 'undefined') {
-//         id = _id
-//     } else {
-//         id = user
-//     }
-
-//     var arquivos = req.files
-//     // console.log('req.files=>' + req.files)
-//     var imagem
-//     var ativo = false
-//     var mensagem
-//     const vardate = new Date().getSeconds() + '_' + new Date().getFullYear() + '_' + new Date().getMonth() + '_' + new Date().getDate() + '_'
-
-//     // console.log("tipo=>" + req.body.tipo)
-//     // console.log("id=>" + req.body.idprj)
-
-//     if (naoVazio(arquivos)) {
-//         // console.log('arquivos=>' + arquivos.length)
-//         arquivos.forEach((e) => {
-//             if (req.body.tipo == 'assistencia') {
-//                 imagem = { fotos: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() }, }
-
-//                 Tarefas.findOneAndUpdate({ _id: req.body.id }, { $set: { datafim: dataHoje() } }).then((e) => {
-//                     Tarefas.findOneAndUpdate({ _id: req.body.id }, { $push: imagem }).then((e) => {
-//                         var concluido = {}
-//                         concluido = { 'concluido': true, 'solucao': req.body.solucao }
-
-//                         // console.log('concluido=>' + JSON.stringify(concluido))
-//                         Tarefas.findOneAndUpdate({ _id: req.body.id }, concluido).then((e) => {
-
-//                             res.redirect('/gerenciamento/assistencia')
-
-//                         }).catch((err) => {
-//                             req.flash('error_msg', 'Houve erro ao encontrar a tarefa.')
-//                             res.redirect('/dashboard')
-//                         })
-//                     })
-//                 })
-//             } else {
-//                 // console.log('req.body.idprj=>' + req.body.idprj)
-//                 Projeto.findOne({ _id: req.body.idprj }).then((prj) => {
-//                     Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
-//                         if (req.body.tipo == 'projeto') {
-//                             // console.log("caminho=>" + req.body.caminho)
-//                             if ((req.body.caminho == 'fatura') || (req.body.caminho == 'documento') || (req.body.caminho == 'entrada')
-//                                 || (req.body.caminho == 'disjuntor') || (req.body.caminho == 'trafo') || (req.body.caminho == 'localizacao'
-//                                     || (req.body.caminho == 'telhado'))
-//                                 || (req.body.caminho == 'medidor')) {
-//                                 console.log('é telhado=>' + req.body.seq)
-//                                 imagem = { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() }
-//                             } else {
-//                                 imagem = { "desc": req.body.seq + '_' + e.originalname }
-//                             }
-
-//                             var disjuntor
-//                             var medidor
-//                             var trafo
-//                             if (req.body.caminho == 'disjuntor') {
-//                                 disjuntor = imagem
-//                                 medidor = prj.medidor
-//                                 trafo = prj.trafo
-//                             }
-//                             if (req.body.caminho == 'medidor') {
-//                                 medidor = imagem
-//                                 disjuntor = prj.disjuntor
-//                                 trafo = prj.trafo
-//                             }
-//                             if (req.body.caminho == 'trafo') {
-//                                 trafo = imagem
-//                                 disjuntor = prj.disjuntor
-//                                 medidor = prj.medidor
-//                             }
-
-//                             // console.log('caminho=>' + req.body.caminho)
-//                             // console.log('disjuntor=>' + naoVazio(disjuntor))
-//                             // console.log('medidor=>' + naoVazio(medidor))
-//                             // console.log('trafo=>' + naoVazio(trafo))
-
-//                             var levantamento = false
-//                             if ((req.body.caminho == 'disjuntor' || req.body.caminho == 'medidor' || req.body.caminho == 'trafo') &&
-//                                 (naoVazio(disjuntor) && naoVazio(medidor) && naoVazio(trafo))) {
-//                                 levantamento = true
-//                             }
-
-//                             // console.log('levantamento=>' + levantamento)
-//                             var texto
-//                             if (req.body.caminho == 'fatura') {
-//                                 Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { fatura: imagem } }).then((e) => {
-//                                     texto = 'Fatura(s) salva(s) com sucesso.'
-//                                 })
-//                             } else {
-//                                 if (req.body.caminho == 'documento') {
-//                                     Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { documento: imagem } }).then((e) => {
-//                                         texto = 'Documento(s) salvo(s) com sucesso.'
-//                                     })
-//                                 } else {
-//                                     if (req.body.caminho == 'entrada') {
-//                                         Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { entrada: imagem } }).then((e) => {
-//                                             texto = 'Entrada(s) salva(s) com sucesso.'
-//                                         })
-//                                     } else {
-//                                         if (req.body.caminho == 'disjuntor') {
-//                                             Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { disjuntor: imagem } }).then((e) => {
-//                                                 if (!levantamento) {
-//                                                     texto = 'Disjuntor(es) salvo(s) com sucesso.'
-//                                                 }
-//                                             })
-//                                         } else {
-//                                             if (req.body.caminho == 'trafo') {
-//                                                 Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { trafo: imagem } }).then((e) => {
-//                                                     if (!levantamento) {
-//                                                         texto = 'Trafo(s) salvo(s) com sucesso.'
-//                                                     }
-//                                                 })
-//                                             } else {
-//                                                 if (req.body.caminho == 'localizacao') {
-//                                                     Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { localizacao: imagem } }).then((e) => {
-//                                                         texto = 'Localização(ões) salva(s) com sucesso.'
-//                                                     })
-//                                                 } else {
-//                                                     if (req.body.caminho == 'telhado') {
-//                                                         console.log('salva telhado=>' + req.body.idprj)
-//                                                         Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { telhado_foto: imagem } }).then((e) => {
-//                                                             texto = 'Foto(s) do(s) telhado(s) salva(s) com sucesso.'
-//                                                         })
-//                                                     } else {
-//                                                         if (req.body.caminho == 'medidor') {
-//                                                             Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { medidor: imagem } }).then((e) => {
-//                                                                 if (!levantamento) {
-//                                                                     texto = 'Medidor(ees) salvo(s) com sucesso.'
-//                                                                 }
-//                                                             })
-//                                                         }
-//                                                     }
-//                                                 }
-//                                             }
-//                                         }
-//                                     }
-//                                 }
-//                             }
-//                             if (levantamento) {
-//                                 // console.log('levantamento de rede')
-//                                 Acesso.find({ user: id, notdoc: 'checked' }).then((acesso) => {
-//                                     if (naoVazio(acesso)) {
-//                                         acesso.forEach((e) => {
-//                                             Pessoa.findOne({ _id: e.pessoa }).then((projetista) => {
-//                                                 // console.log(pessoa.celular)
-//                                                 mensagem = 'Olá ' + projetista.nome + ',' + '\n' +
-//                                                     'O levantamento de rede da proposta ' + prj.seq + ' foi adicionado.' + '\n' +
-//                                                     'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
-//                                                 client.messages
-//                                                     .create({
-//                                                         body: mensagem,
-//                                                         from: 'whatsapp:+554991832978',
-//                                                         to: 'whatsapp:+55' + projetista.celular
-//                                                     })
-//                                                     .then((message) => {
-//                                                         // console.log(message.sid)
-//                                                         cont++
-//                                                         // console.log('cont=>' + cont)
-//                                                         if (cont == acesso.length) {
-//                                                             req.flash('success_msg', 'Levantamento de rede realizado com sucesso.')
-//                                                             res.redirect('/gerenciamento/fotos/' + req.body.idprj)
-//                                                         }
-//                                                     }).done()
-//                                             }).catch((err) => {
-//                                                 req.flash('error_msg', 'Houve erro ao encontrar o projetista.')
-//                                                 res.redirect('/gerenciamento/fotos/' + req.body.idprj)
-//                                             })
-//                                         })
-//                                     } else {
-//                                         // console.log('aguardando')
-//                                         if (req.body.caminho == 'fatura') {
-//                                             req.flash('success_msg', 'Imagem salva com sucesso')
-//                                             res.redirect('/gerenciamento/fatura/' + req.body.idprj)
-//                                         } else {
-//                                             console.log('texto=>' + texto)
-//                                             req.flash('success_msg', texto)
-//                                             res.redirect('/gerenciamento/fotos/' + req.body.idprj)
-//                                         }
-//                                     }
-//                                 }).catch((err) => {
-//                                     req.flash('error_msg', 'Houve erro ao encontrar o acesso.')
-//                                     res.redirect('/gerenciamento/fotos/' + req.body.idprj)
-//                                 })
-//                             } else {
-//                                 if (req.body.caminho == 'fatura') {
-//                                     req.flash('success_msg', 'Imagem da fatura salva com sucesso')
-//                                     res.redirect('/gerenciamento/fatura/' + req.body.idprj)
-//                                 } else {
-//                                     req.flash('success_msg', texto)
-//                                     res.redirect('/gerenciamento/fotos/' + req.body.idprj)
-//                                 }
-//                             }
-//                         } else {
-//                             if (req.body.tipo == 'tarefa') {
-//                                 // console.log('instalação')
-//                                 // console.log('req.body.check=>' + req.body.check)
-//                                 if (req.body.check == 'Aprovado') {
-//                                     ativo = true
-//                                 } else {
-//                                     ativo = false
-//                                 }
-
-
-//                                 imagem = { fotos: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() } }
-
-//                                 Tarefas.findOneAndUpdate({ _id: req.body.id }, { $push: imagem }).then((e) => {
-//                                     Tarefas.findOneAndUpdate({ _id: req.body.id }, { $set: { datafim: dataHoje() } }).then((e) => {
-//                                         req.flash('success_msg', 'Foto(s) da instalação salva(s) com sucesso.')
-//                                     })
-//                                 })
-
-//                                 var concluido = {}
-//                                 concluido = { 'concluido': ativo }
-
-//                                 // console.log('concluido=>' + JSON.stringify(concluido))
-//                                 // console.log('req.body.id=>' + req.body.id)
-//                                 Tarefas.findOneAndUpdate({ _id: req.body.id }, concluido).then((e) => {
-//                                     Tarefas.find({ projeto: req.body.idprj }).then(async (lista_tarefas) => {
-//                                         if (ativo == true) {
-//                                             req.flash('success_msg', 'Imagem(ns) da(s) instalação aprovada(s)')
-//                                             await Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { instalado: true } })
-//                                         }
-
-//                                         lista_tarefas.forEach((e) => {
-//                                             // console.log('e.fotos=>' + e.fotos)
-//                                             if (naoVazio(e.fotos) == false) {
-//                                                 notimg = false
-//                                             }
-//                                         })
-//                                         if (notimg == true) {
-//                                             Acesso.find({ user: id, notimg: 'checked' }).then((acesso) => {
-//                                                 if (naoVazio(acesso)) {
-//                                                     acesso.forEach((e) => {
-//                                                         Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-//                                                             // console.log('enviou mensagem')
-//                                                             texto = 'Olá ' + pessoa.nome + ',' + '\n' +
-//                                                                 'Todas as fotos da obra do projeto ' + prj.seq + ' para o cliente ' + cliente.nome + '  estão na plataforma. ' +
-//                                                                 'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + prj._id + ' para verificar.'
-//                                                             // console.log('pessoa.celular=>'+pessoa.celular)
-//                                                             client.messages
-//                                                                 .create({
-//                                                                     body: texto,
-//                                                                     from: 'whatsapp:+554991832978',
-//                                                                     to: 'whatsapp:+55' + pessoa.celular
-//                                                                 })
-//                                                                 .then((message) => {
-//                                                                     q++
-//                                                                     // console.log('q=>' + q)
-//                                                                     // console.log('acesso.length=>' + acesso.length)
-//                                                                     if (q == acesso.length) {
-//                                                                         // console.log(message.sid)
-//                                                                         if (req.body.caminho == 'instalacao') {
-//                                                                             if (req.body.usuario == 'gestor') {
-//                                                                                 // console.log('req.body.idprj=>' + req.body.idprj)
-//                                                                                 res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
-//                                                                             } else {
-//                                                                                 res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
-//                                                                             }
-//                                                                         } else {
-//                                                                             res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
-//                                                                         }
-//                                                                     }
-//                                                                 }).done()
-
-//                                                         }).catch((err) => {
-//                                                             req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
-//                                                             res.redirect('/dashboard')
-//                                                         })
-//                                                     })
-//                                                 } else {
-//                                                     if (req.body.caminho == 'instalacao') {
-//                                                         if (req.body.usuario == 'gestor') {
-//                                                             // console.log('req.body.idprj=>' + req.body.idprj)
-//                                                             res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
-//                                                         } else {
-//                                                             res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
-//                                                         }
-//                                                     } else {
-//                                                         res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
-//                                                     }
-//                                                 }
-//                                             }).catch((err) => {
-//                                                 req.flash('error_msg', 'Houve erro ao encontrar o acesso.')
-//                                                 res.redirect('/gerenciamento/fotos/' + req.body.id)
-//                                             })
-//                                         } else {
-//                                             if (req.body.caminho == 'instalacao') {
-//                                                 if (req.body.usuario == 'gestor') {
-//                                                     // console.log('req.body.idprj=>' + req.body.idprj)
-//                                                     res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
-//                                                 } else {
-//                                                     res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
-//                                                 }
-//                                             } else {
-//                                                 res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
-//                                             }
-//                                         }
-//                                     }).catch((err) => {
-//                                         req.flash('error_msg', 'Houve erro ao encontrar a tarefa.')
-//                                         res.redirect('/dashboard')
-//                                     })
-//                                 }).catch((err) => {
-//                                     req.flash('error_msg', 'Houve erro ao encontrar a tarefa.')
-//                                     res.redirect('/dashboard')
-//                                 })
-//                             } else {
-//                                 if (req.body.tipo == 'termo') {
-//                                     // console.log('entrou termo')
-//                                     Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { termo: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() } } }).then((e) => {
-//                                         req.flash('success_msg', 'Termo de entrega salvo com sucesso.')
-//                                         res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
-//                                     })
-//                                 }
-//                             }
-//                         }
-//                     }).catch((err) => {
-//                         req.flash('error_msg', 'Houve erro ao encontrar o cliente.')
-//                         res.redirect('/gerenciamento/fotos/' + req.body.id)
-//                     })
-//                 }).catch((err) => {
-//                     req.flash('error_msg', 'Houve erro ao encontrar o projeto.')
-//                     res.redirect('/gerenciamento/fotos/' + req.body.id)
-//                 })
-//             }
-//         })
-//     } else {
-//         if (req.body.tipo == 'tarefa') {
-//             // console.log('aprovação')
-//             // console.log('req.body.check=>' + req.body.check)
-//             if (req.body.check == 'Aprovado') {
-//                 ativo = true
-//             } else {
-//                 ativo = false
-//             }
-
-//             // console.log('req.body.id=>' + req.body.id)
-//             Tarefas.findOneAndUpdate({ _id: req.body.id }, { $set: { concluido: ativo } }).then((e) => {
-//                 if (ativo == true) {
-//                     req.flash('success_msg', 'Imagem(ns) da(s) instalação aprovada(s)')
-//                 } else {
-//                     req.flash('success_msg', 'Imagem(ns) da(s) instalação para averiguar(s)')
-//                 }
-//                 if (req.body.caminho == 'instalacao') {
-//                     if (req.body.usuario == 'gestor') {
-//                         // console.log('req.body.idprj=>' + req.body.idprj)
-//                         res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
-//                     } else {
-//                         res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
-//                     }
-//                 } else {
-//                     res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
-//                 }
-//             }).catch((err) => {
-//                 req.flash('error_msg', 'Houve erro ao encontrar a tarefa.')
-//                 res.redirect('/dashboard')
-//             })
-//         } else {
-//             req.flash('aviso_mag', 'Nenhum arquivo adicionado.')
-//             res.redirect('/gerenciamento/fotos/' + req.body.id)
-//         }
-//     }
-// })
 router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
     const { _id } = req.user
     const { user } = req.user
@@ -4918,6 +4538,17 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
     var cont = 0
     var notimg = true
     var q = 0
+
+    // console.log('req.file.path=>'+req.files.path)
+
+    // (async() =>  {
+    //     await sharp(req.files.path)
+    //     .resize(540,960)
+    //     .png({quality: 90})
+    //     .toFile(
+    //         path.resolve(req.file.destination, 'resize', image)
+    //     )
+    // })
 
     if (typeof user == 'undefined') {
         id = _id
@@ -4965,7 +4596,9 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                             // console.log("caminho=>" + req.body.caminho)
                             if ((req.body.caminho == 'fatura') || (req.body.caminho == 'documento') || (req.body.caminho == 'entrada')
                                 || (req.body.caminho == 'disjuntor') || (req.body.caminho == 'trafo') || (req.body.caminho == 'localizacao'
-                                    || req.body.caminho == 'telhado') || (req.body.caminho == 'medidor') || (req.body.caminho == 'local')) {
+                                    || (req.body.caminho == 'telhado') || req.body.caminho == 'local')
+                                || (req.body.caminho == 'medidor')) {
+                                console.log('é telhado=>' + req.body.seq)
                                 imagem = { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() }
                             } else {
                                 imagem = { "desc": req.body.seq + '_' + e.originalname }
@@ -5013,6 +4646,11 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                         texto = 'Documento(s) salvo(s) com sucesso.'
                                     })
                                 } else {
+                                    if (req.body.caminho == 'local') {
+                                        Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { local: imagem } }).then((e) => {
+                                            texto = 'Local(ais) salvo(s) com sucesso.'
+                                        })
+                                    } else{
                                     if (req.body.caminho == 'entrada') {
                                         Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { entrada: imagem } }).then((e) => {
                                             texto = 'Entrada(s) salva(s) com sucesso.'
@@ -5038,8 +4676,9 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                     })
                                                 } else {
                                                     if (req.body.caminho == 'telhado') {
+                                                        console.log('salva telhado=>' + req.body.idprj)
                                                         Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { telhado_foto: imagem } }).then((e) => {
-                                                            texto = 'Foto(s) do(s) telhado(s) salvos(s) com sucesso.'
+                                                            texto = 'Foto(s) do(s) telhado(s) salva(s) com sucesso.'
                                                         })
                                                     } else {
                                                         if (req.body.caminho == 'medidor') {
@@ -5048,21 +4687,15 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                                     texto = 'Medidor(ees) salvo(s) com sucesso.'
                                                                 }
                                                             })
-                                                        }else {
-                                                            if (req.body.caminho == 'local') {
-                                                                Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { local: imagem } }).then((e) => {
-                                                                        texto = 'Local(ais) salvo(s) com sucesso.'
-                                                                })
-                                                            }
                                                         }
                                                     }
                                                 }
+                                            }
                                             }
                                         }
                                     }
                                 }
                             }
-
                             if (levantamento) {
                                 // console.log('levantamento de rede')
                                 Acesso.find({ user: id, notdoc: 'checked' }).then((acesso) => {
@@ -5072,7 +4705,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                 // console.log(pessoa.celular)
                                                 mensagem = 'Olá ' + projetista.nome + ',' + '\n' +
                                                     'O levantamento de rede da proposta ' + prj.seq + ' foi adicionado.' + '\n' +
-                                                    'Acesse: https://integracao.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
+                                                    'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
                                                 client.messages
                                                     .create({
                                                         body: mensagem,
@@ -5099,6 +4732,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                             req.flash('success_msg', 'Imagem salva com sucesso')
                                             res.redirect('/gerenciamento/fatura/' + req.body.idprj)
                                         } else {
+                                            console.log('texto=>' + texto)
                                             req.flash('success_msg', texto)
                                             res.redirect('/gerenciamento/fotos/' + req.body.idprj)
                                         }
@@ -5109,10 +4743,10 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 })
                             } else {
                                 if (req.body.caminho == 'fatura') {
-                                    req.flash('success_msg', texto)
+                                    req.flash('success_msg', 'Imagem da fatura salva com sucesso')
                                     res.redirect('/gerenciamento/fatura/' + req.body.idprj)
                                 } else {
-                                    req.flash('success_msg', 'Imagem salva com sucesso')
+                                    req.flash('success_msg', texto)
                                     res.redirect('/gerenciamento/fotos/' + req.body.idprj)
                                 }
                             }
@@ -5125,6 +4759,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 } else {
                                     ativo = false
                                 }
+
 
                                 imagem = { fotos: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() } }
 
@@ -5140,10 +4775,12 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 // console.log('concluido=>' + JSON.stringify(concluido))
                                 // console.log('req.body.id=>' + req.body.id)
                                 Tarefas.findOneAndUpdate({ _id: req.body.id }, concluido).then((e) => {
-                                    Tarefas.find({ projeto: req.body.idprj }).then((lista_tarefas) => {
+                                    Tarefas.find({ projeto: req.body.idprj }).then(async (lista_tarefas) => {
                                         if (ativo == true) {
                                             req.flash('success_msg', 'Imagem(ns) da(s) instalação aprovada(s)')
+                                            await Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { instalado: true } })
                                         }
+
                                         lista_tarefas.forEach((e) => {
                                             // console.log('e.fotos=>' + e.fotos)
                                             if (naoVazio(e.fotos) == false) {
@@ -5229,9 +4866,9 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                             } else {
                                 if (req.body.tipo == 'termo') {
                                     // console.log('entrou termo')
-                                    Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { termo: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() } } }).then((e) => {
+                                    Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { termo: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() } } }).then((e) => {
                                         req.flash('success_msg', 'Termo de entrega salvo com sucesso.')
-                                        res.redirect('/gerenciamento/orcamento/' + req.body.id)
+                                        res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
                                     })
                                 }
                             }
@@ -5306,6 +4943,10 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
                 // console.log('params[1]=>' + params[1])
                 sql = { 'documento': { '_id': params[1] } }
             }
+            if (params[4] == 'local') {
+                // console.log('params[1]=>' + params[1])
+                sql = { 'local': { '_id': params[1] } }
+            }            
             if (params[4] == 'entrada') {
                 sql = { 'entrada': { '_id': params[1] } }
             }
@@ -8578,6 +8219,245 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
     })
 })
 
+// router.post('/emandamento/', ehAdmin, async (req, res) => {
+
+//     const { _id } = req.user
+//     const { user } = req.user
+//     var id
+
+//     if (naoVazio(user)) {
+//         id = user
+//     } else {
+//         id = _id
+//     }
+
+//     let seq;
+//     let cliente;
+//     let nome_cliente;
+//     let parado;
+//     let autorizado;
+//     let pagamento;
+//     let instalado;
+//     let execucao;
+//     let instalador;
+//     let cidade;
+//     let uf;
+//     let telhado;
+//     let estrutura;
+//     let inversor;
+//     let modulos;
+//     let potencia;
+//     let sistema;
+//     let deadline;
+//     let ins_banco;
+//     let checkReal;
+//     let nome_ins;
+//     let id_ins;
+//     let nome_ins_banco;
+//     let id_ins_banco;
+//     var observacao;
+//     var obsprojetista;
+
+//     var listaAndamento = [];
+//     var addInstalador = [];
+
+//     const dataini = req.body.dataini;
+//     const datafim = req.body.datafim;
+//     const dtini = parseFloat(dataBusca(dataini));
+//     const dtfim = parseFloat(dataBusca(datafim));
+
+//     let filter_installer = req.body.instalador;
+//     let installer_name;
+//     let filter_status = req.body.status;
+//     let liberar_status = { $exists: true };
+//     let prjfeito_status = { $exists: true };
+//     let parado_status = { $exists: true };
+//     let sql_installer = {};
+
+//     let match = {};
+
+//     if (filter_status != 'Todos') {
+//         switch (filter_status) {
+//             case 'Aguardando': liberar_status = false; parado_status = false; prjfeito_status = false
+//                 break;
+//             case 'Execução': liberar_status = true; parado_status = false; prjfeito_status = false
+//                 break;
+//             case 'Instalado': liberar_status = true; parado_status = false; prjfeito_status = true
+//                 break;
+//             case 'Parado': liberar_status = true; parado_status = true; prjfeito_status = false
+//                 break;
+//         }
+//     }
+
+
+//     if (filter_installer != 'Todos') {
+//         const id_ins = await Pessoa.findById(filter_installer)
+//         match = {
+//             user: id,
+//             tarefa: { $exists: false },
+//             nome_projeto: { $exists: true },
+//             liberar: liberar_status,
+//             prjfeito: prjfeito_status,
+//             parado: parado_status,
+//             insres: id_ins._id,
+//             "dtfimbusca": {
+//                 $gte: dtini,
+//                 $lte: dtfim
+//             },
+//         }
+//     } else {
+//         match = {
+//             user: id,
+//             tarefa: { $exists: false },
+//             nome_projeto: { $exists: true },
+//             liberar: liberar_status,
+//             prjfeito: prjfeito_status,
+//             parado: parado_status,
+//             "dtfimbusca": {
+//                 $gte: dtini,
+//                 $lte: dtfim
+//             },
+//         }
+//     }
+
+//     console.log('instalador=>' + typeof (req.body.instalador))
+//     // console.log('id=>'+typeof(id_ins._id))
+
+//     Cliente.find({ user: id }).lean().then((todos_clientes) => {
+//         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
+//             Equipe.aggregate([
+//                 {
+//                     $match: match
+//                 },
+//                 {
+//                     $lookup: {
+//                         from: 'projetos',
+//                         localField: '_id',
+//                         foreignField: 'equipe',
+//                         as: 'projeto'
+//                     }
+//                 },
+//                 {
+//                     $lookup: {
+//                         from: 'pessoas',
+//                         localField: 'insres',
+//                         foreignField: '_id',
+//                         as: 'instalador',
+//                     }
+//                 }
+//             ]).then(async list => {
+
+//                 for (const item of list) {
+//                     observacao = item.observacao;
+//                     deadline = await item.dtfim;
+//                     if (naoVazio(deadline) == false) {
+//                         deadline = '0000-00-00'
+//                     }
+//                     qtdmod = await item.qtdmod;
+//                     let projetos = await item.projeto;
+
+//                     projetos.map(async register => {
+//                         id = register._id
+//                         seq = register.seq
+//                         cidade = register.cidade
+//                         uf = register.uf
+//                         telhado = register.telhado
+//                         estrutura = register.estrutura
+//                         inversor = register.plaKwpInv
+//                         modulos = register.plaQtdMod
+//                         potencia = register.plaWattMod
+//                         instalado = register.instalado
+//                         execucao = register.execucao
+//                         parado = register.parado
+//                         autorizado = register.autorizado
+//                         pagamento = register.pago
+//                         cliente = register.cliente
+//                         ins_banco = register.ins_banco
+//                         checkReal = register.ins_real
+//                         obsprojetista = register.obsprojetista
+
+//                         if (checkReal != true) {
+//                             checkReal = 'unchecked'
+//                         } else {
+//                             checkReal = 'checked'
+//                         }
+
+//                         if (naoVazio(modulos) && naoVazio(potencia)) {
+//                             sistema = ((modulos * potencia) / 1000).toFixed(2);
+//                         } else {
+//                             sistema = 0;
+//                         }
+//                     })
+
+//                     let instaladores = await item.instalador
+
+//                     instaladores.map(async register => {
+//                         instalador = register.nome;
+
+//                         nome_ins = instalador;
+//                         id_ins = register._id;
+
+//                         if (naoVazio(ins_banco)) {
+//                             if (register._id == ins_banco) {
+//                                 addInstalador = [{ instalador, qtdmod }];
+//                             } else {
+//                                 let nome_instalador = await Pessoa.findById(ins_banco);
+//                                 addInstalador = [{ instalador: nome_instalador.nome, qtdmod }];
+//                             }
+//                         } else {
+//                             addInstalador = [{ instalador, qtdmod }];
+//                         }
+//                     })
+
+
+//                     if (naoVazio(ins_banco)) {
+//                         await Pessoa.findById(ins_banco).then(this_ins_banco => {
+//                             nome_ins_banco = this_ins_banco.nome;
+//                             id_ins_banco = this_ins_banco._id;
+//                         })
+//                     } else {
+//                         nome_ins_banco = '';
+//                         id_ins_banco = '';
+//                     }
+
+//                     await Cliente.findById(cliente).then(this_cliente => {
+//                         nome_cliente = this_cliente.nome;
+//                     })
+
+//                     listaAndamento.push({
+//                         id, seq, parado, execucao, autorizado, pagamento, observacao, obsprojetista,
+//                         instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
+//                         sistema, modulos, potencia, inversor, deadline, addInstalador,
+//                         dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
+//                     })
+//                     addInstalador = [];
+//                 }
+
+//                 listaAndamento.sort(comparaNum);
+
+//                 if (filter_installer != 'Todos') {
+//                     const installer = await Pessoa.findById(filter_installer);
+//                 } else {
+//                     installer_name = 'Todos';
+//                 }
+
+//                 res.render('principal/emandamento', {
+//                     listaAndamento, todos_clientes, todos_instaladores,
+//                     datafim, dataini,
+//                     installer_id: filter_installer, installer_name,
+//                     status: filter_status
+//                 })
+//             })
+//         }).catch((err) => {
+//             req.flash('error_msg', 'Nenhum instalador encontrado.')
+//             res.redirect('/dashboard')
+//         })
+//     }).catch((err) => {
+//         req.flash('error_msg', 'Nenhum cliente encontrado.')
+//         res.redirect('/dashboard')
+//     })
+// })
+
 router.post('/salvarFotos', ehAdmin, (req, res) => {
     const { _id } = req.user
     const { user } = req.user
@@ -8692,7 +8572,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
     }
     if (req.body.tipo == 'local') {
         sql = { local: foto }
-    }   
+    }
     if (req.body.tipo == 'entrada') {
         sql = { entrada: foto }
     }
@@ -10437,16 +10317,16 @@ router.post('/obsinstalacao', ehAdmin, async (req, res) => {
     reg.map(async item => {
         if (item.equipes.length > 0) {
             let equipes = item.equipes;
-            equipes.map(async i=>{
-                await Equipe.updateOne({ _id: i._id }, { $set: { observacao: req.body.obsins } });                   
+            equipes.map(async i => {
+                await Equipe.updateOne({ _id: i._id }, { $set: { observacao: req.body.obsins } });
             })
         } else {
             let equipe = await Equipe.findOne({ projeto: req.body.id });
-            await Equipe.updateOne({ _id: equipe._id }, { $set: { observacao: req.body.obsins } });   
+            await Equipe.updateOne({ _id: equipe._id }, { $set: { observacao: req.body.obsins } });
         }
     })
-   
-    res.render('principal/obsinstalador', { idprj: req.body.id, observacao: req.body.obsins }); 
+
+    res.render('principal/obsinstalador', { idprj: req.body.id, observacao: req.body.obsins });
 })
 
 router.post('/obsprojetista', ehAdmin, async (req, res) => {
