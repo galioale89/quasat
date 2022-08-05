@@ -201,16 +201,24 @@
             <i class="bi bi-funnel d-flex align-items-center"></i>&nbspProposta
         </a>
         <input type='hidden' value='{{agenda.descricao}}' id="descricao">
+        {{#if projeto.ganho}}
         <a href='/relatorios/pedido/{{projeto._id}}' class='mt-1' title='pedido'><i class="bi bi-files"
                 style="font-size: 25px;color: white;padding-right: 10px;"></i></a>
-        {{#if projeto.ganho}}
         <a onclick='termoEntrega()' class='mt-1' title='termo de entrega'>
             <i class="bi bi-folder" style="font-size: 25px;color: white;padding-right: 5px;cursor: pointer;"></i>
         </a>
         {{else}}
-        <a href='/gerenciamento/ganho/{{projeto._id}}/' style="margin-right: 10px;" class='mt-1'>
+        {{#if projeto._id}}
+        {{#if projeto.pedido}}
+        <a href='/gerenciamento/ganho/{{projeto._id}}/' class='mt-1'>
             <i class="bi bi-check-square" style="font-size: 25px;color: white;"></i>
         </a>
+        {{else}}
+        <a href='' data-bs-target="#pedido" data-bs-toggle="modal" class='mt-1' title='fazer pedido'>
+            <i class="bi bi-box-seam" style="font-size: 25px;color: white;padding-right: 5px;"></i>
+        </a>
+        {{/if}}
+        {{/if}}
         {{/if}}
         <!-- FIM VALIDA GANHO -->
         <!-- FEATURES PADRÃO PARA AS DUAS SITUAÇÕES -->
@@ -448,7 +456,7 @@
                         enctype="multipart/form-data" id='bloquear1'>
                         <input type="hidden" name='tipo' value='projeto'>
                         <input type="hidden" name='caminho' value='local'>
-                        <input type="hidden" name='seq' value='{{seqdoc}}'>
+                        <input type="hidden" name='seq' value='{{seqloc}}'>
                         <input type='hidden' name='idprj' value="{{projeto._id}}">
                         <div class="card">
                             <div class="card-body">
@@ -468,7 +476,7 @@
                         {{#each lista_local}}
                         <div class="col-md-3">
                             <div style="width: 1px;">
-                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimglocal'
                                     class='botao-filter'><i class='bi bi-x-circle'
                                         style="font-size: 20px;color: orangered"></i></a>
                             </div>
@@ -595,7 +603,8 @@
             <div class="card mt-1" style="margin-bottom: 10px;">
                 <div class="card-body">
                     <div style="display: flex">
-                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Disjuntor </label>
+                        <label style="font-size: 20px;font-weight: 600;padding: 15px;width: 100%;">Adicionar Disjuntor
+                        </label>
                         <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>
                     </div>
                     <form action="/gerenciamento/salvarFotos" method="post">
@@ -1045,8 +1054,7 @@
                     <div style="display: flex">
                         <div style="width: 100%;">
                             <label style="font-size: 20px;font-weight: 600;padding: 15px;">Pedido</label>
-                            <a href='/relatorios/pedido/{{projeto._id}}'
-                                style="color: rgb(40, 55, 86);"><i
+                            <a href='/relatorios/pedido/{{projeto._id}}' style="color: rgb(40, 55, 86);"><i
                                     class="bi bi-printer" style="font-size: 20px;"></i></a>
                         </div>
                         <a href="#topo"><i class="bi bi-arrow-up-circle" style="font-size: 20px;"></i></a>

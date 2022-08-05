@@ -4608,6 +4608,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                             var medidor
                             var trafo
                             if (req.body.caminho == 'disjuntor') {
+                                console.log('entrou disjuntor')
                                 disjuntor = imagem
                                 medidor = prj.medidor
                                 trafo = prj.trafo
@@ -4634,7 +4635,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 levantamento = true
                             }
 
-                            // console.log('levantamento=>' + levantamento)
+                            console.log('levantamento=>' + levantamento)
                             var texto
                             if (req.body.caminho == 'fatura') {
                                 Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { fatura: imagem } }).then((e) => {
@@ -4650,54 +4651,55 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                         Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { local: imagem } }).then((e) => {
                                             texto = 'Local(ais) salvo(s) com sucesso.'
                                         })
-                                    } else{
-                                    if (req.body.caminho == 'entrada') {
-                                        Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { entrada: imagem } }).then((e) => {
-                                            texto = 'Entrada(s) salva(s) com sucesso.'
-                                        })
                                     } else {
-                                        if (req.body.caminho == 'disjuntor') {
-                                            Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { disjuntor: imagem } }).then((e) => {
-                                                if (!levantamento) {
-                                                    texto = 'Disjuntor(es) salvo(s) com sucesso.'
-                                                }
+                                        if (req.body.caminho == 'entrada') {
+                                            Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { entrada: imagem } }).then((e) => {
+                                                texto = 'Entrada(s) salva(s) com sucesso.'
                                             })
                                         } else {
-                                            if (req.body.caminho == 'trafo') {
-                                                Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { trafo: imagem } }).then((e) => {
+                                            if (req.body.caminho == 'disjuntor') {
+                                                console.log('push disjuntor')
+                                                Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { disjuntor: imagem } }).then((e) => {
                                                     if (!levantamento) {
-                                                        texto = 'Trafo(s) salvo(s) com sucesso.'
+                                                        texto = 'Disjuntor(es) salvo(s) com sucesso.'
                                                     }
                                                 })
                                             } else {
-                                                if (req.body.caminho == 'localizacao') {
-                                                    Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { localizacao: imagem } }).then((e) => {
-                                                        texto = 'Localização(ões) salva(s) com sucesso.'
+                                                if (req.body.caminho == 'trafo') {
+                                                    Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { trafo: imagem } }).then((e) => {
+                                                        if (!levantamento) {
+                                                            texto = 'Trafo(s) salvo(s) com sucesso.'
+                                                        }
                                                     })
                                                 } else {
-                                                    if (req.body.caminho == 'telhado') {
-                                                        console.log('salva telhado=>' + req.body.idprj)
-                                                        Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { telhado_foto: imagem } }).then((e) => {
-                                                            texto = 'Foto(s) do(s) telhado(s) salva(s) com sucesso.'
+                                                    if (req.body.caminho == 'localizacao') {
+                                                        Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { localizacao: imagem } }).then((e) => {
+                                                            texto = 'Localização(ões) salva(s) com sucesso.'
                                                         })
                                                     } else {
-                                                        if (req.body.caminho == 'medidor') {
-                                                            Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { medidor: imagem } }).then((e) => {
-                                                                if (!levantamento) {
-                                                                    texto = 'Medidor(ees) salvo(s) com sucesso.'
-                                                                }
+                                                        if (req.body.caminho == 'telhado') {
+                                                            console.log('salva telhado=>' + req.body.idprj)
+                                                            Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { telhado_foto: imagem } }).then((e) => {
+                                                                texto = 'Foto(s) do(s) telhado(s) salva(s) com sucesso.'
                                                             })
+                                                        } else {
+                                                            if (req.body.caminho == 'medidor') {
+                                                                Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { medidor: imagem } }).then((e) => {
+                                                                    if (!levantamento) {
+                                                                        texto = 'Medidor(ees) salvo(s) com sucesso.'
+                                                                    }
+                                                                })
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
                                             }
                                         }
                                     }
                                 }
                             }
                             if (levantamento) {
-                                // console.log('levantamento de rede')
+                                console.log('levantamento de rede')
                                 Acesso.find({ user: id, notdoc: 'checked' }).then((acesso) => {
                                     if (naoVazio(acesso)) {
                                         acesso.forEach((e) => {
@@ -4946,7 +4948,7 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
             if (params[4] == 'local') {
                 // console.log('params[1]=>' + params[1])
                 sql = { 'local': { '_id': params[1] } }
-            }            
+            }
             if (params[4] == 'entrada') {
                 sql = { 'entrada': { '_id': params[1] } }
             }
@@ -4960,7 +4962,7 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
                 sql = { 'localizacao': { '_id': params[1] } }
             }
             if (params[4] == 'telhado') {
-                sql = { 'telhado': { '_id': params[1] } }
+                sql = { 'telhado_foto': { '_id': params[1] } }
             }
             if (params[4] == 'medidor') {
                 sql = { 'medidor': { '_id': params[1] } }
@@ -8586,7 +8588,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
         sql = { localizacao: foto }
     }
     if (req.body.tipo == 'telhado') {
-        sql = { telhado: foto }
+        sql = { telhado_foto: foto }
     }
     if (req.body.tipo == 'medidor') {
         sql = { medidor: foto }
@@ -8685,6 +8687,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                 var medidor
                 var trafo
                 if (req.body.tipo == 'disjuntor') {
+                    console.log('entrou disjuntor')
                     disjuntor = foto
                     medidor = prj.medidor
                     trafo = prj.trafo
