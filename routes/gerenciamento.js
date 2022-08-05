@@ -139,16 +139,16 @@ router.get('/obsinstalacao/:id', ehAdmin, async (req, res) => {
         if (item.equipes.length > 0) {
             let equipes = item.equipes;
             equipes.map(async i => {
-                console.log('i.observacao=>' + i.observacao)
+                //console.log('i.observacao=>' + i.observacao)
                 observacao = i.observacao;
             })
         } else {
             let equipe = await Equipe.findOne({ projeto: req.body.id });
-            console.log('equipe.observacao=>' + equipe.observacao)
+            //console.log('equipe.observacao=>' + equipe.observacao)
             observacao = equipe.observacao;
         }
     })
-    console.log(observacao);
+    //console.log(observacao);
     res.render('principal/obsinstalador', { idprj: req.params.id, observacao });
 })
 
@@ -205,7 +205,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
         sql = { user: id, vendedor: pessoa, dataTroca: { $exists: true }, encerrado: false }
     }
 
-    console.log(JSON.stringify(sql))
+    //console.log(JSON.stringify(sql))
     Projeto.find(sql).then((projeto) => {
         if (naoVazio(projeto)) {
             projeto.forEach((e) => {
@@ -214,17 +214,17 @@ router.get('/termos/', ehAdmin, (req, res) => {
                     if (naoVazio(e.dataApro)) {
                         dataAprova = e.dataApro
                     }
-                    console.log('dataAprova=>' + dataAprova)
+                    //console.log('dataAprova=>' + dataAprova)
 
                     tamTermo = e.termo
-                    console.log('tamTermo.length=>' + tamTermo.length)
+                    //console.log('tamTermo.length=>' + tamTermo.length)
                     if (tamTermo.length > 0) {
                         if (naoVazio(tamTermo[0].data)) {
                             datatermo = tamTermo[0].data
                         }
                     }
-                    console.log('datatermo=>' + datatermo)
-                    console.log('projeto_dataTroca=>' + e.dataTroca)
+                    //console.log('datatermo=>' + datatermo)
+                    //console.log('projeto_dataTroca=>' + e.dataTroca)
 
                     dataTroca = e.dataTroca
                     if (naoVazio(dataTroca)) {
@@ -235,8 +235,8 @@ router.get('/termos/', ehAdmin, (req, res) => {
                             contaDias = diferencaDias(e.dataTroca, dataHoje())
                             termo = false
                         }
-                        console.log('contaDias=>' + contaDias)
-                        console.log('termo=>' + termo)
+                        //console.log('contaDias=>' + contaDias)
+                        //console.log('termo=>' + termo)
                     }
 
                     // if (contaDias > 7) {
@@ -254,7 +254,7 @@ router.get('/termos/', ehAdmin, (req, res) => {
                         datatroca: dataMensagem(dataTroca)
                     })
 
-                    console.log('q=>' + q)
+                    //console.log('q=>' + q)
                     if (q == projeto.length) {
                         res.render('principal/termos', { projetos })
                     }
@@ -526,7 +526,7 @@ router.get('/selecao', ehAdmin, (req, res) => {
         ganho.sort(comparaNum);
         baixado.sort(comparaNum);
 
-        // console.log('totComparando=>' + totComparando)
+        //console.log('totComparando=>' + totComparando)
         if (naoVazio(totComparando)) {
             totComparando = mascaraDecimal(totComparando);
         }
@@ -642,7 +642,7 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
     const dtini = parseFloat(dataBusca(dataini))
     const dtfim = parseFloat(dataBusca(datafim))
 
-    // console.log('entrou')
+    //console.log('entrou')
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
 
@@ -815,9 +815,9 @@ router.get('/mostraEquipe/:id', ehAdmin, (req, res) => {
             })
         } else {
             var realizar
-            // console.log('mostrar tarefa')
+            //console.log('mostrar tarefa')
             Tarefas.findOne({ _id: req.params.id }).lean().then((tarefa) => {
-                // console.log(tarefa)
+                //console.log(tarefa)
                 if (naoVazio(tarefa)) {
                     Servico.findOne({ _id: tarefa.servico }).lean().then((servico) => {
                         Cliente.findOne({ _id: tarefa.cliente }).lean().then((cliente) => {
@@ -889,20 +889,20 @@ router.get('/realizar/:id', ehAdmin, (req, res) => {
 })
 
 router.get('/mostrarFotos/:id', ehAdmin, (req, res) => {
-    // console.log('entrou')
+    //console.log('entrou')
     var lista_imagens = []
     var img = []
     var params = req.params.id
-    // console.log('params=>' + params)
+    //console.log('params=>' + params)
     params = params.split('@')
-    // console.log('tarefa=>' + params[0])
-    // console.log('projeto=>' + params[1])
-    // console.log('proposta vazio')
+    //console.log('tarefa=>' + params[0])
+    //console.log('projeto=>' + params[1])
+    //console.log('proposta vazio')
     if (params[0] == 'assistencia') {
-        // console.log("entrou")
+        //console.log("entrou")
         Tarefas.findOne({ _id: params[1] }).lean().then((tarefa) => {
             img = tarefa.fotos
-            // console.log('img.length=>' + img.length)
+            //console.log('img.length=>' + img.length)
             img.forEach((e) => {
                 lista_imagens.push({ imagem: e.desc, id: params[1] })
             })
@@ -917,14 +917,14 @@ router.get('/mostrarFotos/:id', ehAdmin, (req, res) => {
                 Tarefas.find({ projeto: params[2] }).lean().then((tarefas) => {
 
                     img = tarefa.fotos
-                    // console.log('img=>' + img.length)
+                    //console.log('img=>' + img.length)
                     if (img.length > 0) {
-                        // console.log('img.length=>' + img.length)
+                        //console.log('img.length=>' + img.length)
                         img.forEach((e) => {
                             lista_imagens.push({ imagem: e.desc, id: params[1] })
                         })
                     }
-                    // console.log('lista_imagens=>' + lista_imagens)
+                    //console.log('lista_imagens=>' + lista_imagens)
                     res.render('principal/mostrarFotos', { lista_imagens, tarefa, tarefas, projeto, titulo: tarefa.descricao, seqtrf: img.length })
                 }).catch((err) => {
                     req.flash('error_msg', 'Não foi possível encontrar as tarefas.')
@@ -966,37 +966,37 @@ router.get('/orcamento', ehAdmin, (req, res) => {
     var quebra = false
     Componente.find({ user: id, classificacao: 'solar' }).lean().then((equipamento) => {
         Parametros.find({ user: id, tipo: 'solar' }).then((parametros) => {
-            // console.log('tems params')
+            //console.log('tems params')
             parametros.forEach((e) => {
-                // console.log('valor=>' + e.valor)
+                //console.log('valor=>' + e.valor)
                 if (naoVazio(e.valor)) {
                     valor = e.valor.split(';')
-                    // console.log('valor=>' + valor)
+                    //console.log('valor=>' + valor)
                     if (valor.length > 1) {
                         selectini = '<select name="params[]" class="form-select form-select-sm mb-1">'
                         selectfim = '</select>'
                         for (let i = 0; i < valor.length; i++) {
-                            // console.log('i=>'+i)
-                            // console.log('valor=>'+valor[i])
+                            //console.log('i=>'+i)
+                            //console.log('valor=>'+valor[i])
                             options = options + '<option value="' + valor[i] + '">' + valor[i] + '</option>'
                         }
-                        // console.log('dados=>' + dados[x].descricao)
-                        // console.log('valor=>' + e.descricao)
+                        //console.log('dados=>' + dados[x].descricao)
+                        //console.log('valor=>' + e.descricao)
                         if (dados[x].descricao == e.descricao) {
                             options = '<option class="fw-bold" value="' + dados[x].valor + '">' + dados[x].valor + '</option>' + options
                         }
                         campo = selectini + options + selectfim
                     } else {
-                        // console.log('input type text')
+                        //console.log('input type text')
                         campo = '<input type="text" class="form-control form-control-sm mb-1" name="params[]" value="">'
                     }
                 } else {
-                    // console.log('input type text vazio')
+                    //console.log('input type text vazio')
                     campo = '<input type="text" class="form-control form-control-sm mb-1" name="params[]" value="">'
                 }
                 lista_itens.push({ desc: e.descricao })
-                // console.log('campo=>' + campo)
-                // console.log('descricao=>' + e.descricao)
+                //console.log('campo=>' + campo)
+                //console.log('descricao=>' + e.descricao)
                 lista_params.push({ id: e._id, descricao: e.descricao, campo })
                 campo = ''
                 options = ''
@@ -1005,9 +1005,9 @@ router.get('/orcamento', ehAdmin, (req, res) => {
             if (naoVazio(user)) {
                 if (vendedor == true) {
                     Acesso.findOne({ _id: _id }).then((acesso) => {
-                        // console.log('acesso.pessoa=>' + acesso.pessoa)
+                        //console.log('acesso.pessoa=>' + acesso.pessoa)
                         Pessoa.findOne({ user: id, _id: acesso.pessoa }).then((ven) => {
-                            // console.log('ven._id=>' + ven._id)
+                            //console.log('ven._id=>' + ven._id)
                             res.render('principal/orcamento', { vendedor, idven: ven._id, equipamento, lista_params, lista_itens })
                         }).catch((err) => {
                             req.flash('error_msg', 'Não foi possível encontrar o responsável.')
@@ -1055,7 +1055,7 @@ router.post('/orcamento', ehAdmin, (req, res) => {
 
     var id
     //var tipo = req.body.seltipo
-    // console.log('tipo=>' + tipo)
+    //console.log('tipo=>' + tipo)
 
     var lista_params = []
     var lista_itens = []
@@ -1075,20 +1075,20 @@ router.post('/orcamento', ehAdmin, (req, res) => {
     AtvPadrao.find({ user: id }).then((atvpadrao) => {
         if (naoVazio(atvpadrao)) {
             var quebra = false
-            // console.log('req.body.tipo =>' + req.body.seltipo )
+            //console.log('req.body.tipo =>' + req.body.seltipo )
             Componente.find({ user: id, classificacao: 'solar' }).lean().then((equipamento) => {
                 Parametros.find({ user: id, tipo: 'solar' }).then((parametros) => {
                     parametros.forEach((e) => {
-                        // console.log('e.valor=>'+e.valor)
+                        //console.log('e.valor=>'+e.valor)
                         if (naoVazio(e.valor)) {
                             valor = e.valor.split(';')
-                            // console.log('valor.length=>'+valor.length)
+                            //console.log('valor.length=>'+valor.length)
                             if (valor.length > 1) {
                                 selectini = '<select name="params[]" class="form-select form-select-sm mb-1">'
                                 selectfim = '</select>'
                                 for (let i = 0; i < valor.length; i++) {
-                                    // console.log('i=>'+i)
-                                    // console.log('valor=>'+valor[i])
+                                    //console.log('i=>'+i)
+                                    //console.log('valor=>'+valor[i])
                                     options = options + '<option value="' + valor[i] + '">' + valor[i] + '</option>'
                                 }
                                 campo = selectini + options + selectfim
@@ -1099,21 +1099,21 @@ router.post('/orcamento', ehAdmin, (req, res) => {
                             campo = '<input type="text" class="form-control form-control-sm mb-1" name="params[]" value="">'
                         }
                         lista_itens.push({ desc: e.descricao })
-                        // console.log('campo=>'+campo)
-                        // console.log('descricao=>'+e.descricao)
+                        //console.log('campo=>'+campo)
+                        //console.log('descricao=>'+e.descricao)
                         lista_params.push({ id: e._id, descricao: e.descricao, campo })
                         campo = ''
                         options = ''
                     })
-                    // console.log('req.body.cliente=>' + req.body.cliente)
+                    //console.log('req.body.cliente=>' + req.body.cliente)
                     if (naoVazio(req.body.cliente)) {
                         Cliente.findOne({ _id: req.body.cliente }).lean().then((cliente) => {
                             if (naoVazio(user)) {
                                 if (vendedor == true) {
                                     Acesso.findOne({ _id: _id }).then((acesso) => {
-                                        // console.log('acesso.pessoa=>' + acesso.pessoa)
+                                        //console.log('acesso.pessoa=>' + acesso.pessoa)
                                         Pessoa.findOne({ user: id, _id: acesso.pessoa }).then((ven) => {
-                                            // console.log('ven._id=>' + ven._id)
+                                            //console.log('ven._id=>' + ven._id)
                                             res.render('principal/orcamento', { vendedor: vendedor, equipamento, idven: ven._id, cliente, lista_params, lista_itens })
                                         }).catch((err) => {
                                             req.flash('error_msg', 'Não foi possível encontrar o responsável.')
@@ -1148,13 +1148,13 @@ router.post('/orcamento', ehAdmin, (req, res) => {
                         })
                     } else {
                         if (naoVazio(user)) {
-                            // console.log('entrou')
-                            // console.log('vendedor=>'+vendedor)
+                            //console.log('entrou')
+                            //console.log('vendedor=>'+vendedor)
                             if (vendedor == true) {
                                 Acesso.findOne({ _id: _id }).then((acesso) => {
-                                    // console.log('acesso.pessoa=>' + acesso.pessoa)
+                                    //console.log('acesso.pessoa=>' + acesso.pessoa)
                                     Pessoa.findOne({ user: id, _id: acesso.pessoa }).then((ven) => {
-                                        // console.log('ven._id=>' + ven._id)
+                                        //console.log('ven._id=>' + ven._id)
                                         res.render('principal/orcamento', { vendedor, equipamento, idven: ven._id, lista_params, lista_itens })
                                     }).catch((err) => {
                                         req.flash('error_msg', 'Não foi possível encontrar o responsável.')
@@ -1176,7 +1176,7 @@ router.post('/orcamento', ehAdmin, (req, res) => {
                                 })
                             }
                         } else {
-                            // console.log('lista_params=>'+lista_params)
+                            //console.log('lista_params=>'+lista_params)
                             Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((todos_vendedores) => {
                                 res.render('principal/orcamento', { todos_vendedores, equipamento, quebra: true, tipo, lista_params, lista_itens })
                             }).catch((err) => {
@@ -1301,20 +1301,20 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                 Parametros.find({ user: id, tipo: 'solar' }).then((lista_params) => {
                     dados = dados.split(';')
                     for (let i = 0; i < lista_params.length; i++) {
-                        // console.log('lista_params[]._id=>' + lista_params[i]._id)
-                        // console.log('lista_params[].descricao=>' + lista_params[i].descricao)
-                        // console.log('dados[]=>' + dados[i])
+                        //console.log('lista_params[]._id=>' + lista_params[i]._id)
+                        //console.log('lista_params[].descricao=>' + lista_params[i].descricao)
+                        //console.log('dados[]=>' + dados[i])
                         params.push({ descricao: lista_params[i].descricao, tipo: lista_params[i].opcao, valor: dados[i] })
                     }
 
                     dados_desc = dados_desc.split(';')
                     dados_qtd = dados_qtd.split(';')
-                    // console.log('dados_desc.length=>' + dados_desc.length)
+                    //console.log('dados_desc.length=>' + dados_desc.length)
                     // if (dados_desc.length > 1) {
-                    // console.log('dados_desc[]=>' + dados_desc[0])
+                    //console.log('dados_desc[]=>' + dados_desc[0])
                     for (let i = 0; i < dados_desc.length; i++) {
-                        // console.log('dados_desc[]=>' + dados_desc[i])
-                        // console.log('dados_qtd[]=>' + dados_qtd[i])
+                        //console.log('dados_desc[]=>' + dados_desc[i])
+                        //console.log('dados_qtd[]=>' + dados_qtd[i])
                         material.push({ desc: dados_desc[i], qtd: dados_qtd[i] })
                     }
                     // } else {
@@ -1382,15 +1382,15 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
             try {
                 const achou_cliente = await Cliente.findOne(sql)
                 if (achou_cliente != null) {
-                    console.log(achou_cliente.vendedor)
-                    console.log(pessoa)
+                    //console.log(achou_cliente.vendedor)
+                    //console.log(pessoa)
                     if (JSON.stringify(achou_cliente.vendedor) == JSON.stringify(pessoa)) {
                         sameCliente = true
                     }
                 }
-                console.log(sameCliente)
+                //console.log(sameCliente)
                 if (sameCliente || achou_cliente == null) {
-                    console.log('entrou')
+                    //console.log('entrou')
                     try {
                         const p = await Pessoa.findOne({ _id: pessoa })
                         const empresa = await Empresa.findOne({ user: id })
@@ -1486,22 +1486,22 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                 } else {
                                     corpo = projeto
                                 }
-                                // console.log('corpo=>'+JSON.stringify(corpo))
+                                //console.log('corpo=>'+JSON.stringify(corpo))
                                 new Projeto(corpo).save().then(() => {
                                     Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
                                         empresa.save().then(() => {
                                             q = 0
                                             var texto
                                             Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                // console.log('acesso=>' + acesso)
+                                                //console.log('acesso=>' + acesso)
                                                 if (naoVazio(acesso)) {
                                                     acesso.forEach((e) => {
                                                         Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                            // console.log('pessoa=>' + pessoa)
+                                                            //console.log('pessoa=>' + pessoa)
                                                             texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                 'O orçamento ' + novo_projeto.seq + ' para o cliente ' + achou_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
                                                                 'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                            // console.log('pessoa.celular=>'+pessoa.celular)
+                                                            //console.log('pessoa.celular=>'+pessoa.celular)
                                                             client.messages
                                                                 .create({
                                                                     body: texto,
@@ -1510,10 +1510,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                                 })
                                                                 .then((message) => {
                                                                     q++
-                                                                    // console.log('q=>' + q)
-                                                                    // console.log('acesso.length=>' + acesso.length)
+                                                                    //console.log('q=>' + q)
+                                                                    //console.log('acesso.length=>' + acesso.length)
                                                                     if (q == acesso.length) {
-                                                                        // console.log(message.sid)
+                                                                        //console.log(message.sid)
                                                                         req.flash('success_msg', 'Proposta adicionada com sucesso')
                                                                         res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
                                                                     }
@@ -1628,22 +1628,22 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                         } else {
                                             corpo = projeto
                                         }
-                                        // console.log('corpo=>'+JSON.stringify(corpo))
+                                        //console.log('corpo=>'+JSON.stringify(corpo))
                                         new Projeto(corpo).save().then(() => {
                                             Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
                                                 Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
                                                     empresa.save().then(() => {
                                                         q = 0
                                                         Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                            // console.log('acesso=>' + acesso)
+                                                            //console.log('acesso=>' + acesso)
                                                             if (naoVazio(acesso)) {
                                                                 acesso.forEach((e) => {
                                                                     Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                                        // console.log('pessoa=>' + pessoa)
+                                                                        //console.log('pessoa=>' + pessoa)
                                                                         texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                             'O orçamento ' + novo_projeto.seq + ' para o cliente ' + cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
                                                                             'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                                        // console.log('pessoa.celular=>'+pessoa.celular)
+                                                                        //console.log('pessoa.celular=>'+pessoa.celular)
                                                                         client.messages
                                                                             .create({
                                                                                 body: texto,
@@ -1652,10 +1652,10 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                                             })
                                                                             .then((message) => {
                                                                                 q++
-                                                                                // console.log('q=>' + q)
-                                                                                // console.log('acesso.length=>' + acesso.length)
+                                                                                //console.log('q=>' + q)
+                                                                                //console.log('acesso.length=>' + acesso.length)
                                                                                 if (q == acesso.length) {
-                                                                                    // console.log(message.sid)
+                                                                                    //console.log(message.sid)
                                                                                     req.flash('success_msg', 'Proposta adicionada com sucesso')
                                                                                     res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
                                                                                 }
@@ -1725,7 +1725,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                         lead: false,
                                     }
 
-                                    // console.log('pessoa=>'+pessoa)
+                                    //console.log('pessoa=>'+pessoa)
                                     if (vendedor) {
                                         Object.assign(cliente, corpo, { vendedor: pessoa })
                                     } else {
@@ -1733,7 +1733,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                     }
                                     new Cliente(cliente).save().then(() => {
                                         Cliente.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_cliente) => {
-                                            // console.log('cliente cadastrado')
+                                            //console.log('cliente cadastrado')
 
                                             if (tipo == 'novo') {
                                                 novo = true
@@ -1752,7 +1752,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                 selvendedor = req.body.vendedor
                                             }
 
-                                            // console.log('params=>' + JSON.stringify(params))
+                                            //console.log('params=>' + JSON.stringify(params))
                                             var ganho
                                             var status
 
@@ -1808,9 +1808,9 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                 corpo = temvendedor
                                             }
 
-                                            // console.log('corpo=>' + JSON.stringify(corpo))
+                                            //console.log('corpo=>' + JSON.stringify(corpo))
 
-                                            // console.log('corpo=>'+JSON.stringify(corpo))
+                                            //console.log('corpo=>'+JSON.stringify(corpo))
                                             new Projeto(corpo).save().then(() => {
                                                 Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
                                                     // Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
@@ -1818,16 +1818,16 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                         q = 0
 
                                                         Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                            // console.log('acesso=>' + acesso)
+                                                            //console.log('acesso=>' + acesso)
                                                             if (naoVazio(acesso)) {
                                                                 acesso.forEach((e) => {
                                                                     Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                                        // console.log('pessoa=>' + pessoa)
-                                                                        // console.log('e.nome=>' + e.nome)
+                                                                        //console.log('pessoa=>' + pessoa)
+                                                                        //console.log('e.nome=>' + e.nome)
                                                                         texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                             'O orçamento ' + novo_projeto.seq + ' para o cliente ' + novo_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
                                                                             'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                                        // console.log('pessoa.celular=>' + pessoa.celular)
+                                                                        //console.log('pessoa.celular=>' + pessoa.celular)
                                                                         client.messages
                                                                             .create({
                                                                                 body: texto,
@@ -1836,8 +1836,8 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                                             })
                                                                             .then((message) => {
                                                                                 q++
-                                                                                // console.log('q=>' + q)
-                                                                                // console.log('acesso.length=>' + acesso.length)
+                                                                                //console.log('q=>' + q)
+                                                                                //console.log('acesso.length=>' + acesso.length)
                                                                                 if (q == acesso.length) {
                                                                                     req.flash('success_msg', 'Proposta adicionada com sucesso')
                                                                                     res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
@@ -1906,11 +1906,11 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
         } else {
             erros.push({ texto: 'Os campos marcados com asterisco são obrigatórios' })
             Acesso.findOne({ _id: _id }).then((acesso) => {
-                // console.log('acesso.vendedor=>' + acesso.vendedor)
+                //console.log('acesso.vendedor=>' + acesso.vendedor)
                 if (naoVazio(acesso)) {
                     if (acesso.vendedor == true) {
-                        // console.log('ehVendedor')
-                        // console.log('acesso.pessoa=>' + acesso.pessoa)
+                        //console.log('ehVendedor')
+                        //console.log('acesso.pessoa=>' + acesso.pessoa)
                         Pessoa.findOne({ user: id, _id: acesso.pessoa }).then((ven) => {
                             res.render('principal/orcamento', { erros, vendedor, idven: ven._id, nome, endereco, uf, cidade, cpf, cnpj, contato, celular, email }) //sobrenome, 
                         }).catch((err) => {
@@ -1978,7 +1978,7 @@ router.get('/fatura/:id', ehAdmin, (req, res) => {
         ehMaster = false
     }
     Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
-        // console.log('projeto=>' + projeto)
+        //console.log('projeto=>' + projeto)
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
             var ehimagem
             var ehpdf
@@ -1990,7 +1990,7 @@ router.get('/fatura/:id', ehAdmin, (req, res) => {
                 x = tipo.length
                 y = x - 3
                 tipo = tipo.slice(y, x)
-                // console.log(tipo)
+                //console.log(tipo)
                 if (tipo == 'pdf') {
                     ehimagem = false
                     ehpdf = true
@@ -2000,7 +2000,7 @@ router.get('/fatura/:id', ehAdmin, (req, res) => {
                 }
                 lista_faturas.push({ desc: l.desc, _id: l._id, ehimagem, ehpdf })
             })
-            // console.log('lista=>' + lista_faturas)
+            //console.log('lista=>' + lista_faturas)
             if (naoVazio(vendedor)) {
                 idAcesso = _id
             } else {
@@ -2063,12 +2063,12 @@ router.get('/fatura/:id', ehAdmin, (req, res) => {
                     totalDez = totalDez + parseFloat(e.dez)
                 })
                 media = Math.round(total / 12)
-                // console.log(media)
+                //console.log(media)
             }
             if (funges || funpro) {
                 proandges = true
             }
-            // console.log('lista=>' + JSON.stringify(lista_faturas))
+            //console.log('lista=>' + JSON.stringify(lista_faturas))
             res.render('principal/fatura', {
                 vendedor, orcamentista, funges, ehMaster, funpro, proandges, projeto, cliente_projeto, idAcesso,
                 lista_faturas, lista_unidades, media, totalJan, totalFev, totalMar, totalAbr, totalMai,
@@ -2194,15 +2194,15 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
         }
     }
 
-    // console.log(qtd.length)
-    // console.log('req.body.id=>' + req.body.id)
+    //console.log(qtd.length)
+    //console.log('req.body.id=>' + req.body.id)
     if (mes.length > 1) {
-        // console.log('iduc=>' + iduc)
+        //console.log('iduc=>' + iduc)
         if (naoVazio(iduc)) {
-            // console.log('iduc.length=>' + iduc.length)
+            //console.log('iduc.length=>' + iduc.length)
             if (iduc.length < 24) {
                 for (i = 0; i < iduc.length; i++) {
-                    // console.log('iduc=>' + iduc[i])
+                    //console.log('iduc=>' + iduc[i])
                     Projeto.findOneAndUpdate({ _id: id }, { $pull: { 'uc': { '_id': iduc[i] } } }).then()
                 }
             } else {
@@ -2221,7 +2221,7 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
         }
 
         if (naoVazio(req.body.add)) {
-            // console.log('req.body.tipoadd =>' + req.body.tipoadd)
+            //console.log('req.body.tipoadd =>' + req.body.tipoadd)
             if (req.body.tipoadd == '%') {
                 uc.forEach((e) => {
                     totalJan = totalJan + parseFloat(e.jan)
@@ -2239,8 +2239,8 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
                 })
 
                 fator = (1 + (req.body.add / 100))
-                // console.log('fator =>' + fator)
-                // console.log('totalJan=>' + totalJan)
+                //console.log('fator =>' + fator)
+                //console.log('totalJan=>' + totalJan)
                 total = Math.round((parseFloat(totalJan) * fator)) + Math.round((parseFloat(totalFev) * fator)) + Math.round((parseFloat(totalMar) * fator)) + Math.round((parseFloat(totalAbr) * fator)) + Math.round((parseFloat(totalMai) * fator)) + Math.round((parseFloat(totalJun) * fator)) +
                     Math.round((parseFloat(totalJul) * fator)) + Math.round((parseFloat(totalAgo) * fator)) + Math.round((parseFloat(totalSet) * fator)) + Math.round((parseFloat(totalOut) * fator)) + Math.round((parseFloat(totalNov) * fator)) + parseFloat(totalDez) * fator
                 uc.push({
@@ -2248,7 +2248,7 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
                     jul: Math.round(parseFloat(totalJul) * fator, 2), ago: Math.round(parseFloat(totalAgo) * fator, 2), set: Math.round(parseFloat(totalSet) * fator, 2), out: Math.round(parseFloat(totalOut) * fator, 2), nov: Math.round(parseFloat(totalNov) * fator, 2), dez: Math.round(parseFloat(totalDez) * fator, 2), total: Math.round(total, 2)
                 })
             } else {
-                // console.log('req.body.add=>' + req.body.add)
+                //console.log('req.body.add=>' + req.body.add)
                 total = parseFloat(req.body.add) * 12
                 uc.push({
                     seq: i + 1, jan: parseFloat(req.body.add), fev: parseFloat(req.body.add), mar: parseFloat(req.body.add), abr: parseFloat(req.body.add), mai: parseFloat(req.body.add), jun: parseFloat(req.body.add),
@@ -2269,14 +2269,14 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
                 } else {
                     novoadd = 0
                 }
-                // console.log('novoadd=>' + novoadd)
-                // console.log('projeto.adduc=>' + projeto.adduc)
+                //console.log('novoadd=>' + novoadd)
+                //console.log('projeto.adduc=>' + projeto.adduc)
                 if (naoVazio(projeto.adduc)) {
                     add = projeto.adduc
                 } else {
                     add = 0
                 }
-                // console.log('add=>' + add)
+                //console.log('add=>' + add)
                 projeto.adduc = parseFloat(add) + parseFloat(novoadd)
                 projeto.save().then(() => {
                     req.flash('success_msg', 'Unidades consumidoras adicionadas com sucesso.')
@@ -2354,14 +2354,14 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
         } else {
             dez = 0
         }
-        // console.log('iduc=>' + iduc)
+        //console.log('iduc=>' + iduc)
         Projeto.findOneAndUpdate({ _id: id }, { $pull: { 'uc': { '_id': iduc } } }).then()
-        // console.log('req.body.add=>' + req.body.add)
-        // console.log('req.body.tipoadd=>' + req.body.tipoadd)
+        //console.log('req.body.add=>' + req.body.add)
+        //console.log('req.body.tipoadd=>' + req.body.tipoadd)
         if (naoVazio(req.body.add)) {
             if (req.body.tipoadd == '%') {
                 fator = (1 + (req.body.add / 100))
-                // console.log('fator=>' + fator)
+                //console.log('fator=>' + fator)
                 total = parseFloat(jan) + parseFloat(fev) + parseFloat(mar) + parseFloat(abr) + parseFloat(mai) + parseFloat(jun) +
                     parseFloat(jul) + parseFloat(ago) + parseFloat(set) + parseFloat(out) + parseFloat(nov) + parseFloat(dez)
                 uc.push({
@@ -2375,17 +2375,17 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
                     jul: Math.round(parseFloat(jul) * fator), ago: Math.round(parseFloat(ago) * fator), set: Math.round(parseFloat(set) * fator), out: Math.round(parseFloat(out) * fator), nov: Math.round(parseFloat(nov) * fator), dez: Math.round(parseFloat(dez) * fator), total: Math.round(total, 2)
                 })
             } else {
-                // console.log('add=>' + add)
+                //console.log('add=>' + add)
                 total = parseFloat(jan) + parseFloat(fev) + parseFloat(mar) + parseFloat(abr) + parseFloat(mai) + parseFloat(jun) +
                     parseFloat(jul) + parseFloat(ago) + parseFloat(set) + parseFloat(out) + parseFloat(nov) + parseFloat(dez)
-                // console.log('total=>' + total)
+                //console.log('total=>' + total)
                 uc.push({
                     seq: 1, jan: parseFloat(jan), fev: parseFloat(fev), mar: parseFloat(mar), abr: parseFloat(abr), mai: parseFloat(mai), jun: parseFloat(jun),
                     jul: parseFloat(jul), ago: parseFloat(ago), set: parseFloat(set), out: parseFloat(out), nov: parseFloat(nov), dez: parseFloat(dez), total
                 })
                 total = parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add) +
                     parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add) + parseFloat(req.body.add)
-                // console.log('total=>' + total)
+                //console.log('total=>' + total)
                 uc.push({
                     seq: 2, jan: parseFloat(req.body.add), fev: parseFloat(req.body.add), mar: parseFloat(req.body.add), abr: parseFloat(req.body.add), mai: parseFloat(req.body.add), jun: parseFloat(req.body.add),
                     jul: parseFloat(req.body.add), ago: parseFloat(req.body.add), set: parseFloat(req.body.add), out: parseFloat(req.body.add), nov: parseFloat(req.body.add), dez: parseFloat(req.body.add), total
@@ -2394,7 +2394,7 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
         } else {
             total = parseFloat(req.body.jan) + parseFloat(req.body.fev) + parseFloat(req.body.mar) + parseFloat(req.body.abr) + parseFloat(req.body.mai) + parseFloat(req.body.jun) +
                 parseFloat(req.body.jul) + parseFloat(req.body.ago) + parseFloat(req.body.set) + parseFloat(req.body.out) + parseFloat(req.body.nov) + parseFloat(req.body.dez)
-            // console.log('total=>' + total)
+            //console.log('total=>' + total)
             uc.push({
                 seq: 1, jan: parseFloat(req.body.jan), fev: parseFloat(req.body.fev), mar: parseFloat(req.body.mar), abr: parseFloat(req.body.abr), mai: parseFloat(req.body.mai), jun: parseFloat(req.body.jun),
                 jul: parseFloat(req.body.jul), ago: parseFloat(req.body.ago), set: parseFloat(req.body.set), out: parseFloat(req.body.out), nov: parseFloat(req.body.nov), dez: parseFloat(req.body.dez), total: Math.round(total, 2)
@@ -2414,14 +2414,14 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
                 } else {
                     novoadd = 0
                 }
-                // console.log('novoadd=>' + novoadd)
-                // console.log('projeto.adduc=>' + projeto.adduc)
+                //console.log('novoadd=>' + novoadd)
+                //console.log('projeto.adduc=>' + projeto.adduc)
                 if (naoVazio(projeto.adduc)) {
                     add = projeto.adduc
                 } else {
                     add = 0
                 }
-                // console.log('add=>' + add)
+                //console.log('add=>' + add)
                 projeto.adduc = parseFloat(add) + parseFloat(novoadd)
                 projeto.save().then(() => {
                     req.flash('success_msg', 'Unidades consumidoras adicionadas com sucesso.')
@@ -2444,8 +2444,8 @@ router.post('/salvaruc', ehAdmin, (req, res) => {
 router.get('/deletauc/:id', ehAdmin, (req, res) => {
     var params = req.params.id
     params = params.split('@')
-    // console.log('params[0]=>' + params[0])
-    // console.log('params[1]=>' + params[1])
+    //console.log('params[0]=>' + params[0])
+    //console.log('params[1]=>' + params[1])
     Projeto.findOneAndUpdate({ _id: params[1] }, { $pull: { 'uc': { '_id': params[0] } } }).then(() => {
         req.flash('success_msg', 'Unidade consumidora excluída.')
         res.redirect('/gerenciamento/fatura/' + params[1])
@@ -2474,7 +2474,7 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
     }
 
     Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
-        // console.log('projeto=>' + projeto)
+        //console.log('projeto=>' + projeto)
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
             const lista_proposta = projeto.proposta
             const lista_doc = listaFotos(projeto.documento)
@@ -2551,7 +2551,7 @@ router.get('/projeto/:id', ehAdmin, (req, res) => {
     Pessoa.find({ user: id, funins: 'checked' }).lean().then((instaladores) => {
         Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
 
-            // console.log('equipe=>'+equipe)
+            //console.log('equipe=>'+equipe)
             if (projeto.autorizado) {
                 checkAuth = 'checked'
             } else {
@@ -2559,7 +2559,7 @@ router.get('/projeto/:id', ehAdmin, (req, res) => {
             }
             lista_proposta = projeto.proposta
 
-            // console.log('instalador=>' + instalador)
+            //console.log('instalador=>' + instalador)
             Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
                 Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
                     var dtfim = setData(pedido.data, pedido.prazo)
@@ -2575,7 +2575,7 @@ router.get('/projeto/:id', ehAdmin, (req, res) => {
                     if (naoVazio(projeto.dataTroca)) {
                         checkTroca = 'checked'
                     }
-                    // console.log('lista_proposta=>' + lista_proposta)
+                    //console.log('lista_proposta=>' + lista_proposta)
                     res.render('principal/projeto', { checkAuth, checkPay, vendedor, lista_proposta, orcamentista, funpro, funges, ehMaster, proandges, pedido, projeto, instaladores, cliente_projeto, checkPost, checkSoli, checkApro, checkTroca, dtfim })
                 }).catch((err) => {
                     req.flash('error_msg', 'Não foi possível encontrar o cliente da proposta<projeto>.')
@@ -2599,7 +2599,7 @@ router.get('/checkAtv/:id', ehAdmin, (req, res) => {
         if (naoVazio(tarefa.dataini) == false) {
             tarefa.dataini = dataHoje()
         }
-        // console.log('tarefa.emandamento=>'+tarefa.emandamento)
+        //console.log('tarefa.emandamento=>'+tarefa.emandamento)
         if (naoVazio(tarefa.emandamento)) {
             if (tarefa.emandamento == true) {
                 tarefa.emandamento = false
@@ -2607,7 +2607,7 @@ router.get('/checkAtv/:id', ehAdmin, (req, res) => {
                 tarefa.emandamento = true
             }
         } else {
-            // console.log('entrou')
+            //console.log('entrou')
             tarefa.emandamento = true
         }
         tarefa.save().then(() => {
@@ -2641,7 +2641,7 @@ router.get('/instalacao/:id', ehAdmin, (req, res) => {
     var dataini = '0000-00-00'
     var datafim = '0000-00-00'
     var ehMaster
-    // console.log('req.params.id=>' + req.params.id)
+    //console.log('req.params.id=>' + req.params.id)
 
     if (naoVazio(user)) {
         ehMaster = false
@@ -2665,10 +2665,10 @@ router.get('/instalacao/:id', ehAdmin, (req, res) => {
         }
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
             Tarefas.find({ projeto: req.params.id }).then((tarefa) => {
-                // console.log('tarefa=>' + tarefa)
+                //console.log('tarefa=>' + tarefa)
                 if (naoVazio(tarefa)) {
                     tarefa.forEach((e) => {
-                        // console.log('tarefas._id=>' + e._id)
+                        //console.log('tarefas._id=>' + e._id)
                         if (e.concluido != true) {
                             entrega = false
                         }
@@ -2692,8 +2692,8 @@ router.get('/instalacao/:id', ehAdmin, (req, res) => {
                             realizado = false
                         }
 
-                        // console.log('dataini=>'+dataini)
-                        // console.log('datafim=>'+datafim)
+                        //console.log('dataini=>'+dataini)
+                        //console.log('datafim=>'+datafim)
 
                         tarefas.push({ id: e._id, check, realizado, contaDias, descricao: e.descricao, dataini, datafim, concluido: e.concluido, emandamento: e.emandamento })
                     })
@@ -2718,11 +2718,11 @@ router.get('/instalacao/:id', ehAdmin, (req, res) => {
 router.get('/verFotos/:id', ehAdmin, (req, res) => {
     var img = []
     var lista = []
-    // console.log('req.params.id=>' + req.params.id)
+    //console.log('req.params.id=>' + req.params.id)
     Tarefas.findOne({ _id: req.params.id }).lean().then((tarefas) => {
         img = tarefas.fotos
         img.forEach((i) => {
-            // console.log('i.desc=>' + i.desc)
+            //console.log('i.desc=>' + i.desc)
             lista.push({ id: tarefas._id, imagem: i.desc, atv: tarefas.desc })
         })
         res.render('principal/verfotos', { tarefas, idprj: tarefas.projeto, lista })
@@ -2816,7 +2816,7 @@ router.get('/agenda/', ehAdmin, (req, res) => {
 
     var q = 0
 
-    // console.log('meshoje=>' + meshoje)
+    //console.log('meshoje=>' + meshoje)
 
     switch (String(meshoje)) {
         case '01': janeiro = 'active'
@@ -2857,19 +2857,19 @@ router.get('/agenda/', ehAdmin, (req, res) => {
             break;
     }
     var sql
-    // console.log('mestitulo=>' + mestitulo)
+    //console.log('mestitulo=>' + mestitulo)
     // var nova_dataini = dataini
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
-        // console.log("dataini=>" + dataini)
-        // console.log("datafim=>" + datafim)
+        //console.log("dataini=>" + dataini)
+        //console.log("datafim=>" + datafim)
         Tarefas.find({ user: id, servico: { $exists: true }, 'buscadataini': { $lte: parseFloat(datafim), $gte: parseFloat(dataini) } }).then((lista_tarefas) => {
-            // console.log('lista_tarefas=>' + lista_tarefas)
+            //console.log('lista_tarefas=>' + lista_tarefas)
             if (naoVazio(lista_tarefas)) {
                 lista_tarefas.forEach((e) => {
-                    // console.log('e._id=>' + e._id)
-                    // console.log('e.cliente=>' + e.cliente)
+                    //console.log('e._id=>' + e._id)
+                    //console.log('e.cliente=>' + e.cliente)
                     Cliente.findOne({ _id: e.cliente }).then((cliente) => {
-                        // console.log('cliente=>' + cliente)
+                        //console.log('cliente=>' + cliente)
                         Servico.findOne({ _id: e.servico }).then((ser) => {
                             var dias = []
                             var feito = false
@@ -2883,8 +2883,8 @@ router.get('/agenda/', ehAdmin, (req, res) => {
                             mesfim = dtinicio.substring(5, 7)
                             diainicio = dtinicio.substring(8, 11)
                             diafim = dtinicio.substring(8, 11)
-                            // console.log("meshoje=>" + meshoje)
-                            // console.log("mesinicio=>" + mesinicio)
+                            //console.log("meshoje=>" + meshoje)
+                            //console.log("mesinicio=>" + mesinicio)
                             if (naoVazio(e.programacao)) {
                                 mes = mesinicio
                                 dia = diainicio
@@ -2908,21 +2908,21 @@ router.get('/agenda/', ehAdmin, (req, res) => {
                                         }
                                     }
                                 } else {
-                                    // console.log('diferente')
+                                    //console.log('diferente')
                                     difmes = parseFloat(mesfim) - parseFloat(mesinicio)
                                     if (difmes != 0) {
-                                        // console.log('difmes=>' + difmes)
+                                        //console.log('difmes=>' + difmes)
                                         if (difmes < 0) {
                                             difmes = difmes + 12
                                         }
-                                        // console.log('mesinicio=>' + mesinicio)
+                                        //console.log('mesinicio=>' + mesinicio)
                                         for (i = 0; i < difmes; i++) {
                                             mes = parseFloat(mesinicio) + i
                                             if (mes > 12) {
                                                 mes = mes - 12
                                             }
-                                            // console.log('mes=>' + mes)
-                                            // console.log('meshoje=>' + meshoje)
+                                            //console.log('mes=>' + mes)
+                                            //console.log('meshoje=>' + meshoje)
                                             if (mes == meshoje) {
                                                 break;
                                             }
@@ -2943,21 +2943,21 @@ router.get('/agenda/', ehAdmin, (req, res) => {
                                 }
                             }
                             const { dataini } = e
-                            // console.log('dataini=>' + dataini)
-                            // console.log('mes_busca=>' + mes_busca)
-                            // console.log(' ser.descricao=>' + ser.descricao)
+                            //console.log('dataini=>' + dataini)
+                            //console.log('mes_busca=>' + mes_busca)
+                            //console.log(' ser.descricao=>' + ser.descricao)
                             tarefa = ser.descricao
                             for (i = 0; i < dif; i++) {
-                                // console.log('dia=>' + dia)
-                                // console.log('entrou laço')
-                                // console.log("meshoje=>" + meshoje)
-                                // console.log("mes=>" + mes)
+                                //console.log('dia=>' + dia)
+                                //console.log('entrou laço')
+                                //console.log("meshoje=>" + meshoje)
+                                //console.log("mes=>" + mes)
                                 if (meshoje == mes) {
-                                    // console.log("dias=>" + dias)
+                                    //console.log("dias=>" + dias)
                                     // if (naoVazio(dias)) {
-                                    //     // console.log('d=>' + d)
+                                    //     //console.log('d=>' + d)
                                     //     feito = dias[i].feito
-                                    //     // console.log('feito=>' + feito)
+                                    //     //console.log('feito=>' + feito)
                                     // }
                                     cor = 'lightgray'
                                     sql = { cliente: cliente.nome, id: e._id, tarefa, cor, concluido: e.concluido }
@@ -3057,8 +3057,8 @@ router.get('/agenda/', ehAdmin, (req, res) => {
                                 }
                                 dia++
                             }
-                            // console.log('q=>' + q)
-                            // console.log('lista_tarefas.length=>' + lista_tarefas.length)
+                            //console.log('q=>' + q)
+                            //console.log('lista_tarefas.length=>' + lista_tarefas.length)
                             if (q == lista_tarefas.length) {
                                 res.render('principal/agenda', {
                                     dia01, dia02, dia03, dia04, dia05, dia06, dia07,
@@ -3074,8 +3074,8 @@ router.get('/agenda/', ehAdmin, (req, res) => {
                     })
                 })
             } else {
-                // console.log("q=>" + q)
-                // console.log("lista_tarefas.length=>" + lista_tarefas.length)
+                //console.log("q=>" + q)
+                //console.log("lista_tarefas.length=>" + lista_tarefas.length)
                 if (q == lista_tarefas.length) {
                     res.render('principal/agenda', {
                         dia01, dia02, dia03, dia04, dia05, dia06, dia07,
@@ -3206,7 +3206,7 @@ router.get('/vermais/', ehAdmin, (req, res) => {
     var meshoje = hoje.substring(5, 7)
     var anotitulo = hoje.substring(0, 4)
 
-    // console.log('meshoje=>' + meshoje)
+    //console.log('meshoje=>' + meshoje)
 
     switch (meshoje) {
         case '01': janeiro = 'active'
@@ -3250,18 +3250,18 @@ router.get('/vermais/', ehAdmin, (req, res) => {
     datafim = String(anotitulo) + meshoje + '30'
     dataini = parseFloat(dataini)
     datafim = parseFloat(datafim)
-    // console.log('anotitulo=>' + anotitulo)
-    // console.log('meshoje=>' + meshoje)
-    // console.log('mestitulo=>' + mestitulo)
-    // console.log('dataini=>' + dataini)
-    // console.log('datafim=>' + datafim)
+    //console.log('anotitulo=>' + anotitulo)
+    //console.log('meshoje=>' + meshoje)
+    //console.log('mestitulo=>' + mestitulo)
+    //console.log('dataini=>' + dataini)
+    //console.log('datafim=>' + datafim)
     var sql = {}
     sql = { user: id, feito: true, liberar: true, prjfeito: false, tarefa: { $exists: false }, nome_projeto: { $exists: true }, $or: [{ 'dtinibusca': { $lte: datafim, $gte: dataini } }, { 'dtfimbusca': { $lte: datafim, $gte: dataini } }] }
     Pessoa.find({ user: id, funins: 'checked' }).lean().then((pessoa) => {
         Equipe.find(sql).then((equipe) => {
             equipe.forEach((e) => {
-                // console.log('e._id=>' + e._id)
-                // console.log('e._id=>' + e.insres)
+                //console.log('e._id=>' + e._id)
+                //console.log('e._id=>' + e.insres)
                 Pessoa.findOne({ _id: e.insres }).then((tecnico) => {
                     q++
                     inicio = e.dtinicio
@@ -3280,7 +3280,7 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                         if (parseFloat(anotitulo) == parseFloat(anoinicio)) {
                             mes = meshoje
                             if (parseFloat(anofim) > parseFloat(anoinicio)) {
-                                // console.log('projeto ultrapassa anos')
+                                //console.log('projeto ultrapassa anos')
                                 dia = diainicio
                                 if (meshoje == 1 || meshoje == 3 || meshoje == 5 || meshoje == 7 || meshoje == 8 || meshoje == 10 || meshoje == 12) {
                                     dif = 31
@@ -3296,38 +3296,38 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                                     if (data1.getTime() < data2.getTime()) {
                                         days = days * -1
                                     }
-                                    // console.log('days=>' + days)
+                                    //console.log('days=>' + days)
                                     dia = diainicio
                                     dif = days + 1
                                 } else {
                                     dia = diainicio
                                     dif = parseFloat(diafim) - parseFloat(diainicio) + 1
-                                    // console.log('dia=>' + dia)
-                                    // console.log('dif=>' + dif)
+                                    //console.log('dia=>' + dia)
+                                    //console.log('dif=>' + dif)
                                 }
                             }
                         } else {
-                            // console.log('anos diferente')
+                            //console.log('anos diferente')
                             dia = 0
                             dif = 0
                         }
                     } else {
-                        // console.log('diferente')
+                        //console.log('diferente')
                         difmes = parseFloat(mesfim) - parseFloat(mesinicio) + 1
-                        // console.log('difmes=>' + difmes)
+                        //console.log('difmes=>' + difmes)
                         if (difmes != 0) {
-                            // console.log('difmes=>' + difmes)
+                            //console.log('difmes=>' + difmes)
                             if (difmes < 0) {
                                 difmes = difmes + 12
                             }
-                            // console.log('mesinicio=>' + mesinicio)
+                            //console.log('mesinicio=>' + mesinicio)
                             for (i = 0; i < difmes; i++) {
                                 mes = parseFloat(mesinicio) + i
                                 if (mes > 12) {
                                     mes = mes - 12
                                 }
-                                // console.log('mes=>' + mes)
-                                // console.log('meshoje=>' + meshoje)
+                                //console.log('mes=>' + mes)
+                                //console.log('meshoje=>' + meshoje)
                                 if (mes == meshoje) {
                                     if (mes < 10) {
                                         mes = '0' + mes
@@ -3356,9 +3356,9 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                         }
                     }
 
-                    // console.log('dif=>' + dif)
-                    // console.log('dia=>' + dia)
-                    // console.log('mes=>' + mes)
+                    //console.log('dif=>' + dif)
+                    //console.log('dia=>' + dia)
+                    //console.log('mes=>' + mes)
                     y = Math.floor(Math.random() * 17)
                     if (y == x) {
                         y = Math.floor(Math.random() * 17)
@@ -3371,12 +3371,12 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                     z = y
 
                     color = cores[y]
-                    // console.log('color=>' + color)
+                    //console.log('color=>' + color)
                     todasCores.push({ color })
 
                     for (i = 0; i < dif; i++) {
-                        // console.log('dia=>' + dia)
-                        // console.log('entrou laço')    
+                        //console.log('dia=>' + dia)
+                        //console.log('entrou laço')    
                         params_dia = { id: tecnico._id, tecnico: tecnico.nome, cor: color, instalador: 'true' }
                         if (meshoje == mes) {
                             switch (String(dia)) {
@@ -3478,10 +3478,10 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                             if (dia < 10) {
                                 dia = '0' + dia
                             }
-                            // console.log('dia=>' + dia)
+                            //console.log('dia=>' + dia)
                         }
                     }
-                    // console.log('q=>' + q)
+                    //console.log('q=>' + q)
                     if (q == equipe.length) {
                         res.render('principal/agenda', {
                             dia01, dia02, dia03, dia04, dia05, dia06, dia07, dia08, dia09, dia10,
@@ -3699,15 +3699,15 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
     }
 
     Empresa.findOne({ user: id }).lean().then((empresa) => {
-        // console.log('vendedor=>' + vendedor)
-        // console.log('funges=>' + funges)
-        // console.log('orcamentista=>' + orcamentista)
+        //console.log('vendedor=>' + vendedor)
+        //console.log('funges=>' + funges)
+        //console.log('orcamentista=>' + orcamentista)
         Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
             Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
                 dados = projeto.params
 
-                // console.log('dados=>'+JSON.stringify(dados))
-                // console.log('solar=>' + projeto.solar)
+                //console.log('dados=>'+JSON.stringify(dados))
+                //console.log('solar=>' + projeto.solar)
                 if (projeto.ampliacao) {
                     tipo = 'ampliacao'
                 } else {
@@ -3741,14 +3741,14 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
                     vlrServico = '0,00'
                 }
                 var vlrKit = parseFloat(projeto.valor) - parseFloat(vlrServico)
-                // console.log('vrlKit=>' + vlrKit)
+                //console.log('vrlKit=>' + vlrKit)
 
                 Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
                     Pessoa.findOne({ _id: projeto.vendedor }).lean().then((ven_projeto) => {
                         Agenda.findOne({ cliente: projeto.cliente }).lean().then((agenda) => {
                             Componente.find({ user: id, classificacao: 'solar' }).lean().then((equipamento) => {
                                 Parametros.find({ user: id, tipo: 'solar' }).then((parametros) => {
-                                    // console.log('dados=>' + dados)
+                                    //console.log('dados=>' + dados)
                                     parametros.forEach((e) => {
                                         if (naoVazio(e.valor)) {
                                             valor = e.valor.split(';')
@@ -3756,18 +3756,18 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
                                                 selectini = '<select name="params[]" class="form-select form-select-sm mb-1">'
                                                 selectfim = '</select>'
                                                 for (let i = 0; i < valor.length; i++) {
-                                                    // console.log('i=>'+i)
-                                                    // console.log('valor=>'+valor[i])
+                                                    //console.log('i=>'+i)
+                                                    //console.log('valor=>'+valor[i])
                                                     options = options + '<option value="' + valor[i] + '">' + valor[i] + '</option>'
                                                 }
-                                                // console.log('dados=>' + dados[x].descricao)
-                                                // console.log('valor=>' + e.descricao)
+                                                //console.log('dados=>' + dados[x].descricao)
+                                                //console.log('valor=>' + e.descricao)
                                                 if (dados[x].descricao == e.descricao) {
                                                     options = '<option class="fw-bold" value="' + dados[x].valor + '">' + dados[x].valor + '</option>' + options
                                                 }
                                                 campo = selectini + options + selectfim
                                             } else {
-                                                // console.log('input type text')
+                                                //console.log('input type text')
                                                 if (naoVazio(dados)) {
                                                     campo = '<input type="text" class="form-control form-control-sm mb-1" name="params[]" value="' + dados[x].valor + '">'
                                                 } else {
@@ -3775,8 +3775,8 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
                                                 }
                                             }
                                         } else {
-                                            // console.log('input type text vazio')
-                                            // console.log('dados=>' + dados)
+                                            //console.log('input type text vazio')
+                                            //console.log('dados=>' + dados)
                                             if (naoVazio(dados)) {
                                                 campo = '<input type="text" class="form-control form-control-sm mb-1" name="params[]" value="' + dados[x].valor + '">'
                                             } else {
@@ -3784,18 +3784,18 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
                                             }
                                         }
                                         lista_itens.push({ desc: e.descricao })
-                                        // console.log('campo=>' + campo)
-                                        // console.log('descricao=>' + e.descricao)
+                                        //console.log('campo=>' + campo)
+                                        //console.log('descricao=>' + e.descricao)
                                         lista_params.push({ id: e._id, descricao: e.descricao, campo })
                                         campo = ''
                                         options = ''
                                         x++
                                     })
-                                    // console.log('lista_params=>' + lista_params)
+                                    //console.log('lista_params=>' + lista_params)
                                     if (vendedor == true && funges == false && orcamentista == false && funpro == false) {
-                                        // console.log('req.params.id=>' + req.params.id)
-                                        // console.log('ven_projeto._id=>'+ven_projeto._id)
-                                        // console.log('lista_obs=>' + lista_obs)
+                                        //console.log('req.params.id=>' + req.params.id)
+                                        //console.log('ven_projeto._id=>'+ven_projeto._id)
+                                        //console.log('lista_obs=>' + lista_obs)
                                         if (naoVazio(projeto.dataPost) && naoVazio(projeto.dataSoli) && naoVazio(projeto.dataApro)) {
                                             vistoria = true
                                             termo = projeto.termo
@@ -3804,9 +3804,9 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
                                             }
                                         }
                                         if (naoVazio(projeto.responsavel)) {
-                                            // console.log('entrou responsavel')
+                                            //console.log('entrou responsavel')
                                             Pessoa.findOne({ _id: projeto.responsavel }).lean().then((responsavel) => {
-                                                // console.log('lista_params=>' + JSON.stringify(lista_params))
+                                                //console.log('lista_params=>' + JSON.stringify(lista_params))
                                                 if (naoVazio(agenda)) {
                                                     res.render('principal/orcamento', { tipo, pedido, vlrKit, vlrServico, vlrMascaraServico: mascaraDecimal(vlrServico), check30, check45, check60, responsavel, equipamento, vistoria, lista_itens, lista_params, desctermo, agenda, empresa, descricao, vendedor, cliente_projeto, ven_projeto, projeto, idAcesso: _id, lista_proposta, lista_obs })
                                                 } else {
@@ -3825,44 +3825,44 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
                                             }
                                         }
                                     } else {
-                                        // console.log('lista_proposta=>' + projeto.proposta)
-                                        // console.log("descricao=>"+descricao)
+                                        //console.log('lista_proposta=>' + projeto.proposta)
+                                        //console.log("descricao=>"+descricao)
                                         Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((todos_vendedores) => {
                                             // Equipe.findOne({ _id: projeto.equipe }).lean().then((lista_equipe) => {
-                                            // console.log('projeto.pedido=>' + projeto.pedido)
-                                            // console.log("sem pedido")
-                                            // console.log('projeto.termo=>' + projeto.termo)
+                                            //console.log('projeto.pedido=>' + projeto.pedido)
+                                            //console.log("sem pedido")
+                                            //console.log('projeto.termo=>' + projeto.termo)
                                             termo = projeto.termo
                                             if (naoVazio(termo)) {
                                                 desctermo = termo[0].desc
                                             }
-                                            // console.log("desctermo=>" + desctermo)
+                                            //console.log("desctermo=>" + desctermo)
                                             aux = cliente_projeto.nome
                                             aux = aux.split(' ')
                                             for (let i = 0; i < aux.length; i++) {
                                                 nome_cliente = nome_cliente + aux[i]
                                             }
                                             if (naoVazio(projeto.responsavel)) {
-                                                // console.log('entrou responsavel')
+                                                //console.log('entrou responsavel')
                                                 Pessoa.findOne({ _id: projeto.responsavel }).lean().then((responsavel) => {
                                                     if (naoVazio(agenda)) {
                                                         res.render('principal/orcamento', { tipo, pedido, desctermo, vlrKit, vlrServico, vlrMascaraServico: mascaraDecimal(vlrServico), check30, check45, check60, equipamento, agenda, lista_params, lista_itens, empresa, descricao, orcamentista, vendedor, lancarPedido, funpro, funges, ehMaster, proandges, cliente_projeto, nome_cliente, responsavel, todos_vendedores, ven_projeto, projeto, idAcesso: id, lista_proposta, lista_obs })
                                                     } else {
                                                         res.render('principal/orcamento', { tipo, pedido, desctermo, vlrKit, vlrServico, vlrMascaraServico: mascaraDecimal(vlrServico), check30, check45, check60, equipamento, lista_params, lista_itens, empresa, descricao, orcamentista, vendedor, funpro, lancarPedido, funges, ehMaster, proandges, cliente_projeto, nome_cliente, responsavel, todos_vendedores, ven_projeto, projeto, idAcesso: id, lista_proposta, lista_obs })
                                                     }
-                                                    // console.log('projeto.cliente=>' + projeto.cliente)
+                                                    //console.log('projeto.cliente=>' + projeto.cliente)
                                                 }).catch((err) => {
                                                     req.flash('error_msg', 'Não foi possível encontrar o responsável do projeto.')
                                                     res.redirect('/dashboard')
                                                 })
                                             } else {
-                                                // console.log('orcamentista=>' + orcamentista)
-                                                // console.log('orcamentista=>' + orcamentista)
-                                                // console.log('pessoa=>' + pessoa)
+                                                //console.log('orcamentista=>' + orcamentista)
+                                                //console.log('orcamentista=>' + orcamentista)
+                                                //console.log('pessoa=>' + pessoa)
                                                 if (funges == true || orcamentista == true || funpro == true) {
-                                                    // console.log('pessoa=>' + pessoa._id)
+                                                    //console.log('pessoa=>' + pessoa._id)
                                                     Projeto.findOneAndUpdate({ _id: req.params.id }, { $set: { 'responsavel': pessoa } }).then(() => {
-                                                        // console.log('update=>')
+                                                        //console.log('update=>')
                                                         if (naoVazio(agenda)) {
                                                             res.render('principal/orcamento', { tipo, pedido, desctermo, vlrKit, vlrServico, vlrMascaraServico: mascaraDecimal(vlrServico), check30, check45, check60, equipamento, agenda, lista_params, lista_itens, empresa, descricao, orcamentista, lancarPedido, funpro, funges, ehMaster, proandges, cliente_projeto, nome_cliente, todos_vendedores, ven_projeto, projeto, idAcesso: id, lista_proposta, lista_obs })
                                                         } else {
@@ -3918,19 +3918,19 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
 
 router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
     var file
-    // console.log('req.file=>' + req.file)
+    //console.log('req.file=>' + req.file)
     if (req.file != null) {
         file = req.file.originalname
     } else {
         file = ''
     }
     var proposta = []
-    // console.log('file=>' + file)
+    //console.log('file=>' + file)
     Projeto.findOne({ _id: req.body.id }).then((projeto) => {
         var propostas = []
         propostas = projeto.proposta
         var x = propostas.length
-        // console.log("x=>" + x)
+        //console.log("x=>" + x)
         if (naoVazio(x)) {
             var ultimo = propostas[x - 1]
             var seq = parseFloat(ultimo.seq) + 1
@@ -3938,15 +3938,15 @@ router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
             seq = 1
         }
 
-        // console.log('file=>' + file)
-        // console.log('req.body.dtcadastro=>' + req.body.dtcadastro)
-        // console.log('req.body.dtvalidade =>' + req.body.dtvalidade)
+        //console.log('file=>' + file)
+        //console.log('req.body.dtcadastro=>' + req.body.dtcadastro)
+        //console.log('req.body.dtvalidade =>' + req.body.dtvalidade)
         proposta = { seq, arquivo: req.body.seq + '_' + file, data: dataMensagem(req.body.dtcadastro), validade: dataMensagem(req.body.dtvalidade) }
-        // console.log('id=>' + req.body.id)
-        // console.log('projeto.vendedor=>' + projeto.vendedor)
+        //console.log('id=>' + req.body.id)
+        //console.log('projeto.vendedor=>' + projeto.vendedor)
         Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
             Pessoa.findOne({ _id: projeto.vendedor, notpro: 'checked' }).then((vendedor) => {
-                // console.log('projeto.responsavel=>' + projeto.responsavel)
+                //console.log('projeto.responsavel=>' + projeto.responsavel)
                 if (naoVazio(projeto.responsavel)) {
                     Pessoa.findOne({ _id: projeto.responsavel }).then((responsavel) => {
                         Projeto.findOneAndUpdate({ _id: req.body.id }, { $push: { proposta: proposta } }).then((e) => {
@@ -3955,7 +3955,7 @@ router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
                                     'Uma nova proposta do projeto ' + projeto.seq + ' para o cliente ' + cliente.nome + ' foi adicionada por: ' + responsavel.nome + ' dia ' + dataMensagem(dataHoje()) + '.' + '\n' +
                                     'Acesse e acompanhe https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
 
-                                // console.log('vendedor.celular=>' + vendedor.celular)
+                                //console.log('vendedor.celular=>' + vendedor.celular)
 
                                 client.messages
                                     .create({
@@ -3964,7 +3964,7 @@ router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
                                         to: 'whatsapp:+55' + vendedor.celular
                                     })
                                     .then((message) => {
-                                        // console.log(message.sid)
+                                        //console.log(message.sid)
                                         req.flash('success_msg', 'Proposta adicionada com sucesso')
                                         res.redirect('/gerenciamento/orcamento/' + req.body.id)
 
@@ -3982,7 +3982,7 @@ router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
                         res.redirect('/gerenciamento/orcamento/' + req.body.id)
                     })
                 } else {
-                    // console.log("entrou como gestor")
+                    //console.log("entrou como gestor")
                     Projeto.findOneAndUpdate({ _id: req.body.id }, { $push: { proposta: proposta } }).then((e) => {
                         req.flash('aviso_msg', 'Nenhum orçamentista será avisado sobre o upload da proposta. Solicite à um orçamentista para gerenciar esta proposta.')
                         res.redirect('/gerenciamento/orcamento/' + req.body.id)
@@ -4008,8 +4008,8 @@ router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
 router.get('/deletarProposta/:id', ehAdmin, (req, res) => {
     var params = req.params.id
     params = params.split('@')
-    // console.log('params[0]=>' + params[0])
-    // console.log('params[1]=>' + params[1])
+    //console.log('params[0]=>' + params[0])
+    //console.log('params[1]=>' + params[1])
     Projeto.findOneAndUpdate({ 'proposta._id': params[0] }, { $pull: { 'proposta': { '_id': params[0] } } }).then(() => {
         req.flash('success_msg', 'Proposta removida com sucesso.')
         res.redirect('/gerenciamento/orcamento/' + params[1])
@@ -4055,13 +4055,13 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
             new Equipe(corpo).save().then(() => {
                 Equipe.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((equipe) => {
                     projeto.save().then(() => {
-                        // console.log('novaatv=>' + novaatv)
+                        //console.log('novaatv=>' + novaatv)
                         // new AtvTelhado(corpo).save().then(() => {
                         //     new AtvAterramento(corpo).save().then(() => {
                         //         new AtvInversor(corpo).save().then(() => {
                         AtvPadrao.find({ user: id }).then((atv) => {
                             atv.forEach((e) => {
-                                // console.log('e=>' + e.descricao)
+                                //console.log('e=>' + e.descricao)
                                 s++
                                 tarefa = {
                                     user: id,
@@ -4072,24 +4072,24 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
                                     tipo: 'padrao',
                                     emandamento: false
                                 }
-                                // console.log('tarefa=>' + tarefa)
+                                //console.log('tarefa=>' + tarefa)
                                 new Tarefas(tarefa).save().then(() => {
-                                    // console.log('q=>' + q)
+                                    //console.log('q=>' + q)
                                     q++
                                     if (q == atv.length) {
                                         q = 0
                                         Acesso.find({ user: id, notgan: 'checked' }).then((acesso) => {
-                                            // console.log('acesso=>' + acesso)
+                                            //console.log('acesso=>' + acesso)
                                             if (naoVazio(acesso)) {
                                                 acesso.forEach((e) => {
                                                     Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                        // console.log('pessoa=>' + pessoa)
+                                                        //console.log('pessoa=>' + pessoa)
                                                         texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                             'PROPOSTA GANHA!' + '\n' +
                                                             'A proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' esta ganha. ' + '\n ' +
                                                             'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + ' e acompanhe.'
 
-                                                        // console.log('pessoa.celular=>' + pessoa.celular)
+                                                        //console.log('pessoa.celular=>' + pessoa.celular)
 
                                                         client.messages
                                                             .create({
@@ -4099,10 +4099,10 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
                                                             })
                                                             .then((message) => {
                                                                 q++
-                                                                // console.log('q=>' + q)
-                                                                // console.log('acesso.length=>' + acesso.length)
+                                                                //console.log('q=>' + q)
+                                                                //console.log('acesso.length=>' + acesso.length)
                                                                 if (q == acesso.length) {
-                                                                    // console.log(message.sid)
+                                                                    //console.log(message.sid)
                                                                     req.flash('success_msg', 'Proposta ' + projeto.seq + ' ganha.')
                                                                     res.redirect('/dashboard/')
                                                                 }
@@ -4169,7 +4169,7 @@ router.post('/projeto', ehAdmin, (req, res) => {
     var checkapr = false
     var checkpost = false
     var checksoli = false
-    console.log(req.body.id)
+    //console.log(req.body.id)
     Projeto.findOne({ _id: req.body.id }).then((projeto) => {
 
         if (naoVazio(projeto.dataPost)) {
@@ -4210,20 +4210,20 @@ router.post('/projeto', ehAdmin, (req, res) => {
 
         projeto.save().then(async () => {
             var projetoobs = await Projeto.findById(req.body.id).lean();
-            console.log(req.body.salvarObs);
+            //console.log(req.body.salvarObs);
             if (req.body.salvarObs == '1') salvarObservacao(projetoobs, req.body.obsprojetista, req.body.id, pessoa);
 
             if (checkpost == false && naoVazio(req.body.dataPost)) {
-                // console.log('postado')
+                //console.log('postado')
                 Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
                     Acesso.findOne({ pessoa: projeto.vendedor, notvis: 'checked' }).then((acesso) => {
                         if (naoVazio(acesso)) {
                             Pessoa.findOne({ _id: projeto.vendedor }).then((vendedor) => {
-                                // console.log('vendedor.celular=>' + vendedor.celular)
+                                //console.log('vendedor.celular=>' + vendedor.celular)
                                 var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
                                     'O projeto ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi postado.' + '\n' +
                                     'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
-                                // console.log(mensagem)
+                                //console.log(mensagem)
                                 client.messages
                                     .create({
                                         body: mensagem,
@@ -4253,16 +4253,16 @@ router.post('/projeto', ehAdmin, (req, res) => {
                 })
             } else {
                 if (checksoli == false && naoVazio(req.body.dataSoli)) {
-                    // console.log('solicitado')
+                    //console.log('solicitado')
                     Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
                         Acesso.findOne({ pessoa: projeto.vendedor, notvis: 'checked' }).then((acesso) => {
                             if (naoVazio(acesso)) {
                                 Pessoa.findOne({ _id: projeto.vendedor }).then((vendedor) => {
-                                    // console.log('vendedor.celular=>' + vendedor.celular)
+                                    //console.log('vendedor.celular=>' + vendedor.celular)
                                     var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
                                         'A vistoria da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi solicitada.' + '\n' +
                                         'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
-                                    // console.log(mensagem)
+                                    //console.log(mensagem)
                                     client.messages
                                         .create({
                                             body: mensagem,
@@ -4293,16 +4293,16 @@ router.post('/projeto', ehAdmin, (req, res) => {
 
                 } else {
                     if (checkapr == false && naoVazio(req.body.dataApro)) {
-                        // console.log('aprovado')
+                        //console.log('aprovado')
                         Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
                             Acesso.findOne({ pessoa: projeto.vendedor, notvis: 'checked' }).then((acesso) => {
                                 if (naoVazio(acesso)) {
                                     Pessoa.findOne({ _id: projeto.vendedor }).then((vendedor) => {
-                                        // console.log('vendedor.celular=>' + vendedor.celular)
+                                        //console.log('vendedor.celular=>' + vendedor.celular)
                                         var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
                                             'A vistoria da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi aprovada.' + '\n' +
                                             'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
-                                        // console.log(mensagem)
+                                        //console.log(mensagem)
                                         client.messages
                                             .create({
                                                 body: mensagem,
@@ -4369,7 +4369,7 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
             Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
                 Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
                     Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                        // console.log('equipe=>' + equipe)
+                        //console.log('equipe=>' + equipe)
                         if (projeto.parado == false && projeto.execucao == false) {
                             if (check) {
                                 equipe.insres = ins_realizado
@@ -4425,7 +4425,7 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
                             }
                             equipe.save()
                             projeto.save().then(() => {
-                                // console.log('cliente=>' + cliente)
+                                //console.log('cliente=>' + cliente)
                                 mensagem = mensagem + ' para o cliente ' + cliente.nome + '\n' + '.'
                                 // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + ' foi cancelada.' + '\n' +
                                 'Aguarde a gerência entrar em contato.'
@@ -4464,9 +4464,9 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
                         tipo = 'success_msg'
                         equipe.liberar = true
                         equipe.save().then(() => {
-                            // console.log('email=>' + email)
+                            //console.log('email=>' + email)
                             Pessoa.findOne({ _id: equipe.insres }).then((insres) => {
-                                // console.log('insres.nome=>' + insres.nome)
+                                //console.log('insres.nome=>' + insres.nome)
                                 req.flash(tipo, mensagem)
                                 res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
 
@@ -4506,7 +4506,7 @@ router.post('/addInstalador/', ehAdmin, (req, res) => {
     } else {
         id = user
     }
-    console.log(req.body.id)
+    //console.log(req.body.id)
     Projeto.findOne({ _id: req.body.id }).then((projeto) => {
         projeto.ins_banco = req.body.instalador
         projeto.save()
@@ -4539,7 +4539,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
     var notimg = true
     var q = 0
 
-    // console.log('req.file.path=>'+req.files.path)
+    //console.log('req.file.path=>'+req.files.path)
 
     // (async() =>  {
     //     await sharp(req.files.path)
@@ -4557,17 +4557,17 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
     }
 
     var arquivos = req.files
-    // console.log('req.files=>' + req.files)
+    //console.log('req.files=>' + req.files)
     var imagem
     var ativo = false
     var mensagem
     const vardate = new Date().getSeconds() + '_' + new Date().getFullYear() + '_' + new Date().getMonth() + '_' + new Date().getDate() + '_'
 
-    // console.log("tipo=>" + req.body.tipo)
-    // console.log("id=>" + req.body.idprj)
+    //console.log("tipo=>" + req.body.tipo)
+    //console.log("id=>" + req.body.idprj)
 
     if (naoVazio(arquivos)) {
-        // console.log('arquivos=>' + arquivos.length)
+        //console.log('arquivos=>' + arquivos.length)
         arquivos.forEach((e) => {
             if (req.body.tipo == 'assistencia') {
                 imagem = { fotos: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() }, }
@@ -4577,7 +4577,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                         var concluido = {}
                         concluido = { 'concluido': true, 'solucao': req.body.solucao }
 
-                        // console.log('concluido=>' + JSON.stringify(concluido))
+                        //console.log('concluido=>' + JSON.stringify(concluido))
                         Tarefas.findOneAndUpdate({ _id: req.body.id }, concluido).then((e) => {
 
                             res.redirect('/gerenciamento/assistencia')
@@ -4589,16 +4589,16 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                     })
                 })
             } else {
-                // console.log('req.body.idprj=>' + req.body.idprj)
+                //console.log('req.body.idprj=>' + req.body.idprj)
                 Projeto.findOne({ _id: req.body.idprj }).then((prj) => {
                     Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
                         if (req.body.tipo == 'projeto') {
-                            // console.log("caminho=>" + req.body.caminho)
+                            console.log("caminho=>" + req.body.caminho)
                             if ((req.body.caminho == 'fatura') || (req.body.caminho == 'documento') || (req.body.caminho == 'entrada')
                                 || (req.body.caminho == 'disjuntor') || (req.body.caminho == 'trafo') || (req.body.caminho == 'localizacao'
                                     || (req.body.caminho == 'telhado') || req.body.caminho == 'local')
                                 || (req.body.caminho == 'medidor')) {
-                                console.log('é telhado=>' + req.body.seq)
+                                //console.log('é telhado=>' + req.body.seq)
                                 imagem = { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() }
                             } else {
                                 imagem = { "desc": req.body.seq + '_' + e.originalname }
@@ -4624,10 +4624,10 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 medidor = prj.medidor
                             }
 
-                            // console.log('caminho=>' + req.body.caminho)
-                            // console.log('disjuntor=>' + naoVazio(disjuntor))
-                            // console.log('medidor=>' + naoVazio(medidor))
-                            // console.log('trafo=>' + naoVazio(trafo))
+                            //console.log('caminho=>' + req.body.caminho)
+                            //console.log('disjuntor=>' + naoVazio(disjuntor))
+                            //console.log('medidor=>' + naoVazio(medidor))
+                            //console.log('trafo=>' + naoVazio(trafo))
 
                             var levantamento = false
                             if ((req.body.caminho == 'disjuntor' || req.body.caminho == 'medidor' || req.body.caminho == 'trafo') &&
@@ -4678,7 +4678,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                         })
                                                     } else {
                                                         if (req.body.caminho == 'telhado') {
-                                                            console.log('salva telhado=>' + req.body.idprj)
+                                                            //console.log('salva telhado=>' + req.body.idprj)
                                                             Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $push: { telhado_foto: imagem } }).then((e) => {
                                                                 texto = 'Foto(s) do(s) telhado(s) salva(s) com sucesso.'
                                                             })
@@ -4704,7 +4704,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                     if (naoVazio(acesso)) {
                                         acesso.forEach((e) => {
                                             Pessoa.findOne({ _id: e.pessoa }).then((projetista) => {
-                                                // console.log(pessoa.celular)
+                                                //console.log(pessoa.celular)
                                                 mensagem = 'Olá ' + projetista.nome + ',' + '\n' +
                                                     'O levantamento de rede da proposta ' + prj.seq + ' foi adicionado.' + '\n' +
                                                     'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
@@ -4715,9 +4715,9 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                         to: 'whatsapp:+55' + projetista.celular
                                                     })
                                                     .then((message) => {
-                                                        // console.log(message.sid)
+                                                        //console.log(message.sid)
                                                         cont++
-                                                        // console.log('cont=>' + cont)
+                                                        //console.log('cont=>' + cont)
                                                         if (cont == acesso.length) {
                                                             req.flash('success_msg', 'Levantamento de rede realizado com sucesso.')
                                                             res.redirect('/gerenciamento/fotos/' + req.body.idprj)
@@ -4729,12 +4729,12 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                             })
                                         })
                                     } else {
-                                        // console.log('aguardando')
+                                        //console.log('aguardando')
                                         if (req.body.caminho == 'fatura') {
                                             req.flash('success_msg', 'Imagem salva com sucesso')
                                             res.redirect('/gerenciamento/fatura/' + req.body.idprj)
                                         } else {
-                                            console.log('texto=>' + texto)
+                                            //console.log('texto=>' + texto)
                                             req.flash('success_msg', texto)
                                             res.redirect('/gerenciamento/fotos/' + req.body.idprj)
                                         }
@@ -4754,8 +4754,8 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                             }
                         } else {
                             if (req.body.tipo == 'tarefa') {
-                                // console.log('instalação')
-                                // console.log('req.body.check=>' + req.body.check)
+                                //console.log('instalação')
+                                //console.log('req.body.check=>' + req.body.check)
                                 if (req.body.check == 'Aprovado') {
                                     ativo = true
                                 } else {
@@ -4774,8 +4774,8 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 var concluido = {}
                                 concluido = { 'concluido': ativo }
 
-                                // console.log('concluido=>' + JSON.stringify(concluido))
-                                // console.log('req.body.id=>' + req.body.id)
+                                //console.log('concluido=>' + JSON.stringify(concluido))
+                                //console.log('req.body.id=>' + req.body.id)
                                 Tarefas.findOneAndUpdate({ _id: req.body.id }, concluido).then((e) => {
                                     Tarefas.find({ projeto: req.body.idprj }).then(async (lista_tarefas) => {
                                         if (ativo == true) {
@@ -4784,7 +4784,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                         }
 
                                         lista_tarefas.forEach((e) => {
-                                            // console.log('e.fotos=>' + e.fotos)
+                                            //console.log('e.fotos=>' + e.fotos)
                                             if (naoVazio(e.fotos) == false) {
                                                 notimg = false
                                             }
@@ -4794,11 +4794,11 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                 if (naoVazio(acesso)) {
                                                     acesso.forEach((e) => {
                                                         Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                            // console.log('enviou mensagem')
+                                                            //console.log('enviou mensagem')
                                                             texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                 'Todas as fotos da obra do projeto ' + prj.seq + ' para o cliente ' + cliente.nome + '  estão na plataforma. ' +
                                                                 'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + prj._id + ' para verificar.'
-                                                            // console.log('pessoa.celular=>'+pessoa.celular)
+                                                            //console.log('pessoa.celular=>'+pessoa.celular)
                                                             client.messages
                                                                 .create({
                                                                     body: texto,
@@ -4807,13 +4807,13 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                                 })
                                                                 .then((message) => {
                                                                     q++
-                                                                    // console.log('q=>' + q)
-                                                                    // console.log('acesso.length=>' + acesso.length)
+                                                                    //console.log('q=>' + q)
+                                                                    //console.log('acesso.length=>' + acesso.length)
                                                                     if (q == acesso.length) {
-                                                                        // console.log(message.sid)
+                                                                        //console.log(message.sid)
                                                                         if (req.body.caminho == 'instalacao') {
                                                                             if (req.body.usuario == 'gestor') {
-                                                                                // console.log('req.body.idprj=>' + req.body.idprj)
+                                                                                //console.log('req.body.idprj=>' + req.body.idprj)
                                                                                 res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
                                                                             } else {
                                                                                 res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
@@ -4832,7 +4832,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                 } else {
                                                     if (req.body.caminho == 'instalacao') {
                                                         if (req.body.usuario == 'gestor') {
-                                                            // console.log('req.body.idprj=>' + req.body.idprj)
+                                                            //console.log('req.body.idprj=>' + req.body.idprj)
                                                             res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
                                                         } else {
                                                             res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
@@ -4848,7 +4848,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                         } else {
                                             if (req.body.caminho == 'instalacao') {
                                                 if (req.body.usuario == 'gestor') {
-                                                    // console.log('req.body.idprj=>' + req.body.idprj)
+                                                    //console.log('req.body.idprj=>' + req.body.idprj)
                                                     res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
                                                 } else {
                                                     res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
@@ -4867,7 +4867,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 })
                             } else {
                                 if (req.body.tipo == 'termo') {
-                                    // console.log('entrou termo')
+                                    //console.log('entrou termo')
                                     Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { termo: { "desc": req.body.seq + '_' + e.originalname, "data": dataHoje() } } }).then((e) => {
                                         req.flash('success_msg', 'Termo de entrega salvo com sucesso.')
                                         res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
@@ -4887,15 +4887,15 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
         })
     } else {
         if (req.body.tipo == 'tarefa') {
-            // console.log('aprovação')
-            // console.log('req.body.check=>' + req.body.check)
+            //console.log('aprovação')
+            //console.log('req.body.check=>' + req.body.check)
             if (req.body.check == 'Aprovado') {
                 ativo = true
             } else {
                 ativo = false
             }
 
-            // console.log('req.body.id=>' + req.body.id)
+            //console.log('req.body.id=>' + req.body.id)
             Tarefas.findOneAndUpdate({ _id: req.body.id }, { $set: { concluido: ativo } }).then((e) => {
                 if (ativo == true) {
                     req.flash('success_msg', 'Imagem(ns) da(s) instalação aprovada(s)')
@@ -4904,7 +4904,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                 }
                 if (req.body.caminho == 'instalacao') {
                     if (req.body.usuario == 'gestor') {
-                        // console.log('req.body.idprj=>' + req.body.idprj)
+                        //console.log('req.body.idprj=>' + req.body.idprj)
                         res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
                     } else {
                         res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
@@ -4927,9 +4927,9 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
     var params = []
     params = req.params.msg
     params = params.split('delimg')
-    // console.log('params[1]=>'+params[1])
-    // console.log('params[2]=>' + params[2])
-    // console.log('params[3]=>' + params[3])
+    //console.log('params[1]=>'+params[1])
+    //console.log('params[2]=>' + params[2])
+    //console.log('params[3]=>' + params[3])
     if (params[2] == 'fatura') {
         Projeto.findOneAndUpdate({ _id: params[3] }, { $pull: { 'fatura': { '_id': params[1] } } }).then(() => {
             req.flash('success_msg', 'Imagem da fatura removida com sucesso.')
@@ -4942,11 +4942,11 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
         if (params[2] == 'fotos') {
             var sql = {}
             if (params[4] == 'documento') {
-                // console.log('params[1]=>' + params[1])
+                //console.log('params[1]=>' + params[1])
                 sql = { 'documento': { '_id': params[1] } }
             }
             if (params[4] == 'local') {
-                // console.log('params[1]=>' + params[1])
+                //console.log('params[1]=>' + params[1])
                 sql = { 'local': { '_id': params[1] } }
             }
             if (params[4] == 'entrada') {
@@ -4967,8 +4967,8 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
             if (params[4] == 'medidor') {
                 sql = { 'medidor': { '_id': params[1] } }
             }
-            // console.log('params[3]=>' + params[3])
-            // console.log('sql=>' + JSON.stringify(sql))
+            //console.log('params[3]=>' + params[3])
+            //console.log('sql=>' + JSON.stringify(sql))
             Projeto.findOneAndUpdate({ _id: params[3] }, { $pull: sql }).then(() => {
                 req.flash('success_msg', 'Imagem removida com sucesso.')
                 if (params[2] == 'fatura') {
@@ -4982,10 +4982,10 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
             })
         } else {
             if (params[2] == 'tarefa') {
-                // console.log('entrou')
+                //console.log('entrou')
                 Tarefas.findOneAndUpdate({ _id: params[1] }, { $pull: { 'fotos': { 'desc': params[0] } } }).then((e) => {
                     req.flash('aviso_msg', 'Imagem removida com sucesso')
-                    // console.log('params[1]=>' + params[1])
+                    //console.log('params[1]=>' + params[1])
                     if (params[3] == 'gestao') {
                         res.redirect('/gerenciamento/verFotos/' + params[1])
                     } else {
@@ -4997,10 +4997,10 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
                 })
             } else {
                 if (params[2] == 'assistencia') {
-                    // console.log('entrou')
+                    //console.log('entrou')
                     Tarefas.findOneAndUpdate({ _id: params[1] }, { $pull: { 'fotos': { 'desc': params[0] } } }).then((e) => {
                         req.flash('aviso_msg', 'Imagem removida com sucesso')
-                        // console.log('params[1]=>' + params[1])
+                        //console.log('params[1]=>' + params[1])
                         if (params[3] == 'gestao') {
                             res.redirect('/gerenciamento/verFotos/' + params[1])
                         } else {
@@ -5017,14 +5017,14 @@ router.get('/deletaImagem/:msg', ehAdmin, (req, res) => {
 })
 
 router.get('/mostrarBucket/:docimg', ehAdmin, (req, res) => {
-    // console.log("req.params.docimg=>" + req.params.docimg)
+    //console.log("req.params.docimg=>" + req.params.docimg)
     s3.getObject(
         { Bucket: "quasatimg", Key: req.params.docimg },
         function (error, data) {
             if (error != null) {
-                // console.log("Failed to retrieve an object: " + error);
+                //console.log("Failed to retrieve an object: " + error);
             } else {
-                // console.log(data.ContentLength)
+                //console.log(data.ContentLength)
                 res.send(data.Body)
             }
         }
@@ -5032,7 +5032,7 @@ router.get('/mostrarBucket/:docimg', ehAdmin, (req, res) => {
 })
 
 router.get('/recuperar/:id', ehAdmin, (req, res) => {
-    // console.log("req.params.docimg=>" + req.params.docimg)
+    //console.log("req.params.docimg=>" + req.params.docimg)
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
         projeto.baixada = false
         projeto.status = 'Negociando'
@@ -5047,7 +5047,7 @@ router.get('/recuperar/:id', ehAdmin, (req, res) => {
 })
 
 router.get('/desfazerGanho/:id', ehAdmin, (req, res) => {
-    // console.log("req.params.docimg=>" + req.params.docimg)
+    //console.log("req.params.docimg=>" + req.params.docimg)
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
         projeto.ganho = false
         projeto.entregue = true
@@ -5064,7 +5064,7 @@ router.get('/desfazerGanho/:id', ehAdmin, (req, res) => {
 })
 
 router.get('/desfazerEntregue/:id', ehAdmin, (req, res) => {
-    // console.log("req.params.docimg=>" + req.params.docimg)
+    //console.log("req.params.docimg=>" + req.params.docimg)
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
         projeto.ganho = false
         projeto.entregue = false
@@ -5102,7 +5102,7 @@ router.get('/entrega/:id', ehAdmin, (req, res) => {
                     projeto.encerrado = true
                     projeto.save().then(() => {
                         Usina.findOne({ projeto: req.params.id }).then((usina) => {
-                            // console.log('usina=>' + naoVazio(usina))
+                            //console.log('usina=>' + naoVazio(usina))
                             if (naoVazio(usina) == false) {
                                 var cadastro = dataHoje()
                                 var datalimp = dataMensagem(setData(dataHoje(), 182))
@@ -5126,7 +5126,7 @@ router.get('/entrega/:id', ehAdmin, (req, res) => {
                                 }
 
                                 new Usina(usina).save().then(() => {
-                                    // console.log('salvou usina')
+                                    //console.log('salvou usina')
                                     Usina.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novausina) => {
                                         const tarefa = {
                                             user: id,
@@ -5218,8 +5218,8 @@ router.post('/plano', ehAdmin, (req, res) => {
     } else {
         fidelidade = req.body.fidelidade
     }
-    // console.log('id=>' + req.body.id)
-    // console.log('fidelidade=>' + req.body.fidelidade)
+    //console.log('id=>' + req.body.id)
+    //console.log('fidelidade=>' + req.body.fidelidade)
     if (req.body.id != '' && typeof req.body.id != 'undefined') {
         Plano.findOne({ _id: req.body.id }).then((existeplano) => {
             existeplano.nome = req.body.nome
@@ -5239,7 +5239,7 @@ router.post('/plano', ehAdmin, (req, res) => {
             res.redirect('/gerenciamento/plano')
         })
     } else {
-        // console.log('novo plano')
+        //console.log('novo plano')
         new Plano({
             user: id,
             nome: req.body.nome,
@@ -5403,28 +5403,28 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
             messel = '12'
             break;
     }
-    // console.log('req.body.selecionado=>' + req.body.selecionado)
+    //console.log('req.body.selecionado=>' + req.body.selecionado)
     dataini = ano + '01' + '01'
     datafim = ano + '12' + '31'
-    // console.log('dataini=>' + dataini)
-    // console.log('datafim=>' + datafim)
-    // console.log('req.body.pessoa=>' + req.body.pessoa)
+    //console.log('dataini=>' + dataini)
+    //console.log('datafim=>' + datafim)
+    //console.log('req.body.pessoa=>' + req.body.pessoa)
     if (naoVazio(req.body.pessoa)) {
-        // console.log('entrou')
+        //console.log('entrou')
         Pessoa.findOne({ user: id, _id: req.body.pessoa }).lean().then((pessoa) => {
-            // console.log('pessoa=>' + pessoa)
+            //console.log('pessoa=>' + pessoa)
             Tarefas.find({ user: id, servico: { $exists: true }, 'buscadataini': { $lte: parseFloat(datafim), $gte: parseFloat(dataini) } }).then((lista_tarefas) => {
-                // console.log('tarefas=>' + tarefas)
+                //console.log('tarefas=>' + tarefas)
                 if (naoVazio(lista_tarefas)) {
                     lista_tarefas.forEach((e) => {
-                        // console.log('e._id=>' + e._id)
+                        //console.log('e._id=>' + e._id)
                         Equipe.findOne({ user: id, id: e.equipe, ins0: { $exists: true }, dtinicio: { $ne: '00/00/0000' }, $or: [{ ins0: pessoa.nome }, { ins1: pessoa.nome }, { ins2: pessoa.nome }, { ins3: pessoa.nome }, { ins4: pessoa.nome }, { ins5: pessoa.nome }] }).then((equipe) => {
-                            // console.log('e._id=>' + e._id)
+                            //console.log('e._id=>' + e._id)
                             Cliente.findOne({ _id: e.cliente }).then((cliente) => {
-                                // console.log('cliente.nome=>' + cliente.nome)
-                                // console.log('e.servico=>' + e.servico)
+                                //console.log('cliente.nome=>' + cliente.nome)
+                                //console.log('e.servico=>' + e.servico)
                                 Servico.findOne({ _id: e.servico }).then((ser) => {
-                                    // console.log('ser.descricao=>' + ser.descricao)
+                                    //console.log('ser.descricao=>' + ser.descricao)
                                     var dias = []
                                     var feito = false
                                     dias = e.dias
@@ -5437,14 +5437,14 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                     mesfim = dtinicio.substring(5, 7)
                                     diainicio = dtinicio.substring(8, 11)
                                     diafim = dtinicio.substring(8, 11)
-                                    // console.log("messel=>" + messel)
-                                    // console.log("mesinicio=>" + mesinicio)
+                                    //console.log("messel=>" + messel)
+                                    //console.log("mesinicio=>" + mesinicio)
                                     if (messel == mesinicio) {
                                         mes = mesinicio
                                         if (parseFloat(anofim) == parseFloat(anoinicio)) {
                                             dia = diainicio
                                             if (parseFloat(anofim) > parseFloat(anoinicio)) {
-                                                // console.log('projeto ultrapassa anos')
+                                                //console.log('projeto ultrapassa anos')
                                                 if (messel == 1 || messel == 3 || messel == 5 || messel == 7 || messel == 8 || messel == 10 || messel == 12) {
                                                     dif = 31
                                                 } else {
@@ -5458,8 +5458,8 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                                 }
                                             }
                                         } else {
-                                            // console.log('mesmo mes outro ano')
-                                            // console.log('diainicio=>' + diainicio)
+                                            //console.log('mesmo mes outro ano')
+                                            //console.log('diainicio=>' + diainicio)
                                             if (naoVazio(e.programacao)) {
                                                 dia = diainicio
                                                 dif = 1
@@ -5469,25 +5469,25 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                             }
                                         }
                                     } else {
-                                        // console.log('diferente')
+                                        //console.log('diferente')
                                         if (naoVazio(e.programacao)) {
                                             dia = diainicio
                                             dif = 1
                                         } else {
                                             difmes = parseFloat(mesfim) - parseFloat(mesinicio)
                                             if (difmes != 0) {
-                                                // console.log('difmes=>' + difmes)
+                                                //console.log('difmes=>' + difmes)
                                                 if (difmes < 0) {
                                                     difmes = difmes + 12
                                                 }
-                                                // console.log('mesinicio=>' + mesinicio)
+                                                //console.log('mesinicio=>' + mesinicio)
                                                 for (i = 0; i < difmes; i++) {
                                                     mes = parseFloat(mesinicio) + i
                                                     if (mes > 12) {
                                                         mes = mes - 12
                                                     }
-                                                    // console.log('mes=>' + mes)
-                                                    // console.log('meshoje=>' + meshoje)
+                                                    //console.log('mes=>' + mes)
+                                                    //console.log('meshoje=>' + meshoje)
                                                     if (mes == messel) {
                                                         break;
                                                     }
@@ -5512,19 +5512,19 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                         }
                                     }
 
-                                    // console.log('dataini=>' + dataini)
-                                    // console.log('mes=>' + mes)
+                                    //console.log('dataini=>' + dataini)
+                                    //console.log('mes=>' + mes)
                                     tarefa = ser.descricao
                                     for (i = 0; i < dif; i++) {
-                                        // console.log('dia=>' + dia)
-                                        // console.log('entrou laço')
+                                        //console.log('dia=>' + dia)
+                                        //console.log('entrou laço')
                                         cor = 'lightgray'
                                         sql = { cliente: cliente.nome, id: e._id, tarefa, cor, concluido: e.concluido }
                                         if (messel == mes) {
                                             if (naoVazio(dias)) {
-                                                // console.log('d=>' + d)
+                                                //console.log('d=>' + d)
                                                 feito = dias[i].feito
-                                                // console.log('feito=>' + feito)
+                                                //console.log('feito=>' + feito)
                                             }
                                             if (dia == '01') {
                                                 dia01.push(sql)
@@ -5622,11 +5622,11 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                         }
                                         dia++
                                     }
-                                    // console.log('tarefas.length=>' + tarefas.length)
+                                    //console.log('tarefas.length=>' + tarefas.length)
                                     if (q == tarefas.length) {
-                                        // console.log('messel=>' + messel)
-                                        // console.log('ano=>' + ano)
-                                        // console.log('mestitulo=>' + mestitulo)
+                                        //console.log('messel=>' + messel)
+                                        //console.log('ano=>' + ano)
+                                        //console.log('mestitulo=>' + mestitulo)
                                         res.render('principal/agenda', {
                                             dia01, dia02, dia03, dia04, dia05, dia06, dia07,
                                             dia08, dia09, dia10, dia11, dia12, dia13, dia14,
@@ -5673,17 +5673,17 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
         })
     } else {
         Cliente.find({ user: id }).lean().then((todos_clientes) => {
-            // console.log("dataini=>" + dataini)
-            // console.log("datafim=>" + datafim)
+            //console.log("dataini=>" + dataini)
+            //console.log("datafim=>" + datafim)
             Tarefas.find({ user: id, servico: { $exists: true }, 'buscadataini': { $lte: parseFloat(datafim), $gte: parseFloat(dataini) } }).then((lista_tarefas) => {
-                // console.log('lista_tarefas=>' + lista_tarefas)
+                //console.log('lista_tarefas=>' + lista_tarefas)
                 if (naoVazio(lista_tarefas)) {
                     lista_tarefas.forEach((e) => {
-                        // console.log('e._id=>' + e._id)
-                        // console.log('e.cliente=>' + e.cliente)
+                        //console.log('e._id=>' + e._id)
+                        //console.log('e.cliente=>' + e.cliente)
                         Cliente.findOne({ _id: e.cliente }).then((cliente) => {
-                            // console.log('cliente=>' + cliente)
-                            // console.log('e.servico=>' + e.servico)
+                            //console.log('cliente=>' + cliente)
+                            //console.log('e.servico=>' + e.servico)
                             Servico.findOne({ _id: e.servico }).then((ser) => {
                                 var dias = []
                                 var feito = false
@@ -5697,16 +5697,16 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                 mesfim = dtinicio.substring(5, 7)
                                 diainicio = dtinicio.substring(8, 11)
                                 diafim = dtinicio.substring(8, 11)
-                                // console.log('e._id=>' + e._id)
-                                // console.log("messel=>" + messel)
-                                // console.log("mesinicio=>" + mesinicio)
+                                //console.log('e._id=>' + e._id)
+                                //console.log("messel=>" + messel)
+                                //console.log("mesinicio=>" + mesinicio)
 
                                 if (messel == mesinicio) {
                                     mes = mesinicio
                                     if (parseFloat(anofim) == parseFloat(anoinicio)) {
                                         dia = diainicio
                                         if (parseFloat(anofim) > parseFloat(anoinicio)) {
-                                            // console.log('projeto ultrapassa anos')
+                                            //console.log('projeto ultrapassa anos')
                                             if (messel == 1 || messel == 3 || messel == 5 || messel == 7 || messel == 8 || messel == 10 || messel == 12) {
                                                 dif = 31
                                             } else {
@@ -5720,8 +5720,8 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                             }
                                         }
                                     } else {
-                                        // console.log('mesmo mes outro ano')
-                                        // console.log('diainicio=>' + diainicio)
+                                        //console.log('mesmo mes outro ano')
+                                        //console.log('diainicio=>' + diainicio)
                                         if (naoVazio(e.programacao)) {
                                             dia = diainicio
                                             dif = 1
@@ -5731,26 +5731,26 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                         }
                                     }
                                 } else {
-                                    // console.log('diferente')
+                                    //console.log('diferente')
                                     mes = 0
                                     if (naoVazio(e.programacao)) {
                                         dia = diainicio
                                         dif = 1
                                     } else {
                                         difmes = parseFloat(mesfim) - parseFloat(mesinicio)
-                                        // console.log('difmes=>' + difmes)
+                                        //console.log('difmes=>' + difmes)
                                         if (difmes != 0) {
                                             if (difmes < 0) {
                                                 difmes = difmes + 12
                                             }
-                                            // console.log('mesinicio=>' + mesinicio)
+                                            //console.log('mesinicio=>' + mesinicio)
                                             for (i = 0; i < difmes; i++) {
                                                 mes = parseFloat(mesinicio) + i
                                                 if (mes > 12) {
                                                     mes = mes - 12
                                                 }
-                                                // console.log('mes=>' + mes)
-                                                // console.log('meshoje=>' + meshoje)
+                                                //console.log('mes=>' + mes)
+                                                //console.log('meshoje=>' + meshoje)
                                                 if (mes == messel) {
                                                     break;
                                                 }
@@ -5775,19 +5775,19 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                 }
 
                                 const { dataini } = e
-                                // console.log('dataini=>' + dataini)
-                                // console.log('ser.descricao=>' + ser.descricao)
+                                //console.log('dataini=>' + dataini)
+                                //console.log('ser.descricao=>' + ser.descricao)
                                 tarefa = ser.descricao
                                 for (i = 0; i < dif; i++) {
-                                    // console.log('dia=>' + dia)
-                                    // console.log('entrou laço')
+                                    //console.log('dia=>' + dia)
+                                    //console.log('entrou laço')
                                     cor = 'lightgray'
                                     sql = { cliente: cliente.nome, id: e._id, tarefa, cor, concluido: e.concluido }
                                     if (messel == mes) {
                                         if (naoVazio(dias)) {
-                                            // console.log('d=>' + d)
+                                            //console.log('d=>' + d)
                                             feito = dias[i].feito
-                                            // console.log('feito=>' + feito)
+                                            //console.log('feito=>' + feito)
                                         }
                                         if (dia == '01') {
                                             dia01.push(sql)
@@ -5885,11 +5885,11 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                                     }
                                     dia++
                                 }
-                                // console.log('lista_tarefas.length=>' + lista_tarefas.length)
+                                //console.log('lista_tarefas.length=>' + lista_tarefas.length)
                                 if (q == lista_tarefas.length) {
-                                    // console.log('messel=>' + messel)
-                                    // console.log('ano=>' + ano)
-                                    // console.log('mestitulo=>' + mestitulo)
+                                    //console.log('messel=>' + messel)
+                                    //console.log('ano=>' + ano)
+                                    //console.log('mestitulo=>' + mestitulo)
                                     res.render('principal/agenda', {
                                         dia01, dia02, dia03, dia04, dia05, dia06, dia07,
                                         dia08, dia09, dia10, dia11, dia12, dia13, dia14,
@@ -5905,7 +5905,7 @@ router.post('/aplicarTarefas/', ehAdmin, (req, res) => {
                     })
                 } else {
                     if (q == lista_tarefas.length) {
-                        // console.log('mestitulo=>' + mestitulo)
+                        //console.log('mestitulo=>' + mestitulo)
                         res.render('principal/agenda', {
                             dia01, dia02, dia03, dia04, dia05, dia06, dia07,
                             dia08, dia09, dia10, dia11, dia12, dia13, dia14,
@@ -5997,7 +5997,7 @@ router.get('/editarsrv/:id', ehAdmin, (req, res) => {
     }
     Servico.find({ user: id }).lean().then((servicos) => {
         Servico.findOne({ _id: req.params.id }).lean().then((servico) => {
-            //     // console.log(servico)
+            //     //console.log(servico)
             res.render('principal/servicos', { servicos, servico })
         }).catch((err) => {
             req.flash('error_msg', 'Falha ao encontrar o tipo de serviço.')
@@ -6059,16 +6059,16 @@ router.get('/assistencia', ehAdmin, (req, res) => {
     const { pessoa } = req.user
     var q = 0
     var lista = []
-    // console.log('pessoa=>' + pessoa)
+    //console.log('pessoa=>' + pessoa)
     Tarefas.find({ responsavel: pessoa, tipo: 'assistencia', concluido: false }).then((tarefa) => {
-        // console.log('tarefa=>' + tarefa)
+        //console.log('tarefa=>' + tarefa)
         if (naoVazio(tarefa)) {
             tarefa.forEach((e) => {
                 Servico.findOne({ _id: e.servico }).then((servico) => {
                     q++
                     lista.push({ id: e._id, seq: e.seq, observacao: e.observacao, selecionado: e.selecionado, descricao: servico.descricao, data: dataMensagem(e.dataini), endereco: e.endereco, numero: e.numero, complemento: e.complemento, uf: e.uf, cidade: e.cidade })
-                    // console.log('q=>' + q)
-                    // console.log('tarefa.length=>' + tarefa.length)
+                    //console.log('q=>' + q)
+                    //console.log('tarefa.length=>' + tarefa.length)
                     if (q == tarefa.length) {
                         lista.sort(comparaNum)
                         res.render('principal/assistencia', { lista })
@@ -6103,7 +6103,7 @@ router.get('/tarefa/:id', ehAdmin, (req, res) => {
     var trf_srvid
     var trf_dataini
 
-    // console.log('req.params.id=>' + req.params.id)
+    //console.log('req.params.id=>' + req.params.id)
     Tarefas.findOne({ _id: req.params.id }).lean().then((tarefa) => {
         trf_dataini = dataMensagem(tarefa.dataini)
         Empresa.findOne({ _id: tarefa.empresa }).lean().then((trfemp) => {
@@ -6117,13 +6117,13 @@ router.get('/tarefa/:id', ehAdmin, (req, res) => {
                         if (naoVazio(equipeins)) {
                             Empresa.find({ user: id }).lean().then((empresa) => {
                                 Cliente.find({ user: id }).lean().then((cliente) => {
-                                    // console.log('req.body.cliente=>' + req.body.cliente)
+                                    //console.log('req.body.cliente=>' + req.body.cliente)
                                     Servico.find({ user: id }).lean().then((servicos) => {
                                         Pessoa.find({ user: id, 'funass': 'checked' }).lean().then((assistencia) => {
                                             if (naoVazio(assistencia)) {
-                                                // console.log('tarefa.responsavel=>' + tarefa.responsavel)
+                                                //console.log('tarefa.responsavel=>' + tarefa.responsavel)
                                                 Pessoa.findOne({ _id: tarefa.responsavel }).lean().then((trf_tecnico) => {
-                                                    // console.log('trf_tecnico=>' + trf_tecnico)
+                                                    //console.log('trf_tecnico=>' + trf_tecnico)
                                                     if (naoVazio(trf_tecnico)) {
                                                         res.render('principal/tarefas', { tarefa, trf_empresa, trf_empid, trfemp, trf_tecnico, assistencia, trf_servico, trf_srvid, trf_cliente, cliente, servicos, empresa })
                                                     } else {
@@ -6217,23 +6217,23 @@ router.post('/addmanutencao', ehAdmin, (req, res) => {
     var id
     var idcliente
     data = req.body.data
-    // console.log('data=>' + data)
+    //console.log('data=>' + data)
     Empresa.findOne({ user: id }).lean().then((trfemp) => {
         if (naoVazio(trfemp)) {
-            // console.log('req.body.cliente=>' + req.body.cliente)
+            //console.log('req.body.cliente=>' + req.body.cliente)
             Servico.find({ user: id }).lean().then((servicos) => {
                 if (naoVazio(servicos)) {
-                    // console.log('check=>' + req.body.check)
+                    //console.log('check=>' + req.body.check)
                     if (req.body.check != 'on') {
                         idcliente = '111111111111111111111111'
                     } else {
                         idcliente = req.body.cliente
                     }
-                    // console.log('idcliente=>' + idcliente)
+                    //console.log('idcliente=>' + idcliente)
                     Usina.find({ cliente: idcliente }).lean().then((usina) => {
-                        // console.log('usina=>' + usina)
+                        //console.log('usina=>' + usina)
                         if (naoVazio(usina)) {
-                            // console.log(usina)
+                            //console.log(usina)
                             Pessoa.find({ user: id, $or: [{ 'funins': 'checked' }, { 'funele': 'checked' }] }).sort({ 'nome': 'asc' }).lean().then((instalacao) => {
                                 if (naoVazio(instalacao)) {
                                     instalacao.forEach((pesins) => {
@@ -6242,7 +6242,7 @@ router.post('/addmanutencao', ehAdmin, (req, res) => {
                                         ins_fora.push({ id: pesins._id, nome })
                                         if (q == instalacao.length) {
                                             Pessoa.find({ user: id, 'funges': 'checked' }).sort({ 'nome': 'asc' }).lean().then((gestor) => {
-                                                // console.log('gestor=>' + gestor)
+                                                //console.log('gestor=>' + gestor)
                                                 res.render('principal/tarefas', { data, usina, ins_fora, servicos, cliente: idcliente, instalacao, gestor, empresa })
                                             }).catch((err) => {
                                                 req.flash('error_msg', 'Falha ao encontrar os gestores.')
@@ -6259,7 +6259,7 @@ router.post('/addmanutencao', ehAdmin, (req, res) => {
                                 res.redirect('/gerenciamento/agenda')
                             })
                         } else {
-                            // console.log('sem usina')
+                            //console.log('sem usina')
                             // Pessoa.find({ user: id, 'funins': 'checked' }).sort({ 'nome': 'asc' }).lean().then((instalacao) => {
                             //     if (naoVazio(instalacao)) {
                             //         instalacao.forEach((pesins) => {
@@ -6267,7 +6267,7 @@ router.post('/addmanutencao', ehAdmin, (req, res) => {
                             //             nome = pesins.nome
                             //             ins_fora.push({ id: pesins._id, nome })
                             //             if (q == instalacao.length) {
-                            //                 // console.log('id=>' + id)
+                            //                 //console.log('id=>' + id)
                             Cliente.find({ user: id }).lean().then((cliente) => {
                                 Pessoa.find({ user: id, 'funges': 'checked' }).sort({ 'nome': 'asc' }).lean().then((gestor) => {
                                     Pessoa.find({ user: id, 'funass': 'checked' }).lean().then((assistencia) => {
@@ -6352,17 +6352,17 @@ router.post('/addtarefa', ehAdmin, (req, res) => {
     var bairro = ''
     var complemento = ''
 
-    // console.log('req.body.id=>' + req.body.id)
+    //console.log('req.body.id=>' + req.body.id)
     if (naoVazio(req.body.id)) {
         Tarefas.findOne({ _id: req.body.id }).then((tarefa) => {
-            // console.log('equipe=>' + tarefa.equipe)
+            //console.log('equipe=>' + tarefa.equipe)
             Equipe.findOne({ _id: tarefa.equipe }).then((equipe) => {
-                // console.log('equipe=>' + equipe)
+                //console.log('equipe=>' + equipe)
                 dataini = req.body.dataini
                 datafim = req.body.datafim
-                // console.log('req.body.checkres=>' + req.body.checkres)
-                // console.log('dataini=>' + dataini)
-                // console.log('datafim=>' + datafim)
+                //console.log('req.body.checkres=>' + req.body.checkres)
+                //console.log('dataini=>' + dataini)
+                //console.log('datafim=>' + datafim)
 
                 if (naoVazio(dataini) && naoVazio(datafim)) {
                     var data1 = new Date(dataini)
@@ -6370,7 +6370,7 @@ router.post('/addtarefa', ehAdmin, (req, res) => {
                     dif = Math.abs(data2.getTime() - data1.getTime())
                     days = Math.ceil(dif / (1000 * 60 * 60 * 24))
                     days = days + 1
-                    // console.log('days=>' + days)
+                    //console.log('days=>' + days)
                     for (i = 1; i < days + 1; i++) {
                         dias.push({ dia: i, feito: false })
                     }
@@ -6385,7 +6385,7 @@ router.post('/addtarefa', ehAdmin, (req, res) => {
                 tarefa.complemento = req.body.complemento
                 tarefa.cidade = req.body.cidade
                 tarefa.uf = req.body.uf
-                // console.log('req.body.manutencao=>' + req.body.manutencao)
+                //console.log('req.body.manutencao=>' + req.body.manutencao)
                 tarefa.servico = req.body.manutencao
                 tarefa.dataini = dataini
                 tarefa.buscadataini = dataBusca(dataini)
@@ -6402,7 +6402,7 @@ router.post('/addtarefa', ehAdmin, (req, res) => {
                     // equipe.ins3 = req.body.ins3
                     // equipe.ins4 = req.body.ins4
                     // equipe.ins5 = req.body.ins5
-                    // console.log('tarefa salva')
+                    //console.log('tarefa salva')
                     if (req.body.checkres != null) {
                         equipe.insres = req.body.responsavel
                     }
@@ -6434,15 +6434,15 @@ router.post('/addtarefa', ehAdmin, (req, res) => {
             res.redirect('/gerenciamento/tarefa/' + tarefa._id)
         })
     } else {
-        // console.log('equipe true')
+        //console.log('equipe true')
         dataini = req.body.dataini
         // datafim = req.body.datafim
-        // console.log('email=>' + email)
+        //console.log('email=>' + email)
         for (i = 0; i < email.length; i++) {
-            // console.log('custoins[i]' + custoins[i])
+            //console.log('custoins[i]' + custoins[i])
             todos_emails = todos_emails + email[i] + ';'
         }
-        // console.log('req.body.ins0=>' + req.body.ins0)
+        //console.log('req.body.ins0=>' + req.body.ins0)
         corpo = {
             user: id,
             inres: req.body.responsavel,
@@ -6463,13 +6463,13 @@ router.post('/addtarefa', ehAdmin, (req, res) => {
         }
 
         new Equipe(equipe).save().then(() => {
-            // console.log('salvou equipe')
+            //console.log('salvou equipe')
             Equipe.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novaequipe) => {
                 Empresa.findOne({ _id: req.body.empresa }).then((emp_tarefa) => {
-                    // console.log('encontrou empresa')
-                    // console.log('req.body.cliente=>' + req.body.cliente)
+                    //console.log('encontrou empresa')
+                    //console.log('req.body.cliente=>' + req.body.cliente)
                     Cliente.findOne({ _id: req.body.cliente }).then((cliente) => {
-                        // console.log("dias=>" + dias)
+                        //console.log("dias=>" + dias)
                         if (naoVazio(req.body.cep)) {
                             cep = req.body.cep
                         } else {
@@ -6529,28 +6529,28 @@ router.post('/addtarefa', ehAdmin, (req, res) => {
                             emandamento: false
                         }
                         var tarefa = []
-                        // console.log('req.body.responsavel=>' + req.body.responsavel)
+                        //console.log('req.body.responsavel=>' + req.body.responsavel)
                         if (naoVazio(req.body.responsavel)) {
-                            // console.log('tarefa=>' + JSON.stringify(corpo))
+                            //console.log('tarefa=>' + JSON.stringify(corpo))
                             Object.assign(tarefa, { responsavel: req.body.responsavel }, corpo)
                         } else {
                             tarefa = corpo
                         }
-                        // console.log('tarefa=>' + JSON.stringify(tarefa))
+                        //console.log('tarefa=>' + JSON.stringify(tarefa))
                         var seq
                         Tarefas.findOne({ user: id, tipo: 'assistencia' }).sort({ field: 'asc', _id: -1 }).then((tarefa_seq) => {
-                            // console.log('tarefa_seq=>' + JSON.stringify(tarefa_seq))
+                            //console.log('tarefa_seq=>' + JSON.stringify(tarefa_seq))
                             if (naoVazio(tarefa_seq)) {
                                 seq = tarefa_seq.seq + 1
                             } else {
                                 seq = 1
                             }
                             new Tarefas(tarefa).save().then(() => {
-                                // console.log("salvou tarefa")
+                                //console.log("salvou tarefa")
                                 Tarefas.findOne({ user: id, tipo: 'assistencia' }).sort({ field: 'asc', _id: -1 }).then((tarefa) => {
                                     emp_tarefa.save().then(() => {
-                                        // console.log('novaequipe._id=>' + novaequipe._id)
-                                        // console.log(tarefa._id)
+                                        //console.log('novaequipe._id=>' + novaequipe._id)
+                                        //console.log(tarefa._id)
                                         novaequipe.tarefa = tarefa._id
                                         novaequipe.save().then(() => {
                                             tarefa.seq = seq
@@ -6742,7 +6742,7 @@ router.post('/vermais/', ehAdmin, (req, res) => {
     var meshoje = hoje.substring(5, 7)
     var anotitulo = hoje.substring(0, 4)
 
-    // console.log('meshoje=>' + meshoje)
+    //console.log('meshoje=>' + meshoje)
     var mestitulo = req.body.mes
 
     switch (mestitulo) {
@@ -6800,19 +6800,19 @@ router.post('/vermais/', ehAdmin, (req, res) => {
     datafim = String(anotitulo) + meshoje + '30'
     dataini = parseFloat(dataini)
     datafim = parseFloat(datafim)
-    // console.log('anotitulo=>' + anotitulo)
-    // console.log('meshoje=>' + meshoje)
-    // console.log('mestitulo=>' + mestitulo)
-    // console.log('dataini=>' + dataini)
-    // console.log('datafim=>' + datafim)
+    //console.log('anotitulo=>' + anotitulo)
+    //console.log('meshoje=>' + meshoje)
+    //console.log('mestitulo=>' + mestitulo)
+    //console.log('dataini=>' + dataini)
+    //console.log('datafim=>' + datafim)
     var sql = {}
     sql = { user: id, feito: true, liberar: true, prjfeito: false, tarefa: { $exists: false }, insres: req.body.instalador, nome_projeto: { $exists: true }, $or: [{ 'dtinibusca': { $lte: datafim, $gte: dataini } }, { 'dtfimbusca': { $lte: datafim, $gte: dataini } }] }
     Pessoa.findOne({ _id: req.body.instalador }).lean().then((pessel) => {
         Pessoa.find({ user: id, funins: 'checked' }).lean().then((pessoa) => {
             Equipe.find(sql).then((equipe) => {
                 equipe.forEach((e) => {
-                    // console.log('e._id=>' + e._id)
-                    // console.log('e._id=>' + e.insres)
+                    //console.log('e._id=>' + e._id)
+                    //console.log('e._id=>' + e.insres)
                     Pessoa.findOne({ _id: e.insres }).then((tecnico) => {
                         q++
                         inicio = e.dtinicio
@@ -6831,7 +6831,7 @@ router.post('/vermais/', ehAdmin, (req, res) => {
                             if (parseFloat(anotitulo) == parseFloat(anoinicio)) {
                                 mes = meshoje
                                 if (parseFloat(anofim) > parseFloat(anoinicio)) {
-                                    // console.log('projeto ultrapassa anos')
+                                    //console.log('projeto ultrapassa anos')
                                     dia = diainicio
                                     if (meshoje == 1 || meshoje == 3 || meshoje == 5 || meshoje == 7 || meshoje == 8 || meshoje == 10 || meshoje == 12) {
                                         dif = 31
@@ -6847,38 +6847,38 @@ router.post('/vermais/', ehAdmin, (req, res) => {
                                         if (data1.getTime() < data2.getTime()) {
                                             days = days * -1
                                         }
-                                        // console.log('days=>' + days)
+                                        //console.log('days=>' + days)
                                         dia = diainicio
                                         dif = days + 1
                                     } else {
                                         dia = diainicio
                                         dif = parseFloat(diafim) - parseFloat(diainicio) + 1
-                                        // console.log('dia=>' + dia)
-                                        // console.log('dif=>' + dif)
+                                        //console.log('dia=>' + dia)
+                                        //console.log('dif=>' + dif)
                                     }
                                 }
                             } else {
-                                // console.log('anos diferente')
+                                //console.log('anos diferente')
                                 dia = 0
                                 dif = 0
                             }
                         } else {
-                            // console.log('diferente')
+                            //console.log('diferente')
                             difmes = parseFloat(mesfim) - parseFloat(mesinicio) + 1
-                            // console.log('difmes=>' + difmes)
+                            //console.log('difmes=>' + difmes)
                             if (difmes != 0) {
-                                // console.log('difmes=>' + difmes)
+                                //console.log('difmes=>' + difmes)
                                 if (difmes < 0) {
                                     difmes = difmes + 12
                                 }
-                                // console.log('mesinicio=>' + mesinicio)
+                                //console.log('mesinicio=>' + mesinicio)
                                 for (i = 0; i < difmes; i++) {
                                     mes = parseFloat(mesinicio) + i
                                     if (mes > 12) {
                                         mes = mes - 12
                                     }
-                                    // console.log('mes=>' + mes)
-                                    // console.log('meshoje=>' + meshoje)
+                                    //console.log('mes=>' + mes)
+                                    //console.log('meshoje=>' + meshoje)
                                     if (mes == meshoje) {
                                         if (mes < 10) {
                                             mes = '0' + mes
@@ -6907,9 +6907,9 @@ router.post('/vermais/', ehAdmin, (req, res) => {
                             }
                         }
 
-                        // console.log('dif=>' + dif)
-                        // console.log('dia=>' + dia)
-                        // console.log('mes=>' + mes)
+                        //console.log('dif=>' + dif)
+                        //console.log('dia=>' + dia)
+                        //console.log('mes=>' + mes)
                         y = Math.floor(Math.random() * 17)
                         if (y == x) {
                             y = Math.floor(Math.random() * 17)
@@ -6922,12 +6922,12 @@ router.post('/vermais/', ehAdmin, (req, res) => {
                         z = y
 
                         color = cores[y]
-                        // console.log('color=>' + color)
+                        //console.log('color=>' + color)
                         todasCores.push({ color })
 
                         for (i = 0; i < dif; i++) {
-                            // console.log('dia=>' + dia)
-                            // console.log('entrou laço')    
+                            //console.log('dia=>' + dia)
+                            //console.log('entrou laço')    
                             params_dia = { id: tecnico._id, tecnico: tecnico.nome, cor: color, instalador: 'true' }
                             if (meshoje == mes) {
                                 switch (String(dia)) {
@@ -7029,10 +7029,10 @@ router.post('/vermais/', ehAdmin, (req, res) => {
                                 if (dia < 10) {
                                     dia = '0' + dia
                                 }
-                                // console.log('dia=>' + dia)
+                                //console.log('dia=>' + dia)
                             }
                         }
-                        // console.log('q=>' + q)
+                        //console.log('q=>' + q)
                         if (q == equipe.length) {
                             res.render('principal/agenda', {
                                 dia01, dia02, dia03, dia04, dia05, dia06, dia07, dia08, dia09, dia10,
@@ -7283,7 +7283,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
         result.map(item => {
             let dataCliente = item.clientes
             dataCliente.map(i => cliente = i.nome);
-            console.log(cliente);
+            //console.log(cliente);
             if (item.status == 'Enviado' && item.ganho == false && naoVazio(item.motivo) == false) {
                 if (item.datacad < parseFloat(datafim) && item.datacad > parseFloat(dataini)) {
                     if (naoVazio(item.valor)) {
@@ -7297,8 +7297,8 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
             let dataPedido = item.pedidos;
             if (dataPedido.length > 0) {
                 dataPedido.map(i => database = dataBusca(i.data));
-                console.log('item.datacad=>' + item.datacad)
-                console.log('item.pedidos.data=>' + item.pedidos.data)
+                //console.log('item.datacad=>' + item.datacad)
+                //console.log('item.pedidos.data=>' + item.pedidos.data)
             }
             if (item.ganho == true) {
                 if (database < parseFloat(datafim) && database > parseFloat(dataini)) {
@@ -7348,7 +7348,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
         ganho.sort(comparaNum)
         baixado.sort(comparaNum)
 
-        // console.log('totComparando=>' + totComparando)
+        //console.log('totComparando=>' + totComparando)
         if (naoVazio(totComparando)) {
             totComparando = mascaraDecimal(totComparando)
         }
@@ -7376,7 +7376,7 @@ router.post('/selecao', ehAdmin, (req, res) => {
     idbax = req.body.idbax
     idgan = req.body.idgan
 
-    // console.log("idgan=>" + idgan)
+    //console.log("idgan=>" + idgan)
 
     if (naoVazio(idneg)) {
         if (idneg.length > 0) {
@@ -7411,13 +7411,13 @@ router.post('/selecao', ehAdmin, (req, res) => {
             }
         }
     }
-    // console.log('idgan.length=>' + idgan.length)
+    //console.log('idgan.length=>' + idgan.length)
     if (naoVazio(idgan)) {
         if (idgan.length > 0) {
             for (i = 0; i < idgan.length; i++) {
-                // console.log('idgan[i]=>' + idgan[i])
+                //console.log('idgan[i]=>' + idgan[i])
                 seq = idgan[i].split(' - ')
-                // console.log('seq=>' + seq[0])
+                //console.log('seq=>' + seq[0])
                 Projeto.findOne({ seq: seq[0] }).then((pg) => {
                     pg.ganho = true
                     pg.save()
@@ -7502,17 +7502,17 @@ router.post('/baixardia/', ehAdmin, (req, res) => {
             if (data2 > data1) {
                 dif = Math.abs(data2.getTime() - data1.getTime())
                 days = Math.ceil(dif / (1000 * 60 * 60 * 24))
-                // console.log('days=>' + days)
+                //console.log('days=>' + days)
                 dia = days + 1
-                // console.log('dia=>' + dia)
+                //console.log('dia=>' + dia)
                 Tarefas.findOneAndUpdate({ _id: req.body.id, 'dias.dia': dia }, { $set: { 'dias.$.feito': true } }).then(() => {
                     dias = t.dias
                     tamdias = dias.length
                     diaantes = dia - 2
                     diadepois = dia
                     mensagem = 'Dia baixado com sucesso.'
-                    // console.log('tamdias=>' + tamdias)
-                    // console.log('dia=>' + dia)
+                    //console.log('tamdias=>' + tamdias)
+                    //console.log('dia=>' + dia)
                     if ((tamdias == dia) && (dias[diaantes].feito == true)) {
                         t.concluido = true
                         t.databaixa = dataHoje()
@@ -7533,16 +7533,16 @@ router.post('/baixardia/', ehAdmin, (req, res) => {
                     }
                     // diaantes = dias[days].feito
                     // diadepois = dias[dia].feito
-                    // console.log('diaantes=>' + diaantes)
-                    // console.log('diadepois=>' + diadepois)
+                    //console.log('diaantes=>' + diaantes)
+                    //console.log('diadepois=>' + diadepois)
                 }).catch((err) => {
                     req.flash('error_msg', 'Houve um erro ao baixar o dia da tarefa.')
                     res.redirect('/gerenciamento/tarefa/' + req.body.id)
                 })
             } else {
-                // console.log('mesmo dia')
+                //console.log('mesmo dia')
                 Tarefas.findOneAndUpdate({ _id: req.body.id, 'dias.dia': 1 }, { $set: { 'dias.$.feito': true } }).then(() => {
-                    // console.log('achou mesmo dia')
+                    //console.log('achou mesmo dia')
                     req.flash('success_msg', 'Dia baixado com sucesso.')
                     res.redirect('/gerenciamento/tarefa/' + req.body.id)
                 }).catch((err) => {
@@ -7585,11 +7585,11 @@ router.post('/exportar/', ehAdmin, (req, res) => {
     var nome_vendedor
     var dtcadastro
 
-    // console.log('stats=>' + req.body.status)
-    // console.log('cliente=>' + req.body.cliente)
-    // console.log('vendedor=>' + req.body.vendedor)
-    // console.log('dtinicio=>' + req.body.inicio)
-    // console.log('dtinicio=>' + req.body.fim)
+    //console.log('stats=>' + req.body.status)
+    //console.log('cliente=>' + req.body.cliente)
+    //console.log('vendedor=>' + req.body.vendedor)
+    //console.log('dtinicio=>' + req.body.inicio)
+    //console.log('dtinicio=>' + req.body.fim)
 
     if (vendedor != 'Todos' && cliente != 'Todos' && stats != 'Todos') {
         sql = { user: id, cliente: cliente, vendedor: vendedor, status: stats }
@@ -7620,15 +7620,15 @@ router.post('/exportar/', ehAdmin, (req, res) => {
             }
         }
     }
-    // console.log('sql=>' + JSON.stringify(sql))
+    //console.log('sql=>' + JSON.stringify(sql))
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
         Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((todos_vendedores) => {
             Projeto.find(sql).sort({ 'data': -1 }).then((projeto) => {
                 if (naoVazio(projeto)) {
                     projeto.forEach((e) => {
-                        // console.log('cliente=>'+e.cliente)
+                        //console.log('cliente=>'+e.cliente)
                         Cliente.findOne({ _id: e.cliente }).then((cliente) => {
-                            // console.log('cliente=>'+e.vendedor)
+                            //console.log('cliente=>'+e.vendedor)
                             Pessoa.findOne({ _id: e.vendedor }).then((vendedor) => {
                                 q++
 
@@ -7656,7 +7656,7 @@ router.post('/exportar/', ehAdmin, (req, res) => {
                                     nome_vendedor = ''
                                 }
 
-                                // console.log('e.valor=>' + e.valor)
+                                //console.log('e.valor=>' + e.valor)
                                 if (naoVazio(e.valor)) {
                                     valor = e.valor
                                     total = total + e.valor
@@ -7666,10 +7666,10 @@ router.post('/exportar/', ehAdmin, (req, res) => {
 
                                 dados.push({ s: String(e.status), seq: String(e.seq), uf: String(e.uf), cidade: String(e.cidade), cliente: String(cliente.nome), nome_vendedor, valor: String(mascaraDecimal(valor)), cadastro: String(dataMsgNum(dtcadastro)), inicio: String(dataMensagem(dtinicio)), fim: String(dataMensagem(dtfim)) })
                                 lista.push({ s: String(e.status), id: e._id, seq: String(e.seq), uf: String(e.uf), cidade: String(e.cidade), valor: String(mascaraDecimal(valor)), cliente: String(cliente.nome), nome_vendedor, cadastro: String(dataMsgNum(dtcadastro)), inicio: String(dataMensagem(dtinicio)), fim: String(dataMensagem(dtfim)) })
-                                // console.log("q=>" + q)
-                                // console.log("projeto.length=>" + projeto.length)
+                                //console.log("q=>" + q)
+                                //console.log("projeto.length=>" + projeto.length)
                                 if (q == projeto.length) {
-                                    // console.log('lista=>' + lista)
+                                    //console.log('lista=>' + lista)
                                     const wb = new xl.Workbook()
                                     const ws = wb.addWorksheet('Relatório')
                                     const headingColumnNames = [
@@ -7692,7 +7692,7 @@ router.post('/exportar/', ehAdmin, (req, res) => {
                                     var rowIndex = 2 //começa na linha 2
                                     dados.forEach(record => { //passa por cada item do data
                                         var columnIndex = 1; //diz para começar na primeira coluna
-                                        // console.log('transforma cada objeto em um array onde cada posição contém as chaves do objeto (name, email, cellphone)')
+                                        //console.log('transforma cada objeto em um array onde cada posição contém as chaves do objeto (name, email, cellphone)')
                                         Object.keys(record).forEach(columnName => {
                                             //cria uma coluna do tipo string para cada item
                                             ws.cell(rowIndex, columnIndex++).string(record[columnName])
@@ -7705,11 +7705,11 @@ router.post('/exportar/', ehAdmin, (req, res) => {
                                     ws.cell(rowIndex, 2).string('Quantidade Total: ' + String(q))
                                     var time = new Date()
                                     var arquivo = 'relatorio_propostas_' + dataHoje() + time.getTime() + '.xlsx'
-                                    // console.log('arquivi=>' + arquivo)
+                                    //console.log('arquivi=>' + arquivo)
                                     // var sucesso = []
                                     // sucesso.push({texto: 'Relatório exportado com sucesso.'})
                                     wb.writeToBuffer().then(function (buffer) {
-                                        // console.log('buffer excel')
+                                        //console.log('buffer excel')
                                         res
                                             .set('content-disposition', `attachment; filename="${arquivo}";  filename*=UTF-8''${encodeURI(arquivo)}`) // filename header
                                             .type('.xlsx') // setting content-type to xlsx. based on file extention
@@ -7749,7 +7749,7 @@ router.post('/exportar/', ehAdmin, (req, res) => {
 
 router.get('/payprj/:id', ehAdmin, (req, res) => {
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
-        // console.log('projeto.autorizado=>' + projeto.autorizado)
+        //console.log('projeto.autorizado=>' + projeto.autorizado)
         if (projeto.pago == true) {
             projeto.pago = false
         } else {
@@ -7767,7 +7767,7 @@ router.get('/payprj/:id', ehAdmin, (req, res) => {
 
 router.get('/authprj/:id', ehAdmin, (req, res) => {
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
-        // console.log('projeto.autorizado=>' + projeto.autorizado)
+        //console.log('projeto.autorizado=>' + projeto.autorizado)
         if (projeto.autorizado == true) {
             projeto.autorizado = false
         } else {
@@ -7829,7 +7829,7 @@ router.get('/exportarOrcamento/:id', ehAdmin, (req, res) => {
                                 lista.push(desc.toString())
                             }
                             var wscalc = workbook.getWorksheet('Cálculo')
-                            // console.log(lista)
+                            //console.log(lista)
                             wscalc.getCell('B17').dataValidation = {
                                 type: 'list',
                                 allowBlank: true,
@@ -7842,8 +7842,8 @@ router.get('/exportarOrcamento/:id', ehAdmin, (req, res) => {
                             //nome cliente
                             row.getCell(3).value = cliente.nome
                             //documento
-                            // console.log('cpf=>'+cliente.cpf)
-                            // console.log('cnpj=>'+cliente.cnpj)
+                            //console.log('cpf=>'+cliente.cpf)
+                            //console.log('cnpj=>'+cliente.cnpj)
                             if (cliente.cpf != '0') {
                                 row.getCell(4).value = 'CPF'
                                 row.getCell(5).value = cliente.cpf
@@ -7860,16 +7860,16 @@ router.get('/exportarOrcamento/:id', ehAdmin, (req, res) => {
                             //cidade
                             row.getCell(9).value = projeto.cidade
                             //cidade
-                            // console.log('projeto.datacad=>' + projeto.datacad)
+                            //console.log('projeto.datacad=>' + projeto.datacad)
                             row.getCell(10).value = dataMensagem(dataInput(String(projeto.datacad)))
                             //unidades consumidoras      
                             //janeiro          
                             var uc = projeto.uc
                             i = 4
                             uc.forEach((e) => {
-                                // console.log('i=>' + i)
+                                //console.log('i=>' + i)
                                 row = wsdados.getRow(16)
-                                // console.log(' e.jan=>' + e.jan)
+                                //console.log(' e.jan=>' + e.jan)
                                 row.getCell(i).value = e.jan
                                 //fevereiro          
                                 row = wsdados.getRow(17)
@@ -7908,7 +7908,7 @@ router.get('/exportarOrcamento/:id', ehAdmin, (req, res) => {
                             })
                             //configuracao perdas
                             var perda
-                            // console.log('empresa.perdaoeste=>'+empresa.perdaoeste)
+                            //console.log('empresa.perdaoeste=>'+empresa.perdaoeste)
                             switch (projeto.orientacao) {
                                 case 'Oeste':
                                     perda = empresa.perdaoeste
@@ -8083,8 +8083,8 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
         }
     }
 
-    console.log('instalador=>' + typeof (req.body.instalador))
-    // console.log('id=>'+typeof(id_ins._id))
+    //console.log('instalador=>' + typeof (req.body.instalador))
+    //console.log('id=>'+typeof(id_ins._id))
     Cliente.find({ user: id }).lean().then((todos_clientes) => {
         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
 
@@ -8220,379 +8220,7 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
         req.flash('error_msg', 'Nenhum cliente encontrado.')
         res.redirect('/dashboard')
     })
-    //     Cliente.find({ user: id }).lean().then((todos_clientes) => {
-    //         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
-    //             Equipe.aggregate([
-    //                 {
-    //                     $match: match
-    //                 },
-    //                 {
-    //                     $lookup: {
-    //                         from: 'projetos',
-    //                         localField: '_id',
-    //                         foreignField: 'equipe',
-    //                         as: 'projeto'
-    //                     }
-    //                 },
-    //                 {
-    //                     $lookup: {
-    //                         from: 'pessoas',
-    //                         localField: 'insres',
-    //                         foreignField: '_id',
-    //                         as: 'instalador',
-    //                     }
-    //                 }
-    //             ]).then(async list => {
-
-    //                 for (const item of list) {
-    //                     observacao = item.observacao;
-    //                     deadline = await item.dtfim;
-    //                     if (naoVazio(deadline) == false) {
-    //                         deadline = '0000-00-00'
-    //                     }
-    //                     qtdmod = await item.qtdmod;
-    //                     let projetos = await item.projeto;
-
-    //                     projetos.map(async register => {
-    //                         id = register._id
-    //                         seq = register.seq
-    //                         cidade = register.cidade
-    //                         uf = register.uf
-    //                         telhado = register.telhado
-    //                         estrutura = register.estrutura
-    //                         inversor = register.plaKwpInv
-    //                         modulos = register.plaQtdMod
-    //                         potencia = register.plaWattMod
-    //                         instalado = register.instalado
-    //                         execucao = register.execucao
-    //                         parado = register.parado
-    //                         autorizado = register.autorizado
-    //                         pagamento = register.pago
-    //                         cliente = register.cliente
-    //                         ins_banco = register.ins_banco
-    //                         checkReal = register.ins_real
-    //                         obsprojetista = register.obsprojetista
-
-    //                         if (checkReal != true) {
-    //                             checkReal = 'unchecked'
-    //                         } else {
-    //                             checkReal = 'checked'
-    //                         }
-
-    //                         if (naoVazio(modulos) && naoVazio(potencia)) {
-    //                             sistema = ((modulos * potencia) / 1000).toFixed(2);
-    //                         } else {
-    //                             sistema = 0;
-    //                         }
-    //                     })
-
-    //                     let instaladores = await item.instalador
-
-    //                     instaladores.map(async register => {
-    //                         instalador = register.nome;
-
-    //                         nome_ins = instalador;
-    //                         id_ins = register._id;
-
-    //                         if (naoVazio(ins_banco)) {
-    //                             if (register._id == ins_banco) {
-    //                                 addInstalador = [{ instalador, qtdmod }];
-    //                             } else {
-    //                                 let nome_instalador = await Pessoa.findById(ins_banco);
-    //                                 addInstalador = [{ instalador: nome_instalador.nome, qtdmod }];
-    //                             }
-    //                         } else {
-    //                             addInstalador = [{ instalador, qtdmod }];
-    //                         }
-    //                     })
-
-
-    //                     if (naoVazio(ins_banco)) {
-    //                         await Pessoa.findById(ins_banco).then(this_ins_banco => {
-    //                             nome_ins_banco = this_ins_banco.nome;
-    //                             id_ins_banco = this_ins_banco._id;
-    //                         })
-    //                     } else {
-    //                         nome_ins_banco = '';
-    //                         id_ins_banco = '';
-    //                     }
-
-    //                     await Cliente.findById(cliente).then(this_cliente => {
-    //                         nome_cliente = this_cliente.nome;
-    //                     })
-
-    //                     listaAndamento.push({
-    //                         id, seq, parado, execucao, autorizado, pagamento, observacao, obsprojetista,
-    //                         instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
-    //                         sistema, modulos, potencia, inversor, deadline, addInstalador,
-    //                         dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
-    //                     })
-    //                     addInstalador = [];
-    //                 }
-
-    //                 listaAndamento.sort(comparaNum);
-
-    //                 if (filter_installer != 'Todos') {
-    //                     const installer = await Pessoa.findById(filter_installer);
-    //                 } else {
-    //                     installer_name = 'Todos';
-    //                 }
-
-    //                 res.render('principal/emandamento', {
-    //                     listaAndamento, todos_clientes, todos_instaladores,
-    //                     datafim, dataini,
-    //                     installer_id: filter_installer, installer_name,
-    //                     status: filter_status
-    //                 })
-    //             })
-    //         }).catch((err) => {
-    //             req.flash('error_msg', 'Nenhum instalador encontrado.')
-    //             res.redirect('/dashboard')
-    //         })
-    //     }).catch((err) => {
-    //         req.flash('error_msg', 'Nenhum cliente encontrado.')
-    //         res.redirect('/dashboard')
-    //     })
 })
-
-// router.post('/emandamento/', ehAdmin, async (req, res) => {
-
-//     const { _id } = req.user
-//     const { user } = req.user
-//     var id
-
-//     if (naoVazio(user)) {
-//         id = user
-//     } else {
-//         id = _id
-//     }
-
-//     let seq;
-//     let cliente;
-//     let nome_cliente;
-//     let parado;
-//     let autorizado;
-//     let pagamento;
-//     let instalado;
-//     let execucao;
-//     let instalador;
-//     let cidade;
-//     let uf;
-//     let telhado;
-//     let estrutura;
-//     let inversor;
-//     let modulos;
-//     let potencia;
-//     let sistema;
-//     let deadline;
-//     let ins_banco;
-//     let checkReal;
-//     let nome_ins;
-//     let id_ins;
-//     let nome_ins_banco;
-//     let id_ins_banco;
-//     var observacao;
-//     var obsprojetista;
-
-//     var listaAndamento = [];
-//     var addInstalador = [];
-
-//     const dataini = req.body.dataini;
-//     const datafim = req.body.datafim;
-//     const dtini = parseFloat(dataBusca(dataini));
-//     const dtfim = parseFloat(dataBusca(datafim));
-
-//     let filter_installer = req.body.instalador;
-//     let installer_name;
-//     let filter_status = req.body.status;
-//     let liberar_status = { $exists: true };
-//     let prjfeito_status = { $exists: true };
-//     let parado_status = { $exists: true };
-//     let sql_installer = {};
-
-//     let match = {};
-
-//     if (filter_status != 'Todos') {
-//         switch (filter_status) {
-//             case 'Aguardando': liberar_status = false; parado_status = false; prjfeito_status = false
-//                 break;
-//             case 'Execução': liberar_status = true; parado_status = false; prjfeito_status = false
-//                 break;
-//             case 'Instalado': liberar_status = true; parado_status = false; prjfeito_status = true
-//                 break;
-//             case 'Parado': liberar_status = true; parado_status = true; prjfeito_status = false
-//                 break;
-//         }
-//     }
-
-
-//     if (filter_installer != 'Todos') {
-//         const id_ins = await Pessoa.findById(filter_installer)
-//         match = {
-//             user: id,
-//             tarefa: { $exists: false },
-//             nome_projeto: { $exists: true },
-//             liberar: liberar_status,
-//             prjfeito: prjfeito_status,
-//             parado: parado_status,
-//             insres: id_ins._id,
-//             "dtfimbusca": {
-//                 $gte: dtini,
-//                 $lte: dtfim
-//             },
-//         }
-//     } else {
-//         match = {
-//             user: id,
-//             tarefa: { $exists: false },
-//             nome_projeto: { $exists: true },
-//             liberar: liberar_status,
-//             prjfeito: prjfeito_status,
-//             parado: parado_status,
-//             "dtfimbusca": {
-//                 $gte: dtini,
-//                 $lte: dtfim
-//             },
-//         }
-//     }
-
-//     console.log('instalador=>' + typeof (req.body.instalador))
-//     // console.log('id=>'+typeof(id_ins._id))
-
-//     Cliente.find({ user: id }).lean().then((todos_clientes) => {
-//         Pessoa.find({ user: id, funins: 'checked' }).lean().then((todos_instaladores) => {
-//             Equipe.aggregate([
-//                 {
-//                     $match: match
-//                 },
-//                 {
-//                     $lookup: {
-//                         from: 'projetos',
-//                         localField: '_id',
-//                         foreignField: 'equipe',
-//                         as: 'projeto'
-//                     }
-//                 },
-//                 {
-//                     $lookup: {
-//                         from: 'pessoas',
-//                         localField: 'insres',
-//                         foreignField: '_id',
-//                         as: 'instalador',
-//                     }
-//                 }
-//             ]).then(async list => {
-
-//                 for (const item of list) {
-//                     observacao = item.observacao;
-//                     deadline = await item.dtfim;
-//                     if (naoVazio(deadline) == false) {
-//                         deadline = '0000-00-00'
-//                     }
-//                     qtdmod = await item.qtdmod;
-//                     let projetos = await item.projeto;
-
-//                     projetos.map(async register => {
-//                         id = register._id
-//                         seq = register.seq
-//                         cidade = register.cidade
-//                         uf = register.uf
-//                         telhado = register.telhado
-//                         estrutura = register.estrutura
-//                         inversor = register.plaKwpInv
-//                         modulos = register.plaQtdMod
-//                         potencia = register.plaWattMod
-//                         instalado = register.instalado
-//                         execucao = register.execucao
-//                         parado = register.parado
-//                         autorizado = register.autorizado
-//                         pagamento = register.pago
-//                         cliente = register.cliente
-//                         ins_banco = register.ins_banco
-//                         checkReal = register.ins_real
-//                         obsprojetista = register.obsprojetista
-
-//                         if (checkReal != true) {
-//                             checkReal = 'unchecked'
-//                         } else {
-//                             checkReal = 'checked'
-//                         }
-
-//                         if (naoVazio(modulos) && naoVazio(potencia)) {
-//                             sistema = ((modulos * potencia) / 1000).toFixed(2);
-//                         } else {
-//                             sistema = 0;
-//                         }
-//                     })
-
-//                     let instaladores = await item.instalador
-
-//                     instaladores.map(async register => {
-//                         instalador = register.nome;
-
-//                         nome_ins = instalador;
-//                         id_ins = register._id;
-
-//                         if (naoVazio(ins_banco)) {
-//                             if (register._id == ins_banco) {
-//                                 addInstalador = [{ instalador, qtdmod }];
-//                             } else {
-//                                 let nome_instalador = await Pessoa.findById(ins_banco);
-//                                 addInstalador = [{ instalador: nome_instalador.nome, qtdmod }];
-//                             }
-//                         } else {
-//                             addInstalador = [{ instalador, qtdmod }];
-//                         }
-//                     })
-
-
-//                     if (naoVazio(ins_banco)) {
-//                         await Pessoa.findById(ins_banco).then(this_ins_banco => {
-//                             nome_ins_banco = this_ins_banco.nome;
-//                             id_ins_banco = this_ins_banco._id;
-//                         })
-//                     } else {
-//                         nome_ins_banco = '';
-//                         id_ins_banco = '';
-//                     }
-
-//                     await Cliente.findById(cliente).then(this_cliente => {
-//                         nome_cliente = this_cliente.nome;
-//                     })
-
-//                     listaAndamento.push({
-//                         id, seq, parado, execucao, autorizado, pagamento, observacao, obsprojetista,
-//                         instalado, cliente: nome_cliente, cidade, uf, telhado, estrutura,
-//                         sistema, modulos, potencia, inversor, deadline, addInstalador,
-//                         dtfim: dataMensagem(deadline), nome_ins_banco, id_ins_banco, nome_ins, id_ins, checkReal
-//                     })
-//                     addInstalador = [];
-//                 }
-
-//                 listaAndamento.sort(comparaNum);
-
-//                 if (filter_installer != 'Todos') {
-//                     const installer = await Pessoa.findById(filter_installer);
-//                 } else {
-//                     installer_name = 'Todos';
-//                 }
-
-//                 res.render('principal/emandamento', {
-//                     listaAndamento, todos_clientes, todos_instaladores,
-//                     datafim, dataini,
-//                     installer_id: filter_installer, installer_name,
-//                     status: filter_status
-//                 })
-//             })
-//         }).catch((err) => {
-//             req.flash('error_msg', 'Nenhum instalador encontrado.')
-//             res.redirect('/dashboard')
-//         })
-//     }).catch((err) => {
-//         req.flash('error_msg', 'Nenhum cliente encontrado.')
-//         res.redirect('/dashboard')
-//     })
-// })
 
 router.post('/salvarFotos', ehAdmin, (req, res) => {
     const { _id } = req.user
@@ -8616,11 +8244,11 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
     var notimg = true
     var imagem
 
-    // console.log('salvar fotos')
+    //console.log('salvar fotos')
 
     img = req.body.imagem
     imgblob = req.body.imgblob
-    console.log('img.length=>' + img.length)
+    //console.log('img.length=>' + img.length)
     if (img.length < 100) {
         (async () => {
             await img.forEach((i) => {
@@ -8659,19 +8287,19 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                 if (err) {
                     throw err
                 } else {
-                    // console.log('Upload realizado com sucesso.')
+                    //console.log('Upload realizado com sucesso.')
                 }
             })
         }
 
     } else {
-        // console.log('lendo diretório')
+        //console.log('lendo diretório')
         (async () => {
 
             ib = imgblob.replace('blob:https://quasat.vimmus.com.br/', '')
             //ib = imgblob.replace('blob:http://localhost:3001/', '')
             ib = ib + '.png'
-            // console.log('ib=>' + ib)
+            //console.log('ib=>' + ib)
             // strip off the data: url prefix to get just the base64-encoded bytes
             data = img.replace(/^data:image\/\w+;base64,/, "")
             buf = Buffer.from(data, "base64")
@@ -8682,7 +8310,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
 
             foto.push({ "desc": ib, 'data': dataMensagem(dataHoje()) })
 
-            // console.log('ib=>' + ib)
+            //console.log('ib=>' + ib)
 
             params = {
                 Bucket: 'quasatimg',
@@ -8694,14 +8322,14 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                 if (err) {
                     throw err
                 }
-                // console.log(`File uploaded successfully. ${data.Location}`)
+                //console.log(`File uploaded successfully. ${data.Location}`)
             })
         })()
     }
 
     var sql = []
 
-    // console.log('req.body.tipo=>' + req.body.tipo)
+    //console.log('req.body.tipo=>' + req.body.tipo)
 
     if (req.body.tipo == 'documento') {
         sql = { documento: foto }
@@ -8732,35 +8360,35 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
     }
     if (req.body.tipo == 'tarefa') {
         Projeto.findOne({ _id: req.body.idprj }).then((prj) => {
-            // console.log('prj.cliente=>'+prj.cliente)
+            //console.log('prj.cliente=>'+prj.cliente)
             Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
-                // console.log("cliente.nome=>"+cliente.nome)
-                // console.log("req.body.id=>"+req.body.id)
+                //console.log("cliente.nome=>"+cliente.nome)
+                //console.log("req.body.id=>"+req.body.id)
                 Tarefas.findOneAndUpdate({ _id: req.body.id }, { $push: { fotos: foto } }).then((e) => {
                     Tarefas.findOneAndUpdate({ _id: req.body.id }, { $set: { datafim: dataHoje() } }).then((e) => {
                         req.flash('success_msg', 'Foto(s) da instalação salva(s) com sucesso.')
-                        // console.log('req.body.idprj=>' + req.body.idprj)
+                        //console.log('req.body.idprj=>' + req.body.idprj)
                         Tarefas.find({ projeto: req.body.idprj }).then((lista_tarefas) => {
-                            // console.log('lista_tarefas=>'+lista_tarefas)
+                            //console.log('lista_tarefas=>'+lista_tarefas)
                             lista_tarefas.forEach((e) => {
-                                // console.log('e.fotos=>' + e.fotos)
+                                //console.log('e.fotos=>' + e.fotos)
                                 if (naoVazio(e.fotos) == false) {
                                     notimg = false
                                 }
                             })
-                            // console.log('notimg=>' + notimg)
+                            //console.log('notimg=>' + notimg)
                             if (notimg == true) {
                                 Acesso.find({ user: id, notimg: 'checked' }).then((acesso) => {
-                                    // console.log('acesso=>' + acesso)
+                                    //console.log('acesso=>' + acesso)
                                     if (naoVazio(acesso)) {
                                         acesso.forEach((e) => {
                                             Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                // console.log('pessoa=>' + pessoa)
-                                                // console.log('enviou mensagem')
+                                                //console.log('pessoa=>' + pessoa)
+                                                //console.log('enviou mensagem')
                                                 texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                     'Todas as fotos da obra do projeto ' + prj.seq + ' para o cliente ' + cliente.nome + '  estão na plataforma. ' +
                                                     'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + prj._id + ' para verificar.'
-                                                // console.log('pessoa.celular=>'+pessoa.celular)
+                                                //console.log('pessoa.celular=>'+pessoa.celular)
                                                 client.messages
                                                     .create({
                                                         body: texto,
@@ -8769,10 +8397,10 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                                                     })
                                                     .then((message) => {
                                                         q++
-                                                        // console.log('q=>' + q)
-                                                        // console.log('acesso.length=>' + acesso.length)
+                                                        //console.log('q=>' + q)
+                                                        //console.log('acesso.length=>' + acesso.length)
                                                         if (q == acesso.length) {
-                                                            // console.log(message.sid)
+                                                            //console.log(message.sid)
                                                             res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
                                                         }
                                                     }).done()
@@ -8790,7 +8418,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                                     res.redirect('/gerenciamento/fotos/' + req.body.id)
                                 })
                             } else {
-                                // console.log('mostrar')
+                                //console.log('mostrar')
                                 res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
                             }
                         }).catch((err) => {
@@ -8814,14 +8442,14 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
             res.redirect('/dashboard')
         })
     } else {
-        // console.log('sql=>' + sql)
+        //console.log('sql=>' + sql)
         Projeto.findOneAndUpdate({ _id: req.body.id }, { $push: sql }).then(() => {
             Projeto.findOne({ _id: req.body.id }).then((prj) => {
                 var disjuntor
                 var medidor
                 var trafo
                 if (req.body.tipo == 'disjuntor') {
-                    console.log('entrou disjuntor')
+                    //console.log('entrou disjuntor')
                     disjuntor = foto
                     medidor = prj.medidor
                     trafo = prj.trafo
@@ -8837,19 +8465,19 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                     medidor = prj.medidor
                 }
 
-                // console.log('disjuntor=>' + disjuntor)
-                // console.log('medidor=>' + medidor)
-                // console.log('trafo=>' + trafo)
+                //console.log('disjuntor=>' + disjuntor)
+                //console.log('medidor=>' + medidor)
+                //console.log('trafo=>' + trafo)
 
                 if ((req.body.tipo == 'disjutor' || req.body.tipo == 'medidor' || req.body.tipo == 'trafo') &&
                     (naoVazio(disjuntor) && naoVazio(medidor) && naoVazio(trafo))) {
                     q = 0
-                    // console.log('levantamento de rede')
+                    //console.log('levantamento de rede')
                     Acesso.find({ user: id, notdoc: 'checked' }).then((acesso) => {
                         if (naoVazio(acesso)) {
                             acesso.forEach((e) => {
                                 Pessoa.findOne({ _id: e.pessoa }).then((projetista) => {
-                                    // console.log(pessoa.celular)
+                                    //console.log(pessoa.celular)
                                     mensagem = 'Olá ' + projetista.nome + ',' + '\n' +
                                         'O levantamento de rede da proposta ' + prj.seq + ' foi realizado.' + '\n' +
                                         'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
@@ -8860,7 +8488,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                                             to: 'whatsapp:+55' + projetista.celular
                                         })
                                         .then((message) => {
-                                            // console.log(message.sid)
+                                            //console.log(message.sid)
                                             q++
                                             if (q == acesso.length) {
                                                 req.flash('success_msg', 'Levantamento de rede realizado com sucesso.')
@@ -8870,7 +8498,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                                 })
                             })
                         } else {
-                            // console.log('aguardando')
+                            //console.log('aguardando')
                             req.flash('success_msg', 'Foto(s) adicionada(s) com sucesso.')
                             res.redirect('/gerenciamento/fotos/' + req.body.id)
                         }
@@ -8879,7 +8507,7 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                         res.redirect('/dashboard')
                     })
                 } else {
-                    // console.log('aguardando')
+                    //console.log('aguardando')
                     if (req.body.caminho = 'fatura') {
                         req.flash('success_msg', 'Fatura(s) adicionada(s) com sucesso.')
                         res.redirect('/gerenciamento/fatura/' + req.body.id)
@@ -8918,23 +8546,23 @@ router.post('/observacao', ehAdmin, (req, res) => {
     }
 
     // ids = ids.split('$@$')
-    // console.log('id proposta=>' + ids[0])
+    //console.log('id proposta=>' + ids[0])
     texto = '[' + dataMensagem(dataHoje()) + ']' + '\n' + req.body.obs
-    // console.log('texto=>' + texto)
-    // console.log('id projeto=>' + req.body.id)
+    //console.log('texto=>' + texto)
+    //console.log('id projeto=>' + req.body.id)
     Projeto.findOne({ _id: req.body.id }).then((prj) => {
         Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
             Pessoa.findOne({ _id: prj.vendedor }).then((pes_ven) => {
                 Pessoa.findOne({ _id: prj.responsavel }).then((pes_res) => {
                     // var prj_proposta = prj.proposta
                     // prj_proposta.forEach((p) => {
-                    //     // console.log('p._id=>' + p._id)
-                    //     // console.log('ids[0]=>' + ids[0])
+                    //     //console.log('p._id=>' + p._id)
+                    //     //console.log('ids[0]=>' + ids[0])
                     //     if (p._id == ids[0]) {
-                    //         // console.log('igual')
+                    //         //console.log('igual')
                     //         if (naoVazio(p.obs)) {
                     //             texto_salvo = p.obs + '\n'
-                    //             // console.log('texto_salvo=>' + texto_salvo)
+                    //             //console.log('texto_salvo=>' + texto_salvo)
                     //         }
                     //     }
                     if (naoVazio(prj.obs)) {
@@ -8942,7 +8570,7 @@ router.post('/observacao', ehAdmin, (req, res) => {
                     } else {
                         texto_salvo = texto
                     }
-                    // console.log('vendedor=>' + vendedor)
+                    //console.log('vendedor=>' + vendedor)
                     if (vendedor == true) {
                         Acesso.findOne({ pessoa: prj.responsavel, notobs: 'checked' }).then((acesso_responsavel) => {
                             if (naoVazio(acesso_responsavel)) {
@@ -8951,8 +8579,8 @@ router.post('/observacao', ehAdmin, (req, res) => {
                                     'Mensagem: ' + req.body.obs + '\n' +
                                     'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
 
-                                // console.log('mensagem=>' + mensagem)
-                                // console.log('pes_res.celular=>' + pes_res.celular)
+                                //console.log('mensagem=>' + mensagem)
+                                //console.log('pes_res.celular=>' + pes_res.celular)
 
                                 client.messages
                                     .create({
@@ -8961,9 +8589,9 @@ router.post('/observacao', ehAdmin, (req, res) => {
                                         to: 'whatsapp:+55' + pes_res.celular
                                     })
                                     .then((message) => {
-                                        // console.log(message.sid)
+                                        //console.log(message.sid)
                                         //'proposta._id': ids[0] 
-                                        // console.log('texto_salvo=>' + texto_salvo)
+                                        //console.log('texto_salvo=>' + texto_salvo)
                                         Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { obs: texto_salvo } }).then(() => {
                                             req.flash('success_msg', 'Observação adicionada com sucesso')
                                             res.redirect('/gerenciamento/orcamento/' + req.body.id)
@@ -8987,7 +8615,7 @@ router.post('/observacao', ehAdmin, (req, res) => {
                         })
                     } else {
                         Acesso.findOne({ pessoa: prj.vendedor, notobs: 'checked' }).then((acesso_vendedor) => {
-                            // console.log('acesso_vendedor=>' + acesso_vendedor)
+                            //console.log('acesso_vendedor=>' + acesso_vendedor)
                             if (naoVazio(acesso_vendedor)) {
 
                                 mensagem = 'Olá ' + pes_ven.nome + ',' + '\n' +
@@ -8995,8 +8623,8 @@ router.post('/observacao', ehAdmin, (req, res) => {
                                     'Mensagem: ' + req.body.obs + '\n' +
                                     'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
 
-                                // console.log('mensagem=>' + mensagem)
-                                // console.log('pes_ven.celular=>' + pes_ven.celular)
+                                //console.log('mensagem=>' + mensagem)
+                                //console.log('pes_ven.celular=>' + pes_ven.celular)
 
                                 client.messages
                                     .create({
@@ -9005,7 +8633,7 @@ router.post('/observacao', ehAdmin, (req, res) => {
                                         to: 'whatsapp:+55' + pes_ven.celular
                                     })
                                     .then((message) => {
-                                        // console.log(message.sid)
+                                        //console.log(message.sid)
                                         Projeto.findOneAndUpdate({ _id: req.body.id, }, { $set: { 'obs': texto_salvo } }).then(() => {
                                             req.flash('success_msg', 'Observação adicionada com sucesso')
                                             res.redirect('/gerenciamento/orcamento/' + req.body.id)
@@ -9064,14 +8692,14 @@ router.post('/pedido', ehAdmin, (req, res) => {
         id = user
     }
 
-    // console.log('req.body.dataprazo=>' + req.body.dataprazo)
-    // console.log('vlrServico=>' + req.body.vlrServico)
-    // console.log('vlrKit=>' + req.body.vlrKit)
-    // console.log('req.body.idpedido=>' + req.body.idpedido)
+    //console.log('req.body.dataprazo=>' + req.body.dataprazo)
+    //console.log('vlrServico=>' + req.body.vlrServico)
+    //console.log('vlrKit=>' + req.body.vlrKit)
+    //console.log('req.body.idpedido=>' + req.body.idpedido)
     Empresa.findOne({ user: id }).then((empresa) => {
         Projeto.findOne({ _id: req.body.id }).then((projeto) => {
             Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                // console.log('req.body.idpedido=>' + req.body.idpedido)
+                //console.log('req.body.idpedido=>' + req.body.idpedido)
                 if (naoVazio(req.body.pagamento)) {
                     if (naoVazio(req.body.idpedido)) {
                         Pedido.findOne({ _id: req.body.idpedido }).then((pedido) => {
@@ -9097,7 +8725,7 @@ router.post('/pedido', ehAdmin, (req, res) => {
                             }
                             pedido.prazo = parseFloat(req.body.dataprazo)
                             pedido.save().then(() => {
-                                // console.log('salvou pedido')
+                                //console.log('salvou pedido')
                                 projeto.vlrServico = parseFloat(req.body.vlrServico)
                                 projeto.vlrKit = parseFloat(req.body.vlrKit)
                                 projeto.valor = parseFloat(req.body.vlrTotal)
@@ -9147,7 +8775,7 @@ router.post('/pedido', ehAdmin, (req, res) => {
                             Pedido.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_pedido) => {
                                 var datafim = req.body.dataprazo
                                 datafim = setData(dataHoje(), datafim)
-                                // console.log('datafim=>' + datafim)
+                                //console.log('datafim=>' + datafim)
                                 projeto.pedido = novo_pedido._id
                                 projeto.vlrServico = parseFloat(req.body.vlrServico)
                                 projeto.vlrKit = parseFloat(req.body.vlrKit)
@@ -9164,18 +8792,18 @@ router.post('/pedido', ehAdmin, (req, res) => {
                                 // projeto.plaKwpInv = req.body.plaKwpInv
                                 projeto.save().then(() => {
                                     Acesso.find({ user: id, notped: 'checked' }).then((acesso) => {
-                                        // console.log('acesso=>' + acesso)
+                                        //console.log('acesso=>' + acesso)
                                         if (naoVazio(acesso)) {
                                             acesso.forEach((e) => {
                                                 Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
                                                     q++
-                                                    // console.log('pessoa=>' + pessoa)
+                                                    //console.log('pessoa=>' + pessoa)
                                                     texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                         'PEDIDO REALIZADO!' + '\n' +
                                                         'O pedido da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' está pronto. ' + '\n ' +
                                                         'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + ' e acompanhe.'
 
-                                                    // console.log('pessoa.celular=>' + pessoa.celular)
+                                                    //console.log('pessoa.celular=>' + pessoa.celular)
 
                                                     client.messages
                                                         .create({
@@ -9184,10 +8812,10 @@ router.post('/pedido', ehAdmin, (req, res) => {
                                                             to: 'whatsapp:+55' + pessoa.celular
                                                         })
                                                         .then((message) => {
-                                                            // console.log('q=>' + q)
-                                                            // console.log('acesso.length=>' + acesso.length)
+                                                            //console.log('q=>' + q)
+                                                            //console.log('acesso.length=>' + acesso.length)
                                                             if (q == acesso.length) {
-                                                                // console.log(message.sid)
+                                                                //console.log(message.sid)
                                                                 req.flash('success_msg', 'Pedido realizado com sucesso.')
                                                                 res.redirect('/gerenciamento/orcamento/' + req.body.id)
                                                             }
@@ -9406,7 +9034,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                 } else {
                     sql = { user: id, vendedor: logado._id, datacad: { $lte: datafim, $gte: dataini } }
                 }
-                // console.log('funpro=>' + funpro)
+                //console.log('funpro=>' + funpro)
                 if (vendedor == true || funges == true || orcamentista == true || funpro == true) {
                     Projeto.find(sql).sort({ 'seq': -1 }).then((projetos) => {
                         if (naoVazio(projetos)) {
@@ -9516,7 +9144,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                     }
 
                                                     if ((e.entregue == true) && (e.status == 'Enviado')) {
-                                                        // console.log('entregue')
+                                                        //console.log('entregue')
                                                         alerta = false
                                                         dtfim = String(e.dtentrega)
                                                         diaval = dtfim.substring(8, 10)
@@ -9524,29 +9152,29 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                         anoval = dtfim.substring(0, 4)
                                                         data2 = new Date(anoval, mesval, diaval)
                                                         data1 = new Date(data)
-                                                        // console.log('data1=>' + data1)
-                                                        // console.log('data2=>' + data2)
+                                                        //console.log('data1=>' + data1)
+                                                        //console.log('data2=>' + data2)
                                                         dif = Math.abs(data1.getTime() - data2.getTime())
-                                                        // console.log('dif=>' + dif)
+                                                        //console.log('dif=>' + dif)
                                                         days = Math.ceil(dif / (1000 * 60 * 60 * 24))
-                                                        // console.log('days=>' + days)
+                                                        //console.log('days=>' + days)
                                                         if (days > 7) {
                                                             alerta = true
                                                         }
-                                                        // console.log(alerta)
+                                                        //console.log(alerta)
                                                         listaEntregue.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, alerta, seq: e.seq, resp: e.responsavel, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                                     } else {
                                                         if ((e.futuro == true) && (e.status == 'Futuro')) {
                                                             listaFuturos.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                                         } else {
-                                                            // console.log('e.execucao=>' + e.execucao)
+                                                            //console.log('e.execucao=>' + e.execucao)
                                                             if (e.baixada == true) {
                                                                 listaBaixado.push({ id: e._id, seq: e.seq, cliente: cliente.nome, cadastro: dataMsgNum(datacad) })
                                                             } else {
-                                                                // console.log('e.status=>' + e.status)
+                                                                //console.log('e.status=>' + e.status)
                                                                 if ((e.execucao == true)) {
                                                                     // && (e.status == 'Ganho')
-                                                                    // console.log('pes_ins=>'+pes_ins)
+                                                                    //console.log('pes_ins=>'+pes_ins)
 
                                                                     vistoria = false
                                                                     if (naoVazio(e.dataPost) && naoVazio(e.dataSoli) && naoVazio(dataAprova)) {
@@ -9576,12 +9204,12 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                             anoval = dtfim.substring(6, 11)
                                                                             data2 = new Date(anoval, mesval, diaval)
                                                                             data1 = new Date(hoje)
-                                                                            // console.log('data1=>' + data1)
-                                                                            // console.log('data2=>' + data2)
+                                                                            //console.log('data1=>' + data1)
+                                                                            //console.log('data2=>' + data2)
                                                                             dif = Math.abs(data2.getTime() - data1.getTime())
-                                                                            // console.log('dif=>'+dif)
+                                                                            //console.log('dif=>'+dif)
                                                                             days = Math.ceil(dif / (1000 * 60 * 60 * 24))
-                                                                            // console.log('days=>'+days)
+                                                                            //console.log('days=>'+days)
                                                                             if (days < 30) {
                                                                                 deadlineIns.push({ id: e._id, projeto: e.seq, cliente: cliente.nome, cadastro: dataMensagem(dtcadastro), inicio: dataMensagem(e.dtinicio), dliins: dataMensagem(e.dtfim) })
                                                                             }
@@ -9598,15 +9226,15 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                         if ((e.baixada == false) && (e.encerrado == false)) {
 
                                                                             if (naoVazio(e.proposta) == false) {
-                                                                                // console.log('e.proposta=>'+e.proposta)
+                                                                                //console.log('e.proposta=>'+e.proposta)
                                                                                 var proposta = e.proposta
                                                                                 if (proposta.length > 0) {
                                                                                     dtcadastro = proposta[proposta.length - 1].data
                                                                                     dtvalidade = proposta[proposta.length - 1].validade
                                                                                 }
 
-                                                                                // console.log('dtvalidade=>'+dtvalidade)
-                                                                                // console.log('e._id=>'+e._id)
+                                                                                //console.log('dtvalidade=>'+dtvalidade)
+                                                                                //console.log('e._id=>'+e._id)
                                                                                 if (naoVazio(dtvalidade)) {
                                                                                     diaval = dtvalidade.substring(0, 2)
                                                                                     mesval = dtvalidade.substring(3, 5) - 1
@@ -9618,7 +9246,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                                     if (data1.getTime() < data2.getTime()) {
                                                                                         days = days * -1
                                                                                     }
-                                                                                    // console.log('days=>' + days)
+                                                                                    //console.log('days=>' + days)
                                                                                     if (days == 1 || days == 0) {
                                                                                         notpro.push({ id: e._id, seq: e.seq, status: e.status, cliente: nome_cliente, telefone: cliente.celular, cadastro: dtcadastro, validade: dtvalidade })
                                                                                     } else {
@@ -9630,7 +9258,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                             }
 
                                                                             if (e.status == 'Negociando' || e.status == 'Analisando Financiamento' || e.status == 'Comparando Propostas' || e.status == 'Aguardando redução de preço') {
-                                                                                // console.log('negociando')
+                                                                                //console.log('negociando')
                                                                                 alerta = false
                                                                                 dtfim = String(e.datastatus)
                                                                                 diaval = dtfim.substring(8, 10)
@@ -9638,16 +9266,16 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                                                 anoval = dtfim.substring(0, 4)
                                                                                 data2 = new Date(anoval, mesval, diaval)
                                                                                 data1 = new Date(data)
-                                                                                // console.log('data1=>' + data1)
-                                                                                // console.log('data2=>' + data2)
+                                                                                //console.log('data1=>' + data1)
+                                                                                //console.log('data2=>' + data2)
                                                                                 dif = Math.abs(data1.getTime() - data2.getTime())
-                                                                                // console.log('dif=>' + dif)
+                                                                                //console.log('dif=>' + dif)
                                                                                 days = Math.ceil(dif / (1000 * 60 * 60 * 24))
-                                                                                // console.log('days=>' + days)
+                                                                                //console.log('days=>' + days)
                                                                                 if (days > 3) {
                                                                                     alerta = true
                                                                                 }
-                                                                                // console.log(alerta)
+                                                                                //console.log(alerta)
                                                                                 listaNegociando.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, alerta, cliente: cliente.nome, seq: e.seq, status: e.status, cadastro: dataMsgNum(datacad) })
                                                                             } else {
                                                                                 listaEnviado.push({ id: e._id, idcliente: e.cliente, idvendedor: e.vendedor, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
@@ -9661,7 +9289,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                     }
 
                                                     if (q == projetos.length) {
-                                                        // console.log('lista=>' + JSON.stringify(listaExecucao))
+                                                        //console.log('lista=>' + JSON.stringify(listaExecucao))
                                                         listaEntregue.sort(comparaNum)
                                                         listaEnviado.sort(comparaNum)
                                                         listaExecucao.sort(comparaNum)
@@ -9670,7 +9298,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                         listaGanho.sort(comparaNum)
                                                         listaNegociando.sort(comparaNum)
                                                         listaFuturos.sort(comparaNum)
-                                                        // console.log('totEnviado=>' + totEnviado)
+                                                        //console.log('totEnviado=>' + totEnviado)
                                                         totEnviado = mascaraDecimal(totEnviado)
                                                         totGanho = mascaraDecimal(totGanho)
                                                         totPerdido = mascaraDecimal(totPerdido)
@@ -9697,11 +9325,11 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                 })
                             })
                         } else {
-                            // console.log('sem projeto')
+                            //console.log('sem projeto')
                             Empresa.findOne().sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
                                 if (naoVazio(empresa)) {
-                                    // console.log("com empresa")
-                                    // console.log('sqlcli=>'+JSON.stringify(sqlcli))
+                                    //console.log("com empresa")
+                                    //console.log('sqlcli=>'+JSON.stringify(sqlcli))
 
                                     Cliente.find(sqlcli).lean().then((todos_clientes) => {
                                         var render = []
@@ -9711,7 +9339,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                         res.render('dashboard', { render, totEnviado, totGanho, totPerdido, totNegociando, id: _id, empresa, ehMaster, owner: owner, ano, funges, orcamentista, vendedor, instalador, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
                                     })
                                 } else {
-                                    // console.log("sem empresa")
+                                    //console.log("sem empresa")
                                     res.render('dashboard', { id: _id, ehMaster, owner: owner, ano, funges, orcamentista, vendedor, instalador, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
                                 }
                             })
@@ -9727,8 +9355,8 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                     Projeto.findOne({ equipe: e._id }).then((projeto) => {
                                         Pessoa.findOne({ _id: projeto.vendedor }).then((pes_ven) => {
                                             Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                                                // console.log('e._id=>'+e._id)
-                                                // console.log('projeto._id=>'+projeto._id)
+                                                //console.log('e._id=>'+e._id)
+                                                //console.log('projeto._id=>'+projeto._id)
                                                 clientes.push({ id: cliente.id, nome: cliente.nome })
                                                 if (e.prjfeito == 'true') {
                                                     listaEncerrado.push({ ativo: e.ativo, id: projeto._id, seq: projeto.seq, cliente: cliente.nome, endereco: projeto.endereco, cidade: projeto.cidade, uf: projeto.uf, dtini: dataMensagem(e.dtinicio), dtfim: dataMensagem(e.dtfim) })
@@ -9778,7 +9406,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                             } else {
                                 insres = '111111111111111111111111'
                             }
-                            // console.log('id_res=>'+id_res)
+                            //console.log('id_res=>'+id_res)
                             if (naoVazio(e.responsavel)) {
                                 id_responsavel = e.responsavel
                             } else {
@@ -9858,7 +9486,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                             contaDias = 0
                                         }
 
-                                        // console.log(contaDias)
+                                        //console.log(contaDias)
                                         // if (contaDias > 6) {
                                         //     mostrar = true
                                         // } else {
@@ -9883,12 +9511,12 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                 anoval = dtfim.substring(6, 11)
                                                 data2 = new Date(anoval, mesval, diaval)
                                                 data1 = new Date(hoje)
-                                                // console.log('data1=>' + data1)
-                                                // console.log('data2=>' + data2)
+                                                //console.log('data1=>' + data1)
+                                                //console.log('data2=>' + data2)
                                                 dif = Math.abs(data2.getTime() - data1.getTime())
-                                                // console.log('dif=>' + dif)
+                                                //console.log('dif=>' + dif)
                                                 days = Math.ceil(dif / (1000 * 60 * 60 * 24))
-                                                // console.log('days=>' + days)
+                                                //console.log('days=>' + days)
                                                 if (days < 30) {
                                                     deadlineIns.push({ id: e._id, projeto: e.seq, cliente: cliente.nome, cadastro: dataMensagem(dtcadastro), inicio: dataMensagem(e.dtinicio), dliins: dataMensagem(e.dtfim) })
                                                 }
@@ -9901,7 +9529,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                             listaGanho.push({ id: e._id, leva, seq: e.seq, resp: e.responsavel, pro: e.proposta, cliente: nome_cliente, cadastro: dataMsgNum(datacad) })
                                         } else {
                                             if (naoVazio(e.proposta)) {
-                                                // console.log('e.proposta=>'+e.proposta)
+                                                //console.log('e.proposta=>'+e.proposta)
                                                 var proposta = e.proposta
                                                 if (proposta.length > 0) {
                                                     dtcadastro = proposta[proposta.length - 1].data
@@ -9913,14 +9541,14 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                     anoval = dtvalidade.substring(6, 11)
                                                     data1 = new Date(anoval, mesval, diaval)
                                                     data2 = new Date(hoje)
-                                                    // console.log('data1=>' + data1)
-                                                    // console.log('data2=>' + data2)
+                                                    //console.log('data1=>' + data1)
+                                                    //console.log('data2=>' + data2)
                                                     dif = Math.abs(data1.getTime() - data2.getTime())
                                                     days = Math.ceil(dif / (1000 * 60 * 60 * 24))
                                                     if (data1.getTime() < data2.getTime()) {
                                                         days = days * -1
                                                     }
-                                                    // console.log('days=>' + days)
+                                                    //console.log('days=>' + days)
                                                     if (days == 1 || days == 0) {
                                                         notpro.push({ id: e._id, seq: e.seq, status: e.status, cliente: nome_cliente, telefone: cliente.celular, cadastro: dtcadastro, validade: dtvalidade })
                                                     } else {
@@ -9940,7 +9568,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                         } else {
                                             if ((e.execucao == true) && (e.instalado != true)) {
                                                 // && (e.status == 'Ganho')
-                                                // console.log('pes_ins=>'+pes_ins)
+                                                //console.log('pes_ins=>'+pes_ins)
                                                 listaExecucao.push({ id: e._id, seq: e.seq, pes_ins, cliente: cliente.nome, nome_instalador, cadastro: dataMsgNum(datacad), parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                             }
                                         }
@@ -9956,7 +9584,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                         totNegociando = mascaraDecimal(totNegociando)
                                         Empresa.findOne().sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
                                             if (naoVazio(empresa)) {
-                                                // console.log('sqlcli=>'+JSON.stringify(sqlcli))
+                                                //console.log('sqlcli=>'+JSON.stringify(sqlcli))
                                                 Cliente.find(sqlcli).lean().then((todos_clientes) => {
                                                     var render
                                                     if (naoVazio(todos_clientes)) {
@@ -9965,7 +9593,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                     res.render('dashboard', { totEnviado, totGanho, totPerdido, totNegociando, render, id: _id, pessoa, empresa, ehMaster, owner: owner, ano, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, listaTermos, notpro, atrasado })
                                                 })
                                             } else {
-                                                // console.log('com empresa')
+                                                //console.log('com empresa')
                                                 res.render('dashboard', { id: _id, pessoa, ehMaster, owner: owner, ano, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, listaTermos, notpro, atrasado })
                                             }
                                         })
@@ -9978,7 +9606,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
             } else {
                 Empresa.findOne().sort({ field: 'asc', _id: -1 }).lean().then((empresa) => {
                     if (naoVazio(empresa)) {
-                        // console.log('sqlcli=>'+JSON.stringify(sqlcli))
+                        //console.log('sqlcli=>'+JSON.stringify(sqlcli))
                         Cliente.find(sqlcli).lean().then((todos_clientes) => {
                             var render
                             if (naoVazio(todos_clientes)) {
@@ -9987,7 +9615,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                             res.render('dashboard', { render, id: _id, empresa, ehMaster, owner: owner, ano, orcamentista: true, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
                         })
                     } else {
-                        // console.log('sem empresa')
+                        //console.log('sem empresa')
                         res.render('dashboard', { id: _id, ehMaster, owner: owner, ano, orcamentista: true, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
                     }
                 })
@@ -10268,7 +9896,7 @@ router.post('/dashInstalador', ehAdmin, async (req, res) => {
 
     let diafim
 
-    console.log(req.body.mes)
+    //console.log(req.body.mes)
 
     switch (req.body.mes) {
         case 'Janeiro':
