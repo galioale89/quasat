@@ -362,7 +362,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                     }
                                                                     //FIM TERMOS
 
-                                                                    if (!e.ganho, !e.entregue, !e.baixada, e.status == 'Enviado') {
+                                                                    if (!e.ganho, !e.entregue, !e.baixada, e.status != 'Entregue') {
                                                                         listaOrcado.push({
                                                                             id: e._id,
                                                                             logado: pessoa,

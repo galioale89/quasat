@@ -1,95 +1,143 @@
-$(document).ready(function () {
-
-    var inputsCEP = $('#rua', '#cidade', '#estado', '#bairro');
-    var inputsRUA = $('#cep', '#bairro');
-
-    function limpa_formulário_cep() {
-        // Limpa valores do formulário de cep.
-        // $("#rua").val("");
-        // $("#bairro").val("");
-        // $("#cidade").val("");
-        // $("#estado").val("");
-        inputsCEP.val('');
+function showIndex(tipo) {
+    var html = '';
+    var title = '';
+    if (tipo == 'venda') {
+        title = 'Venda';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Aguardando Proposta</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Projeto Sem Responsável</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
+            "</tr>" +
+            "</table>";
     }
-
-    //Quando o campo cep perde o foco.
-    $("#cep").blur(function () {
-
-        //Nova variável "cep" somente com dígitos.
-        var cep = $(this).val().replace(/\D/g, '');
-
-        //Verifica se campo cep possui valor informado.
-        if (cep != "") {
-
-            //Expressão regular para validar o CEP.
-            var validacep = /^[0-9]{8}$/;
-
-            //Valida o formato do CEP.
-            if (validacep.test(cep)) {
-
-                //Preenche os campos com "..." enquanto consulta webservice.
-                // $("#rua").val("...");
-                // $("#bairro").val("...");
-                // $("#cidade").val("...");
-                // $("#estado").val("...");
-                inputsCEP.val('...');
-
-                //Consulta o webservice viacep.com.br/
-                $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
-
-                    if (!("erro" in dados)) {
-                        //Atualiza os campos com os valores da consulta.
-                        $("#rua").val(dados.logradouro);
-                        $("#bairro").val(dados.bairro);
-                        $("#cidade").val(dados.localidade);
-                        $("#estado").val(dados.uf);
-                    } //end if.
-                    else {
-                        //CEP pesquisado não foi encontrado.
-                        limpa_formulário_cep();
-                        alert("CEP não encontrado.");
-                    }
-                });
-            } //end if.
-            else {
-                //cep é inválido.
-                limpa_formulário_cep();
-                alert("Formato de CEP inválido.");
-            }
-        } //end if.
-        else {
-            //cep sem valor, limpa formulário.
-            limpa_formulário_cep();
-        }
-    });
-
-    function get(url) {
-        $.get(url, function (data) {
-            if (!("erro" in data)) {
-                if (Object.prototype.toString.call(data) === '[object Array]') {
-                    var data = data[0];
-                }
-
-                $.each(data, function (nome, info) {
-                    $('#' + nome).val(nome == 'cep' ? info.replace(/\D/g, '') : info)
-                });
-            } else {
-                limpa_formulário_cep();
-            }
-        });
+    if (tipo == 'termos') {
+        title = 'Termos de Entrega';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Termo Enviado</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Aguardando Termo</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
+            "</tr>" +
+            "</table>";
     }
-
-    $('#rua').on('blur', function (e) {
-        if ($('#rua').val() !== '' && $('#rua').val() !== $('#rua').attr('info')
-            && $('#cidade').val() !== '' && $('#cidade').val() !== $('#cidade').attr('info')
-            && $('#estado').val() !== '' && $('#estado').val() !== $('#estado').attr('info')) {
-
-            inputsRUA.val('...')
-            get("https://viacep.com.br/ws/" + $('#estado').val() + '/' + $('#cidade').val() + '/' + $('#rua').val() + '/json/')
-        }
-    });
-
-});
+    if (tipo == 'projeto') {
+        title = 'Projeto';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Projeto Autorizado</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='levantamento'</td>" +
+            "</tr>" +
+            "</table>";
+    }
+    if (tipo == 'instalacao') {
+        title = 'Instalação';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Aguardando Vistoria</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Projeto em Execução</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Projeto Parado</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Aguardando Projeto</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
+            "</tr>" +
+            "</table>";
+    }
+    if (tipo == 'enviados') {
+        title = 'Orçamentos Enviados';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Pedido Realizado</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Orçamento em Andamento</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='aguardando'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Orçamento Solicitado</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
+            "</tr>" +
+            "</table>";
+    }
+    if (tipo == 'entregue') {
+        title = 'Orçamentos Entregues';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Passou 7 dias da entrega</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Proposta Entregue</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
+            "</tr>" +
+            "</table>";
+    }
+    if (tipo == 'negociando') {
+        title = 'Orçamentos Negociando';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Passou 3 dias da interação</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Negociando</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
+            "</tr>" +
+            "</table>";
+    }
+    if (tipo == 'ganho') {
+        title = 'Orçamentos Ganhos';
+        html = "<table>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Autorizado Pelo Projetista</th>" +
+            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
+            "</tr>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
+            "<tr style='display: flex; font-size: 12px'>" +
+            "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
+            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='levantamento'</td>" +
+            "</tr>" +
+            "</tr>" +
+            "</table>";
+    }
+    Toast.fire({
+        html: html,
+        title: title
+    })
+}
 
 function valida_celular() {
     var cel = document.getElementById('celular')
@@ -1027,3 +1075,96 @@ function novoVoltar() {
         window.location.reload();
     }
 }     
+
+$(document).ready(function () {
+
+    var inputsCEP = $('#rua', '#cidade', '#estado', '#bairro');
+    var inputsRUA = $('#cep', '#bairro');
+
+    function limpa_formulário_cep() {
+        // Limpa valores do formulário de cep.
+        // $("#rua").val("");
+        // $("#bairro").val("");
+        // $("#cidade").val("");
+        // $("#estado").val("");
+        inputsCEP.val('');
+    }
+
+    //Quando o campo cep perde o foco.
+    $("#cep").blur(function () {
+
+        //Nova variável "cep" somente com dígitos.
+        var cep = $(this).val().replace(/\D/g, '');
+
+        //Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            //Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            //Valida o formato do CEP.
+            if (validacep.test(cep)) {
+
+                //Preenche os campos com "..." enquanto consulta webservice.
+                // $("#rua").val("...");
+                // $("#bairro").val("...");
+                // $("#cidade").val("...");
+                // $("#estado").val("...");
+                inputsCEP.val('...');
+
+                //Consulta o webservice viacep.com.br/
+                $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+                    if (!("erro" in dados)) {
+                        //Atualiza os campos com os valores da consulta.
+                        $("#rua").val(dados.logradouro);
+                        $("#bairro").val(dados.bairro);
+                        $("#cidade").val(dados.localidade);
+                        $("#estado").val(dados.uf);
+                    } //end if.
+                    else {
+                        //CEP pesquisado não foi encontrado.
+                        limpa_formulário_cep();
+                        alert("CEP não encontrado.");
+                    }
+                });
+            } //end if.
+            else {
+                //cep é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } //end if.
+        else {
+            //cep sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    });
+
+    function get(url) {
+        $.get(url, function (data) {
+            if (!("erro" in data)) {
+                if (Object.prototype.toString.call(data) === '[object Array]') {
+                    var data = data[0];
+                }
+
+                $.each(data, function (nome, info) {
+                    $('#' + nome).val(nome == 'cep' ? info.replace(/\D/g, '') : info)
+                });
+            } else {
+                limpa_formulário_cep();
+            }
+        });
+    }
+
+    $('#rua').on('blur', function (e) {
+        if ($('#rua').val() !== '' && $('#rua').val() !== $('#rua').attr('info')
+            && $('#cidade').val() !== '' && $('#cidade').val() !== $('#cidade').attr('info')
+            && $('#estado').val() !== '' && $('#estado').val() !== $('#estado').attr('info')) {
+
+            inputsRUA.val('...')
+            get("https://viacep.com.br/ws/" + $('#estado').val() + '/' + $('#cidade').val() + '/' + $('#rua').val() + '/json/')
+        }
+    });
+
+});
