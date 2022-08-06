@@ -1,10 +1,10 @@
 {
-  "name": "vimmusapplocal",
+  "name": "quasat",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "quasat.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node quasat.js"
   },
   "author": "Alexandre Galiotto <alexandre@vimmus.com.br>",
   "license": "ISC",
