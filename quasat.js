@@ -362,8 +362,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                     }
                                                                     //FIM TERMOS
 
-                                                                    if (!e.ganho && !e.entregue && !e.baixada && 
-                                                                        e.status == 'Negociando' || e.status == 'Analisando Financiamento' || e.status == 'Comparando Propostas' || e.status == 'Aguardando redução de preço') {
+                                                                    if (e.ganho == false && e.entregue == false && e.baixada == false && e.status == 'Enviado') {
                                                                         listaOrcado.push({
                                                                             id: e._id,
                                                                             logado: pessoa,
@@ -1101,15 +1100,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                     }
 
                                                                 }
-                                                                // listaOrcado.push({
-                                                                //     id: e._id,
-                                                                //     seq: e.seq,
-                                                                //     resp: e.responsavel,
-                                                                //     nome_responsavel,
-                                                                //     pro: e.proposta,
-                                                                //     cliente: nome_cliente,
-                                                                //     cadastro: dataMsgNum(e.datacad)
-                                                                // })
                                                             }
                                                         } else {
                                                             if (e.baixado == true) {
