@@ -1301,20 +1301,13 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                 Parametros.find({ user: id, tipo: 'solar' }).then((lista_params) => {
                     dados = dados.split(';')
                     for (let i = 0; i < lista_params.length; i++) {
-                        //console.log('lista_params[]._id=>' + lista_params[i]._id)
-                        //console.log('lista_params[].descricao=>' + lista_params[i].descricao)
-                        //console.log('dados[]=>' + dados[i])
                         params.push({ descricao: lista_params[i].descricao, tipo: lista_params[i].opcao, valor: dados[i] })
                     }
 
                     dados_desc = dados_desc.split(';')
                     dados_qtd = dados_qtd.split(';')
-                    //console.log('dados_desc.length=>' + dados_desc.length)
                     // if (dados_desc.length > 1) {
-                    //console.log('dados_desc[]=>' + dados_desc[0])
                     for (let i = 0; i < dados_desc.length; i++) {
-                        //console.log('dados_desc[]=>' + dados_desc[i])
-                        //console.log('dados_qtd[]=>' + dados_qtd[i])
                         material.push({ desc: dados_desc[i], qtd: dados_qtd[i] })
                     }
                     // } else {
@@ -2472,52 +2465,54 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
     }
 
     Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
-        //console.log('projeto=>' + projeto)
+        console.log('projeto=>' + projeto)
+        console.log('projeto.cliente=>' + projeto.cliente)
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
-            let lista_proposta = projeto.proposta
-            let lista_doc = []
-            let lista_local = []
-            let lista_entrada = []
-            let lista_disjuntor = []
-            let lista_trafo = []
-            let lista_telhado = []
-            let lista_localizacao = []
-            let lista_medidor = []
-            if (naoVazio(projeto.documento)) {
-                lista_doc = listaFotos(projeto.documento)
-            }
-            // if (naoVazio(projeto.local)) {
-            //     lista_local = listaFotos(projeto.local)
+            
+            // let lista_proposta = projeto.proposta
+            // let lista_doc = []
+            // let lista_local = []
+            // let lista_entrada = []
+            // let lista_disjuntor = []
+            // let lista_trafo = []
+            // let lista_telhado = []
+            // let lista_localizacao = []
+            // let lista_medidor = []
+            // if (naoVazio(projeto.documento)) {
+            //     lista_doc = listaFotos(projeto.documento)
             // }
-            if (naoVazio(projeto.entrada)) {
-                lista_entrada = listaFotos(projeto.entrada)
-            }               
-            if (naoVazio(projeto.disjuntor)) {
-                lista_disjuntor = listaFotos(projeto.disjuntor)
-            }                                                
-            if (naoVazio(projeto.trafo)) {
-                lista_trafo = listaFotos(projeto.trafo)
-            }
-            if (naoVazio(projeto.telhado_foto)) {
-                lista_telhado = listaFotos(projeto.telhado_foto)
-            }
-            if (naoVazio(projeto.localizacao)) {
-                lista_localizacao = listaFotos(projeto.localizacao)
-            }
-            if (naoVazio(projeto.medidor)) {
-                lista_medidor = listaFotos(projeto.medidor)
-            }                        
+            // // if (naoVazio(projeto.local)) {
+            // //     lista_local = listaFotos(projeto.local)
+            // // }
+            // if (naoVazio(projeto.entrada)) {
+            //     lista_entrada = listaFotos(projeto.entrada)
+            // }               
+            // if (naoVazio(projeto.disjuntor)) {
+            //     lista_disjuntor = listaFotos(projeto.disjuntor)
+            // }                                                
+            // if (naoVazio(projeto.trafo)) {
+            //     lista_trafo = listaFotos(projeto.trafo)
+            // }
+            // if (naoVazio(projeto.telhado_foto)) {
+            //     lista_telhado = listaFotos(projeto.telhado_foto)
+            // }
+            // if (naoVazio(projeto.localizacao)) {
+            //     lista_localizacao = listaFotos(projeto.localizacao)
+            // }
+            // if (naoVazio(projeto.medidor)) {
+            //     lista_medidor = listaFotos(projeto.medidor)
+            // }                        
 
-            if (funges || funpro) {
-                proandges = true
-            } else {
-                proandges = false
-            }
+            // if (funges || funpro) {
+            //     proandges = true
+            // } else {
+            //     proandges = false
+            // }
             res.render('principal/fotos', {
-                vendedor, orcamentista, funges, funpro, ehMaster, proandges, projeto, cliente_projeto,
-                lista_doc, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
-                seqdoc: lista_doc.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
-                seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
+                // vendedor, orcamentista, funges, funpro, ehMaster, proandges, projeto, cliente_projeto,
+                // lista_doc, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
+                // seqdoc: lista_doc.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
+                // seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
             })
         }).catch((err) => {
             req.flash('error_msg', 'Não foi possível encontrar o cliente da proposta<fotos>.')
