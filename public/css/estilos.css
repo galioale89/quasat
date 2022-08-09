@@ -1156,6 +1156,7 @@ td {
 .alignPhotos{
     list-style-type: none;
     text-align: center;
+    display: flex;
 }
 
 .photoBoard {
