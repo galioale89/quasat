@@ -2491,18 +2491,18 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
             if (naoVazio(projeto.disjuntor)) {
                 lista_disjuntor = listaFotos(projeto.disjuntor)
             }                                                
-            if (naoVazio(projeto.trafo)) {
-                lista_trafo = listaFotos(projeto.trafo)
-            }
-            if (naoVazio(projeto.telhado_foto)) {
-                lista_telhado = listaFotos(projeto.telhado_foto)
-            }
-            // if (naoVazio(projeto.localizacao)) {
-            //     lista_localizacao = listaFotos(projeto.localizacao)
+            // if (naoVazio(projeto.trafo)) {
+            //     lista_trafo = listaFotos(projeto.trafo)
             // }
-            // if (naoVazio(projeto.medidor)) {
-            //     lista_medidor = listaFotos(projeto.medidor)
-            // }                        
+            // if (naoVazio(projeto.telhado_foto)) {
+            //     lista_telhado = listaFotos(projeto.telhado_foto)
+            // }
+            if (naoVazio(projeto.localizacao)) {
+                lista_localizacao = listaFotos(projeto.localizacao)
+            }
+            if (naoVazio(projeto.medidor)) {
+                lista_medidor = listaFotos(projeto.medidor)
+            }                        
 
             if (funges || funpro) {
                 proandges = true
