@@ -2470,6 +2470,7 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
 
             let lista_proposta = projeto.proposta
+            console.log('lista_proposta=>'+lista_proposta)
             let lista_doc = []
             let lista_local = []
             let lista_entrada = []
@@ -2484,24 +2485,24 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
             // if (naoVazio(projeto.local)) {
             //     lista_local = listaFotos(projeto.local)
             // }
-            if (naoVazio(projeto.entrada)) {
-                lista_entrada = listaFotos(projeto.entrada)
-            }               
-            if (naoVazio(projeto.disjuntor)) {
-                lista_disjuntor = listaFotos(projeto.disjuntor)
-            }                                                
-            if (naoVazio(projeto.trafo)) {
-                lista_trafo = listaFotos(projeto.trafo)
-            }
-            if (naoVazio(projeto.telhado_foto)) {
-                lista_telhado = listaFotos(projeto.telhado_foto)
-            }
-            if (naoVazio(projeto.localizacao)) {
-                lista_localizacao = listaFotos(projeto.localizacao)
-            }
-            if (naoVazio(projeto.medidor)) {
-                lista_medidor = listaFotos(projeto.medidor)
-            }                        
+            // if (naoVazio(projeto.entrada)) {
+            //     lista_entrada = listaFotos(projeto.entrada)
+            // }               
+            // if (naoVazio(projeto.disjuntor)) {
+            //     lista_disjuntor = listaFotos(projeto.disjuntor)
+            // }                                                
+            // if (naoVazio(projeto.trafo)) {
+            //     lista_trafo = listaFotos(projeto.trafo)
+            // }
+            // if (naoVazio(projeto.telhado_foto)) {
+            //     lista_telhado = listaFotos(projeto.telhado_foto)
+            // }
+            // if (naoVazio(projeto.localizacao)) {
+            //     lista_localizacao = listaFotos(projeto.localizacao)
+            // }
+            // if (naoVazio(projeto.medidor)) {
+            //     lista_medidor = listaFotos(projeto.medidor)
+            // }                        
 
             if (funges || funpro) {
                 proandges = true
@@ -2509,10 +2510,10 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
                 proandges = false
             }
             res.render('principal/fotos', {
-                vendedor, orcamentista, funges, funpro, proandges, projeto, cliente_projeto,
-                lista_doc, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
-                seqdoc: lista_doc.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
-                seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
+                vendedor, orcamentista, funges, funpro, proandges, projeto, cliente_projeto
+                // lista_doc, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
+                // seqdoc: lista_doc.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
+                // seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
             })
         }).catch((err) => {
             req.flash('error_msg', 'Não foi possível encontrar o cliente da proposta<fotos>.')
