@@ -2485,12 +2485,12 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
             if (naoVazio(projeto.local)) {
                 lista_local = listaFotos(projeto.local)
             }
-            // if (naoVazio(projeto.entrada)) {
-            //     lista_entrada = listaFotos(projeto.entrada)
-            // }               
-            // if (naoVazio(projeto.disjuntor)) {
-            //     lista_disjuntor = listaFotos(projeto.disjuntor)
-            // }                                                
+            if (naoVazio(projeto.entrada)) {
+                lista_entrada = listaFotos(projeto.entrada)
+            }               
+            if (naoVazio(projeto.disjuntor)) {
+                lista_disjuntor = listaFotos(projeto.disjuntor)
+            }                                                
             // if (naoVazio(projeto.trafo)) {
             //     lista_trafo = listaFotos(projeto.trafo)
             // }
