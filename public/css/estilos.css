@@ -1156,7 +1156,7 @@ td {
 .imageBoard {
     border: 2px solid gray;
     border-radius: 100%;
-    width: 100px;
+    max-width: 100px;
 }
 
 .alignImagem {
