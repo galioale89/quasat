@@ -377,24 +377,25 @@
                         </div>
                     </form>
                     {{#if projeto.documento}}
-                    <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
                     <div class="row mt-3">
+                        <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
                         {{#if lista_doc}}
                         {{#each lista_doc}}
                         <div class="col-md-3">
-                            {{#if ehimagem}}
                             <div style="width: 1px;">
                                 <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
                                     class='botao-filter'><i class='bi bi-x-circle'
                                         style="font-size: 20px;color: orangered"></i></a>
                             </div>
+                            {{#if ehimagem}}
                             <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                                <img src='/gerenciamento/mostrarBucket/{{desc}}' alt='Minha Figura' style="width: 80%;"></a>
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' alt='Minha Figura'
+                                    style="width: 80%;"></a>
                             {{/if}}
                             {{#if ehpdf}}
                             <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
                                 <div style="font-size: 50px;">
-                                    <img src='/img/pdf.png' style="width: 20%;" alt='Minha Figura'></img>
+                                    <img src='/img/pdf.png' style="width: 40%;" alt='Minha Figura'></img>
                                 </div>
                                 <i class="bi bi-arrow-down-circle"></i>
                             </a>
