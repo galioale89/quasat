@@ -2491,9 +2491,9 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
             if (naoVazio(projeto.disjuntor)) {
                 lista_disjuntor = listaFotos(projeto.disjuntor)
             }                                                
-            // if (naoVazio(projeto.trafo)) {
-            //     lista_trafo = listaFotos(projeto.trafo)
-            // }
+            if (naoVazio(projeto.trafo)) {
+                lista_trafo = listaFotos(projeto.trafo)
+            }
             // if (naoVazio(projeto.telhado_foto)) {
             //     lista_telhado = listaFotos(projeto.telhado_foto)
             // }
