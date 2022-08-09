@@ -1152,3 +1152,13 @@ td {
     transition: 0.3s;
     text-decoration: none;
 }
+
+.imageBoard {
+    border: 2px solid gray;
+    border-radius: 100%;
+}
+
+.alignImagem {
+    display: inline-block;
+    justify-content: center;
+}

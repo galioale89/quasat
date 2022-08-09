@@ -366,7 +366,7 @@
                         <input type="hidden" name='seq' value='{{seqdoc}}'>
                         <input type='hidden' name='idprj' value="{{projeto._id}}">
                         <div class="card">
-                            <div class="card-body" style="justify-content: center;">
+                            <div class="card-body">
                                 <label class='col-form-label col-form-label-sm'>Adicionar imagem da galeria</label>
                                 <div>
                                     <input type="file" name="files" multiple class='form-control'>
@@ -377,11 +377,11 @@
                         </div>
                     </form>
                     {{#if projeto.documento}}
-                    <div class="row mt-3">
+                    <div class="alignImagem">
                         <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
                         {{#if lista_doc}}
                         {{#each lista_doc}}
-                        <div class="col-md-3">
+                        <div class="imageBord">
                             <div style="width: 1px;">
                                 <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
                                     class='botao-filter'><i class='bi bi-x-circle'
