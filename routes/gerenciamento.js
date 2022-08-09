@@ -2476,21 +2476,39 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
     Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
         //console.log('projeto=>' + projeto)
         Cliente.findOne({ _id: projeto.cliente }).lean().then((cliente_projeto) => {
-            const lista_proposta = projeto.proposta
-            const lista_doc = listaFotos(projeto.documento)
-            var lista_local = []
-            if (naoVazio(projeto.telhado_foto)) {
+            let lista_proposta = projeto.proposta
+            let lista_doc = []
+            let lista_local = []
+            let lista_entrada = []
+            let lista_disjuntor = []
+            let lista_trafo = []
+            let lista_telhado = []
+            let lista_localizacao = []
+            let lista_medidor = []
+            if (naoVazio(projeto.documento)) {
+                lista_doc = listaFotos(projeto.documento)
+            }
+            if (naoVazio(projeto.local)) {
                 lista_local = listaFotos(projeto.local)
             }
-            const lista_entrada = listaFotos(projeto.entrada)
-            const lista_disjuntor = listaFotos(projeto.disjuntor)
-            const lista_trafo = listaFotos(projeto.trafo)
-            var lista_telhado = []
+            if (naoVazio(projeto.entrada)) {
+                lista_entrada = listaFotos(projeto.entrada)
+            }               
+            if (naoVazio(projeto.disjuntor)) {
+                lista_disjuntor = listaFotos(projeto.disjuntor)
+            }                                                
+            if (naoVazio(projeto.trafo)) {
+                lista_trafo = listaFotos(projeto.trafo)
+            }
             if (naoVazio(projeto.telhado_foto)) {
                 lista_telhado = listaFotos(projeto.telhado_foto)
             }
-            const lista_localizacao = listaFotos(projeto.localizacao)
-            const lista_medidor = listaFotos(projeto.medidor)
+            if (naoVazio(projeto.localizacao)) {
+                lista_localizacao = listaFotos(projeto.localizacao)
+            }
+            if (naoVazio(projeto.medidor)) {
+                lista_medidor = listaFotos(projeto.medidor)
+            }                        
 
             if (funges || funpro) {
                 proandges = true
