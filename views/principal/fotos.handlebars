@@ -381,7 +381,7 @@
                     <ul class="alignPhotos">
                         {{#if lista_doc}}
                         {{#each lista_doc}}
-                        <li class="photoBoard">
+                        <li class="photoBoard" style="width: 100px;height: 50px;">
                             {{#if ehimagem}}
                             <div style="width: 1px;">
                                 <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
@@ -398,12 +398,12 @@
                                 </div>
                                 <i class="bi bi-arrow-down-circle"></i>
                             </a>
+                            {{/if}}
                         </li>
                         {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf" width="100%"
                             height="500">
                             <p>Seu navegador não tem um plugin pra PDF</p>
                         </object> --}}
-                        {{/if}}
                         {{/each}}
                         {{/if}}
                     </ul>
