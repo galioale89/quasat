@@ -1153,10 +1153,15 @@ td {
     text-decoration: none;
 }
 
-.imageBoard {
+.alignPhotos{
+    list-style-type: none;
+    text-align: center;
+}
+
+.photoBoard {
     border: 2px solid gray;
     border-radius: 100%;
     max-width: 50px;
     display: inline-block;
-    justify-content: center;    
+    cursor: pointer;  
 }
