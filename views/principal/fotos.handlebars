@@ -3,15 +3,6 @@
         pointer-events: none;
         opacity: 0.4;
     }
-
-    .alignPhotos {
-        list-style-type: none;
-        text-align: center;
-    }
-
-    .photoBoard {
-        max-height: 80px;
-    }
 </style>
 
 <script>
@@ -387,10 +378,10 @@
                     </form>
                     {{#if projeto.documento}}
                     <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    <ul class="alignPhotos">
+                    <div class="row">
                         {{#if lista_doc}}
                         {{#each lista_doc}}
-                        <li class="photoBoard">
+                        <div class="col-md-3">
                             {{#if ehimagem}}
                             <div style="width: 1px;">
                                 <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
@@ -408,14 +399,14 @@
                                 <i class="bi bi-arrow-down-circle"></i>
                             </a>
                             {{/if}}
-                        </li>
+                        </div>
                         {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf" width="100%"
                             height="500">
                             <p>Seu navegador não tem um plugin pra PDF</p>
                         </object> --}}
                         {{/each}}
                         {{/if}}
-                    </ul>
+                    </div>
                     {{/if}}
                 </div>
             </div>
