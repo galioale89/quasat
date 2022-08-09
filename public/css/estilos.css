@@ -1156,10 +1156,10 @@ td {
 .imageBoard {
     border: 2px solid gray;
     border-radius: 100%;
+    width: 100px;
 }
 
 .alignImagem {
     display: inline-block;
     justify-content: center;
-    width: 100px;
 }
