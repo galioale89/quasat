@@ -378,7 +378,7 @@
                     </form>
                     {{#if projeto.documento}}
                     <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
-                    <div class="row">
+                    <div class="row mt-3">
                         {{#if lista_doc}}
                         {{#each lista_doc}}
                         <div class="col-md-3">
@@ -389,7 +389,7 @@
                                         style="font-size: 20px;color: orangered"></i></a>
                             </div>
                             <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                                <img src='/gerenciamento/mostrarBucket/{{desc}}' alt='Minha Figura'></a>
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' alt='Minha Figura' style="width: 80%;"></a>
                             {{/if}}
                             {{#if ehpdf}}
                             <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
