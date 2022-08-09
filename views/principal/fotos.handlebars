@@ -381,15 +381,17 @@
                         <label style="font-size: 20px;font-weight: 600;">Fotos Salvas</label>
                         {{#if lista_doc}}
                         {{#each lista_doc}}
-                        <div class="alignPhotos">
+                        <ul class="alignPhotos">
                             <div style="width: 1px;">
                                 <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
                                     class='botao-filter'><i class='bi bi-x-circle'
                                         style="font-size: 20px;color: orangered"></i></a>
                             </div>
                             {{#if ehimagem}}
-                            <a href='/gerenciamento/mostrarBucket/{{desc}}' class="photoBoard" target="_blank" style="font-size: 25px;">
+                            <li class="photoBoard">
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
                                 <img src='/gerenciamento/mostrarBucket/{{desc}}' alt='Minha Figura'></a>
+                            </li>
                             {{/if}}
                             {{#if ehpdf}}
                             <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
