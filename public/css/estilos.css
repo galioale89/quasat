@@ -1165,4 +1165,5 @@ td {
     max-width: 50px;
     display: inline-block;
     cursor: pointer;  
+    display: flex;
 }
