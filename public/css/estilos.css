@@ -1161,5 +1161,5 @@ td {
 .alignImagem {
     display: inline-block;
     justify-content: center;
-    width: 30%;
+    width: 100px;
 }
