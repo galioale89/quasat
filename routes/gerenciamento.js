@@ -2463,8 +2463,6 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
     var id
     var proandges = false
 
-    var lista_proposta = []
-
     if (naoVazio(user)) {
         id = user
         ehMaster = false
@@ -2517,9 +2515,9 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
             }
             res.render('principal/fotos', {
                 vendedor, orcamentista, funges, funpro, ehMaster, proandges, projeto, cliente_projeto,
-                lista_doc, lista_local, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
-                seqdoc: lista_doc.length, seqloc: lista_local.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
-                seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
+                // lista_doc, lista_local, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
+                // seqdoc: lista_doc.length, seqloc: lista_local.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
+                // seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
             })
         }).catch((err) => {
             req.flash('error_msg', 'Não foi possível encontrar o cliente da proposta<fotos>.')
