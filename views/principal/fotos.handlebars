@@ -381,23 +381,23 @@
                     <ul class="alignPhotos">
                         {{#if lista_doc}}
                         {{#each lista_doc}}
-                        <li class="photoBoard"></li>
-                        {{#if ehimagem}}
-                        <div style="width: 1px;">
-                            <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
-                                class='botao-filter'><i class='bi bi-x-circle'
-                                    style="font-size: 20px;color: orangered"></i></a>
-                        </div>
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <img src='/gerenciamento/mostrarBucket/{{desc}}' alt='Minha Figura'></a>
-                        {{/if}}
-                        {{#if ehpdf}}
-                        <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
-                            <div style="font-size: 50px;">
-                                <img src='/img/pdf.png' style="width: 20%;" alt='Minha Figura'></img>
+                        <li class="photoBoard">
+                            {{#if ehimagem}}
+                            <div style="width: 1px;">
+                                <a href='/gerenciamento/deletaImagem/{{desc}}delimg{{_id}}delimgfotosdelimg{{../projeto._id}}delimgdocumento'
+                                    class='botao-filter'><i class='bi bi-x-circle'
+                                        style="font-size: 20px;color: orangered"></i></a>
                             </div>
-                            <i class="bi bi-arrow-down-circle"></i>
-                        </a>
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <img src='/gerenciamento/mostrarBucket/{{desc}}' alt='Minha Figura'></a>
+                            {{/if}}
+                            {{#if ehpdf}}
+                            <a href='/gerenciamento/mostrarBucket/{{desc}}' target="_blank" style="font-size: 25px;">
+                                <div style="font-size: 50px;">
+                                    <img src='/img/pdf.png' style="width: 20%;" alt='Minha Figura'></img>
+                                </div>
+                                <i class="bi bi-arrow-down-circle"></i>
+                            </a>
                         </li>
                         {{!-- <object data="/gerenciamento/mostrarBucket/{{desc}}" type="application/pdf" width="100%"
                             height="500">
