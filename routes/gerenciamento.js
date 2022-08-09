@@ -2511,8 +2511,8 @@ router.get('/fotos/:id', ehAdmin, (req, res) => {
             }
             res.render('principal/fotos', {
                 vendedor, orcamentista, funges, funpro, proandges, projeto, cliente_projeto,
-                lista_doc, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
-                seqdoc: lista_doc.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
+                lista_doc, lista_local, lista_entrada, lista_disjuntor, lista_trafo, lista_localizacao, lista_telhado, lista_medidor,
+                seqdoc: lista_doc.length, seqlocal: lista_local.length, seqent: lista_entrada.length, seqdis: lista_disjuntor.length, seqmed: lista_medidor.length,
                 seqtra: lista_trafo.length, seqloc: lista_localizacao.length, seqtel: lista_telhado.length, lista_proposta
             })
         }).catch((err) => {
