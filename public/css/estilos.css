@@ -1166,4 +1166,7 @@ td {
     display: inline-block;
     cursor: pointer;  
     display: flex;
+    width: 100px;
+    height: 150px; 
+    transform: scale(0.4);    
 }
