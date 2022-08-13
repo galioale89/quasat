@@ -4198,9 +4198,9 @@ router.post('/projeto', ehAdmin, async (req, res) => {
     await projeto.setStatusProject('pago', req.body.chekPaiedRefresh);
     await projeto.setStatusProject('autorizado', req.body.chekAuthRefresh);
     await projeto.saveDate('dataPost', req.body.checkPost, 'postado');
-    await projeto.saveDate('dataApro', req.body.checkApro, 'aprovado');
+    await projeto.saveDate('dataApro', req.body.checkApro, 'aprovada');
     await projeto.saveDate('dataSoli', req.body.checkSoli, 'solicitado');
-    await projeto.saveDate('dataTroca', req.body.checkTroca, 'trocado medidor');
+    await projeto.saveDate('dataTroca', req.body.checkTroca, 'trocado o medidor');
     await projeto.saveObservation('obsprojetista', req.body.insertObs);
 
     res.redirect('/gerenciamento/projeto/' + req.body.id);

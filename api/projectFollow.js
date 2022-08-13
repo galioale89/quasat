@@ -93,9 +93,13 @@ const projectFollow = class {
             if (dbDate != formDate)
                 isSendMessage = true;
 
-            var sellNumber = seller.celular;
-            if (naoVazio(accessSeller) && naoVazio(sellNumber) && isSendMessage)
-                sendMessage(seller.nome, project.seq, client.nome, seller.celular, this.idPro, message);
+            try {
+                var sellNumber = seller.celular;
+                if (naoVazio(accessSeller) && naoVazio(sellNumber) && isSendMessage)
+                    sendMessage(seller.nome, project.seq, client.nome, seller.celular, this.idPro, message);
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 
@@ -143,10 +147,14 @@ function verifyCheckDB(dataBase) {
 };
 
 async function sendMessage(sellerName, seqPro, clientName, clientPhone, idPro, message) {
+    var mensagem = 'Olá ' + sellerName + ',' + '\n';
 
-    var mensagem = 'Olá ' + sellerName + ',' + '\n' +
-        'O projeto ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n' +
-        'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + idPro + '.'
+    if (message == 'postado')
+        mensagem += 'O projeto ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n';
+    else
+        mensagem += 'A vistoria da proposta ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n';
+
+    mensagem += 'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + idPro + '.'
 
     client.messages
         .create({
