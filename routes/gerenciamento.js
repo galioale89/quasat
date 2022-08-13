@@ -1,75 +1,77 @@
 // require('../app')
-require('../model/Usuario')
-require('../model/Projeto')
-require('../model/Empresa')
-require('../model/Cliente')
-require('../model/Tarefas')
-require('../model/Plano')
-require('../model/AtvTelhado')
-require('../model/AtvAterramento')
-require('../model/AtvInversor')
-require('../model/Servico')
-require('../model/ImagensTarefas')
-require('../model/Acesso')
-require('../model/Pedido')
-require('../model/Pedido')
-require('../model/Agenda')
-require('../model/AtividadesPadrao')
-require('../model/Parametros')
-require('../model/Componente')
-require('../model/Mensagem')
-require('dotenv').config()
+require('../model/Usuario');
+require('../model/Projeto');
+require('../model/Empresa');
+require('../model/Cliente');
+require('../model/Tarefas');
+require('../model/Plano');
+require('../model/AtvTelhado');
+require('../model/AtvAterramento');
+require('../model/AtvInversor');
+require('../model/Servico');
+require('../model/ImagensTarefas');
+require('../model/Acesso');
+require('../model/Pedido');
+require('../model/Pedido');
+require('../model/Agenda');
+require('../model/AtividadesPadrao');
+require('../model/Parametros');
+require('../model/Componente');
+require('../model/Mensagem');
+require('dotenv').config();
 
-const { ehAdmin } = require('../helpers/ehAdmin')
+projectFollow = require('../api/projectFollow');
 
-const express = require('express')
-const router = express.Router()
-const mongoose = require('mongoose')
-const aws = require("aws-sdk")
-const multer = require('multer')
-const multerS3 = require("multer-s3")
-const resizeImg = require('resize-image-buffer')
-const xl = require('excel4node')
-const sharp = require('sharp')
-var excel = require('exceljs')
+const { ehAdmin } = require('../helpers/ehAdmin');
+
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const aws = require("aws-sdk");
+const multer = require('multer');
+const multerS3 = require("multer-s3");
+const resizeImg = require('resize-image-buffer');
+const xl = require('excel4node');
+const sharp = require('sharp');
+var excel = require('exceljs');
 //const {Client, TextContent} = require('@zenvia/sdk');
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID
-const authToken = process.env.TWILIO_AUTH_TOKEN
-const client = require('twilio')(accountSid, authToken)
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
 // const ListInput = require('../api')
 // const list = new ListInput(mongoose, app)
 
-const Usuario = mongoose.model('usuario')
-const Acesso = mongoose.model('acesso')
-const Empresa = mongoose.model('empresa')
-const Cliente = mongoose.model('cliente')
-const Usina = mongoose.model('usina')
-const Pessoa = mongoose.model('pessoa')
-const Tarefas = mongoose.model('tarefas')
-const Equipe = mongoose.model('equipe')
-const Plano = mongoose.model('plano')
-const Projeto = mongoose.model('projeto')
-const Servico = mongoose.model('servico')
-const Pedido = mongoose.model('pedido')
-const Agenda = mongoose.model('agenda')
-const AtvPadrao = mongoose.model('atvPadrao')
-const Parametros = mongoose.model('parametros')
-const Componente = mongoose.model('componente')
-const Mensagem = mongoose.model('mensagem')
+const Usuario = mongoose.model('usuario');
+const Acesso = mongoose.model('acesso');
+const Empresa = mongoose.model('empresa');
+const Cliente = mongoose.model('cliente');
+const Usina = mongoose.model('usina');
+const Pessoa = mongoose.model('pessoa');
+const Tarefas = mongoose.model('tarefas');
+const Equipe = mongoose.model('equipe');
+const Plano = mongoose.model('plano');
+const Projeto = mongoose.model('projeto');
+const Servico = mongoose.model('servico');
+const Pedido = mongoose.model('pedido');
+const Agenda = mongoose.model('agenda');
+const AtvPadrao = mongoose.model('atvPadrao');
+const Parametros = mongoose.model('parametros');
+const Componente = mongoose.model('componente');
+const Mensagem = mongoose.model('mensagem');
 
-const dataBusca = require('../resources/dataBusca')
-const setData = require('../resources/setData')
-const dataMensagem = require('../resources/dataMensagem')
-const dataMsgNum = require('../resources/dataMsgNum')
-const dataHoje = require('../resources/dataHoje')
-const naoVazio = require('../resources/naoVazio')
-const mascaraDecimal = require('../resources/mascaraDecimal')
-const dataInput = require('../resources/dataInput')
-const comparaNum = require('../resources/comparaNumeros')
-const listaFotos = require('../resources/listaFotos')
-const buscaPrimeira = require('../resources/buscaPrimeira')
-const diferencaDias = require('../resources/diferencaDias')
+const dataBusca = require('../resources/dataBusca');
+const setData = require('../resources/setData');
+const dataMensagem = require('../resources/dataMensagem');
+const dataMsgNum = require('../resources/dataMsgNum');
+const dataHoje = require('../resources/dataHoje');
+const naoVazio = require('../resources/naoVazio');
+const mascaraDecimal = require('../resources/mascaraDecimal');
+const dataInput = require('../resources/dataInput');
+const comparaNum = require('../resources/comparaNumeros');
+const listaFotos = require('../resources/listaFotos');
+const buscaPrimeira = require('../resources/buscaPrimeira');
+const diferencaDias = require('../resources/diferencaDias');
 
 var credentials = new aws.SharedIniFileCredentials({ profile: 'vimmusimg' })
 aws.config.credentials = credentials
@@ -4175,188 +4177,33 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
     })
 })
 
-router.post('/projeto', ehAdmin, (req, res) => {
+router.post('/projeto', ehAdmin, async (req, res) => {
+
     const { _id } = req.user;
     const { pessoa } = req.user;
 
-    var checkapr = false
-    var checkpost = false
-    var checksoli = false
-    //console.log(req.body.id)
-    Projeto.findOne({ _id: req.body.id }).then((projeto) => {
+    var projeto = new projectFollow(
+        req.body.dataPost, 
+        req.body.dataSoli, 
+        req.body.dataApro, 
+        req.body.dataTroca,
+        req.body.obsprojetista,
+        req.body.id,
+        _id,
+        pessoa,
+        req.body.checkPago,
+        req.body.checkAuth
+    );
 
-        if (naoVazio(projeto.dataPost)) {
-            checkpost = true
-        }
+    await projeto.setStatusProject('pago', req.body.chekPaiedRefresh);
+    await projeto.setStatusProject('autorizado', req.body.chekAuthRefresh);
+    await projeto.saveDate('dataPost', req.body.checkPost);
+    await projeto.saveDate('dataApro', req.body.checkApor);
+    await projeto.saveDate('dataSoli', req.body.checkSoli);
+    await projeto.saveDate('dataTroca', req.body.checkTroca);
+    await projeto.saveObservation('obsprojetista', req.body.insertObs);
 
-        if (naoVazio(projeto.dataSoli)) {
-            checksoli = true
-        }
-
-        if (naoVazio(projeto.dataApro)) {
-            checkapr = true
-        }
-
-        if (req.body.checkPost != null) {
-            projeto.dataPost = dataHoje()
-        } else {
-            projeto.dataPost = req.body.dataPost
-        }
-
-        if (req.body.checkSoli != null) {
-            projeto.dataSoli = dataHoje()
-        } else {
-            projeto.dataSoli = req.body.dataSoli
-        }
-
-        if (req.body.checkApro != null) {
-            projeto.dataApro = dataHoje()
-        } else {
-            projeto.dataApro = req.body.dataApro
-        }
-
-        if (req.body.checkTroca != null) {
-            projeto.dataTroca = dataHoje()
-        } else {
-            projeto.dataTroca = req.body.dataTroca
-        }
-
-        projeto.save().then(async () => {
-            var projetoobs = await Projeto.findById(req.body.id).lean();
-            //console.log(req.body.salvarObs);
-            if (req.body.salvarObs == '1') salvarObservacao(projetoobs, req.body.obsprojetista, req.body.id, pessoa);
-
-            if (checkpost == false && naoVazio(req.body.dataPost)) {
-                //console.log('postado')
-                Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                    Acesso.findOne({ pessoa: projeto.vendedor, notvis: 'checked' }).then((acesso) => {
-                        if (naoVazio(acesso)) {
-                            Pessoa.findOne({ _id: projeto.vendedor }).then((vendedor) => {
-                                //console.log('vendedor.celular=>' + vendedor.celular)
-                                var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
-                                    'O projeto ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi postado.' + '\n' +
-                                    'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
-                                //console.log(mensagem)
-                                client.messages
-                                    .create({
-                                        body: mensagem,
-                                        from: 'whatsapp:+554991832978',
-                                        to: 'whatsapp:+55' + vendedor.celular
-                                    })
-                                    .then((message) => {
-                                        req.flash('success_msg', 'Projeto atualizado com sucesso')
-                                        res.redirect('/gerenciamento/projeto/' + req.body.id)
-                                    }).done()
-
-                            }).catch(() => {
-                                req.flash('error_msg', 'Falha ao encontrar o vendedor.')
-                                res.redirect('/gerenciamento/projeto/' + req.params.id)
-                            })
-                        } else {
-                            req.flash('success_msg', 'Projeto atualizado com sucesso')
-                            res.redirect('/gerenciamento/projeto/' + req.body.id)
-                        }
-                    }).catch(() => {
-                        req.flash('error_msg', 'Falha ao encontrar o acesso.')
-                        res.redirect('/gerenciamento/projeto/' + req.params.id)
-                    })
-                }).catch(() => {
-                    req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                    res.redirect('/gerenciamento/projeto/' + req.body.id)
-                })
-            } else {
-                if (checksoli == false && naoVazio(req.body.dataSoli)) {
-                    //console.log('solicitado')
-                    Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                        Acesso.findOne({ pessoa: projeto.vendedor, notvis: 'checked' }).then((acesso) => {
-                            if (naoVazio(acesso)) {
-                                Pessoa.findOne({ _id: projeto.vendedor }).then((vendedor) => {
-                                    //console.log('vendedor.celular=>' + vendedor.celular)
-                                    var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
-                                        'A vistoria da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi solicitada.' + '\n' +
-                                        'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
-                                    //console.log(mensagem)
-                                    client.messages
-                                        .create({
-                                            body: mensagem,
-                                            from: 'whatsapp:+554991832978',
-                                            to: 'whatsapp:+55' + vendedor.celular
-                                        })
-                                        .then((message) => {
-                                            req.flash('success_msg', 'Projeto atualizado com sucesso')
-                                            res.redirect('/gerenciamento/projeto/' + req.body.id)
-                                        }).done()
-
-                                }).catch(() => {
-                                    req.flash('error_msg', 'Falha ao encontrar o vendedor.')
-                                    res.redirect('/gerenciamento/projeto/' + req.params.id)
-                                })
-                            } else {
-                                req.flash('success_msg', 'Projeto atualizado com sucesso')
-                                res.redirect('/gerenciamento/projeto/' + req.body.id)
-                            }
-                        }).catch(() => {
-                            req.flash('error_msg', 'Falha ao encontrar o acesso.')
-                            res.redirect('/gerenciamento/projeto/' + req.params.id)
-                        })
-                    }).catch(() => {
-                        req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                        res.redirect('/gerenciamento/projeto/' + req.params.id)
-                    })
-
-                } else {
-                    if (checkapr == false && naoVazio(req.body.dataApro)) {
-                        //console.log('aprovado')
-                        Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                            Acesso.findOne({ pessoa: projeto.vendedor, notvis: 'checked' }).then((acesso) => {
-                                if (naoVazio(acesso)) {
-                                    Pessoa.findOne({ _id: projeto.vendedor }).then((vendedor) => {
-                                        //console.log('vendedor.celular=>' + vendedor.celular)
-                                        var mensagem = 'Olá ' + vendedor.nome + ',' + '\n' +
-                                            'A vistoria da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' foi aprovada.' + '\n' +
-                                            'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
-                                        //console.log(mensagem)
-                                        client.messages
-                                            .create({
-                                                body: mensagem,
-                                                from: 'whatsapp:+554991832978',
-                                                to: 'whatsapp:+55' + vendedor.celular
-                                            })
-                                            .then((message) => {
-                                                req.flash('success_msg', 'Projeto atualizado com sucesso')
-                                                res.redirect('/gerenciamento/projeto/' + req.body.id)
-                                            }).done()
-
-                                    }).catch(() => {
-                                        req.flash('error_msg', 'Falha ao encontrar o vendedor.')
-                                        res.redirect('/gerenciamento/projeto/' + req.params.id)
-                                    })
-                                } else {
-                                    req.flash('success_msg', 'Projeto atualizado com sucesso')
-                                    res.redirect('/gerenciamento/projeto/' + req.body.id)
-                                }
-                            }).catch(() => {
-                                req.flash('error_msg', 'Falha ao encontrar o acesso.')
-                                res.redirect('/gerenciamento/projeto/' + req.params.id)
-                            })
-                        }).catch(() => {
-                            req.flash('error_msg', 'Falha ao encontrar o cliente.')
-                            res.redirect('/gerenciamento/projeto/' + req.params.id)
-                        })
-                    } else {
-                        req.flash('success_msg', 'Projeto atualizado com sucesso')
-                        res.redirect('/gerenciamento/projeto/' + req.body.id)
-                    }
-                }
-            }
-        }).catch((err) => {
-            req.flash('error_msg', 'Falha ao salvar o projeto.')
-            res.redirect('/gerenciamento/projeto/' + req.body.id)
-        })
-    }).catch(() => {
-        req.flash('error_msg', 'Falha ao encontrar o projeto.')
-        res.redirect('/gerenciamento/projeto/' + req.params.id)
-    })
+    res.redirect('/gerenciamento/projeto/' + req.body.id)
 })
 
 router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
@@ -7770,41 +7617,6 @@ router.get('/payprj/:id', ehAdmin, (req, res) => {
         }
         projeto.save().then(() => {
             req.flash('success_msg', 'Projeto pago.')
-            res.redirect('/gerenciamento/projeto/' + req.params.id)
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Falha ao encontrar o projeto')
-        res.redirect('/relatorios/consulta')
-    })
-})
-
-router.get('/authprj/:id', ehAdmin, (req, res) => {
-    Projeto.findOne({ _id: req.params.id }).then((projeto) => {
-        //console.log('projeto.autorizado=>' + projeto.autorizado)
-        if (projeto.autorizado == true) {
-            projeto.autorizado = false
-        } else {
-            projeto.autorizado = true
-        }
-        projeto.save().then(() => {
-            req.flash('success_msg', 'Projeto autorizado pelo projetista.')
-            res.redirect('/gerenciamento/projeto/' + req.params.id)
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Falha ao encontrar o projeto')
-        res.redirect('/relatorios/consulta')
-    })
-})
-
-router.get('/pagoprj/:id', ehAdmin, (req, res) => {
-    Projeto.findOne({ _id: req.params.id }).then((projeto) => {
-        if (projeto.pago == true) {
-            projeto.pago = false
-        } else {
-            projeto.pago = true
-        }
-        projeto.save().then(() => {
-            req.flash('success_msg', 'Projeto pago pelo projetista')
             res.redirect('/gerenciamento/projeto/' + req.params.id)
         })
     }).catch((err) => {

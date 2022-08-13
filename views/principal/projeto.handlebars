@@ -102,27 +102,32 @@
     {{/if}}
 
     <div id='bloquear' class='{{projeto.encerrado}}'>
-        <div class='mt-4' style="margin-bottom: 50px;">
-            <div style="display: flex;flex-direction: row;justify-content: center;">
-                <div class="'form-check mt-2">
-                    <label class='form-check-label' style="font-size: 16px;margin-top: 5px">Projeto Pago</label>
-                    <input class='form-check-input' type='checkbox' name='checkPago' {{checkPay}}
-                        style="transform: scale(2);margin-left: 5px;"
-                        onclick='window.location.href="/gerenciamento/payprj/{{projeto._id}}"'>
+        <form action='/gerenciamento/projeto' method='post' id="form">
+            
+            <input type="hidden" id="salvarObs" name="salvarObs" value="0">
+            <input type="hidden" name="id" value="{{projeto._id}}">
+
+            <div class='mt-4' style="margin-bottom: 50px;">
+                <div style="display: flex;flex-direction: row;justify-content: center;">
+                    <div class="'form-check mt-2">
+                        <input type="hidden" id="chekPaiedRefresh" name="chekPaiedRefresh">
+                        <label class='form-check-label' style="font-size: 16px;margin-top: 5px">Projeto Pago</label>
+                        <input class='form-check-input' type='checkbox' name='checkPago' id='checkPago' {{checkPay}}
+                            style="transform: scale(2);margin-left: 5px;" 
+                             onclick='verifyCheck("checkPago","chekPaiedRefresh","form")' />
+                    </div>
+                    <div class="'form-check mt-2" style="width: 30rem;">
+                        <input type="hidden" id="chekAuthRefresh" name="chekAuthRefresh">
+                        <label class='form-check-label' style="font-size: 16px;margin-top: 5px;">Autorizar
+                            Projeto</label>
+                        <input class='form-check-input' type='checkbox' name='checkAuth' id="checkAuth" {{checkAuth}}
+                            style="transform: scale(2);margin-left: 5px;"
+                            onclick='verifyCheck("checkAuth","chekAuthRefresh","form")' />
+                    </div>
+                    {{!-- <a data-bs-toggle="modal" data-bs-target='#anexos' class="btn btn-primary"
+                        style="margin-left: 20px"><i class="bi bi-calendar-check justtify-align-right"></i></a> --}}
                 </div>
-                <div class="'form-check mt-2" style="width: 30rem;">
-                    <label class='form-check-label' style="font-size: 16px;margin-top: 5px;">Autorizar Projeto</label>
-                    <input class='form-check-input' type='checkbox' name='checkAuth' {{checkAuth}}
-                        style="transform: scale(2);margin-left: 5px;"
-                        onclick='window.location.href="/gerenciamento/authprj/{{projeto._id}}"'>
-                </div>
-                {{!-- <a data-bs-toggle="modal" data-bs-target='#anexos' class="btn btn-primary"
-                    style="margin-left: 20px"><i class="bi bi-calendar-check justtify-align-right"></i></a> --}}
-            </div>
-            <hr>
-            <form action='/gerenciamento/projeto' method='post'>
-                <input type="hidden" id="salvarObs" name="salvarObs" value="0">
-                <input type="hidden" name="id" value="{{projeto._id}}">
+                <hr>
                 <div class="row">
                     <div class="col">
                         <div class="row">
@@ -169,6 +174,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div style="flex">
+                                    <input type="hidden" name="insertObs" id="insertObs" value="false">
                                     <label style="width: 85%;" class="h6 fw-bold">Observação do Projeto</label>
                                     <a class="btn btn-sm" id='btnovo' onclick="novoVoltar()">Novo</a>
                                 </div>
@@ -181,7 +187,7 @@
                         <button type="submit" style="height: 190px;" class='btn btn-sm btn-success mt-2'>Salvar</button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
