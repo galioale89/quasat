@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 
+require('dotenv').config();
+
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
+
 require('../model/Projeto');
 require('../model/Acesso');
 require('../model/Cliente');
@@ -44,32 +50,53 @@ const projectFollow = class {
             commitOne(this.idPro, field, value);
     };
 
-    async saveDate(field, check) {
+    async saveDate(field, check, message) {
         var project = await getProject(this.idPro);
+        var isSendMessage = false;
+        var dbDate;
+        var formDate;
 
-        if (field == 'dataSoli' && (verifyCheckDB(project.dataSoli) || naoVazio(this.date_soli)))
-            var value = this.date_soli
+        if (field == 'dataSoli' && (verifyCheckDB(project.dataSoli) || naoVazio(this.date_soli))) {
+            var value = this.date_soli;
+            dbDate = project.dataSoli;
+            formDate = this.date_soli;
+        }
 
-        if (field == 'dataApro' && (verifyCheckDB(project.dataApro) || naoVazio(this.date_aproved)))
+        if (field == 'dataApro' && (verifyCheckDB(project.dataApro) || naoVazio(this.date_aproved))) {
             var value = this.date_aproved;
+            dbDate = project.dataApro;
+            formDate = this.date_aproved;
+        }
 
-        if (field == 'dataTroca' && (verifyCheckDB(project.dataTroca) || naoVazio(this.date_change)))
-           var value = this.date_change;
+        if (field == 'dataTroca' && (verifyCheckDB(project.dataTroca) || naoVazio(this.date_change))) {
+            var value = this.date_change;
+            dbDate = project.dataTroca;
+            formDate = this.date_change;
+        }
 
-        if (field == 'dataPost' && (verifyCheckDB(project.dataPost) || naoVazio(this.date_project)))
+        if (field == 'dataPost' && (verifyCheckDB(project.dataPost) || naoVazio(this.date_project))) {
             var value = this.date_project;
+            dbDate = project.dataPost;
+            formDate = this.date_project;
+        }
 
-        if (check != undefined && !naoVazio(value))
+        if (check != undefined && !naoVazio(value)) {
             var value = dataHoje();
+            formDate = value;
+        }
 
-        console.log(this.idPro);
-        commitOne(this.idPro, field, value);
+        if (await commitOne(this.idPro, field, value)) {
+            var client = await getClientName(project.cliente);
+            var accessSeller = await getValidAccessSeller(project.vendedor);
+            var seller = await getPeople(project.vendedor);
 
-        var client = await getClientName(project.cliente);
-        var accessSeller = await getValidAccessSeller(project.vendedor);
-        var seller = await getPeople(project.vendedor);
-        if (naoVazio(accessSeller) && naoVazio(seller.celular)) 
-            sendMessage(seller.nome, project.seq, client.nome, seller.celular, this.idPro, mescom);
+            if (dbDate != formDate)
+                isSendMessage = true;
+
+            var sellNumber = seller.celular;
+            if (naoVazio(accessSeller) && naoVazio(sellNumber) && isSendMessage)
+                sendMessage(seller.nome, project.seq, client.nome, seller.celular, this.idPro, message);
+        }
     };
 
     async saveObservation(field, insertobs) {
@@ -83,16 +110,12 @@ const projectFollow = class {
             personName = '';
         }
 
-        console.log('insertobs=>'+insertobs);
-
         if (insertobs == 'true') {
 
             let project = await getProject(this.idPro);
             let time = String(new Date(Date.now())).substring(16, 21);
-            
-            console.log(this.observation)
+
             var value = `[${dataMensagem(dataHoje())} - ${time}] por ${personName}` + '\n' + this.observation + '\n' + project.obsprojetista;
-            console.log(value)
 
             commitOne(this.idPro, field, value);
         }
@@ -102,7 +125,14 @@ const projectFollow = class {
 async function commitOne(idPro, field, value) {
     var params = {};
     params[field] = value;
-    await Projeto.findOneAndUpdate({ _id: idPro }, { $set: params })
+    try {
+        await Projeto.findOneAndUpdate({ _id: idPro }, { $set: params })
+        return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
 }
 
 function verifyCheckDB(dataBase) {
@@ -112,9 +142,10 @@ function verifyCheckDB(dataBase) {
     return false;
 };
 
-async function sendMessage(sellerName, seqPro, clientName, clientPhone, idPro, mescom) {
+async function sendMessage(sellerName, seqPro, clientName, clientPhone, idPro, message) {
+
     var mensagem = 'Olá ' + sellerName + ',' + '\n' +
-        'O projeto ' + seqPro + ' do cliente ' + clientName + ' foi ' + mescom + '.' + '\n' +
+        'O projeto ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n' +
         'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + idPro + '.'
 
     client.messages

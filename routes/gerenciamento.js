@@ -4197,13 +4197,13 @@ router.post('/projeto', ehAdmin, async (req, res) => {
 
     await projeto.setStatusProject('pago', req.body.chekPaiedRefresh);
     await projeto.setStatusProject('autorizado', req.body.chekAuthRefresh);
-    await projeto.saveDate('dataPost', req.body.checkPost);
-    await projeto.saveDate('dataApro', req.body.checkApor);
-    await projeto.saveDate('dataSoli', req.body.checkSoli);
-    await projeto.saveDate('dataTroca', req.body.checkTroca);
+    await projeto.saveDate('dataPost', req.body.checkPost, 'postado');
+    await projeto.saveDate('dataApro', req.body.checkApor, 'aprovado');
+    await projeto.saveDate('dataSoli', req.body.checkSoli, 'solicitado');
+    await projeto.saveDate('dataTroca', req.body.checkTroca, 'trocado medidor');
     await projeto.saveObservation('obsprojetista', req.body.insertObs);
 
-    res.redirect('/gerenciamento/projeto/' + req.body.id)
+    res.redirect('/gerenciamento/projeto/' + req.body.id);
 })
 
 router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
@@ -7603,24 +7603,6 @@ router.post('/exportar/', ehAdmin, (req, res) => {
             res.redirect('/relatorios/consulta')
         })
     }).catch((err) => {
-        res.redirect('/relatorios/consulta')
-    })
-})
-
-router.get('/payprj/:id', ehAdmin, (req, res) => {
-    Projeto.findOne({ _id: req.params.id }).then((projeto) => {
-        //console.log('projeto.autorizado=>' + projeto.autorizado)
-        if (projeto.pago == true) {
-            projeto.pago = false
-        } else {
-            projeto.pago = true
-        }
-        projeto.save().then(() => {
-            req.flash('success_msg', 'Projeto pago.')
-            res.redirect('/gerenciamento/projeto/' + req.params.id)
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Falha ao encontrar o projeto')
         res.redirect('/relatorios/consulta')
     })
 })
