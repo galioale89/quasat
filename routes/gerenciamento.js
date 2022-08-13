@@ -6957,6 +6957,7 @@ router.post('/aplicaSelecao', ehAdmin, (req, res) => {
     let mes = req.body.mes
     let mestitulo = ''
     let diaini = '01'
+    let diafim;
 
     let cliente
 
