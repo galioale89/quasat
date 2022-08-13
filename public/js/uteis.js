@@ -1,144 +1,3 @@
-function showIndex(tipo) {
-    var html = '';
-    var title = '';
-    if (tipo == 'venda') {
-        title = 'Venda';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Aguardando Proposta</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Projeto Sem Responsável</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
-            "</tr>" +
-            "</table>";
-    }
-    if (tipo == 'termos') {
-        title = 'Termos de Entrega';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Termo Enviado</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Aguardando Termo</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
-            "</tr>" +
-            "</table>";
-    }
-    if (tipo == 'projeto') {
-        title = 'Projeto';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Projeto Autorizado</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='levantamento'</td>" +
-            "</tr>" +
-            "</table>";
-    }
-    if (tipo == 'instalacao') {
-        title = 'Instalação';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Aguardando Vistoria</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Projeto em Execução</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Projeto Parado</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Aguardando Projeto</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='homologado'</td>" +
-            "</tr>" +
-            "</table>";
-    }
-    if (tipo == 'enviados') {
-        title = 'Orçamentos Enviados';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Pedido Realizado</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Proposta Enviada</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Orçamento em Andamento</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='aguardando'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Orçamento Solicitado</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px;text-align: left' id='parado'</td>" +
-            "</tr>" +
-            "</table>";
-    }
-    if (tipo == 'entregue') {
-        title = 'Orçamentos Entregues';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Passou 7 dias da entrega</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Proposta Entregue</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='realizado'</td>" +
-            "</tr>" +
-            "</table>";
-    }
-    if (tipo == 'negociando') {
-        title = 'Orçamentos Negociando';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Passou 3 dias da interação</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='parado'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Negociando</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='homologado'</td>" +
-            "</tr>" +
-            "</table>";
-    }
-    if (tipo == 'ganho') {
-        title = 'Orçamentos Ganhos';
-        html = "<table>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Autorizado Pelo Projetista</th>" +
-            "<td style='height: 15px; width: 15px; border-radius: 15px; text-align: center' id='execucao'</td>" +
-            "</tr>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Levantamento Realizado</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='aguardando'</td>" +
-            "<tr style='display: flex; font-size: 12px'>" +
-            "<th style='width: 200px;text-align: center;'>Falta Fazer o Levantamento</th>" +
-            "<td style='height: 15px;  width: 15px; border-radius: 15px; text-align: center' id='levantamento'</td>" +
-            "</tr>" +
-            "</tr>" +
-            "</table>";
-    }
-    Toast.fire({
-        html: html,
-        title: title
-    })
-}
-
 function valida_celular() {
     var cel = document.getElementById('celular')
     if (cel.value.length == 1) {
@@ -204,125 +63,6 @@ function dia() {
     //}
 }
 
-function somaPotencia() {
-    var x
-    var params
-    var decimais
-
-    var pla = document.getElementById('plaWattMod')
-    var qtd = document.getElementById('plaQtdMod')
-    var potenciaTotal = document.getElementById('potenciaTotal')
-    //var potencia = document.getElementById('potencia')
-    var servico = document.getElementById('vlrServico')
-    var total = document.getElementById('vlrTotal')
-    var material = document.getElementById('vlrKit')
-    var vlrmdo = document.getElementById('vlrmdo')
-    var vlrMaskServico = document.getElementById('vlrMaskServico')
-    var soma = ((pla.value * qtd.value) / 1000).toFixed(2)
-    var vlserv = qtd.value * vlrmdo.value
-    var vlrstring = vlserv.toString()
-
-    if (vlrstring.indexOf(',') != -1) {
-        params = vlrstring.split(',')
-        x = params[0].length
-        decimais = params[1]
-    } else {
-        x = vlrstring.length
-        decimais = '00'
-    }
-    if (x < 4) {
-        var primeiros = vlrstring
-        var mascara = primeiros + ',' + decimais
-    } else {
-        if (x > 3 && x < 7) {
-            var i = x - 3
-            var ultimos = vlrstring.slice(i, x)
-            var primeiros = vlrstring.slice(0, i)
-            var mascara = primeiros + '.' + ultimos + ',' + decimais
-        } else {
-            if (x > 3 && x < 10) {
-                var i = x - 3
-                var y = i - 3
-                var ultimos = vlrstring.slice(i, x)
-                var milhares = vlrstring.slice(y, i)
-                var primeiros = vlrstring.slice(0, y)
-                var mascara = primeiros + '.' + milhares + '.' + ultimos + ',' + decimais
-            }
-        }
-    }
-
-    servico.value = vlserv
-    vlrMaskServico.innerText = mascara
-    if (material.value != '') {
-        total.value = material.value + servico.value
-    } else {
-        total.value = servico.value
-    }
-    //potencia.value = soma
-    potenciaTotal.innerText = String(soma) + 'kWp'
-}
-
-function somaTotal() {
-
-    var material = document.getElementById('vlrKit')
-    var servico = document.getElementById('vlrServico')
-    var total = document.getElementById('vlrTotal')
-    var totalbase = document.getElementById('vlrTotalBase')
-    var kitbase = document.getElementById('vlrKitBase')
-    var soma = parseFloat(material.value) + parseFloat(servico.value)
-    if (totalbase.value != total.value) {
-        if (parseFloat(kitbase.value) != parseFloat(material.value)) {
-            total.value = parseFloat(material.value) + parseFloat(servico.value)
-        } else {
-            material.value = parseFloat(total.value) - parseFloat(servico.value)
-        }
-    } else {
-        if (parseFloat(soma) != parseFloat(total.value)) {
-            if (String(material.value).length > 0 && parseFloat(kitbase.value) != parseFloat(material.value)) {
-                total.value = parseFloat(material.value) + parseFloat(servico.value)
-            } else {
-                material.value = parseFloat(total.value) - parseFloat(servico.value)
-            }
-        }
-    }
-}
-
-function addequipamento() {
-    var equipamentos = document.getElementById("equipamentos")
-    //alert('equipamentos=>' + equipamentos)
-    var desc_equi = document.getElementById("desc_equi")
-    //alert('desc_equi=>' + desc_equi)
-    var qtd_equi = document.getElementById("qtd_equi")
-    //alert('qtd_equi=>' + qtd_equi)
-    var row = document.createElement('div')
-    var col1 = document.createElement('div')
-    var col2 = document.createElement('div')
-    var desc = document.createElement('label')
-    var qtd = document.createElement('label')
-    var qtd_hidden = document.createElement('input')
-    var desc_hidden = document.createElement('input')
-    row.className = 'row'
-    col1.className = 'col'
-    col2.className = 'col'
-    desc.className = 'col-form-label col-form-label-sm'
-    desc.textContent = desc_equi.value
-    qtd.className = 'col-form-label col-form-label-sm'
-    qtd.textContent = qtd_equi.value
-    qtd_hidden.type = 'hidden'
-    qtd_hidden.name = 'qtd[]'
-    qtd_hidden.value = qtd_equi.value
-    desc_hidden.type = 'hidden'
-    desc_hidden.name = 'desc[]'
-    desc_hidden.value = desc_equi.value
-    col1.append(desc)
-    col1.append(desc_hidden)
-    col2.append(qtd)
-    col2.append(qtd_hidden)
-    row.append(col1)
-    row.append(col2)
-    equipamentos.prepend(row)
-}
-
 function termoEntrega() {
     var html = ''
     var m
@@ -349,9 +89,9 @@ function termoEntrega() {
     var data = ano + '-' + mes + '-' + dia
     var htmliniform = '<form action="/gerenciamento/salvarImagem" enctype="multipart/form-data" method="post">'
     if (desctermo.length > 0) {
-        var htmlsubmit = '<input type="hidden" name="seq" value="0"><input type="hidden" name="idprj" value="' + id + '"><input type="hidden" name="date" value=' + data + '><input type="hidden" name="tipo" value="termo"><input type="file" name="files" class="form-control form-control-sm"><div><button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button><a style="padding-left: 5px" class="btn btn-sm btn-primary mt-2" href="/gerenciamento/mostrarBucket/' + desctermo + '"><i class="bi bi-eye"></i></a></div>'
+        var htmlsubmit = '<input type="hidden" name="seq" value="0"><input type="hidden" name="id" value="' + id + '"><input type="hidden" name="date" value=' + data + '><input type="hidden" name="tipo" value="termo"><input type="file" name="files" class="form-control form-control-sm"><div><button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button><a style="padding-left: 5px" class="btn btn-sm btn-primary mt-2" href="/gerenciamento/mostrarBucket/' + desctermo + '"><i class="bi bi-eye"></i></a></div>'
     } else {
-        var htmlsubmit = '<input type="hidden" name="seq" value="0"><input type="hidden" name="idprj" value="' + id + '"><input type="hidden" name="date" value=' + data + '><input type="hidden" name="tipo" value="termo"><input type="file" name="files" class="form-control form-control-sm"><button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button>'
+        var htmlsubmit = '<input type="hidden" name="seq" value="0"><input type="hidden" name="id" value="' + id + '"><input type="hidden" name="date" value=' + data + '><input type="hidden" name="tipo" value="termo"><input type="file" name="files" class="form-control form-control-sm"><button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button>'
     }
     var htmlfimform = '</form>'
     html = htmliniform + htmlsubmit + htmlfimform
@@ -407,14 +147,13 @@ function novoOrcamento() {
         select.name = 'cliente'
         select.style.width = '160px'
 
+        var option = document.createElement('option')
         for (let i = 0; i < clinome.length; i++) {
-            var option = document.createElement('option')
-
             option.value = cliid[i].value
             option.text = clinome[i].value
-            select.appendChild(option)
         }
 
+        select.appendChild(option)
         flex.append(span)
         flex.append(label)
         flex.append(select)
@@ -425,6 +164,26 @@ function novoOrcamento() {
     } else {
         selclientes.append(cliente)
         selclientes.append(botao)
+    }
+}
+
+function selTipo() {
+    var solar = $('#solar').val()
+    var camara = $('#camara').val()
+    var ar = $('#ar').val()
+    var seltipo = document.getElementById('seltipo')
+
+    if ($('#solar').is(':checked')) {
+        // alert('solar')
+        seltipo.value = 'solar'
+    }
+    if ($('#camara').is(':checked')) {
+        // alert('camara')
+        seltipo.value = 'camara'
+    }
+    if ($('#ar').is(':checked')) {
+        // alert('ar')
+        seltipo.value = 'ar'
     }
 }
 
@@ -728,6 +487,7 @@ function buscaCPF() {
         showConfirmButton: false,
     })
 }
+
 function selecao() {
     var asc = document.getElementById('asc')
     var desc = document.getElementById('desc')
@@ -738,6 +498,7 @@ function selecao() {
         ordem.value = -1
     }
 }
+
 function manutencao() {
     var hoje = new Date()
     var ano = hoje.getFullYear()
@@ -777,7 +538,8 @@ function entrarOrcamento(res, id, id_res) {
     var id_pes = document.getElementById('pessoa')
     var x = id_pes.value
     var txt_res = 'Orçamentista alocado: ' + res + '.'
-    if (res != 'vazio' && String(id_pes.value) != String(id_res)) {
+    x = x.slice(23, 47)
+    if (res != 'vazio' && String(x) != String(id_res)) {
         Swal.fire({
             title: 'Deseja continuar?',
             text: txt_res,
@@ -796,6 +558,27 @@ function entrarOrcamento(res, id, id_res) {
 
 function preview_foto() {
     var imagem = document.querySelector('input[name=files]').files[0]
+    var preview = document.querySelector('img[name=foto]')
+    var salva = document.getElementById('fotosalva')
+    var fotoprev = document.getElementById('fotopreview')
+
+    salva.style.display = 'none'
+    fotoprev.style.display = ''
+
+    var reader = new FileReader()
+    reader.onloadend = function () {
+        preview.src = reader.result
+    }
+
+    if (imagem) {
+        reader.readAsDataURL(imagem)
+    } else {
+        preview.src = ''
+    }
+}
+
+function preview_logo() {
+    var imagem = document.querySelector('input[name=logo]').files[0]
     var preview = document.querySelector('img[name=foto]')
     var salva = document.getElementById('fotosalva')
     var fotoprev = document.getElementById('fotopreview')
@@ -870,13 +653,15 @@ function evento(divdia) {
         cliente = dia.querySelectorAll('div')
         params = cliente[x].innerText
         params = params.split('@')
-        aux = params[0]
-        aux = aux.split(' ')
-        if (aux[0].length == 1) {
+        if (params[0].length == 1) {
             novaa.innerText = params[1]
             novaa.style.color = 'white'
             novaa.style.fontSize = '10px'
-            novaa.href = '/gerenciamento/projeto/' + params[2]
+            if (params[4].length == 21) {
+                novaa.href = '/pessoa/edicao/' + params[2]
+            } else {
+                novaa.href = '/gerenciamento/projeto/' + params[2]
+            }
             novaa.style.backgroundColor = params[3]
             novaa.style.paddingTop = '10px'
             novaa.style.paddingLeft = '10px'
@@ -1064,20 +849,81 @@ function imprimir() {
     descdata.style.display = ''
 }
 
+function addequipamento() {
+    var equipamentos = document.getElementById("equipamentos")
+    //alert('equipamentos=>' + equipamentos)
+    var desc_equi = document.getElementById("desc_equi")
+    //alert('desc_equi=>' + desc_equi)
+    var qtd_equi = document.getElementById("qtd_equi")
+    //alert('qtd_equi=>' + qtd_equi)
+    var row = document.createElement('div')
+    var col1 = document.createElement('div')
+    var col2 = document.createElement('div')
+    var desc = document.createElement('label')
+    var qtd = document.createElement('label')
+    var qtd_hidden = document.createElement('input')
+    var desc_hidden = document.createElement('input')
+    row.className = 'row'
+    col1.className = 'col'
+    col2.className = 'col'
+    desc.className = 'col-form-label col-form-label-sm'
+    desc.textContent = desc_equi.value
+    qtd.className = 'col-form-label col-form-label-sm'
+    qtd.textContent = qtd_equi.value
+    qtd_hidden.type = 'hidden'
+    qtd_hidden.name = 'qtd[]'
+    qtd_hidden.value = qtd_equi.value
+    desc_hidden.type = 'hidden'
+    desc_hidden.name = 'desc[]'
+    desc_hidden.value = desc_equi.value
+    col1.append(desc)
+    col1.append(desc_hidden)
+    col2.append(qtd)
+    col2.append(qtd_hidden)
+    row.append(col1)
+    row.append(col2)
+    equipamentos.prepend(row)
+}
+
+function somaTotal() {
+    var material = document.getElementById('vlrKit')
+    var servico = document.getElementById('vlrServico')
+    var total = document.getElementById('vlrTotal')
+    if (String(material.value).length > 0 && String(servico.value).length > 0) {
+        total.value = parseFloat(material.value) + parseFloat(servico.value)
+    } else {
+        if (String(material.value).length > 0) {
+            total.value = parseFloat(material.value)
+        } else {
+            total.value = parseFloat(servico.value)
+        }
+    }
+}
+
 function novoVoltar() {
     var status = $('#btnovo').text();
     if (status == 'Novo') {
         $('#obstext').val('');
-        $('#salvarObs').val('1');
         $('#btnovo').text('Voltar');
+        $('#insertObs').val(true);
         $('#obstext').prop('readonly', false)
     } else {
         window.location.reload();
     }
-}     
+}   
+
+function verifyCheck(field,refreh,form) {
+    var check = $('#'+field);
+    $('#'+refreh).val(check.is(':checked'));
+    handleSubmit(form);
+}
+
+function handleSubmit(form) {
+    $('#'+form).submit();
+}
 
 $(document).ready(function () {
-
+    
     var inputsCEP = $('#rua', '#cidade', '#estado', '#bairro');
     var inputsRUA = $('#cep', '#bairro');
 
@@ -1089,7 +935,7 @@ $(document).ready(function () {
         // $("#estado").val("");
         inputsCEP.val('');
     }
-
+    
     //Quando o campo cep perde o foco.
     $("#cep").blur(function () {
 
@@ -1156,7 +1002,7 @@ $(document).ready(function () {
             }
         });
     }
-
+    
     $('#rua').on('blur', function (e) {
         if ($('#rua').val() !== '' && $('#rua').val() !== $('#rua').attr('info')
             && $('#cidade').val() !== '' && $('#cidade').val() !== $('#cidade').attr('info')
@@ -1166,5 +1012,6 @@ $(document).ready(function () {
             get("https://viacep.com.br/ws/" + $('#estado').val() + '/' + $('#cidade').val() + '/' + $('#rua').val() + '/json/')
         }
     });
-
+    
 });
+
