@@ -112,7 +112,7 @@ router.get('/consulta', ehAdmin, (req, res) => {
 
                                 if (q == projeto.length) {
                                     lista.sort(comparaNum)
-                                    res.render('relatorio/consulta', { qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none' })
+                                    res.render('relatorios/consulta', { qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none' })
                                 }
 
                             }).catch((err) => {
@@ -125,7 +125,7 @@ router.get('/consulta', ehAdmin, (req, res) => {
                         })
                     })
                 } else {
-                    res.render('relatorio/consulta', { lista, todos_clientes, todos_vendedores, mostrar: 'none' })
+                    res.render('relatorios/consulta', { lista, todos_clientes, todos_vendedores, mostrar: 'none' })
                 }
             }).catch((err) => {
                 req.flash('error_msg', 'Nenhuma projeto encontrada.')
@@ -210,15 +210,15 @@ router.get('/consulta/:tipo', ehAdmin, (req, res) => {
                                             //console.log('req.params.tipo=>' + req.params.tipo)
                                             if (q == projeto.length) {
                                                 if (req.params.tipo == 'baixado') {
-                                                    res.render('relatorio/consulta', { listaBaixado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'baixado', titulo: ': Projeto Baixas' })
+                                                    res.render('relatorios/consulta', { listaBaixado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'baixado', titulo: ': Projeto Baixas' })
                                                 } else {
                                                     if (req.params.tipo == 'orcado') {
-                                                        res.render('relatorio/consulta', { listaOrcado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Propostas Enviadas' })
+                                                        res.render('relatorios/consulta', { listaOrcado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Propostas Enviadas' })
                                                     } else {
                                                         if (req.params.tipo == 'aberto') {
-                                                            res.render('relatorio/consulta', { listaAberto, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
+                                                            res.render('relatorios/consulta', { listaAberto, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
                                                         } else {
-                                                            res.render('relatorio/consulta', { listaEncerrado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
+                                                            res.render('relatorios/consulta', { listaEncerrado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
                                                         }
                                                     }
                                                 }
@@ -243,12 +243,12 @@ router.get('/consulta/:tipo', ehAdmin, (req, res) => {
                         })
                     } else {
                         if (req.params.tipo == 'orcado') {
-                            res.render('relatorio/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Orçamentos Enviados' })
+                            res.render('relatorios/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Orçamentos Enviados' })
                         } else {
                             if (req.params.tipo == 'aberto') {
-                                res.render('relatorio/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
+                                res.render('relatorios/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
                             } else {
-                                res.render('relatorio/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
+                                res.render('relatorios/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
                             }
                         }
                     }
@@ -7535,7 +7535,7 @@ router.post('/filtrar', ehAdmin, (req, res) => {
                                     } else {
                                         funcaoGes = funges
                                     }
-                                    res.render('relatorio/consulta', {
+                                    res.render('relatorios/consulta', {
                                         qtd: q, lista, todos_clientes, todos_vendedores, dataini, datafim, total: mascaraDecimal(total), stats, cliente, vendedor, inicio: dataini, fim: datafim, mostrar: '',
                                         check2030, check3050, check50100, check100, checktudo, funges: funcaoGes
                                     })
@@ -7557,7 +7557,7 @@ router.post('/filtrar', ehAdmin, (req, res) => {
                         funcaoGes = funges
                     }
                     req.flash('aviso_msg', 'Não existem registros no sistema.')
-                    res.render('relatorio/consulta', {
+                    res.render('relatorios/consulta', {
                         lista, todos_clientes, todos_vendedores, stats, cliente, inicio: dataini, fim: datafim, mostrar: '',
                         check2030, check3050, check50100, check100, checktudo, funges: funcaoGes
                     })
