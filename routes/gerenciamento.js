@@ -4531,7 +4531,7 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
     })
 })
 
-router.post('/addInstalador/', ehAdmin, (req, res) => {
+router.post('/addInstalador/', ehAdmin, async (req, res) => {
     const { user } = req.user
     const { _id } = req.user
     var id
@@ -4551,7 +4551,7 @@ router.post('/addInstalador/', ehAdmin, (req, res) => {
         if (!naoVazio(projeto_equipe)) {
             equipe = await Equipe.findOne({ projeto: req.body.id });
         }
-        
+
         equipe.insres = req.body.instalador
         equipe.qtdmod = req.body.qtdmod
         equipe.save().then(() => {
