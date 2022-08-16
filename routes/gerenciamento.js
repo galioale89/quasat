@@ -825,8 +825,6 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                     let projetos_equipe = await item.projeto_equipe;
                     let instaladores = await item.instalador;
 
-
-
                     if (projetos.length > 0) {
 
                         projetos.map(async register => {
@@ -944,7 +942,6 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
 
                         addInstalador = [];
                     }
-
                 }
 
                 listaAndamento.sort(comparaNum);
@@ -4548,7 +4545,7 @@ router.post('/addInstalador/', ehAdmin, async (req, res) => {
         let equipe;
 
         equipe = await Equipe.findOne({ _id: projeto.equipe });
-        if (!naoVazio(projeto_equipe)) {
+        if (!naoVazio(equipe)) {
             equipe = await Equipe.findOne({ projeto: req.body.id });
         }
 
@@ -8081,9 +8078,17 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                 {
                     $lookup: {
                         from: 'projetos',
+                        localField: 'projeto',
+                        foreignField: '_id',
+                        as: 'projeto'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'projetos',
                         localField: '_id',
                         foreignField: 'equipe',
-                        as: 'projeto'
+                        as: 'projeto_equipe'
                     }
                 },
                 {
@@ -8104,46 +8109,91 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     }
                     qtdmod = await item.qtdmod;
 
+                    for (const item of list) {
+                        observacao = item.observacao;
+                        deadline = await item.dtfim;
+                        if (naoVazio(deadline) == false) {
+                            deadline = '0000-00-00';
+                        }
+                        qtdmod = await item.qtdmod;
 
-                    let projetos = await item.projeto;
-                    let instaladores = await item.instalador;
+                        let projetos = await item.projeto;
+                        let projetos_equipe = await item.projeto_equipe;
+                        let instaladores = await item.instalador;
 
-                    if (projetos.length > 0) {
+                        if (projetos.length > 0) {
 
-                        projetos.map(async register => {
-                            id = register._id
-                            seq = register.seq
-                            cidade = register.cidade
-                            uf = register.uf
-                            telhado = register.telhado
-                            estrutura = register.estrutura
-                            inversor = register.plaKwpInv
-                            modulos = register.plaQtdMod
-                            potencia = register.plaWattMod
-                            instalado = register.instalado
-                            execucao = register.execucao
-                            parado = register.parado
-                            autorizado = register.autorizado
-                            pagamento = register.pago
-                            cliente = register.cliente
-                            ins_banco = register.ins_banco
-                            checkReal = register.ins_real
-                            pedido = register.pedido
-                            obsprojetista = register.obsprojetista
+                            projetos.map(async register => {
+                                id = register._id
+                                seq = register.seq
+                                cidade = register.cidade
+                                uf = register.uf
+                                telhado = register.telhado
+                                estrutura = register.estrutura
+                                inversor = register.plaKwpInv
+                                modulos = register.plaQtdMod
+                                potencia = register.plaWattMod
+                                instalado = register.instalado
+                                execucao = register.execucao
+                                parado = register.parado
+                                autorizado = register.autorizado
+                                pagamento = register.pago
+                                cliente = register.cliente
+                                ins_banco = register.ins_banco
+                                checkReal = register.ins_real
+                                pedido = register.pedido
+                                obsprojetista = register.obsprojetista
 
-                            if (checkReal != true) {
-                                checkReal = 'unchecked';
-                            } else {
-                                checkReal = 'checked';
-                            }
+                                if (checkReal != true) {
+                                    checkReal = 'unchecked';
+                                } else {
+                                    checkReal = 'checked';
+                                }
 
-                            if (naoVazio(modulos) && naoVazio(potencia)) {
-                                sistema = ((modulos * potencia) / 1000).toFixed(2);
-                            } else {
-                                sistema = 0;
-                            }
+                                if (naoVazio(modulos) && naoVazio(potencia)) {
+                                    sistema = ((modulos * potencia) / 1000).toFixed(2);
+                                } else {
+                                    sistema = 0;
+                                }
+                            })
+                        }
 
-                        })
+                        if (projetos_equipe.length > 0) {
+
+                            projetos_equipe.map(async register => {
+                                id = register._id
+                                seq = register.seq
+                                cidade = register.cidade
+                                uf = register.uf
+                                telhado = register.telhado
+                                estrutura = register.estrutura
+                                inversor = register.plaKwpInv
+                                modulos = register.plaQtdMod
+                                potencia = register.plaWattMod
+                                instalado = register.instalado
+                                execucao = register.execucao
+                                parado = register.parado
+                                autorizado = register.autorizado
+                                pagamento = register.pago
+                                cliente = register.cliente
+                                ins_banco = register.ins_banco
+                                checkReal = register.ins_real
+                                pedido = register.pedido
+                                obsprojetista = register.obsprojetista
+
+                                if (checkReal != true) {
+                                    checkReal = 'unchecked';
+                                } else {
+                                    checkReal = 'checked';
+                                }
+
+                                if (naoVazio(modulos) && naoVazio(potencia)) {
+                                    sistema = ((modulos * potencia) / 1000).toFixed(2);
+                                } else {
+                                    sistema = 0;
+                                }
+                            })
+                        }
 
                         if (naoVazio(pedido)) {
 
