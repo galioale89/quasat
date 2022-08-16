@@ -582,6 +582,7 @@ router.get('/propostaEntregue/:id', ehAdmin, (req, res) => {
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
         projeto.entregue = true
         projeto.dtentrega = dataHoje()
+        projeto.status = "Entregue"
         projeto.save().then(() => {
             res.redirect('/dashboard')
         }).catch((err) => {
@@ -7472,18 +7473,23 @@ router.post('/aplicarstatus/', ehAdmin, (req, res) => {
     const { vendedor } = req.user
     Projeto.findOne({ _id: req.body.id }).then((p) => {
         var texto
+
         if (req.body.tipo == 'status') {
+
             if (naoVazio(p.descstatus)) {
                 texto = p.descstatus
             } else {
                 texto = ''
             }
+
             if (naoVazio(req.body.obs)) {
                 texto = texto + '\n' + '[' + dataMensagem(dataHoje()) + ']' + '-' + req.body.status + '\n' + req.body.obs
             }
+
             p.status = req.body.status
             p.descstatus = texto
             p.datastatus = dataHoje()
+
             p.save().then(() => {
                 req.flash('success_msg', 'Status da negociacão alterado.')
                 if (naoVazio(vendedor)) {
@@ -7491,19 +7497,23 @@ router.post('/aplicarstatus/', ehAdmin, (req, res) => {
                 } else {
                     res.redirect('/gerenciamento/selecao')
                 }
+
             }).catch((err) => {
                 req.flash('error_msg', 'Houve um erro ao salvar a projeto.')
                 res.redirect('/gerenciamento/selecao/')
             })
         } else {
+
             if (naoVazio(p.descmot)) {
                 texto = p.descmot
             } else {
                 texto = ''
             }
+
             if (naoVazio(req.body.obs)) {
                 texto = texto + '\n' + '[' + dataMensagem(dataHoje()) + ']' + '-' + req.body.motivo + '\n' + req.body.obs
             }
+
             p.baixada = true
             p.status = 'Perdido'
             p.motivo = req.body.motivo
