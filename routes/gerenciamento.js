@@ -4541,7 +4541,7 @@ router.post('/addInstalador/', ehAdmin, async (req, res) => {
         id = user
     }
     //console.log(req.body.id)
-    Projeto.findOne({ _id: req.body.id }).then((projeto) => {
+    Projeto.findOne({ _id: req.body.id }).then(async (projeto) => {
         projeto.ins_banco = req.body.instalador
         projeto.save();
 
