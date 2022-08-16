@@ -4543,21 +4543,25 @@ router.post('/addInstalador/', ehAdmin, (req, res) => {
     //console.log(req.body.id)
     Projeto.findOne({ _id: req.body.id }).then((projeto) => {
         projeto.ins_banco = req.body.instalador
-        projeto.save()
-        Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
-            equipe.insres = req.body.instalador
-            equipe.qtdmod = req.body.qtdmod
-            equipe.save().then(() => {
-                req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
-                res.redirect('/gerenciamento/emandamento')
-            }).catch((err) => {
-                req.flash('error_msg', 'Houve erro ao salvar a equipe.')
-                res.redirect('/gerenciamento/emandamento')
-            })
+        projeto.save();
+
+        let equipe;
+
+        equipe = await Equipe.findOne({ _id: projeto.equipe });
+        if (!naoVazio(projeto_equipe)) {
+            equipe = await Equipe.findOne({ projeto: req.body.id });
+        }
+        
+        equipe.insres = req.body.instalador
+        equipe.qtdmod = req.body.qtdmod
+        equipe.save().then(() => {
+            req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
+            res.redirect('/gerenciamento/emandamento')
         }).catch((err) => {
-            req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
+            req.flash('error_msg', 'Houve erro ao salvar a equipe.')
             res.redirect('/gerenciamento/emandamento')
         })
+
 
     }).catch((err) => {
         req.flash('error_msg', 'Houve erro ao encontrar a projeto.')

@@ -536,9 +536,9 @@ function manutencao() {
 
 function entrarOrcamento(res, id, id_res) {
     var pessoa = document.getElementById('pessoa')
-    var id_pes = pessoa.value
-    id_pes = id_pes.slice(23, 47)
-    if (res != 'vazio' && String(x) != String(id_res)) {
+    var pessoa_value = pessoa.value
+    var id_pes = pessoa_value.slice(23, 47)
+    if (res != 'vazio' && String(id_pes) != String(id_res)) {
         var txt_res = 'Orçamentista alocado: ' + res + '.'
         Swal.fire({
             title: 'Deseja continuar?',
