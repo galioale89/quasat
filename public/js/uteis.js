@@ -535,11 +535,11 @@ function manutencao() {
 }
 
 function entrarOrcamento(res, id, id_res) {
-    var id_pes = document.getElementById('pessoa')
-    var x = id_pes.value
-    var txt_res = 'Orçamentista alocado: ' + res + '.'
-    x = x.slice(23, 47)
+    var pessoa = document.getElementById('pessoa')
+    var id_pes = pessoa.value
+    id_pes = id_pes.slice(23, 47)
     if (res != 'vazio' && String(x) != String(id_res)) {
+        var txt_res = 'Orçamentista alocado: ' + res + '.'
         Swal.fire({
             title: 'Deseja continuar?',
             text: txt_res,

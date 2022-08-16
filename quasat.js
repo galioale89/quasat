@@ -144,22 +144,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
     var sqlcli = []
     var render = ''
 
-    if (naoVazio(user)) {
-        id = user
-        sql = { user: id, responsavel: pessoa }
-    } else {
-        id = _id
-        sql = { user: id }
-    }
-
-    if (vendedor) {
-        list.getClients(id, pessoa)
-        sqlcli = { user: id, vendedor: pessoa, lead: true }
-    } else {
-        list.getClients(id)
-        sqlcli = { user: id, lead: true }
-    }
-
     var hoje = dataHoje()
     var data1 = 0
     var data2 = 0
@@ -196,13 +180,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
     var totNegociando = 0
     var totPerdido = 0
 
-    var ehMaster
-    if (ehAdmin == 0) {
-        ehMaster = true
-    } else {
-        ehMaster = false
-    }
-
     let data = new Date()
 
     // console.log('id=>' + id)
@@ -217,16 +194,46 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
     let contaDias = 0
     let excedePrazo = false
     let tamTermo
+
+    let nome_responsavel = ''
+    let nome_cliente = ''
+    let  nome_instalador = ''
+    let dataAprova = '0000-00-00'
+    let datacad = '0000-00-00'
+
+    if (naoVazio(user)) {
+        id = user
+        // sql = { user: id, responsavel: pessoa }
+    } else {
+        id = _id
+        // sql = { user: id }
+    }
+
+    if (vendedor) {
+        list.getClients(id, pessoa)
+        sqlcli = { user: id, vendedor: pessoa, lead: true }
+    } else {
+        list.getClients(id)
+        sqlcli = { user: id, lead: true }
+    }
+    
+    var ehMaster
+    if (ehAdmin == 0) {
+        ehMaster = true
+    } else {
+        ehMaster = false
+    }
     // console.log('pessoa=>'+pessoa)
     if (naoVazio(user)) {
+        
         const logado = await Pessoa.findById(pessoa)
-        console.log(logado)
+
         if (funges || orcamentista || funpro) {
             sql = { user: id }
         } else {
             sql = { user: id, vendedor: logado._id }
         }
-        // console.log('orcamentista=>'+orcamentista)
+
         if (vendedor || funges || orcamentista || funpro) {
             Projeto.find(sql)
                 .then((projetos) => {
@@ -253,32 +260,20 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                             Pessoa.findOne({ _id: id_responsavel })
                                                                 .then((responsavel) => {
                                                                     q++
-                                                                    if (naoVazio(responsavel)) {
+                                                                    if (naoVazio(responsavel))
                                                                         nome_responsavel = responsavel.nome
-                                                                    } else {
-                                                                        nome_responsavel = 'vazio'
-                                                                    }
-                                                                    if (naoVazio(cliente)) {
-                                                                        nome_cliente = cliente.nome
-                                                                    } else {
-                                                                        nome_cliente = ''
-                                                                    }
-                                                                    if (naoVazio(instalador)) {
-                                                                        nome_instalador = instalador.nome
-                                                                    } else {
-                                                                        nome_instalador = ''
-                                                                    }
-                                                                    if (naoVazio(e.dataApro)) {
-                                                                        dataAprova = e.dataApro
-                                                                    } else {
-                                                                        dataAprova = '0000-00-00'
-                                                                    }
 
-                                                                    if (naoVazio(e.datacad)) {
+                                                                    if (naoVazio(cliente)) 
+                                                                        nome_cliente = cliente.nome
+
+                                                                    if (naoVazio(instalador)) 
+                                                                        nome_instalador = instalador.nome
+
+                                                                    if (naoVazio(e.dataApro))
+                                                                        dataAprova = e.dataApro
+
+                                                                    if (naoVazio(e.datacad))
                                                                         datacad = e.datacad
-                                                                    } else {
-                                                                        datacad = '0000-00-00'
-                                                                    }
 
                                                                     //DASHBOARD GESTOR
                                                                     if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
