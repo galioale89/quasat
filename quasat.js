@@ -170,8 +170,9 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
     var deadlineIns = []
     var dtcadastro = ''
     var dtvalidade = ''
-    var nome_cliente
-    var nome_instalador
+    let nome_responsavel = ''
+    var nome_cliente = ''
+    var nome_instalador = ''
     var dataAprova
     var datacad
 
@@ -194,12 +195,6 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
     let contaDias = 0
     let excedePrazo = false
     let tamTermo
-
-    let nome_responsavel = ''
-    let nome_cliente = ''
-    let  nome_instalador = ''
-    let dataAprova = '0000-00-00'
-    let datacad = '0000-00-00'
 
     if (naoVazio(user)) {
         id = user
