@@ -582,6 +582,7 @@ router.get('/propostaEntregue/:id', ehAdmin, (req, res) => {
     Projeto.findOne({ _id: req.params.id }).then((projeto) => {
         projeto.entregue = true
         projeto.dtentrega = dataHoje()
+        projeto.status = "Entregue"
         projeto.save().then(() => {
             res.redirect('/dashboard')
         }).catch((err) => {
@@ -825,8 +826,6 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
                     let projetos_equipe = await item.projeto_equipe;
                     let instaladores = await item.instalador;
 
-
-
                     if (projetos.length > 0) {
 
                         projetos.map(async register => {
@@ -944,7 +943,6 @@ router.get('/emandamento/', ehAdmin, (req, res) => {
 
                         addInstalador = [];
                     }
-
                 }
 
                 listaAndamento.sort(comparaNum);
@@ -4531,7 +4529,7 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
     })
 })
 
-router.post('/addInstalador/', ehAdmin, (req, res) => {
+router.post('/addInstalador/', ehAdmin, async (req, res) => {
     const { user } = req.user
     const { _id } = req.user
     var id
@@ -4541,23 +4539,27 @@ router.post('/addInstalador/', ehAdmin, (req, res) => {
         id = user
     }
     //console.log(req.body.id)
-    Projeto.findOne({ _id: req.body.id }).then((projeto) => {
+    Projeto.findOne({ _id: req.body.id }).then(async (projeto) => {
         projeto.ins_banco = req.body.instalador
-        projeto.save()
-        Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
-            equipe.insres = req.body.instalador
-            equipe.qtdmod = req.body.qtdmod
-            equipe.save().then(() => {
-                req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
-                res.redirect('/gerenciamento/emandamento')
-            }).catch((err) => {
-                req.flash('error_msg', 'Houve erro ao salvar a equipe.')
-                res.redirect('/gerenciamento/emandamento')
-            })
+        projeto.save();
+
+        let equipe;
+
+        equipe = await Equipe.findOne({ _id: projeto.equipe });
+        if (!naoVazio(equipe)) {
+            equipe = await Equipe.findOne({ projeto: req.body.id });
+        }
+
+        equipe.insres = req.body.instalador
+        equipe.qtdmod = req.body.qtdmod
+        equipe.save().then(() => {
+            req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
+            res.redirect('/gerenciamento/emandamento')
         }).catch((err) => {
-            req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
+            req.flash('error_msg', 'Houve erro ao salvar a equipe.')
             res.redirect('/gerenciamento/emandamento')
         })
+
 
     }).catch((err) => {
         req.flash('error_msg', 'Houve erro ao encontrar a projeto.')
@@ -7471,18 +7473,23 @@ router.post('/aplicarstatus/', ehAdmin, (req, res) => {
     const { vendedor } = req.user
     Projeto.findOne({ _id: req.body.id }).then((p) => {
         var texto
+
         if (req.body.tipo == 'status') {
+
             if (naoVazio(p.descstatus)) {
                 texto = p.descstatus
             } else {
                 texto = ''
             }
+
             if (naoVazio(req.body.obs)) {
                 texto = texto + '\n' + '[' + dataMensagem(dataHoje()) + ']' + '-' + req.body.status + '\n' + req.body.obs
             }
+
             p.status = req.body.status
             p.descstatus = texto
             p.datastatus = dataHoje()
+
             p.save().then(() => {
                 req.flash('success_msg', 'Status da negociacão alterado.')
                 if (naoVazio(vendedor)) {
@@ -7490,19 +7497,23 @@ router.post('/aplicarstatus/', ehAdmin, (req, res) => {
                 } else {
                     res.redirect('/gerenciamento/selecao')
                 }
+
             }).catch((err) => {
                 req.flash('error_msg', 'Houve um erro ao salvar a projeto.')
                 res.redirect('/gerenciamento/selecao/')
             })
         } else {
+
             if (naoVazio(p.descmot)) {
                 texto = p.descmot
             } else {
                 texto = ''
             }
+
             if (naoVazio(req.body.obs)) {
                 texto = texto + '\n' + '[' + dataMensagem(dataHoje()) + ']' + '-' + req.body.motivo + '\n' + req.body.obs
             }
+
             p.baixada = true
             p.status = 'Perdido'
             p.motivo = req.body.motivo
@@ -8077,9 +8088,17 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                 {
                     $lookup: {
                         from: 'projetos',
+                        localField: 'projeto',
+                        foreignField: '_id',
+                        as: 'projeto'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'projetos',
                         localField: '_id',
                         foreignField: 'equipe',
-                        as: 'projeto'
+                        as: 'projeto_equipe'
                     }
                 },
                 {
@@ -8100,46 +8119,91 @@ router.post('/emandamento/', ehAdmin, async (req, res) => {
                     }
                     qtdmod = await item.qtdmod;
 
+                    for (const item of list) {
+                        observacao = item.observacao;
+                        deadline = await item.dtfim;
+                        if (naoVazio(deadline) == false) {
+                            deadline = '0000-00-00';
+                        }
+                        qtdmod = await item.qtdmod;
 
-                    let projetos = await item.projeto;
-                    let instaladores = await item.instalador;
+                        let projetos = await item.projeto;
+                        let projetos_equipe = await item.projeto_equipe;
+                        let instaladores = await item.instalador;
 
-                    if (projetos.length > 0) {
+                        if (projetos.length > 0) {
 
-                        projetos.map(async register => {
-                            id = register._id
-                            seq = register.seq
-                            cidade = register.cidade
-                            uf = register.uf
-                            telhado = register.telhado
-                            estrutura = register.estrutura
-                            inversor = register.plaKwpInv
-                            modulos = register.plaQtdMod
-                            potencia = register.plaWattMod
-                            instalado = register.instalado
-                            execucao = register.execucao
-                            parado = register.parado
-                            autorizado = register.autorizado
-                            pagamento = register.pago
-                            cliente = register.cliente
-                            ins_banco = register.ins_banco
-                            checkReal = register.ins_real
-                            pedido = register.pedido
-                            obsprojetista = register.obsprojetista
+                            projetos.map(async register => {
+                                id = register._id
+                                seq = register.seq
+                                cidade = register.cidade
+                                uf = register.uf
+                                telhado = register.telhado
+                                estrutura = register.estrutura
+                                inversor = register.plaKwpInv
+                                modulos = register.plaQtdMod
+                                potencia = register.plaWattMod
+                                instalado = register.instalado
+                                execucao = register.execucao
+                                parado = register.parado
+                                autorizado = register.autorizado
+                                pagamento = register.pago
+                                cliente = register.cliente
+                                ins_banco = register.ins_banco
+                                checkReal = register.ins_real
+                                pedido = register.pedido
+                                obsprojetista = register.obsprojetista
 
-                            if (checkReal != true) {
-                                checkReal = 'unchecked';
-                            } else {
-                                checkReal = 'checked';
-                            }
+                                if (checkReal != true) {
+                                    checkReal = 'unchecked';
+                                } else {
+                                    checkReal = 'checked';
+                                }
 
-                            if (naoVazio(modulos) && naoVazio(potencia)) {
-                                sistema = ((modulos * potencia) / 1000).toFixed(2);
-                            } else {
-                                sistema = 0;
-                            }
+                                if (naoVazio(modulos) && naoVazio(potencia)) {
+                                    sistema = ((modulos * potencia) / 1000).toFixed(2);
+                                } else {
+                                    sistema = 0;
+                                }
+                            })
+                        }
 
-                        })
+                        if (projetos_equipe.length > 0) {
+
+                            projetos_equipe.map(async register => {
+                                id = register._id
+                                seq = register.seq
+                                cidade = register.cidade
+                                uf = register.uf
+                                telhado = register.telhado
+                                estrutura = register.estrutura
+                                inversor = register.plaKwpInv
+                                modulos = register.plaQtdMod
+                                potencia = register.plaWattMod
+                                instalado = register.instalado
+                                execucao = register.execucao
+                                parado = register.parado
+                                autorizado = register.autorizado
+                                pagamento = register.pago
+                                cliente = register.cliente
+                                ins_banco = register.ins_banco
+                                checkReal = register.ins_real
+                                pedido = register.pedido
+                                obsprojetista = register.obsprojetista
+
+                                if (checkReal != true) {
+                                    checkReal = 'unchecked';
+                                } else {
+                                    checkReal = 'checked';
+                                }
+
+                                if (naoVazio(modulos) && naoVazio(potencia)) {
+                                    sistema = ((modulos * potencia) / 1000).toFixed(2);
+                                } else {
+                                    sistema = 0;
+                                }
+                            })
+                        }
 
                         if (naoVazio(pedido)) {
 

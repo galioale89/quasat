@@ -89,7 +89,7 @@ function termoEntrega() {
     var data = ano + '-' + mes + '-' + dia
     var htmliniform = '<form action="/gerenciamento/salvarImagem" enctype="multipart/form-data" method="post">'
     if (desctermo.length > 0) {
-        var htmlsubmit = '<input type="hidden" name="seq" value="0"><input type="hidden" name="idprj" value="' + id + '"><input type="hidden" name="date" value=' + data + '><input type="hidden" name="tipo" value="termo"><input type="file" name="files" class="form-control form-control-sm"><div><button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button><a style="padding-left: 5px" class="btn btn-sm btn-primary mt-2" href="/gerenciamento/mostrarBucket/' + desctermo + '"><i class="bi bi-eye"></i></a></div>'
+        var htmlsubmit = '<input type="hidden" name="seq" value="0"><input type="hidden" name="idprj" value="' + id + '"><input type="hidden" name="date" value=' + data + '><input type="hidden" name="tipo" value="termo"><input type="file" name="files" class="form-control form-control-sm"><div><button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button><a style="margin-left: 7px" class="btn btn-sm btn-primary mt-2" href="/gerenciamento/mostrarBucket/' + desctermo + '"><i class="d-flex bi bi-eye"></i></a></div>'
     } else {
         var htmlsubmit = '<input type="hidden" name="seq" value="0"><input type="hidden" name="idprj" value="' + id + '"><input type="hidden" name="date" value=' + data + '><input type="hidden" name="tipo" value="termo"><input type="file" name="files" class="form-control form-control-sm"><button type="submit" class="btn btn-sm btn-success mt-2">Salvar</button>'
     }
@@ -536,9 +536,9 @@ function manutencao() {
 
 function entrarOrcamento(res, id, id_res) {
     var pessoa = document.getElementById('pessoa')
-    var id_pes = pessoa.value
-    id_pes = id_pes.slice(23, 47)
-    if (res != 'vazio' && String(x) != String(id_res)) {
+    var pessoa_value = pessoa.value
+    var id_pes = pessoa_value.slice(23, 47)
+    if (res != 'vazio' && String(id_pes) != String(id_res)) {
         var txt_res = 'Orçamentista alocado: ' + res + '.'
         Swal.fire({
             title: 'Deseja continuar?',

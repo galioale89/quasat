@@ -112,7 +112,7 @@ router.get('/consulta', ehAdmin, (req, res) => {
 
                                 if (q == projeto.length) {
                                     lista.sort(comparaNum)
-                                    res.render('principal/consulta', { qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none' })
+                                    res.render('relatorios/consulta', { qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none' })
                                 }
 
                             }).catch((err) => {
@@ -125,7 +125,7 @@ router.get('/consulta', ehAdmin, (req, res) => {
                         })
                     })
                 } else {
-                    res.render('principal/consulta', { lista, todos_clientes, todos_vendedores, mostrar: 'none' })
+                    res.render('relatorios/consulta', { lista, todos_clientes, todos_vendedores, mostrar: 'none' })
                 }
             }).catch((err) => {
                 req.flash('error_msg', 'Nenhuma projeto encontrada.')
@@ -210,15 +210,15 @@ router.get('/consulta/:tipo', ehAdmin, (req, res) => {
                                             //console.log('req.params.tipo=>' + req.params.tipo)
                                             if (q == projeto.length) {
                                                 if (req.params.tipo == 'baixado') {
-                                                    res.render('principal/consulta', { listaBaixado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'baixado', titulo: ': Projeto Baixas' })
+                                                    res.render('relatorios/consulta', { listaBaixado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'baixado', titulo: ': Projeto Baixas' })
                                                 } else {
                                                     if (req.params.tipo == 'orcado') {
-                                                        res.render('principal/consulta', { listaOrcado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Propostas Enviadas' })
+                                                        res.render('relatorios/consulta', { listaOrcado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Propostas Enviadas' })
                                                     } else {
                                                         if (req.params.tipo == 'aberto') {
-                                                            res.render('principal/consulta', { listaAberto, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
+                                                            res.render('relatorios/consulta', { listaAberto, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
                                                         } else {
-                                                            res.render('principal/consulta', { listaEncerrado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
+                                                            res.render('relatorios/consulta', { listaEncerrado, todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
                                                         }
                                                     }
                                                 }
@@ -243,12 +243,12 @@ router.get('/consulta/:tipo', ehAdmin, (req, res) => {
                         })
                     } else {
                         if (req.params.tipo == 'orcado') {
-                            res.render('principal/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Orçamentos Enviados' })
+                            res.render('relatorios/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'orcado', titulo: ': Orçamentos Enviados' })
                         } else {
                             if (req.params.tipo == 'aberto') {
-                                res.render('principal/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
+                                res.render('relatorios/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'aberto', titulo: ': Em Aberto' })
                             } else {
-                                res.render('principal/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
+                                res.render('relatorios/consulta', { todos_clientes, todos_responsaveis, todas_empresas, tipo: 'encerrado', titulo: ': Encerrado' })
                             }
                         }
                     }
@@ -7432,13 +7432,9 @@ router.post('/filtrar', ehAdmin, (req, res) => {
             cliente = req.body.cliente
             vendedor = req.body.vendedor
 
-            //console.log('stats=>' + req.body.stats)
-            //console.log('cliente=>' + req.body.cliente)
-            //console.log('vendedor=>' + req.body.vendedor)
-
             dataini = dataBusca(req.body.dataini)
             datafim = dataBusca(req.body.datafim)
-            //console.log('req.body.tipo=>' + req.body.tipo)
+        
 
             if (vendedor != 'Todos' && cliente != 'Todos' && stats != 'Todos') {
                 sql = { user: id, cliente: cliente, vendedor: vendedor, status: stats }
@@ -7485,13 +7481,13 @@ router.post('/filtrar', ehAdmin, (req, res) => {
             if (naoVazio(dataini) && naoVazio(datafim)) {
                 var data = { 'datacad': { $lte: datafim, $gte: dataini } }
             }
-            //console.log('sql=>' + JSON.stringify(sql))
+
             Object.assign(busca, sql, data, sqlvlr)
-            //console.log('data=>' + JSON.stringify(data))
+
             console.log('busca=>' + JSON.stringify(busca))
 
             Projeto.find(busca).sort({ 'data': -1 }).then((projeto) => {
-                //console.log('projeto=>' + projeto)
+
                 if (naoVazio(projeto)) {
                     projeto.forEach((e) => {
                         Cliente.findOne({ _id: e.cliente }).then((prj_cliente) => {
@@ -7539,7 +7535,7 @@ router.post('/filtrar', ehAdmin, (req, res) => {
                                     } else {
                                         funcaoGes = funges
                                     }
-                                    res.render('principal/consulta', {
+                                    res.render('relatorios/consulta', {
                                         qtd: q, lista, todos_clientes, todos_vendedores, dataini, datafim, total: mascaraDecimal(total), stats, cliente, vendedor, inicio: dataini, fim: datafim, mostrar: '',
                                         check2030, check3050, check50100, check100, checktudo, funges: funcaoGes
                                     })
@@ -7561,7 +7557,7 @@ router.post('/filtrar', ehAdmin, (req, res) => {
                         funcaoGes = funges
                     }
                     req.flash('aviso_msg', 'Não existem registros no sistema.')
-                    res.render('principal/consulta', {
+                    res.render('relatorios/consulta', {
                         lista, todos_clientes, todos_vendedores, stats, cliente, inicio: dataini, fim: datafim, mostrar: '',
                         check2030, check3050, check50100, check100, checktudo, funges: funcaoGes
                     })
