@@ -535,9 +535,15 @@ function manutencao() {
 }
 
 function entrarOrcamento(res, id, id_res) {
+    alert(res);
+    alert(id);
+    alert(id_res);
     var pessoa = document.getElementById('pessoa')
+    alert(pessoa);
     var pessoa_value = pessoa.value
-    var id_pes = pessoa_value.slice(23, 47)
+    alert(pessoa_value);
+    var id_pes = pessoa_value.slice(23, 47);
+    alert(id_pes);
     if (res != 'vazio' && String(id_pes) != String(id_res)) {
         var txt_res = 'Orçamentista alocado: ' + res + '.'
         Swal.fire({
