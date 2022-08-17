@@ -367,7 +367,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                         })
                                                                     }
 
-                                                                    if ((e.entregue) && (e.status == 'Enviado')) {
+                                                                    if ((e.entregue) && (e.status == 'Entregue')) {
                                                                         alerta = false
                                                                         dtfim = String(e.dtentrega)
                                                                         diaval = dtfim.substring(8, 10)
