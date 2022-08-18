@@ -258,7 +258,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                     if (naoVazio(responsavel))
                                                                         nome_responsavel = responsavel.nome
                                                                     else
-                                                                    nome_responsavel = ""
+                                                                    nome_responsavel = "vazio"
 
                                                                     if (naoVazio(cliente)) 
                                                                         nome_cliente = cliente.nome
