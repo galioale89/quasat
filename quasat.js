@@ -271,7 +271,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                         datacad = e.datacad
 
                                                                     //DASHBOARD GESTOR
-                                                                    if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
+                                                                    if ((e.status == 'Enviado' || e.status == 'Entregue') && e.ganho == false && naoVazio(e.motivo) == false) {
                                                                         if (naoVazio(e.valor)) {
                                                                             totEnviado = totEnviado + e.valor
                                                                         }
@@ -930,7 +930,7 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                         }
                                                         q++
 
-                                                        if (e.status == 'Enviado' && e.ganho == false && naoVazio(e.motivo) == false) {
+                                                        if (e.status == 'Enviado' || e.status == 'Entregue' && e.ganho == false && naoVazio(e.motivo) == false) {
                                                             if (naoVazio(e.valor)) {
                                                                 totEnviado = totEnviado + e.valor
                                                             }
