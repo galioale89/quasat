@@ -9189,7 +9189,7 @@ router.post('/filtrodash', ehAdmin, (req, res) => {
                                                         listaTermos.push({ id: e._id, vendedor: pes_vendedor.nome, termo, excedePrazo, contaDias, nome_instalador, cliente: cliente.nome, desctermo, seq: e.seq, cadastro: dataMsgNum(datacad), aprovacao: dataMensagem(dataAprova), vistoria, parado: e.parado, execucao: e.execucao, encerrado: e.encerrado })
                                                     }
 
-                                                    if ((e.entregue == true) && (e.status == 'Enviado')) {
+                                                    if ((e.entregue == true) && (e.status == 'Entregue')) {
                                                         //console.log('entregue')
                                                         alerta = false
                                                         dtfim = String(e.dtentrega)
