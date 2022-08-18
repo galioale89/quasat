@@ -4395,138 +4395,137 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
     const check = req.body.check
 
     const ins_realizado = await Pessoa.findById(req.body.ins_realizado)
+    try {
 
-    Projeto.findOne({ _id: req.body.id }).then((projeto) => {
-        if (naoVazio(projeto)) {
-            Equipe.findOne({ _id: projeto.equipe }).then((equipe) => {
-                Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
-                    Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                        //console.log('equipe=>' + equipe)
-                        if (projeto.parado == false && projeto.execucao == false) {
-                            if (check) {
-                                equipe.insres = ins_realizado
-                                projeto.ins_real = true
-                            } else {
-                                projeto.ins_real = false
-                                equipe.insres = projeto.ins_banco
-                            }
-                            projeto.execucao = true
-                            projeto.parado = false
-                            projeto.dtiniicio = req.body.dtfim
-                            projeto.dtfim = req.body.dtfim
-                            equipe.liberar = true
-                            equipe.dtinicio = req.body.dtfim
-                            equipe.dtfim = req.body.dtfim
-                            equipe.dtinibusca = dataBusca(req.body.dtfim)
-                            equipe.dtfimbusca = dataBusca(req.body.dtfim)
-                            projeto.save()
-                            equipe.save().then(() => {
-                                mensagem = 'Olá ' + instalador.nome + ',' + '\n' +
-                                    'Instalação programada para o cliente ' + cliente.nome + '\n' +
-                                    // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + '.' + '\n' +
-                                    // 'Acompanhe a obra acessando: https://integracao.vimmus.com.br/gerenciamento/instalacao/' + projeto._id + '.'
-                                    'Verifique seu aplicativo e aguarde a gerência entrar em contato.'
-                                client.messages
-                                    .create({
-                                        body: mensagem,
-                                        from: 'whatsapp:+554991832978',
-                                        to: 'whatsapp:+55' + instalador.celular
-                                    })
-                                    .then((message) => {
-                                        req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
-                                        res.redirect('/gerenciamento/emandamento')
-                                    }).done()
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Houve erro ao salvar a equipe.')
-                                res.redirect('/gerenciamento/emandamento')
-                            })
+    } catch (error) {
 
-                        } else {
-                            if (projeto.parado == false) {
-                                projeto.execucao = true
-                                projeto.parado = true
-                                mensagem = 'Equipe de instalação cancelada'
-                                tipo = 'error_msg'
-                                equipe.parado = true
-                            } else {
-                                projeto.execucao = true
-                                projeto.parado = false
-                                mensagem = 'Equipe de instalação enviada'
-                                tipo = 'success_msg'
-                                equipe.parado = false
-                            }
-                            equipe.save()
-                            projeto.save().then(() => {
-                                //console.log('cliente=>' + cliente)
-                                mensagem = mensagem + ' para o cliente ' + cliente.nome + '\n' + '.'
-                                // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + ' foi cancelada.' + '\n' +
-                                'Aguarde a gerência entrar em contato.'
-                                client.messages
-                                    .create({
-                                        body: mensagem,
-                                        from: 'whatsapp:+554991832978',
-                                        to: 'whatsapp:+55' + instalador.celular
-                                    })
-                                    .then((message) => {
-                                        req.flash(tipo, mensagem)
-                                        res.redirect('/gerenciamento/emandamento')
-                                    }).done()
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Houve erro ao salvar a projeto.')
-                                res.redirect('/gerenciamento/emandamento')
+    }
+    var projeto = await Projeto.findOne({ _id: req.body.id })
+    if (naoVazio(projeto)) {
+        let equipe;
+        equipe = await Equipe.findOne({ _id: projeto.equipe })
+        if (!naoVazio(equipe)) {
+            equipe = await Equipe.findOne({ _id: req.body.id })
+        }
+        Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
+            Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
+                if (projeto.parado == false && projeto.execucao == false) {
+                    if (check) {
+                        equipe.insres = ins_realizado
+                        projeto.ins_real = true
+                    } else {
+                        projeto.ins_real = false
+                        equipe.insres = projeto.ins_banco
+                    }
+                    projeto.execucao = true
+                    projeto.parado = false
+                    projeto.dtiniicio = req.body.dtfim
+                    projeto.dtfim = req.body.dtfim
+                    equipe.liberar = true
+                    equipe.dtinicio = req.body.dtfim
+                    equipe.dtfim = req.body.dtfim
+                    equipe.dtinibusca = dataBusca(req.body.dtfim)
+                    equipe.dtfimbusca = dataBusca(req.body.dtfim)
+                    projeto.save()
+                    equipe.save().then(() => {
+                        mensagem = 'Olá ' + instalador.nome + ',' + '\n' +
+                            'Instalação programada para o cliente ' + cliente.nome + '\n' +
+                            // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + '.' + '\n' +
+                            // 'Acompanhe a obra acessando: https://integracao.vimmus.com.br/gerenciamento/instalacao/' + projeto._id + '.'
+                            'Verifique seu aplicativo e aguarde a gerência entrar em contato.'
+                        client.messages
+                            .create({
+                                body: mensagem,
+                                from: 'whatsapp:+554991832978',
+                                to: 'whatsapp:+55' + instalador.celular
                             })
-                        }
+                            .then((message) => {
+                                req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
+                                res.redirect('/gerenciamento/emandamento')
+                            }).done()
                     }).catch((err) => {
-                        req.flash('error_msg', 'Houve erro ao encontrar o cliente<envia>.')
+                        req.flash('error_msg', 'Houve erro ao salvar a equipe.')
                         res.redirect('/gerenciamento/emandamento')
                     })
-                }).catch((err) => {
-                    req.flash('error_msg', 'Houve erro ao encontrar o instalador<envia>.')
-                    res.redirect('/gerenciamento/emandamento')
-                })
+
+                } else {
+                    if (projeto.parado == false) {
+                        projeto.execucao = true
+                        projeto.parado = true
+                        mensagem = 'Equipe de instalação cancelada'
+                        tipo = 'error_msg'
+                        equipe.parado = true
+                    } else {
+                        projeto.execucao = true
+                        projeto.parado = false
+                        mensagem = 'Equipe de instalação enviada'
+                        tipo = 'success_msg'
+                        equipe.parado = false
+                    }
+                    equipe.save()
+                    projeto.save().then(() => {
+                        //console.log('cliente=>' + cliente)
+                        mensagem = mensagem + ' para o cliente ' + cliente.nome + '\n' + '.'
+                        // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + ' foi cancelada.' + '\n' +
+                        'Aguarde a gerência entrar em contato.'
+                        client.messages
+                            .create({
+                                body: mensagem,
+                                from: 'whatsapp:+554991832978',
+                                to: 'whatsapp:+55' + instalador.celular
+                            })
+                            .then((message) => {
+                                req.flash(tipo, mensagem)
+                                res.redirect('/gerenciamento/emandamento')
+                            }).done()
+                    }).catch((err) => {
+                        req.flash('error_msg', 'Houve erro ao salvar a projeto.')
+                        res.redirect('/gerenciamento/emandamento')
+                    })
+                }
             }).catch((err) => {
-                req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
+                req.flash('error_msg', 'Houve erro ao encontrar o cliente<envia>.')
                 res.redirect('/gerenciamento/emandamento')
             })
-        } else {
-            Tarefas.findOne({ _id: req.body.id }).then((tarefa) => {
-                Equipe.findOne({ _id: tarefa.equipe }).then((equipe) => {
-                    if (naoVazio(equipe.insres)) {
-                        mensagem = 'Equipe liberada para o serviço.'
-                        tipo = 'success_msg'
-                        equipe.liberar = true
-                        equipe.save().then(() => {
-                            //console.log('email=>' + email)
-                            Pessoa.findOne({ _id: equipe.insres }).then((insres) => {
-                                //console.log('insres.nome=>' + insres.nome)
-                                req.flash(tipo, mensagem)
-                                res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
+        }).catch((err) => {
+            req.flash('error_msg', 'Houve erro ao encontrar o instalador<envia>.')
+            res.redirect('/gerenciamento/emandamento')
+        })
+    } else {
+        Tarefas.findOne({ _id: req.body.id }).then((tarefa) => {
+            Equipe.findOne({ _id: tarefa.equipe }).then((equipe) => {
+                if (naoVazio(equipe.insres)) {
+                    mensagem = 'Equipe liberada para o serviço.'
+                    tipo = 'success_msg'
+                    equipe.liberar = true
+                    equipe.save().then(() => {
+                        //console.log('email=>' + email)
+                        Pessoa.findOne({ _id: equipe.insres }).then((insres) => {
+                            //console.log('insres.nome=>' + insres.nome)
+                            req.flash(tipo, mensagem)
+                            res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
 
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Houve erro ao encontrar o instalador responsável.')
-                                res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
-                            })
                         }).catch((err) => {
-                            req.flash('error_msg', 'Houve erro ao salvar a equipe.')
+                            req.flash('error_msg', 'Houve erro ao encontrar o instalador responsável.')
                             res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
                         })
-                    } else {
-                        req.flash('aviso_msg', 'Só será possível libera a equipe para a obra após selecionar um técnico responsável.')
-                        res.redirect('/gerenciamento/equipe/' + req.body.id)
-                    }
-                }).catch((err) => {
-                    req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
-                    res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
-                })
+                    }).catch((err) => {
+                        req.flash('error_msg', 'Houve erro ao salvar a equipe.')
+                        res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
+                    })
+                } else {
+                    req.flash('aviso_msg', 'Só será possível libera a equipe para a obra após selecionar um técnico responsável.')
+                    res.redirect('/gerenciamento/equipe/' + req.body.id)
+                }
             }).catch((err) => {
-                req.flash('error_msg', 'Houve erro ao encontrar a tarefa.')
+                req.flash('error_msg', 'Houve erro ao encontrar a equipe.')
                 res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
             })
-        }
-    }).catch((err) => {
-        req.flash('error_msg', 'Houve erro ao encontrar a projeto.')
-        res.redirect('/gerenciamento/emandamento')
-    })
+        }).catch((err) => {
+            req.flash('error_msg', 'Houve erro ao encontrar a tarefa.')
+            res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
+        })
+    }
 })
 
 router.post('/addInstalador/', ehAdmin, async (req, res) => {
