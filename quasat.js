@@ -257,18 +257,28 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                                                     q++
                                                                     if (naoVazio(responsavel))
                                                                         nome_responsavel = responsavel.nome
+                                                                    else
+                                                                    nome_responsavel = ""
 
                                                                     if (naoVazio(cliente)) 
                                                                         nome_cliente = cliente.nome
+                                                                    else
+                                                                        nome_cliente = ""
 
                                                                     if (naoVazio(instalador)) 
                                                                         nome_instalador = instalador.nome
+                                                                    else
+                                                                        nome_instalador = ""
 
                                                                     if (naoVazio(e.dataApro))
                                                                         dataAprova = e.dataApro
+                                                                    else
+                                                                        dataAprova = ""
 
                                                                     if (naoVazio(e.datacad))
                                                                         datacad = e.datacad
+                                                                    else
+                                                                        datacad = ""
 
                                                                     //DASHBOARD GESTOR
                                                                     if ((e.status == 'Enviado' || e.status == 'Entregue') && e.ganho == false && naoVazio(e.motivo) == false) {
