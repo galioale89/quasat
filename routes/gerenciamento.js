@@ -4405,7 +4405,7 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
         let equipe;
         equipe = await Equipe.findOne({ _id: projeto.equipe })
         if (!naoVazio(equipe)) {
-            equipe = await Equipe.findOne({ _id: req.body.id })
+            equipe = await Equipe.findOne({ projeto: req.body.id })
         }
         Pessoa.findOne({ _id: equipe.insres }).then((instalador) => {
             Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
