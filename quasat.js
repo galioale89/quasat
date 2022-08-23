@@ -40,7 +40,6 @@ const dataMsgNum = require('./resources/dataMsgNum')
 const mascaraDecimal = require('./resources/mascaraDecimal')
 
 const ListInput = require('./api')
-const list = new ListInput(mongoose, app)
 
 // const MobileService = require('./apiService/manager')
 // const mobileService = new MobileService(mongoose, app)
@@ -100,6 +99,8 @@ mongoose.connect('mongodb://quasatdb:64l10770@localhost:27017/quasat?authSource=
 }).catch((errr) => {
     console.log("Falha ao se conectar no Mongo")
 })
+
+const list = new ListInput(mongoose, app)
 
 //Public para CSS do bootstrap
 app.use(express.static(path.join(__dirname, 'public')))

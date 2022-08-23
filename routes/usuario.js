@@ -82,28 +82,17 @@ router.get('/editar/:id', ehAdmin, (req, res) => {
         ehUserMaster = false
     }
 
-    //console.log('req.params.id=>' + req.params.id)
     Acesso.findOne({ _id: req.params.id }).then((acesso) => {
-        //console.log('acesso=>' + acesso)
         if (acesso != null) {
-            //console.log('acesso')
-            //console.log('acesso.usuario=>'+acesso.pessoa)
             Pessoa.findOne({ user: id, _id: acesso.pessoa }).then((pessoa) => {
-                //console.log('usuario._id=>'+usuario._id)
-                //console.log('mostraDetalhes=>'+mostraDetalhes)
                 usuario_acesso = { _id: acesso._id, nome: pessoa.nome, cpf: pessoa.cpf, endereco: pessoa.endereco, uf: pessoa.uf, cidade: pessoa.cidade, celular: pessoa.celular, email: pessoa.email, email_agenda: acesso.email_agenda, usuario: acesso.usuario, admin: acesso.ehAdmin, notpro: acesso.notpro, notobs: acesso.notobs, notvis: acesso.notvis, notorc: acesso.notorc, notins: acesso.notins, notped: acesso.notped, notgan: acesso.notgan, notfat: acesso.notfat, notimg: acesso.notimg, notdoc: acesso.notdoc }
-                // console.log('usuario_acesso._id=>' + usuario_acesso._id)
-                // console.log('acesso.ehAdmin=>' + acesso.ehAdmin)
-                // console.log('usuario_acesso.admin=>' + usuario_acesso.admin)
                 res.render('usuario/editregistro', { usuario_acesso, ehUserMaster, mostraDetalhes })
             }).catch((err) => {
                 req.flash('error_msg', 'Não foi possível encontrar a pessoa vinculada ao usuário.')
                 res.redirect('/administrador/acesso')
             })
         } else {
-            //console.log('não acesso')
             Usuario.findOne({ _id: req.params.id }).lean().then((usuario_acesso) => {
-                //console.log('usuario_acesso.nome=>'+usuario_acesso.nome)
                 res.render('usuario/editregistro', { usuario_acesso, ehUserMaster, mostraDetalhes })
             }).catch((err) => {
                 req.flash('error_msg', 'Não foi possível encontrar o usuário.')
@@ -119,7 +108,6 @@ router.get('/editar/:id', ehAdmin, (req, res) => {
 router.get('/registrar/:plano', (req, res) => {
     var tipoPlano
     var tipoTodos
-    //console.log('plano=>' + req.params.plano)
     if (req.params.plano == 'planoPago') {
         tipoPlano = true
     } else {
