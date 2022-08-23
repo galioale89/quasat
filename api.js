@@ -15,6 +15,7 @@ class ListInput {
                 }else{
                     sql = {user: id}
                 }
+                console.log(sql)
                 client.find(sql, (err, data) => {
                     const clients = data.map((data) => {
                         return {
