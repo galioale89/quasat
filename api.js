@@ -18,9 +18,9 @@ class ListInput {
                 }
 
                 client.find(sql, (err, data) => {
-                    const clients = data.map(item => {
+                    const clients = data.map(data => {
                         return {
-                            name: item.nome,
+                            name: data.nome,
                         }
                     })
 
