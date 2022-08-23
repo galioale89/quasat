@@ -1545,7 +1545,7 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
             }
         }
         let sameCliente = false
-        if (naoVazio(nome) && naoVazio(celular) && documento == true) {
+        if (naoVazio(nome) && naoVazio(celular)) {
             try {
                 const achou_cliente = await Cliente.findOne(sql)
                 if (achou_cliente != null) {
