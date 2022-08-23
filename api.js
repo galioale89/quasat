@@ -16,7 +16,6 @@ class ListInput {
                     sql = {user: id}
                 }
                 client.find(sql, (err, data) => {
-                    console.log(data)
                     const clients = data.map((data) => {
                         return {
                             name: data.nome,
@@ -28,6 +27,7 @@ class ListInput {
                         let listName = clients.filter(a => {
                             return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true)  
                         },Object.create(null));
+                        console.log(listName)
                         resolve(listName)
                     }
                 })
