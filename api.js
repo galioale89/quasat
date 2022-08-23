@@ -10,17 +10,20 @@ class ListInput {
             const client = this.mongoose.model('cliente')
 
             const allClients = new Promise((resolve, reject) => {
+                
                 if (vendedor){
                     sql = {user: id, vendedor: vendedor}
                 }else{
                     sql = {user: id}
                 }
+
                 client.find(sql, (err, data) => {
                     const clients = data.map((data) => {
                         return {
                             name: data.nome,
                         }
                     })
+
                     if (clients == null || typeof projects == undefined) {
                         reject('Não foram encontrados clientes')
                     } else {
@@ -29,12 +32,13 @@ class ListInput {
                         },Object.create(null));
                         resolve(listName)
                     }
+
                 })
             })
 
             allClients.then((result) => {
                 console.log(result)
-                res.send(result)
+                res.json(result);
             }).catch((err) => {
                 console.log('Deu erro ' + err)
             })
