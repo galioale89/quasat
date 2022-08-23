@@ -38,7 +38,7 @@ class ListInput {
 
             allClients.then((result) => {
                 console.log(result)
-                res.json({hello: "world"});
+                res.json(result);
             }).catch((err) => {
                 console.log('Deu erro ' + err)
             })
