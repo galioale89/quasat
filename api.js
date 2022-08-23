@@ -27,13 +27,13 @@ class ListInput {
                         let listName = clients.filter(a => {
                             return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true)  
                         },Object.create(null));
-                        console.log(listName)
                         resolve(listName)
                     }
                 })
             })
 
             allClients.then((result) => {
+                console.log(result)
                 res.send(result)
             }).catch((err) => {
                 console.log('Deu erro ' + err)
