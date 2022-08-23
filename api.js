@@ -23,7 +23,7 @@ class ListInput {
                             name: data.nome,
                         }
                     })
-
+                    console.log(clients)
                     if (clients == null || typeof projects == undefined) {
                         reject('Não foram encontrados clientes')
                     } else {
@@ -37,8 +37,7 @@ class ListInput {
             })
 
             allClients.then((result) => {
-                console.log(result)
-                res.sendFile(result);
+                res.send(result);
             }).catch((err) => {
                 console.log('Deu erro ' + err)
             })
