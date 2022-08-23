@@ -18,12 +18,12 @@ class ListInput {
                 }
 
                 client.find(sql, (err, data) => {
-                    const clients = data.map((data) => {
+                    const clients = data.map(item => {
                         return {
-                            name: data.nome,
+                            name: item.nome,
                         }
                     })
-                    console.log(clients)
+
                     if (clients == null || typeof projects == undefined) {
                         reject('Não foram encontrados clientes')
                     } else {
@@ -34,7 +34,8 @@ class ListInput {
                     }
 
                 })
-            }).then((result) => {
+            }).then(result => {
+                console.log(result);
                 res.send(result);
             }).catch((err) => {
                 console.log('Deu erro ' + err)
