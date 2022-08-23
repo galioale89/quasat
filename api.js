@@ -38,7 +38,7 @@ class ListInput {
 
             allClients.then((result) => {
                 console.log(result)
-                res.json(result);
+                res.sendFile(result);
             }).catch((err) => {
                 console.log('Deu erro ' + err)
             })
