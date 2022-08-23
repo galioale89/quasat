@@ -9,7 +9,7 @@ class ListInput {
         this.app.get('/clients', (req, res) => {
             const client = this.mongoose.model('cliente')
 
-            const allClients = new Promise((resolve, reject) => {
+            new Promise((resolve, reject) => {
                 
                 if (vendedor){
                     sql = {user: id, vendedor: vendedor}
@@ -34,9 +34,7 @@ class ListInput {
                     }
 
                 })
-            })
-
-            allClients.then((result) => {
+            }).then((result) => {
                 res.send(result);
             }).catch((err) => {
                 console.log('Deu erro ' + err)
