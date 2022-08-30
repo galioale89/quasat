@@ -8478,7 +8478,7 @@ router.post('/observacao', ehAdmin, (req, res) => {
     }
 
     texto = '[' + dataMensagem(dataHoje()) + ']' + '\n' + req.body.observacao
-    Projeto.findOne({ _id: req.body.idprj }).then((prj) => {
+    Projeto.findOne({ _id: req.body.id }).then((prj) => {
         // Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
             // Pessoa.findOne({ _id: prj.vendedor }).then((pes_ven) => {
             //     Pessoa.findOne({ _id: prj.responsavel }).then((pes_res) => {
@@ -8512,32 +8512,32 @@ router.post('/observacao', ehAdmin, (req, res) => {
                     //         //     .then((message) => {
                     //                 Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { obs: texto_salvo } }).then(() => {
                     //                     req.flash('success_msg', 'Observação adicionada com sucesso')
-                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.id)
                     //                 }).catch((err) => {
                     //                     req.flash('error_msg', 'Houve um erro ao salvar a observação.')
-                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.id)
                     //                 })
                     //             // }).done()
                     //     } else {
-                            Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { 'obs': texto_salvo } }).then(() => {
+                            Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { 'obs': texto_salvo } }).then(() => {
                                 req.flash('success_msg', 'Observação adicionada com sucesso')
-                                res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                                res.redirect('/gerenciamento/orcamento/' + req.body.id)
                             }).catch((err) => {
                                 req.flash('error_msg', 'Houve um erro ao salvar a observação.')
-                                res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                                res.redirect('/gerenciamento/orcamento/' + req.body.id)
                             })
                     //     }
                     // }).catch((err) => {
                     //     req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
-                    //     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                    //     res.redirect('/gerenciamento/orcamento/' + req.body.id)
                     // })
             //     }).catch((err) => {
             //         req.flash('error_msg', 'Houve um erro ao encontrar a pessoa.')
-            //         res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+            //         res.redirect('/gerenciamento/orcamento/' + req.body.id)
             //     })
             // }).catch((err) => {
             //     req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
-            //     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+            //     res.redirect('/gerenciamento/orcamento/' + req.body.id)
             // })
         // }).catch((err) => {
         //     req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
