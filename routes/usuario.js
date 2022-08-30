@@ -6,6 +6,8 @@ require('../model/Pessoa')
 require('../model/Acesso')
 require('dotenv').config()
 
+const { ehAdmin } = require('../helpers/ehAdmin');
+
 const mongoose = require('mongoose')
 const Usuario = mongoose.model('usuario')
 const Pessoa = mongoose.model('pessoa')
@@ -15,21 +17,9 @@ const nodemailer = require('nodemailer')
 const bcrypt = require("bcryptjs")
 const passport = require("passport")
 
-const comparaDatas = require('../resources/comparaDatas')
-const dataBusca = require('../resources/dataBusca')
-const liberaRecursos = require('../resources/liberaRecursos')
-const setData = require('../resources/setData')
-const dataMensagem = require('../resources/dataMensagem')
-const dataMsgNum = require('../resources/dataMsgNum')
-const validaCronograma = require('../resources/validaCronograma')
-const dataHoje = require('../resources/dataHoje')
-const filtrarProposta = require('../resources/filtrar')
-const naoVazio = require('../resources/naoVazio')
-
 //Configurando envio de whatsapp
 router.use(express.static('imagens'))
 router.use(express.static('imagens/upload'))
-const { ehAdmin } = require('../helpers/ehAdmin')
 
 //Configurando envio de e-mail
 const transporter = nodemailer.createTransport({ // Configura os parâmetros de conexão com servidor.
