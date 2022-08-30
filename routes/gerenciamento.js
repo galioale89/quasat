@@ -1063,15 +1063,10 @@ router.get('/realizar/:id', ehAdmin, (req, res) => {
 })
 
 router.get('/mostrarFotos/:id', ehAdmin, (req, res) => {
-    //console.log('entrou')
     var lista_imagens = []
     var img = []
     var params = req.params.id
-    //console.log('params=>' + params)
     params = params.split('@')
-    //console.log('tarefa=>' + params[0])
-    //console.log('projeto=>' + params[1])
-    //console.log('proposta vazio')
     if (params[0] == 'assistencia') {
         //console.log("entrou")
         Tarefas.findOne({ _id: params[1] }).lean().then((tarefa) => {
@@ -3833,7 +3828,6 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
     var check30 = 'unchecked'
     var check45 = 'unchecked'
     var check60 = 'unchecked'
-    var idAcesso
     var ultima_proposta
     var descricao = ''
     var nome_cliente = ''
@@ -3847,7 +3841,6 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
     var tipo = ''
     var dados = []
     var x = 0
-    var vrlServico = 0
     var desctermo = ''
     var vistoria = false
     var termo = ''
@@ -3864,9 +3857,6 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
     }
 
     Empresa.findOne({ user: id }).lean().then((empresa) => {
-        //console.log('vendedor=>' + vendedor)
-        //console.log('funges=>' + funges)
-        //console.log('orcamentista=>' + orcamentista)
         Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
             Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
                 dados = projeto.params
@@ -8488,10 +8478,10 @@ router.post('/observacao', ehAdmin, (req, res) => {
     }
 
     texto = '[' + dataMensagem(dataHoje()) + ']' + '\n' + req.body.observacao
-    Projeto.findOne({ _id: req.body.id }).then((prj) => {
-        Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
-            Pessoa.findOne({ _id: prj.vendedor }).then((pes_ven) => {
-                Pessoa.findOne({ _id: prj.responsavel }).then((pes_res) => {
+    Projeto.findOne({ _id: req.body.idprj }).then((prj) => {
+        // Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
+            // Pessoa.findOne({ _id: prj.vendedor }).then((pes_ven) => {
+            //     Pessoa.findOne({ _id: prj.responsavel }).then((pes_res) => {
                     if (naoVazio(prj.obs)) {
                         texto_salvo = prj.obs + '\n' + texto
                     } else {
@@ -8506,29 +8496,29 @@ router.post('/observacao', ehAdmin, (req, res) => {
                     }
 
                     console.log('sql=>' + sql)
-                    Acesso.findOne(sql).then((acesso_responsavel) => {
-                        if (naoVazio(acesso_responsavel)) {
-                            mensagem = 'Olá ' + pes_res.nome + ',' + '\n' +
-                                'Foi adicionada uma observação à proposta: ' + prj.seq + ' do cliente: ' + cliente.nome + '\n' +
-                                'Mensagem: ' + req.body.observacao + '\n' +
-                                'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
+                    // Acesso.findOne(sql).then((acesso_responsavel) => {
+                    //     if (naoVazio(acesso_responsavel)) {
+                    //         mensagem = 'Olá ' + pes_res.nome + ',' + '\n' +
+                    //             'Foi adicionada uma observação à proposta: ' + prj.seq + ' do cliente: ' + cliente.nome + '\n' +
+                    //             'Mensagem: ' + req.body.observacao + '\n' +
+                    //             'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
 
-                            // client.messages
-                            //     .create({
-                            //         body: mensagem,
-                            //         from: 'whatsapp:+554991832978',
-                            //         to: 'whatsapp:+55' + pes_res.celular
-                            //     })
-                            //     .then((message) => {
-                                    Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { obs: texto_salvo } }).then(() => {
-                                        req.flash('success_msg', 'Observação adicionada com sucesso')
-                                        res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
-                                    }).catch((err) => {
-                                        req.flash('error_msg', 'Houve um erro ao salvar a observação.')
-                                        res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
-                                    })
-                                // }).done()
-                        } else {
+                    //         // client.messages
+                    //         //     .create({
+                    //         //         body: mensagem,
+                    //         //         from: 'whatsapp:+554991832978',
+                    //         //         to: 'whatsapp:+55' + pes_res.celular
+                    //         //     })
+                    //         //     .then((message) => {
+                    //                 Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { obs: texto_salvo } }).then(() => {
+                    //                     req.flash('success_msg', 'Observação adicionada com sucesso')
+                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                    //                 }).catch((err) => {
+                    //                     req.flash('error_msg', 'Houve um erro ao salvar a observação.')
+                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                    //                 })
+                    //             // }).done()
+                    //     } else {
                             Projeto.findOneAndUpdate({ _id: req.body.idprj }, { $set: { 'obs': texto_salvo } }).then(() => {
                                 req.flash('success_msg', 'Observação adicionada com sucesso')
                                 res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
@@ -8536,23 +8526,23 @@ router.post('/observacao', ehAdmin, (req, res) => {
                                 req.flash('error_msg', 'Houve um erro ao salvar a observação.')
                                 res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
                             })
-                        }
-                    }).catch((err) => {
-                        req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
-                        res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
-                    })
-                }).catch((err) => {
-                    req.flash('error_msg', 'Houve um erro ao encontrar a pessoa.')
-                    res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
-                })
-            }).catch((err) => {
-                req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
-                res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
-            })
-        }).catch((err) => {
-            req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
-            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-        })
+                    //     }
+                    // }).catch((err) => {
+                    //     req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
+                    //     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+                    // })
+            //     }).catch((err) => {
+            //         req.flash('error_msg', 'Houve um erro ao encontrar a pessoa.')
+            //         res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+            //     })
+            // }).catch((err) => {
+            //     req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
+            //     res.redirect('/gerenciamento/orcamento/' + req.body.idprj)
+            // })
+        // }).catch((err) => {
+        //     req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
+        //     res.redirect('/gerenciamento/orcamento/' + req.body.id)
+        // })
     })
 })
 
