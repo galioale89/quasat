@@ -8476,7 +8476,6 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
 router.post('/observacao', ehAdmin, (req, res) => {
     var texto = ''
     var texto_salvo = ''
-    var mensagem = ''
     const { _id } = req.user
     const { user } = req.user
     const { vendedor } = req.user
@@ -8488,7 +8487,7 @@ router.post('/observacao', ehAdmin, (req, res) => {
         id = user
     }
 
-    texto = '[' + dataMensagem(dataHoje()) + ']' + '\n' + req.body.obs
+    texto = '[' + dataMensagem(dataHoje()) + ']' + '\n' + req.body.observacao
     Projeto.findOne({ _id: req.body.id }).then((prj) => {
         Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
             Pessoa.findOne({ _id: prj.vendedor }).then((pes_ven) => {
@@ -8511,7 +8510,7 @@ router.post('/observacao', ehAdmin, (req, res) => {
                         if (naoVazio(acesso_responsavel)) {
                             mensagem = 'Olá ' + pes_res.nome + ',' + '\n' +
                                 'Foi adicionada uma observação à proposta: ' + prj.seq + ' do cliente: ' + cliente.nome + '\n' +
-                                'Mensagem: ' + req.body.obs + '\n' +
+                                'Mensagem: ' + req.body.observacao + '\n' +
                                 'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
 
                             // client.messages
@@ -8563,11 +8562,6 @@ router.post('/pedido', ehAdmin, (req, res) => {
     var id
 
     var potencia
-    var vlrKit
-    var vlrTotal = 0
-    var vlrServico = 0
-
-    var texto = ''
     var q = 0
 
     if (typeof user == 'undefined') {
