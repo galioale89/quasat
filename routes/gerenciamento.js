@@ -36,9 +36,9 @@ const sharp = require('sharp');
 var excel = require('exceljs');
 //const {Client, TextContent} = require('@zenvia/sdk');
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
+// const accountSid = process.env.TWILIO_ACCOUNT_SID;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const client = require('twilio')(accountSid, authToken);
 // const ListInput = require('../api')
 // const list = new ListInput(mongoose, app)
 
@@ -1063,15 +1063,10 @@ router.get('/realizar/:id', ehAdmin, (req, res) => {
 })
 
 router.get('/mostrarFotos/:id', ehAdmin, (req, res) => {
-    //console.log('entrou')
     var lista_imagens = []
     var img = []
     var params = req.params.id
-    //console.log('params=>' + params)
     params = params.split('@')
-    //console.log('tarefa=>' + params[0])
-    //console.log('projeto=>' + params[1])
-    //console.log('proposta vazio')
     if (params[0] == 'assistencia') {
         //console.log("entrou")
         Tarefas.findOne({ _id: params[1] }).lean().then((tarefa) => {
@@ -1653,38 +1648,32 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                 } else {
                                     corpo = projeto
                                 }
-                                //console.log('corpo=>'+JSON.stringify(corpo))
                                 new Projeto(corpo).save().then(() => {
                                     Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
                                         empresa.save().then(() => {
                                             q = 0
                                             var texto
                                             Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                //console.log('acesso=>' + acesso)
                                                 if (naoVazio(acesso)) {
                                                     acesso.forEach((e) => {
                                                         Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                            //console.log('pessoa=>' + pessoa)
                                                             texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                 'O orçamento ' + novo_projeto.seq + ' para o cliente ' + achou_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
                                                                 'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                            //console.log('pessoa.celular=>'+pessoa.celular)
-                                                            client.messages
-                                                                .create({
-                                                                    body: texto,
-                                                                    from: 'whatsapp:+554991832978',
-                                                                    to: 'whatsapp:+55' + pessoa.celular
-                                                                })
-                                                                .then((message) => {
-                                                                    q++
-                                                                    //console.log('q=>' + q)
-                                                                    //console.log('acesso.length=>' + acesso.length)
+                                                            // client.messages
+                                                            //     .create({
+                                                            //         body: texto,
+                                                            //         from: 'whatsapp:+554991832978',
+                                                            //         to: 'whatsapp:+55' + pessoa.celular
+                                                            //     })
+                                                            //     .then((message) => {
+                                                                     q++
                                                                     if (q == acesso.length) {
                                                                         //console.log(message.sid)
                                                                         req.flash('success_msg', 'Proposta adicionada com sucesso')
                                                                         res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
                                                                     }
-                                                                }).done()
+                                                                // }).done()
 
                                                         }).catch((err) => {
                                                             req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
@@ -1795,38 +1784,31 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                         } else {
                                             corpo = projeto
                                         }
-                                        //console.log('corpo=>'+JSON.stringify(corpo))
                                         new Projeto(corpo).save().then(() => {
                                             Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
                                                 Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
                                                     empresa.save().then(() => {
                                                         q = 0
                                                         Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                            //console.log('acesso=>' + acesso)
                                                             if (naoVazio(acesso)) {
                                                                 acesso.forEach((e) => {
                                                                     Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                                        //console.log('pessoa=>' + pessoa)
                                                                         texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                             'O orçamento ' + novo_projeto.seq + ' para o cliente ' + cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
                                                                             'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                                        //console.log('pessoa.celular=>'+pessoa.celular)
-                                                                        client.messages
-                                                                            .create({
-                                                                                body: texto,
-                                                                                from: 'whatsapp:+554991832978',
-                                                                                to: 'whatsapp:+55' + pessoa.celular
-                                                                            })
-                                                                            .then((message) => {
+                                                                        // client.messages
+                                                                        //     .create({
+                                                                        //         body: texto,
+                                                                        //         from: 'whatsapp:+554991832978',
+                                                                        //         to: 'whatsapp:+55' + pessoa.celular
+                                                                        //     })
+                                                                        //     .then((message) => {
                                                                                 q++
-                                                                                //console.log('q=>' + q)
-                                                                                //console.log('acesso.length=>' + acesso.length)
                                                                                 if (q == acesso.length) {
-                                                                                    //console.log(message.sid)
                                                                                     req.flash('success_msg', 'Proposta adicionada com sucesso')
                                                                                     res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
                                                                                 }
-                                                                            }).done()
+                                                                            // }).done()
 
                                                                     }).catch((err) => {
                                                                         req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
@@ -1975,41 +1957,32 @@ router.post('/addorcamento/', ehAdmin, async (req, res) => {
                                                 corpo = temvendedor
                                             }
 
-                                            //console.log('corpo=>' + JSON.stringify(corpo))
 
-                                            //console.log('corpo=>'+JSON.stringify(corpo))
                                             new Projeto(corpo).save().then(() => {
                                                 Projeto.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_projeto) => {
-                                                    // Cliente.findOne({ _id: novo_projeto.cliente }).then((cliente) => {
                                                     empresa.save().then(() => {
                                                         q = 0
 
                                                         Acesso.find({ user: id, notorc: 'checked' }).then((acesso) => {
-                                                            //console.log('acesso=>' + acesso)
                                                             if (naoVazio(acesso)) {
                                                                 acesso.forEach((e) => {
                                                                     Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                                        //console.log('pessoa=>' + pessoa)
-                                                                        //console.log('e.nome=>' + e.nome)
                                                                         texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                             'O orçamento ' + novo_projeto.seq + ' para o cliente ' + novo_cliente.nome + ' foi criado dia ' + dataMensagem(dataHoje()) + ' por: ' + p.nome + '.' + '\n' +
                                                                             'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + novo_projeto._id + ' e acompanhe'
-                                                                        //console.log('pessoa.celular=>' + pessoa.celular)
-                                                                        client.messages
-                                                                            .create({
-                                                                                body: texto,
-                                                                                from: 'whatsapp:+554991832978',
-                                                                                to: 'whatsapp:+55' + pessoa.celular
-                                                                            })
-                                                                            .then((message) => {
+                                                                        // client.messages
+                                                                        //     .create({
+                                                                        //         body: texto,
+                                                                        //         from: 'whatsapp:+554991832978',
+                                                                        //         to: 'whatsapp:+55' + pessoa.celular
+                                                                        //     })
+                                                                        //     .then((message) => {
                                                                                 q++
-                                                                                //console.log('q=>' + q)
-                                                                                //console.log('acesso.length=>' + acesso.length)
                                                                                 if (q == acesso.length) {
                                                                                     req.flash('success_msg', 'Proposta adicionada com sucesso')
                                                                                     res.redirect('/gerenciamento/orcamento/' + novo_projeto._id)
                                                                                 }
-                                                                            }).done()
+                                                                            // }).done()
 
                                                                     }).catch((err) => {
                                                                         req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
@@ -3855,7 +3828,6 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
     var check30 = 'unchecked'
     var check45 = 'unchecked'
     var check60 = 'unchecked'
-    var idAcesso
     var ultima_proposta
     var descricao = ''
     var nome_cliente = ''
@@ -3869,7 +3841,6 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
     var tipo = ''
     var dados = []
     var x = 0
-    var vrlServico = 0
     var desctermo = ''
     var vistoria = false
     var termo = ''
@@ -3886,9 +3857,6 @@ router.get('/orcamento/:id', ehAdmin, (req, res) => {
     }
 
     Empresa.findOne({ user: id }).lean().then((empresa) => {
-        //console.log('vendedor=>' + vendedor)
-        //console.log('funges=>' + funges)
-        //console.log('orcamentista=>' + orcamentista)
         Projeto.findOne({ _id: req.params.id }).lean().then((projeto) => {
             Pedido.findOne({ _id: projeto.pedido }).lean().then((pedido) => {
                 dados = projeto.params
@@ -4112,28 +4080,19 @@ router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
         file = ''
     }
     var proposta = []
-    //console.log('file=>' + file)
     Projeto.findOne({ _id: req.body.id }).then((projeto) => {
         var propostas = []
         propostas = projeto.proposta
         var x = propostas.length
-        //console.log("x=>" + x)
         if (naoVazio(x)) {
             var ultimo = propostas[x - 1]
             var seq = parseFloat(ultimo.seq) + 1
         } else {
             seq = 1
         }
-
-        //console.log('file=>' + file)
-        //console.log('req.body.dtcadastro=>' + req.body.dtcadastro)
-        //console.log('req.body.dtvalidade =>' + req.body.dtvalidade)
         proposta = { seq, arquivo: req.body.seq + '_' + file, data: dataMensagem(req.body.dtcadastro), validade: dataMensagem(req.body.dtvalidade) }
-        //console.log('id=>' + req.body.id)
-        //console.log('projeto.vendedor=>' + projeto.vendedor)
         Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
             Pessoa.findOne({ _id: projeto.vendedor, notpro: 'checked' }).then((vendedor) => {
-                //console.log('projeto.responsavel=>' + projeto.responsavel)
                 if (naoVazio(projeto.responsavel)) {
                     Pessoa.findOne({ _id: projeto.responsavel }).then((responsavel) => {
                         Projeto.findOneAndUpdate({ _id: req.body.id }, { $push: { proposta: proposta } }).then((e) => {
@@ -4141,21 +4100,17 @@ router.post('/proposta', upload.single('proposta'), ehAdmin, (req, res) => {
                                 var texto = 'Olá ' + vendedor.nome + ',' + '\n' +
                                     'Uma nova proposta do projeto ' + projeto.seq + ' para o cliente ' + cliente.nome + ' foi adicionada por: ' + responsavel.nome + ' dia ' + dataMensagem(dataHoje()) + '.' + '\n' +
                                     'Acesse e acompanhe https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + '.'
-
-                                //console.log('vendedor.celular=>' + vendedor.celular)
-
-                                client.messages
-                                    .create({
-                                        body: texto,
-                                        from: 'whatsapp:+554991832978',
-                                        to: 'whatsapp:+55' + vendedor.celular
-                                    })
-                                    .then((message) => {
-                                        //console.log(message.sid)
+                                // client.messages
+                                //     .create({
+                                //         body: texto,
+                                //         from: 'whatsapp:+554991832978',
+                                //         to: 'whatsapp:+55' + vendedor.celular
+                                //     })
+                                //     .then((message) => {
                                         req.flash('success_msg', 'Proposta adicionada com sucesso')
                                         res.redirect('/gerenciamento/orcamento/' + req.body.id)
 
-                                    }).done()
+                                    // }).done()
                             } else {
                                 req.flash('success_msg', 'Proposta adicionada com sucesso')
                                 res.redirect('/gerenciamento/orcamento/' + req.body.id)
@@ -4242,13 +4197,8 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
             new Equipe(corpo).save().then(() => {
                 Equipe.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((equipe) => {
                     projeto.save().then(() => {
-                        //console.log('novaatv=>' + novaatv)
-                        // new AtvTelhado(corpo).save().then(() => {
-                        //     new AtvAterramento(corpo).save().then(() => {
-                        //         new AtvInversor(corpo).save().then(() => {
                         AtvPadrao.find({ user: id }).then((atv) => {
                             atv.forEach((e) => {
-                                //console.log('e=>' + e.descricao)
                                 s++
                                 tarefa = {
                                     user: id,
@@ -4259,41 +4209,31 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
                                     tipo: 'padrao',
                                     emandamento: false
                                 }
-                                //console.log('tarefa=>' + tarefa)
                                 new Tarefas(tarefa).save().then(() => {
-                                    //console.log('q=>' + q)
                                     q++
                                     if (q == atv.length) {
                                         q = 0
                                         Acesso.find({ user: id, notgan: 'checked' }).then((acesso) => {
-                                            //console.log('acesso=>' + acesso)
                                             if (naoVazio(acesso)) {
                                                 acesso.forEach((e) => {
                                                     Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                        //console.log('pessoa=>' + pessoa)
                                                         texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                             'PROPOSTA GANHA!' + '\n' +
                                                             'A proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' esta ganha. ' + '\n ' +
                                                             'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + ' e acompanhe.'
-
-                                                        //console.log('pessoa.celular=>' + pessoa.celular)
-
-                                                        client.messages
-                                                            .create({
-                                                                body: texto,
-                                                                from: 'whatsapp:+554991832978',
-                                                                to: 'whatsapp:+55' + pessoa.celular
-                                                            })
-                                                            .then((message) => {
+                                                        // client.messages
+                                                        //     .create({
+                                                        //         body: texto,
+                                                        //         from: 'whatsapp:+554991832978',
+                                                        //         to: 'whatsapp:+55' + pessoa.celular
+                                                        //     })
+                                                        //     .then((message) => {
                                                                 q++
-                                                                //console.log('q=>' + q)
-                                                                //console.log('acesso.length=>' + acesso.length)
                                                                 if (q == acesso.length) {
-                                                                    //console.log(message.sid)
                                                                     req.flash('success_msg', 'Proposta ' + projeto.seq + ' ganha.')
                                                                     res.redirect('/dashboard/')
                                                                 }
-                                                            }).done()
+                                                            // }).done()
 
                                                     }).catch((err) => {
                                                         req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
@@ -4318,18 +4258,6 @@ router.get('/ganho/:id', ehAdmin, (req, res) => {
                             req.flash('error_msg', 'Houve erro ao encontrar as atividades padrão.')
                             res.redirect('/gerenciamento/orcamento/' + req.body.id)
                         })
-                        //         }).catch((err) => {
-                        //             req.flash('error_msg', 'Houve erro ao salvar a atividade de instalação do inversor.')
-                        //             res.redirect('/gerenciamento/projeto/' + req.body.id)
-                        //         })
-                        //     }).catch((err) => {
-                        //         req.flash('error_msg', 'Houve erro ao salvar a atividade de instalação do aterramento.')
-                        //         res.redirect('/gerenciamento/projeto/' + req.body.id)
-                        //     })
-                        // }).catch((err) => {
-                        //     req.flash('error_msg', 'Houve erro ao salvar a atividade de instalação do telhado.')
-                        //     res.redirect('/gerenciamento/projeto/' + req.body.id)
-                        // })
                     }).catch(() => {
                         req.flash('error_msg', 'Falha ao salvar a equipe.')
                         res.redirect('/gerenciamento/orcamento/' + req.params.id)
@@ -4433,16 +4361,16 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
                             // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + '.' + '\n' +
                             // 'Acompanhe a obra acessando: https://integracao.vimmus.com.br/gerenciamento/instalacao/' + projeto._id + '.'
                             'Verifique seu aplicativo e aguarde a gerência entrar em contato.'
-                        client.messages
-                            .create({
-                                body: mensagem,
-                                from: 'whatsapp:+554991832978',
-                                to: 'whatsapp:+55' + instalador.celular
-                            })
-                            .then((message) => {
+                        // client.messages
+                        //     .create({
+                        //         body: mensagem,
+                        //         from: 'whatsapp:+554991832978',
+                        //         to: 'whatsapp:+55' + instalador.celular
+                        //     })
+                        //     .then((message) => {
                                 req.flash('success_msg', 'Instalador alocado para o projeto ' + projeto.seq + '.')
                                 res.redirect('/gerenciamento/emandamento')
-                            }).done()
+                            // }).done()
                     }).catch((err) => {
                         req.flash('error_msg', 'Houve erro ao salvar a equipe.')
                         res.redirect('/gerenciamento/emandamento')
@@ -4464,20 +4392,19 @@ router.post('/enviarEquipe/', ehAdmin, async (req, res) => {
                     }
                     equipe.save()
                     projeto.save().then(() => {
-                        //console.log('cliente=>' + cliente)
                         mensagem = mensagem + ' para o cliente ' + cliente.nome + '\n' + '.'
                         // 'com previsão para inicio em ' + dataMensagem(projeto.dtinicio) + ' e término em ' + dataMensagem(projeto.dtfim) + ' foi cancelada.' + '\n' +
                         'Aguarde a gerência entrar em contato.'
-                        client.messages
-                            .create({
-                                body: mensagem,
-                                from: 'whatsapp:+554991832978',
-                                to: 'whatsapp:+55' + instalador.celular
-                            })
-                            .then((message) => {
+                        // client.messages
+                        //     .create({
+                        //         body: mensagem,
+                        //         from: 'whatsapp:+554991832978',
+                        //         to: 'whatsapp:+55' + instalador.celular
+                        //     })
+                        //     .then((message) => {
                                 req.flash(tipo, mensagem)
                                 res.redirect('/gerenciamento/emandamento')
-                            }).done()
+                            // }).done()
                     }).catch((err) => {
                         req.flash('error_msg', 'Houve erro ao salvar a projeto.')
                         res.redirect('/gerenciamento/emandamento')
@@ -4739,25 +4666,22 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                     if (naoVazio(acesso)) {
                                         acesso.forEach((e) => {
                                             Pessoa.findOne({ _id: e.pessoa }).then((projetista) => {
-                                                //console.log(pessoa.celular)
                                                 mensagem = 'Olá ' + projetista.nome + ',' + '\n' +
                                                     'O levantamento de rede da proposta ' + prj.seq + ' foi adicionado.' + '\n' +
                                                     'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
-                                                client.messages
-                                                    .create({
-                                                        body: mensagem,
-                                                        from: 'whatsapp:+554991832978',
-                                                        to: 'whatsapp:+55' + projetista.celular
-                                                    })
-                                                    .then((message) => {
-                                                        //console.log(message.sid)
+                                                // client.messages
+                                                //     .create({
+                                                //         body: mensagem,
+                                                //         from: 'whatsapp:+554991832978',
+                                                //         to: 'whatsapp:+55' + projetista.celular
+                                                //     })
+                                                //     .then((message) => {
                                                         cont++
-                                                        //console.log('cont=>' + cont)
                                                         if (cont == acesso.length) {
                                                             req.flash('success_msg', 'Levantamento de rede realizado com sucesso.')
                                                             res.redirect('/gerenciamento/fotos/' + req.body.idprj)
                                                         }
-                                                    }).done()
+                                                    // }).done()
                                             }).catch((err) => {
                                                 req.flash('error_msg', 'Houve erro ao encontrar o projetista.')
                                                 res.redirect('/gerenciamento/fotos/' + req.body.idprj)
@@ -4789,8 +4713,6 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                             }
                         } else {
                             if (req.body.tipo == 'tarefa') {
-                                //console.log('instalação')
-                                //console.log('req.body.check=>' + req.body.check)
                                 if (req.body.check == 'Aprovado') {
                                     ativo = true
                                 } else {
@@ -4809,8 +4731,6 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                 var concluido = {}
                                 concluido = { 'concluido': ativo }
 
-                                //console.log('concluido=>' + JSON.stringify(concluido))
-                                //console.log('req.body.id=>' + req.body.id)
                                 Tarefas.findOneAndUpdate({ _id: req.body.id }, concluido).then((e) => {
                                     Tarefas.find({ projeto: req.body.idprj }).then(async (lista_tarefas) => {
                                         if (ativo == true) {
@@ -4829,26 +4749,20 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                 if (naoVazio(acesso)) {
                                                     acesso.forEach((e) => {
                                                         Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                            //console.log('enviou mensagem')
                                                             texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                                 'Todas as fotos da obra do projeto ' + prj.seq + ' para o cliente ' + cliente.nome + '  estão na plataforma. ' +
                                                                 'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + prj._id + ' para verificar.'
-                                                            //console.log('pessoa.celular=>'+pessoa.celular)
-                                                            client.messages
-                                                                .create({
-                                                                    body: texto,
-                                                                    from: 'whatsapp:+554991832978',
-                                                                    to: 'whatsapp:+55' + pessoa.celular
-                                                                })
-                                                                .then((message) => {
+                                                            // client.messages
+                                                            //     .create({
+                                                            //         body: texto,
+                                                            //         from: 'whatsapp:+554991832978',
+                                                            //         to: 'whatsapp:+55' + pessoa.celular
+                                                            //     })
+                                                            //     .then((message) => {
                                                                     q++
-                                                                    //console.log('q=>' + q)
-                                                                    //console.log('acesso.length=>' + acesso.length)
                                                                     if (q == acesso.length) {
-                                                                        //console.log(message.sid)
                                                                         if (req.body.caminho == 'instalacao') {
                                                                             if (req.body.usuario == 'gestor') {
-                                                                                //console.log('req.body.idprj=>' + req.body.idprj)
                                                                                 res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
                                                                             } else {
                                                                                 res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
@@ -4857,7 +4771,7 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                                             res.redirect('/gerenciamento/mostraEquipe/' + req.body.id)
                                                                         }
                                                                     }
-                                                                }).done()
+                                                                // }).done()
 
                                                         }).catch((err) => {
                                                             req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
@@ -4867,7 +4781,6 @@ router.post('/salvarImagem', ehAdmin, upload.array('files', 20), (req, res) => {
                                                 } else {
                                                     if (req.body.caminho == 'instalacao') {
                                                         if (req.body.usuario == 'gestor') {
-                                                            //console.log('req.body.idprj=>' + req.body.idprj)
                                                             res.redirect('/gerenciamento/instalacao/' + req.body.idprj)
                                                         } else {
                                                             res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
@@ -8405,50 +8318,37 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
     }
     if (req.body.tipo == 'tarefa') {
         Projeto.findOne({ _id: req.body.idprj }).then((prj) => {
-            //console.log('prj.cliente=>'+prj.cliente)
             Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
-                //console.log("cliente.nome=>"+cliente.nome)
-                //console.log("req.body.id=>"+req.body.id)
                 Tarefas.findOneAndUpdate({ _id: req.body.id }, { $push: { fotos: foto } }).then((e) => {
                     Tarefas.findOneAndUpdate({ _id: req.body.id }, { $set: { datafim: dataHoje() } }).then((e) => {
                         req.flash('success_msg', 'Foto(s) da instalação salva(s) com sucesso.')
-                        //console.log('req.body.idprj=>' + req.body.idprj)
                         Tarefas.find({ projeto: req.body.idprj }).then((lista_tarefas) => {
-                            //console.log('lista_tarefas=>'+lista_tarefas)
                             lista_tarefas.forEach((e) => {
                                 //console.log('e.fotos=>' + e.fotos)
                                 if (naoVazio(e.fotos) == false) {
                                     notimg = false
                                 }
                             })
-                            //console.log('notimg=>' + notimg)
                             if (notimg == true) {
                                 Acesso.find({ user: id, notimg: 'checked' }).then((acesso) => {
-                                    //console.log('acesso=>' + acesso)
                                     if (naoVazio(acesso)) {
                                         acesso.forEach((e) => {
                                             Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
-                                                //console.log('pessoa=>' + pessoa)
-                                                //console.log('enviou mensagem')
                                                 texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                     'Todas as fotos da obra do projeto ' + prj.seq + ' para o cliente ' + cliente.nome + '  estão na plataforma. ' +
                                                     'Acesse https://vimmus.com.br/gerenciamento/orcamento/' + prj._id + ' para verificar.'
-                                                //console.log('pessoa.celular=>'+pessoa.celular)
-                                                client.messages
-                                                    .create({
-                                                        body: texto,
-                                                        from: 'whatsapp:+554991832978',
-                                                        to: 'whatsapp:+55' + pessoa.celular
-                                                    })
-                                                    .then((message) => {
+                                                // client.messages
+                                                //     .create({
+                                                //         body: texto,
+                                                //         from: 'whatsapp:+554991832978',
+                                                //         to: 'whatsapp:+55' + pessoa.celular
+                                                //     })
+                                                //     .then((message) => {
                                                         q++
-                                                        //console.log('q=>' + q)
-                                                        //console.log('acesso.length=>' + acesso.length)
                                                         if (q == acesso.length) {
-                                                            //console.log(message.sid)
                                                             res.redirect('/gerenciamento/mostrarFotos/tarefa@' + req.body.id + '@' + req.body.idprj)
                                                         }
-                                                    }).done()
+                                                    // }).done()
 
                                             }).catch((err) => {
                                                 req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')
@@ -8487,7 +8387,6 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
             res.redirect('/dashboard')
         })
     } else {
-        //console.log('sql=>' + sql)
         Projeto.findOneAndUpdate({ _id: req.body.id }, { $push: sql }).then(() => {
             Projeto.findOne({ _id: req.body.id }).then((prj) => {
                 var disjuntor
@@ -8510,36 +8409,29 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                     medidor = prj.medidor
                 }
 
-                //console.log('disjuntor=>' + disjuntor)
-                //console.log('medidor=>' + medidor)
-                //console.log('trafo=>' + trafo)
-
                 if ((req.body.tipo == 'disjutor' || req.body.tipo == 'medidor' || req.body.tipo == 'trafo') &&
                     (naoVazio(disjuntor) && naoVazio(medidor) && naoVazio(trafo))) {
                     q = 0
-                    //console.log('levantamento de rede')
                     Acesso.find({ user: id, notdoc: 'checked' }).then((acesso) => {
                         if (naoVazio(acesso)) {
                             acesso.forEach((e) => {
                                 Pessoa.findOne({ _id: e.pessoa }).then((projetista) => {
-                                    //console.log(pessoa.celular)
                                     mensagem = 'Olá ' + projetista.nome + ',' + '\n' +
                                         'O levantamento de rede da proposta ' + prj.seq + ' foi realizado.' + '\n' +
                                         'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
-                                    client.messages
-                                        .create({
-                                            body: mensagem,
-                                            from: 'whatsapp:+554991832978',
-                                            to: 'whatsapp:+55' + projetista.celular
-                                        })
-                                        .then((message) => {
-                                            //console.log(message.sid)
+                                    // client.messages
+                                    //     .create({
+                                    //         body: mensagem,
+                                    //         from: 'whatsapp:+554991832978',
+                                    //         to: 'whatsapp:+55' + projetista.celular
+                                    //     })
+                                    //     .then((message) => {
                                             q++
                                             if (q == acesso.length) {
                                                 req.flash('success_msg', 'Levantamento de rede realizado com sucesso.')
                                                 res.redirect('/gerenciamento/orcamento/' + req.body.id)
                                             }
-                                        }).done()
+                                        // }).done()
                                 })
                             })
                         } else {
@@ -8552,7 +8444,6 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
                         res.redirect('/dashboard')
                     })
                 } else {
-                    //console.log('aguardando')
                     if (req.body.caminho = 'fatura') {
                         req.flash('success_msg', 'Fatura(s) adicionada(s) com sucesso.')
                         res.redirect('/gerenciamento/fatura/' + req.body.id)
@@ -8575,13 +8466,9 @@ router.post('/salvarFotos', ehAdmin, (req, res) => {
 router.post('/observacao', ehAdmin, (req, res) => {
     var texto = ''
     var texto_salvo = ''
-    var ids = req.body.seq
-    var mensagem = ''
     const { _id } = req.user
     const { user } = req.user
     const { vendedor } = req.user
-    const { orcamentista } = req.user
-    const { funges } = req.user
     var id
 
     if (typeof user == 'undefined') {
@@ -8590,131 +8477,72 @@ router.post('/observacao', ehAdmin, (req, res) => {
         id = user
     }
 
-    // ids = ids.split('$@$')
-    //console.log('id proposta=>' + ids[0])
-    texto = '[' + dataMensagem(dataHoje()) + ']' + '\n' + req.body.obs
-    //console.log('texto=>' + texto)
-    //console.log('id projeto=>' + req.body.id)
+    texto = '[' + dataMensagem(dataHoje()) + ']' + '\n' + req.body.observacao
     Projeto.findOne({ _id: req.body.id }).then((prj) => {
-        Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
-            Pessoa.findOne({ _id: prj.vendedor }).then((pes_ven) => {
-                Pessoa.findOne({ _id: prj.responsavel }).then((pes_res) => {
-                    // var prj_proposta = prj.proposta
-                    // prj_proposta.forEach((p) => {
-                    //     //console.log('p._id=>' + p._id)
-                    //     //console.log('ids[0]=>' + ids[0])
-                    //     if (p._id == ids[0]) {
-                    //         //console.log('igual')
-                    //         if (naoVazio(p.obs)) {
-                    //             texto_salvo = p.obs + '\n'
-                    //             //console.log('texto_salvo=>' + texto_salvo)
-                    //         }
-                    //     }
+        // Cliente.findOne({ _id: prj.cliente }).then((cliente) => {
+            // Pessoa.findOne({ _id: prj.vendedor }).then((pes_ven) => {
+            //     Pessoa.findOne({ _id: prj.responsavel }).then((pes_res) => {
                     if (naoVazio(prj.obs)) {
                         texto_salvo = prj.obs + '\n' + texto
                     } else {
                         texto_salvo = texto
                     }
-                    //console.log('vendedor=>' + vendedor)
+
+                    var sql = {}
                     if (vendedor == true) {
-                        Acesso.findOne({ pessoa: prj.responsavel, notobs: 'checked' }).then((acesso_responsavel) => {
-                            if (naoVazio(acesso_responsavel)) {
-                                mensagem = 'Olá ' + pes_res.nome + ',' + '\n' +
-                                    'Foi adicionada uma observação à proposta: ' + prj.seq + ' do cliente: ' + cliente.nome + '\n' +
-                                    'Mensagem: ' + req.body.obs + '\n' +
-                                    'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
-
-                                //console.log('mensagem=>' + mensagem)
-                                //console.log('pes_res.celular=>' + pes_res.celular)
-
-                                client.messages
-                                    .create({
-                                        body: mensagem,
-                                        from: 'whatsapp:+554991832978',
-                                        to: 'whatsapp:+55' + pes_res.celular
-                                    })
-                                    .then((message) => {
-                                        //console.log(message.sid)
-                                        //'proposta._id': ids[0] 
-                                        //console.log('texto_salvo=>' + texto_salvo)
-                                        Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { obs: texto_salvo } }).then(() => {
-                                            req.flash('success_msg', 'Observação adicionada com sucesso')
-                                            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                        }).catch((err) => {
-                                            req.flash('error_msg', 'Houve um erro ao salvar a observação.')
-                                            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                        })
-                                    }).done()
-                            } else {
-                                Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { obs: texto_salvo } }).then(() => {
-                                    req.flash('success_msg', 'Observação adicionada com sucesso')
-                                    res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                }).catch((err) => {
-                                    req.flash('error_msg', 'Houve um erro ao salvar a observação.')
-                                    res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                })
-                            }
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
-                            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                        })
+                        sql = { pessoa: prj.vendedor, notobs: 'checked' }
                     } else {
-                        Acesso.findOne({ pessoa: prj.vendedor, notobs: 'checked' }).then((acesso_vendedor) => {
-                            //console.log('acesso_vendedor=>' + acesso_vendedor)
-                            if (naoVazio(acesso_vendedor)) {
-
-                                mensagem = 'Olá ' + pes_ven.nome + ',' + '\n' +
-                                    'Foi adicionada uma observação à proposta: ' + prj.seq + ' do cliente: ' + cliente.nome + '\n' +
-                                    'Mensagem: ' + req.body.obs + '\n' +
-                                    'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
-
-                                //console.log('mensagem=>' + mensagem)
-                                //console.log('pes_ven.celular=>' + pes_ven.celular)
-
-                                client.messages
-                                    .create({
-                                        body: mensagem,
-                                        from: 'whatsapp:+554991832978',
-                                        to: 'whatsapp:+55' + pes_ven.celular
-                                    })
-                                    .then((message) => {
-                                        //console.log(message.sid)
-                                        Projeto.findOneAndUpdate({ _id: req.body.id, }, { $set: { 'obs': texto_salvo } }).then(() => {
-                                            req.flash('success_msg', 'Observação adicionada com sucesso')
-                                            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                        }).catch((err) => {
-                                            req.flash('error_msg', 'Houve um erro ao salvar a observação.')
-                                            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                        })
-
-                                    }).done()
-
-                            } else {
-                                Projeto.findOneAndUpdate({ _id: req.body.id, }, { $set: { 'obs': texto_salvo } }).then(() => {
-                                    req.flash('success_msg', 'Observação adicionada com sucesso')
-                                    res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                }).catch((err) => {
-                                    req.flash('error_msg', 'Houve um erro ao salvar a observação.')
-                                    res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                                })
-                            }
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
-                            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                        })
+                        sql = { pessoa: prj.responsavel, notobs: 'checked' }
                     }
-                }).catch((err) => {
-                    req.flash('error_msg', 'Houve um erro ao encontrar a pessoa.')
-                    res.redirect('/gerenciamento/orcamento/' + req.body.id)
-                })
-            }).catch((err) => {
-                req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
-                res.redirect('/gerenciamento/orcamento/' + req.body.id)
-            })
-        }).catch((err) => {
-            req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
-            res.redirect('/gerenciamento/orcamento/' + req.body.id)
-        })
+
+                    console.log('sql=>' + sql)
+                    // Acesso.findOne(sql).then((acesso_responsavel) => {
+                    //     if (naoVazio(acesso_responsavel)) {
+                    //         mensagem = 'Olá ' + pes_res.nome + ',' + '\n' +
+                    //             'Foi adicionada uma observação à proposta: ' + prj.seq + ' do cliente: ' + cliente.nome + '\n' +
+                    //             'Mensagem: ' + req.body.observacao + '\n' +
+                    //             'Acesse: https://quasat.vimmus.com.br/orcamento/' + prj._id + ' para mais informações.'
+
+                    //         // client.messages
+                    //         //     .create({
+                    //         //         body: mensagem,
+                    //         //         from: 'whatsapp:+554991832978',
+                    //         //         to: 'whatsapp:+55' + pes_res.celular
+                    //         //     })
+                    //         //     .then((message) => {
+                    //                 Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { obs: texto_salvo } }).then(() => {
+                    //                     req.flash('success_msg', 'Observação adicionada com sucesso')
+                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.id)
+                    //                 }).catch((err) => {
+                    //                     req.flash('error_msg', 'Houve um erro ao salvar a observação.')
+                    //                     res.redirect('/gerenciamento/orcamento/' + req.body.id)
+                    //                 })
+                    //             // }).done()
+                    //     } else {
+                            Projeto.findOneAndUpdate({ _id: req.body.id }, { $set: { 'obs': texto_salvo } }).then(() => {
+                                req.flash('success_msg', 'Observação adicionada com sucesso')
+                                res.redirect('/gerenciamento/orcamento/' + req.body.id)
+                            }).catch((err) => {
+                                req.flash('error_msg', 'Houve um erro ao salvar a observação.')
+                                res.redirect('/gerenciamento/orcamento/' + req.body.id)
+                            })
+                    //     }
+                    // }).catch((err) => {
+                    //     req.flash('error_msg', 'Houve um erro ao encontrar o acesso.')
+                    //     res.redirect('/gerenciamento/orcamento/' + req.body.id)
+                    // })
+            //     }).catch((err) => {
+            //         req.flash('error_msg', 'Houve um erro ao encontrar a pessoa.')
+            //         res.redirect('/gerenciamento/orcamento/' + req.body.id)
+            //     })
+            // }).catch((err) => {
+            //     req.flash('error_msg', 'Houve um erro ao encontrar o cliente.')
+            //     res.redirect('/gerenciamento/orcamento/' + req.body.id)
+            // })
+        // }).catch((err) => {
+        //     req.flash('error_msg', 'Houve um erro ao encontrar o projeto.')
+        //     res.redirect('/gerenciamento/orcamento/' + req.body.id)
+        // })
     })
 })
 
@@ -8724,11 +8552,6 @@ router.post('/pedido', ehAdmin, (req, res) => {
     var id
 
     var potencia
-    var vlrKit
-    var vlrTotal = 0
-    var vlrServico = 0
-
-    var texto = ''
     var q = 0
 
     if (typeof user == 'undefined') {
@@ -8737,14 +8560,9 @@ router.post('/pedido', ehAdmin, (req, res) => {
         id = user
     }
 
-    //console.log('req.body.dataprazo=>' + req.body.dataprazo)
-    //console.log('vlrServico=>' + req.body.vlrServico)
-    //console.log('vlrKit=>' + req.body.vlrKit)
-    //console.log('req.body.idpedido=>' + req.body.idpedido)
     Empresa.findOne({ user: id }).then((empresa) => {
         Projeto.findOne({ _id: req.body.id }).then((projeto) => {
             Cliente.findOne({ _id: projeto.cliente }).then((cliente) => {
-                //console.log('req.body.idpedido=>' + req.body.idpedido)
                 if (naoVazio(req.body.pagamento)) {
                     if (naoVazio(req.body.idpedido)) {
                         Pedido.findOne({ _id: req.body.idpedido }).then((pedido) => {
@@ -8820,7 +8638,6 @@ router.post('/pedido', ehAdmin, (req, res) => {
                             Pedido.findOne({ user: id }).sort({ field: 'asc', _id: -1 }).then((novo_pedido) => {
                                 var datafim = req.body.dataprazo
                                 datafim = setData(dataHoje(), datafim)
-                                //console.log('datafim=>' + datafim)
                                 projeto.pedido = novo_pedido._id
                                 projeto.vlrServico = parseFloat(req.body.vlrServico)
                                 projeto.vlrKit = parseFloat(req.body.vlrKit)
@@ -8831,40 +8648,29 @@ router.post('/pedido', ehAdmin, (req, res) => {
                                 projeto.plaWattMod = req.body.plaWattMod
                                 projeto.plaQtdInv = req.body.plaQtdInv
                                 projeto.plaKwpInv = req.body.plaKwpInv
-                                // projeto.plaQtdMod = req.body.plaQtdMod
-                                // projeto.plaWattMod = req.body.plaWattMod
-                                // projeto.plaQtdInv = req.body.plaQtdMod
-                                // projeto.plaKwpInv = req.body.plaKwpInv
+
                                 projeto.save().then(() => {
                                     Acesso.find({ user: id, notped: 'checked' }).then((acesso) => {
-                                        //console.log('acesso=>' + acesso)
                                         if (naoVazio(acesso)) {
                                             acesso.forEach((e) => {
                                                 Pessoa.findOne({ _id: e.pessoa }).then((pessoa) => {
                                                     q++
-                                                    //console.log('pessoa=>' + pessoa)
                                                     texto = 'Olá ' + pessoa.nome + ',' + '\n' +
                                                         'PEDIDO REALIZADO!' + '\n' +
                                                         'O pedido da proposta ' + projeto.seq + ' do cliente ' + cliente.nome + ' está pronto. ' + '\n ' +
                                                         'Acesse https://quasat.vimmus.com.br/gerenciamento/orcamento/' + projeto._id + ' e acompanhe.'
-
-                                                    //console.log('pessoa.celular=>' + pessoa.celular)
-
-                                                    client.messages
-                                                        .create({
-                                                            body: texto,
-                                                            from: 'whatsapp:+554991832978',
-                                                            to: 'whatsapp:+55' + pessoa.celular
-                                                        })
-                                                        .then((message) => {
-                                                            //console.log('q=>' + q)
-                                                            //console.log('acesso.length=>' + acesso.length)
+                                                    // client.messages
+                                                    //     .create({
+                                                    //         body: texto,
+                                                    //         from: 'whatsapp:+554991832978',
+                                                    //         to: 'whatsapp:+55' + pessoa.celular
+                                                    //     })
+                                                    //     .then((message) => {
                                                             if (q == acesso.length) {
-                                                                //console.log(message.sid)
                                                                 req.flash('success_msg', 'Pedido realizado com sucesso.')
                                                                 res.redirect('/gerenciamento/orcamento/' + req.body.id)
                                                             }
-                                                        }).done()
+                                                        // }).done()
 
                                                 }).catch((err) => {
                                                     req.flash('error_msg', 'Houve um erro ao encontrar a pessoa<whats>.')

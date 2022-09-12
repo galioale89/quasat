@@ -35,7 +35,6 @@ class ListInput {
 
                 })
             }).then(result => {
-                console.log(result);
                 res.send(result);
             }).catch((err) => {
                 console.log('Deu erro ' + err)

@@ -48,7 +48,6 @@ const ListInput = require('./api')
 //Chamando função de validação de autenticação do usuário pela função passport
 const passport = require("passport")
 require("./config/auth")(passport)
-
 //Configuração
 //Sessions
 app.use(session({
