@@ -52,6 +52,7 @@ router.get('/consulta', ehAdmin, (req, res) => {
         }
     }
 
+    console.log('sql=>'+sql)
 
     Cliente.aggregate([
         {
