@@ -80,6 +80,7 @@ router.get('/consulta', ehAdmin, (req, res) => {
         },
 
     ]).then(result => {
+        console.log("result=>"+result)
         result.map(e => {
             clientes.push({ _id: e._id, nome: e.nome, cidade: e.cidade, uf: e.uf, contato: e.contato, celular: e.celular, vendedor: e.vendedor.nome })
         })
