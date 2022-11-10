@@ -10,7 +10,7 @@ require('../model/Projeto')
 
 const { ehAdmin } = require('../helpers/ehAdmin')
 // Provide the required configuration
-const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
+//const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
 
 // Google calendar API settings
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
