@@ -16,14 +16,12 @@ const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
 const calendar = google.calendar({ version: "v3" });
 
-// const auth = new google.auth.JWT(
-//     CREDENTIALS.client_email,
-//     null,
-//     CREDENTIALS.private_key,
-//     SCOPES
-// )
-
-const auth = {};
+const auth = new google.auth.JWT(
+    CREDENTIALS.client_email,
+    null,
+    CREDENTIALS.private_key,
+    SCOPES
+)
 
 const Agenda = mongoose.model('agenda')
 const Cliente = mongoose.model('cliente')
