@@ -68,7 +68,7 @@
                     </div>
                 </form>
                 <div style="margin-top: 10px;">
-                    <a href="#" class="menu-open">
+                    <a href="#" class="menu-open" style="display: flex;justify-content: right;">
                         <i style="font-size: 30px;" class="bi bi-arrow-bar-left"></i>
                     </a>
                     <div class="overlay"></div>
@@ -82,6 +82,9 @@
                                     style="color: #9b9b9b;">Minha
                                     Conta</a><br>
                             </li>
+                            <li>
+                                <a href='/pessoa/consulta/' class='botao_menu mb-1 mt-1'>Pessoas</a>
+                            </li>                            
                             {{#if funpro}}
                             <li>
                                 <a href='/cliente/consulta/' class='botao_menu mb-1'>Clientes</a><br>
@@ -94,9 +97,6 @@
                             {{/if}}
                             {{#if funges}}
                             <li>
-                                <a href='/pessoa/consulta/' class='botao_menu mb-1 mt-1'>Pessoas</a>
-                            </li>
-                            <li>
                                 <a href='/cliente/consulta/' class='botao_menu mb-1'>Clientes</a>
                             </li>
                             <li>
@@ -107,9 +107,6 @@
                             </li>
                             {{/if}}
                             {{#if orcamentista}}
-                            <li>
-                                <a href='/pessoa/consulta/' class='botao_menu mb-1 mt-1'>Pessoas</a>
-                            </li>
                             <li>
                                 <a href='/cliente/consulta/' class='botao_menu mb-1'>Clientes</a>
                             </li>
@@ -122,9 +119,7 @@
                                 <a {{#if empresa}}href='/configuracao/editempresa/{{empresa._id}}'
                                     {{else}}href='/configuracao/addempresa' {{/if}} class='botao_menu mb-1'>Empresa</a>
                             </li>
-                            <li>
-                                <a href='/pessoa/consulta/' class='botao_menu mb-1 mt-1'>Pessoas</a>
-                            </li>
+
                             <li>
                                 <a href='/cliente/consulta/' class='botao_menu mb-1'>Clientes</a>
                             </li>
