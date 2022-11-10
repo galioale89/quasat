@@ -90,11 +90,11 @@ app.use(express.static('public/'))
 
 //Mongoose DB
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://quasatdb:64l10770@localhost:27017/quasat?authSource=admin', {
+mongoose.connect('mongodb://quasatdb:64l10770@18.229.182.115:27017/quasat?authSource=admin', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
-    console.log("Sucesso ao se conectar no app")
+    console.log("Sucesso ao se conectar no Mongo")
 }).catch((errr) => {
     console.log("Falha ao se conectar no Mongo")
 })
@@ -1151,11 +1151,11 @@ app.get('/dashboard', ehAdmin, async (req, res) => {
                                 if (naoVazio(todos_clientes)) {
                                     render = todos_clientes
                                 }
-                                res.render('dashboard', { render, id: _id, empresa, ehMaster, owner: owner, ano, orcamentista: true, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
+                                res.render('dashboard', { render, id: _id, empresa, ehMaster, owner: owner, ano, orcamentista, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
                             })
                         } else {
                             // console.log('sem empresa')
-                            res.render('dashboard', { id: _id, ehMaster, owner: owner, ano, orcamentista: true, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
+                            res.render('dashboard', { id: _id, ehMaster, owner: owner, ano, orcamentista, block: true, listaGanho, listaOrcado, listaBaixado, listaEncerrado, listaExecucao, notpro, atrasado })
                         }
                     })
                 }
@@ -1177,8 +1177,8 @@ app.use('/parametros/', parametros)
 
 //Outros
 
-const APP_PORT = process.env.APP_PORT || 3001
+const APP_PORT = process.env.APP_PORT || 3005
 
 app.listen(APP_PORT, () => {
-    // console.log(`Running app at port:${APP_PORT}`)
+    console.log(`Running app at port:${APP_PORT}`)
 })

@@ -32,7 +32,6 @@ const multer = require('multer');
 const multerS3 = require("multer-s3");
 const resizeImg = require('resize-image-buffer');
 const xl = require('excel4node');
-const sharp = require('sharp');
 var excel = require('exceljs');
 //const {Client, TextContent} = require('@zenvia/sdk');
 
@@ -3366,8 +3365,6 @@ router.get('/vermais/', ehAdmin, (req, res) => {
     var meshoje = hoje.substring(5, 7)
     var anotitulo = hoje.substring(0, 4)
 
-    //console.log('meshoje=>' + meshoje)
-
     switch (meshoje) {
         case '01': janeiro = 'active'
             mestitulo = 'Janeiro '
@@ -3410,18 +3407,12 @@ router.get('/vermais/', ehAdmin, (req, res) => {
     datafim = String(anotitulo) + meshoje + '30'
     dataini = parseFloat(dataini)
     datafim = parseFloat(datafim)
-    //console.log('anotitulo=>' + anotitulo)
-    //console.log('meshoje=>' + meshoje)
-    //console.log('mestitulo=>' + mestitulo)
-    //console.log('dataini=>' + dataini)
-    //console.log('datafim=>' + datafim)
+
     var sql = {}
     sql = { user: id, feito: true, liberar: true, prjfeito: false, tarefa: { $exists: false }, nome_projeto: { $exists: true }, $or: [{ 'dtinibusca': { $lte: datafim, $gte: dataini } }, { 'dtfimbusca': { $lte: datafim, $gte: dataini } }] }
     Pessoa.find({ user: id, funins: 'checked' }).lean().then((pessoa) => {
         Equipe.find(sql).then((equipe) => {
             equipe.forEach((e) => {
-                //console.log('e._id=>' + e._id)
-                //console.log('e._id=>' + e.insres)
                 Pessoa.findOne({ _id: e.insres }).then((tecnico) => {
                     q++
                     inicio = e.dtinicio
@@ -3516,9 +3507,6 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                         }
                     }
 
-                    //console.log('dif=>' + dif)
-                    //console.log('dia=>' + dia)
-                    //console.log('mes=>' + mes)
                     y = Math.floor(Math.random() * 17)
                     if (y == x) {
                         y = Math.floor(Math.random() * 17)
@@ -3531,12 +3519,9 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                     z = y
 
                     color = cores[y]
-                    //console.log('color=>' + color)
                     todasCores.push({ color })
 
-                    for (i = 0; i < dif; i++) {
-                        //console.log('dia=>' + dia)
-                        //console.log('entrou laço')    
+                    for (i = 0; i < dif; i++) { 
                         params_dia = { id: tecnico._id, tecnico: tecnico.nome, cor: color, instalador: 'true' }
                         if (meshoje == mes) {
                             switch (String(dia)) {
@@ -3638,10 +3623,8 @@ router.get('/vermais/', ehAdmin, (req, res) => {
                             if (dia < 10) {
                                 dia = '0' + dia
                             }
-                            //console.log('dia=>' + dia)
                         }
                     }
-                    //console.log('q=>' + q)
                     if (q == equipe.length) {
                         res.render('principal/agenda', {
                             dia01, dia02, dia03, dia04, dia05, dia06, dia07, dia08, dia09, dia10,

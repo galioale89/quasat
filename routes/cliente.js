@@ -43,10 +43,8 @@ router.get('/consulta', ehAdmin, (req, res) => {
         id = _id
         sql = { user: id }
     } else {
-        console.log('entrou')
         id = user
         idpes = pessoa
-        console.log('vendedor=>' + String(vendedor).length)
         if (String(vendedor).length == 4) {
             sql = { user: id, vendedor: idpes }
         } else {
@@ -54,22 +52,38 @@ router.get('/consulta', ehAdmin, (req, res) => {
         }
     }
 
-    Cliente.find(sql).then((cliente) => {
-        cliente.forEach((e) => {
-            Pessoa.findOne({ _id: e.vendedor }).then((vendedor) => {
-                clientes.push({ _id: e._id, nome: e.nome, cidade: e.cidade, uf: e.uf, contato: e.contato, celular: e.celular, vendedor: vendedor.nome })
-                q++
-                if (q == cliente.length) {
-                    res.render('cliente/consulta', { clientes })
-                }
-            }).catch((err) => {
-                req.flash('error_msg', 'Não foi possível encontrar os vendedores.')
-                res.redirect('/dashboard')
-            })
+
+    Cliente.aggregate([
+        {
+            $match: sql
+        },
+        {
+            $lookup: {
+                from: 'pessoas',
+                let: {id_vendedor: '$vendedor'},
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$_id","$$id_vendedor"]
+                            }
+                        }
+                    },
+                    {
+                        $project: {
+                            nome: 1
+                        }
+                    }
+                ],
+                as: 'vendedor'
+            }
+        },
+
+    ]).then(result => {
+        result.map(e => {
+            clientes.push({ _id: e._id, nome: e.nome, cidade: e.cidade, uf: e.uf, contato: e.contato, celular: e.celular, vendedor: e.vendedor.nome })
         })
-    }).catch((err) => {
-        req.flash('error_msg', 'Não foi possível encontrar os clientes.')
-        res.redirect('/cliente/novo')
+        res.render('cliente/consulta', { clientes })
     })
 })
 

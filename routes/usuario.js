@@ -560,7 +560,6 @@ router.get("/login", (req, res) => {
 })
 
 router.post("/login", (req, res, next) => {
-    console.log('login quasat')
     passport.authenticate("local", {
         successRedirect: "/dashboard",
         failureRedirect: "/",
