@@ -90,7 +90,7 @@ app.use(express.static('public/'))
 
 //Mongoose DB
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb://quasatdb:64l10770@18.229.182.115:27017/quasat?authSource=admin', {
+mongoose.connect('mongodb://quasatdb:64l10770@localhost:27017/quasat?authSource=admin', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
