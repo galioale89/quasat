@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 require('dotenv').config();
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
+// const accountSid = process.env.TWILIO_ACCOUNT_SID;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const client = require('twilio')(accountSid, authToken);
 
 require('../model/Projeto');
 require('../model/Acesso');
@@ -146,26 +146,26 @@ function verifyCheckDB(dataBase) {
     return false;
 };
 
-async function sendMessage(sellerName, seqPro, clientName, clientPhone, idPro, message) {
-    var mensagem = 'Olá ' + sellerName + ',' + '\n';
+// async function sendMessage(sellerName, seqPro, clientName, clientPhone, idPro, message) {
+//     var mensagem = 'Olá ' + sellerName + ',' + '\n';
 
-    if (message == 'postado')
-        mensagem += 'O projeto ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n';
-    else
-        mensagem += 'A vistoria da proposta ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n';
+//     if (message == 'postado')
+//         mensagem += 'O projeto ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n';
+//     else
+//         mensagem += 'A vistoria da proposta ' + seqPro + ' do cliente ' + clientName + ' foi ' + message + '.' + '\n';
 
-    mensagem += 'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + idPro + '.'
+//     mensagem += 'Acompanhe a proposta acessando: https://integracao.vimmus.com.br/gerenciamento/orcamento/' + idPro + '.'
 
-    client.messages
-        .create({
-            body: mensagem,
-            from: 'whatsapp:+554991832978',
-            to: 'whatsapp:+55' + clientPhone
-        })
-        .then((message) => {
-            console.log(message)
-        }).done()
-};
+//     client.messages
+//         .create({
+//             body: mensagem,
+//             from: 'whatsapp:+554991832978',
+//             to: 'whatsapp:+55' + clientPhone
+//         })
+//         .then((message) => {
+//             console.log(message)
+//         }).done()
+// };
 
 async function getProject(idPro) {
     return await Projeto.findById(idPro);;
