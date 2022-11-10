@@ -10,18 +10,20 @@ require('../model/Projeto')
 
 const { ehAdmin } = require('../helpers/ehAdmin')
 // Provide the required configuration
-//const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
+const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
 
 // Google calendar API settings
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
 const calendar = google.calendar({ version: "v3" });
 
-const auth = new google.auth.JWT(
-    CREDENTIALS.client_email,
-    null,
-    CREDENTIALS.private_key,
-    SCOPES
-)
+// const auth = new google.auth.JWT(
+//     CREDENTIALS.client_email,
+//     null,
+//     CREDENTIALS.private_key,
+//     SCOPES
+// )
+
+const auth = {};
 
 const Agenda = mongoose.model('agenda')
 const Cliente = mongoose.model('cliente')
