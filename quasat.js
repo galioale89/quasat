@@ -1177,7 +1177,7 @@ app.use('/parametros/', parametros)
 
 //Outros
 
-const APP_PORT = process.env.APP_PORT || 3005
+const APP_PORT = process.env.APP_PORT || 3002
 
 app.listen(APP_PORT, () => {
     console.log(`Running app at port:${APP_PORT}`)
