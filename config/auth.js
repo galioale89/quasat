@@ -17,8 +17,6 @@ module.exports = function (passport) {
                     if (!user) {
                         return done(null, false, { message: "Esta conta não existe" })
                     } else {
-                        // console.log('acesso')
-                        // console.log(user)
                         bcrypt.compare(senha, user.senha, (erro, batem) => {
                             if (batem) {
                                 return done(null, user)
@@ -30,7 +28,6 @@ module.exports = function (passport) {
                     }
                 })
             } else {
-                console.log('conexão quasat')
                 bcrypt.compare(senha, user.senha, (erro, batem) => {
 
                     if (batem) {
