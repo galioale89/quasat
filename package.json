@@ -4,7 +4,7 @@
   "description": "",
   "main": "quasat.js",
   "scripts": {
-    "start": "node quasat.js"
+    "start": "nodemon quasat.js"
   },
   "author": "Alexandre Galiotto <alexandre@vimmus.com.br>",
   "license": "ISC",
