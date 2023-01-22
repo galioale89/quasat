@@ -68,77 +68,141 @@ router.get('/consulta', ehAdmin, (req, res) => {
     //console.log('sql_pes=>' + JSON.stringify(sql_pes))
     //console.log('sql_prj=>' + JSON.stringify(sql_prj))
 
-    Cliente.find({ user: id }).lean().then((todos_clientes) => {
-        Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((todos_vendedores) => {
-            Projeto.find({ user: id }).sort({ 'data': -1 }).then((projeto) => {
-                if (naoVazio(projeto)) {
-                    projeto.forEach((e) => {
-                        Cliente.findOne({ _id: e.cliente }).then((cliente) => {
-                            Pessoa.findOne({ _id: e.vendedor }).then((vendedor) => {
-                                q++
-                                //console.log('e.datacad=>' + e.datacad)
-                                if (naoVazio(e.datacad)) {
-                                    dtcadastro = e.datacad
-                                } else {
-                                    dtcadastro = '00000000'
-                                }
+    Projeto.aggregate([
+        {
+            $match: {
+                user: id
+            }
+        },
+        {
+            $lookup: {
+                from: 'clientes',
+                localField: 'cliente',
+                foreignField: '_id',
+                as: 'cliente'
+            },
+        },
+        {
+            $lookup: {
+                from: 'pessoas',
+                localField: 'vendedor',
+                foreignField: '_id',
+                as: 'vendedor'
+            }
+        }
+    ]).then(async (projeto) => {
+        
+        projeto.forEach((prj) => {
+            dtcadastro = naoVazio(prj.datacad) ? prj.datacad : '00000000';
+            dtinicio = naoVazio(prj.dtinicio) ? prj.dtinicio : '0000-00-00';
+            dtfim = naoVazio(prj.dtfim) ? prj.dtfim : '0000-00-00';
+            nome_vendedor = naoVazio(prj.vendedor.nome_vendedor) ? prj.vendedor.nome_vendedor : '';
 
-                                if (naoVazio(e.dtinicio)) {
-                                    dtinicio = e.dtinicio
-                                } else {
-                                    dtinicio = '0000-00-00'
-                                }
+            if (naoVazio(prj.valor)) {
+                total = total + prj.valor
+                valor = prj.valor
+            } else {
+                valor = 0
+            }
 
-                                if (naoVazio(e.dtfim)) {
-                                    dtfim = e.dtfim
-                                } else {
-                                    dtfim = '0000-00-00'
-                                }
+            lista.push({
+                s: prj.status,
+                id: prj._id,
+                seq: prj.seq,
+                uf: prj.uf,
+                cidade: prj.cidade,
+                valor: mascaraDecimal(valor),
+                cliente: prj.cliente.nome,
+                nome_vendedor,
+                cadastro: dataMsgNum(dtcadastro),
+                inicio: dataMensagem(dtinicio),
+                fim: dataMensagem(dtfim)
+            });
 
-                                if (naoVazio(vendedor)) {
-                                    nome_vendedor = vendedor.nome
-                                } else {
-                                    nome_vendedor = ''
-                                }
-                                if (naoVazio(e.valor)) {
-                                    total = total + e.valor
-                                    valor = e.valor
-                                } else {
-                                    valor = 0
-                                }
+        });
+        
+        var todos_vendedores = await Pessoa.find({ user: id, vendedor: 'checked' }).lean();
+        var todos_clientes = await Cliente.find({ user: id }).lean();
+    
+        lista.sort(comparaNum)
+        res.render('relatorios/consulta',
+            {
+                qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none'
+            });
+    });
 
 
-                                lista.push({ s: e.status, id: e._id, seq: e.seq, uf: e.uf, cidade: e.cidade, valor: mascaraDecimal(valor), cliente: cliente.nome, nome_vendedor, cadastro: dataMsgNum(dtcadastro), inicio: dataMensagem(dtinicio), fim: dataMensagem(dtfim) })
+    // Cliente.find({ user: id }).lean().then((todos_clientes) => {
+    //     Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((todos_vendedores) => {
+    //         Projeto.find({ user: id }).sort({ 'data': -1 }).then((projeto) => {
+    //             if (naoVazio(projeto)) {
+    //                 projeto.forEach((e) => {
+    //                     Cliente.findOne({ _id: e.cliente }).then((cliente) => {
+    //                         Pessoa.findOne({ _id: e.vendedor }).then((vendedor) => {
+    //                             q++
+    //                             //console.log('e.datacad=>' + e.datacad)
+    //                             if (naoVazio(e.datacad)) {
+    //                                 dtcadastro = e.datacad
+    //                             } else {
+    //                                 dtcadastro = '00000000'
+    //                             }
 
-                                if (q == projeto.length) {
-                                    lista.sort(comparaNum)
-                                    res.render('relatorios/consulta', { qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none' })
-                                }
+    //                             if (naoVazio(e.dtinicio)) {
+    //                                 dtinicio = e.dtinicio
+    //                             } else {
+    //                                 dtinicio = '0000-00-00'
+    //                             }
 
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Nenhum vendedor encontrado.')
-                                res.redirect('/dashboard')
-                            })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Nenhum cliente encontrado.')
-                            res.redirect('/dashboard')
-                        })
-                    })
-                } else {
-                    res.render('relatorios/consulta', { lista, todos_clientes, todos_vendedores, mostrar: 'none' })
-                }
-            }).catch((err) => {
-                req.flash('error_msg', 'Nenhuma projeto encontrada.')
-                res.redirect('/dashboard')
-            })
-        }).catch((err) => {
-            req.flash('error_msg', 'Nenhum responsável encontrado.')
-            res.redirect('/dashboard')
-        })
-    }).catch((err) => {
-        req.flash('error_msg', 'Nenhum cliente encontrada.')
-        res.redirect('/dashboard')
-    })
+    //                             if (naoVazio(e.dtfim)) {
+    //                                 dtfim = e.dtfim
+    //                             } else {
+    //                                 dtfim = '0000-00-00'
+    //                             }
+
+    //                             if (naoVazio(vendedor)) {
+    //                                 nome_vendedor = vendedor.nome
+    //                             } else {
+    //                                 nome_vendedor = ''
+    //                             }
+    //                             if (naoVazio(e.valor)) {
+    //                                 total = total + e.valor
+    //                                 valor = e.valor
+    //                             } else {
+    //                                 valor = 0
+    //                             }
+
+
+    //                             lista.push({ s: e.status, id: e._id, seq: e.seq, uf: e.uf, cidade: e.cidade, valor: mascaraDecimal(valor), cliente: cliente.nome, nome_vendedor, cadastro: dataMsgNum(dtcadastro), inicio: dataMensagem(dtinicio), fim: dataMensagem(dtfim) })
+
+    //                             if (q == projeto.length) {
+    //                                 lista.sort(comparaNum)
+    //                                 res.render('relatorios/consulta', { qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none' })
+    //                             }
+
+    //                         }).catch((err) => {
+    //                             req.flash('error_msg', 'Nenhum vendedor encontrado.')
+    //                             res.redirect('/dashboard')
+    //                         })
+    //                     }).catch((err) => {
+    //                         req.flash('error_msg', 'Nenhum cliente encontrado.')
+    //                         res.redirect('/dashboard')
+    //                     })
+    //                 })
+    //             } else {
+    //                 res.render('relatorios/consulta', { lista, todos_clientes, todos_vendedores, mostrar: 'none' })
+    //             }
+    //         }).catch((err) => {
+    //             req.flash('error_msg', 'Nenhuma projeto encontrada.')
+    //             res.redirect('/dashboard')
+    //         })
+    //     }).catch((err) => {
+    //         req.flash('error_msg', 'Nenhum responsável encontrado.')
+    //         res.redirect('/dashboard')
+    //     })
+    // }).catch((err) => {
+    //     req.flash('error_msg', 'Nenhum cliente encontrada.')
+    //     res.redirect('/dashboard')
+    // })
 })
 
 router.get('/consulta/:tipo', ehAdmin, (req, res) => {
@@ -7434,7 +7498,7 @@ router.post('/filtrar', ehAdmin, (req, res) => {
 
             dataini = dataBusca(req.body.dataini)
             datafim = dataBusca(req.body.datafim)
-        
+
 
             if (vendedor != 'Todos' && cliente != 'Todos' && stats != 'Todos') {
                 sql = { user: id, cliente: cliente, vendedor: vendedor, status: stats }
