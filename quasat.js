@@ -90,7 +90,7 @@ app.use(express.static('public/'))
 
 //Mongoose DB
 mongoose.Promise = global.Promise
-mongoose.connect('mongodb+srv://admin:64l10770@cluster0.r5uuj.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://USER_QUASAT_MONGO_DB:PWD_QUASAT_MONGO_DB@cluster0.r5uuj.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
