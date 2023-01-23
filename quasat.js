@@ -89,9 +89,9 @@ app.set('view engine', 'handlebars')
 app.use(express.static('public/'))
 
 //Mongoose DB
-const user = USER_QUASAT_MONGO_DB;
+const user = process.env.USER_QUASAT_MONGO_DB;
 console.log("user => " + user);
-const upwd = PWD_QUASAT_MONGO_DB;
+const upwd = process.env.PWD_QUASAT_MONGO_DB;
 console.log("upwd => " + upwd);
 mongoose.Promise = global.Promise
 mongoose.connect(`mongodb+srv://${user}:${upwd}@cluster0.r5uuj.mongodb.net/?retryWrites=true&w=majority`, {

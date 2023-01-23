@@ -33,13 +33,9 @@ const comparaNum = require('../resources/comparaNumeros')
 router.get('/consulta', ehAdmin, (req, res) => {
     var id
     var sql_prj = []
-    var sql_pes = []
     const { _id } = req.user
     const { user } = req.user
-    const { pessoa } = req.user
     const { orcamentista } = req.user
-    const { instalador } = req.user
-    const { vendedor } = req.user
     const { funges } = req.user
 
     if (naoVazio(user)) {
@@ -48,8 +44,6 @@ router.get('/consulta', ehAdmin, (req, res) => {
         id = _id
     }
 
-    //console.log('funges=>' + funges)
-    //console.log('orcamentista=>' + orcamentista)
 
     if (funges || orcamentista || naoVazio(user) == false) {
         sql_prj = { user: id }
@@ -61,12 +55,9 @@ router.get('/consulta', ehAdmin, (req, res) => {
     var dtcadastro = '00000000'
     var dtinicio = '0000-00-00'
     var dtfim = '0000-00-00'
-    var nome_vendedor
+    var nome_vendedor = ""
     var valor = 0
     var total = 0
-
-    //console.log('sql_pes=>' + JSON.stringify(sql_pes))
-    //console.log('sql_prj=>' + JSON.stringify(sql_prj))
 
     Projeto.aggregate([
         {
@@ -91,118 +82,46 @@ router.get('/consulta', ehAdmin, (req, res) => {
             }
         }
     ]).then(async (projeto) => {
-        
+
         projeto.forEach((prj) => {
-            dtcadastro = naoVazio(prj.datacad) ? prj.datacad : '00000000';
-            dtinicio = naoVazio(prj.dtinicio) ? prj.dtinicio : '0000-00-00';
-            dtfim = naoVazio(prj.dtfim) ? prj.dtfim : '0000-00-00';
-            nome_vendedor = naoVazio(prj.vendedor.nome_vendedor) ? prj.vendedor.nome_vendedor : '';
+            if (naoVazio(prj.vendedor) && naoVazio(prj.cliente)) {
+                dtcadastro = naoVazio(prj.datacad) ? prj.datacad : '00000000';
+                dtinicio = naoVazio(prj.dtinicio) ? prj.dtinicio : '0000-00-00';
+                dtfim = naoVazio(prj.dtfim) ? prj.dtfim : '0000-00-00';
+                nome_vendedor = naoVazio(prj.vendedor[0].nome) ? prj.vendedor[0].nome : '';
 
-            if (naoVazio(prj.valor)) {
-                total = total + prj.valor
-                valor = prj.valor
-            } else {
-                valor = 0
+                if (naoVazio(prj.valor)) {
+                    total = total + prj.valor
+                    valor = prj.valor
+                } else {
+                    valor = 0
+                }
+
+                lista.push({
+                    s: prj.status,
+                    id: prj._id,
+                    seq: prj.seq,
+                    uf: prj.uf,
+                    cidade: prj.cidade,
+                    valor: mascaraDecimal(valor),
+                    cliente: prj.cliente[0].nome,
+                    nome_vendedor,
+                    cadastro: dataMsgNum(dtcadastro),
+                    inicio: dataMensagem(dtinicio),
+                    fim: dataMensagem(dtfim)
+                });
             }
-
-            lista.push({
-                s: prj.status,
-                id: prj._id,
-                seq: prj.seq,
-                uf: prj.uf,
-                cidade: prj.cidade,
-                valor: mascaraDecimal(valor),
-                cliente: prj.cliente.nome,
-                nome_vendedor,
-                cadastro: dataMsgNum(dtcadastro),
-                inicio: dataMensagem(dtinicio),
-                fim: dataMensagem(dtfim)
-            });
-
         });
-        
+
         var todos_vendedores = await Pessoa.find({ user: id, vendedor: 'checked' }).lean();
         var todos_clientes = await Cliente.find({ user: id }).lean();
-    
+
         lista.sort(comparaNum)
         res.render('relatorios/consulta',
             {
                 qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none'
             });
     });
-
-
-    // Cliente.find({ user: id }).lean().then((todos_clientes) => {
-    //     Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((todos_vendedores) => {
-    //         Projeto.find({ user: id }).sort({ 'data': -1 }).then((projeto) => {
-    //             if (naoVazio(projeto)) {
-    //                 projeto.forEach((e) => {
-    //                     Cliente.findOne({ _id: e.cliente }).then((cliente) => {
-    //                         Pessoa.findOne({ _id: e.vendedor }).then((vendedor) => {
-    //                             q++
-    //                             //console.log('e.datacad=>' + e.datacad)
-    //                             if (naoVazio(e.datacad)) {
-    //                                 dtcadastro = e.datacad
-    //                             } else {
-    //                                 dtcadastro = '00000000'
-    //                             }
-
-    //                             if (naoVazio(e.dtinicio)) {
-    //                                 dtinicio = e.dtinicio
-    //                             } else {
-    //                                 dtinicio = '0000-00-00'
-    //                             }
-
-    //                             if (naoVazio(e.dtfim)) {
-    //                                 dtfim = e.dtfim
-    //                             } else {
-    //                                 dtfim = '0000-00-00'
-    //                             }
-
-    //                             if (naoVazio(vendedor)) {
-    //                                 nome_vendedor = vendedor.nome
-    //                             } else {
-    //                                 nome_vendedor = ''
-    //                             }
-    //                             if (naoVazio(e.valor)) {
-    //                                 total = total + e.valor
-    //                                 valor = e.valor
-    //                             } else {
-    //                                 valor = 0
-    //                             }
-
-
-    //                             lista.push({ s: e.status, id: e._id, seq: e.seq, uf: e.uf, cidade: e.cidade, valor: mascaraDecimal(valor), cliente: cliente.nome, nome_vendedor, cadastro: dataMsgNum(dtcadastro), inicio: dataMensagem(dtinicio), fim: dataMensagem(dtfim) })
-
-    //                             if (q == projeto.length) {
-    //                                 lista.sort(comparaNum)
-    //                                 res.render('relatorios/consulta', { qtd: q, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none' })
-    //                             }
-
-    //                         }).catch((err) => {
-    //                             req.flash('error_msg', 'Nenhum vendedor encontrado.')
-    //                             res.redirect('/dashboard')
-    //                         })
-    //                     }).catch((err) => {
-    //                         req.flash('error_msg', 'Nenhum cliente encontrado.')
-    //                         res.redirect('/dashboard')
-    //                     })
-    //                 })
-    //             } else {
-    //                 res.render('relatorios/consulta', { lista, todos_clientes, todos_vendedores, mostrar: 'none' })
-    //             }
-    //         }).catch((err) => {
-    //             req.flash('error_msg', 'Nenhuma projeto encontrada.')
-    //             res.redirect('/dashboard')
-    //         })
-    //     }).catch((err) => {
-    //         req.flash('error_msg', 'Nenhum responsável encontrado.')
-    //         res.redirect('/dashboard')
-    //     })
-    // }).catch((err) => {
-    //     req.flash('error_msg', 'Nenhum cliente encontrada.')
-    //     res.redirect('/dashboard')
-    // })
 })
 
 router.get('/consulta/:tipo', ehAdmin, (req, res) => {
@@ -7429,24 +7348,15 @@ router.post('/filtrar', ehAdmin, (req, res) => {
     const { _id } = req.user
     const { user } = req.user
     const { funges } = req.user
-    var id
 
-    if (typeof user == 'undefined') {
-        id = _id
-    } else {
-        id = user
-    }
+    var id = typeof user == 'undefined' ? _id : user;
 
     var lista = []
-
     var dtcadastro = '0000-00-00'
     var dtinicio = '0000-00-00'
     var dtfim = '0000-00-00'
-    var dataini = 0
-    var datafim = 0
     var busca = {}
     var sql = {}
-    var stats
     var valor = 0
     var total = 0
     var check2030 = ''
@@ -7454,35 +7364,30 @@ router.post('/filtrar', ehAdmin, (req, res) => {
     var check50100 = ''
     var check100 = ''
     var checktudo = ''
+    var qtd = 0;
+
     var filtravlr = String(req.body.valor)
     filtravlr = filtravlr.replace(',on', '')
     var sqlvlr = {}
 
     var funcaoGes
 
-    var q = 0
-
-    //console.log('req.body.dataini=>' + req.body.dataini)
-    //console.log('req.body.datafim=>' + req.body.datafim)
-
     if (req.body.dataini == '' || req.body.datafim == '' || (dataBusca(req.body.dataini) > dataBusca(req.body.datafim))) {
         req.flash('error_msg', 'Verificar as datas de busca escolhidas.')
         res.redirect('/dashboard/')
     }
 
-    console.log('filtravlr=>' + filtravlr)
-
     switch (filtravlr) {
-        case '2030': sqlvlr = { 'valor': { $gte: 20000, $lte: 30000 } }
+        case '2030': sqlvlr = { "valor": { $gte: 20000, $lte: 30000 } }
             check2030 = 'checked'
             break;
-        case '3050': sqlvlr = { 'valor': { $gte: 30000, $lte: 50000 } }
+        case '3050': sqlvlr = { "valor": { $gte: 30000, $lte: 50000 } }
             check3050 = 'checked'
             break;
-        case '50100': sqlvlr = { 'valor': { $gte: 50000, $lte: 100000 } }
+        case '50100': sqlvlr = { "valor": { $gte: 50000, $lte: 100000 } }
             check50100 = 'checked'
             break;
-        case '100': sqlvlr = { 'valor': { $gte: 100000 } }
+        case '100': sqlvlr = { "valor": { $gte: 100000 } }
             check100 = 'checked'
             break;
         default: sqlvlr = {}
@@ -7490,153 +7395,136 @@ router.post('/filtrar', ehAdmin, (req, res) => {
             break;
     }
 
-    Cliente.find({ user: id }).lean().then((todos_clientes) => {
-        Pessoa.find({ user: id, vendedor: 'checked' }).lean().then((todos_vendedores) => {
-            stats = req.body.stats
-            cliente = req.body.cliente
-            vendedor = req.body.vendedor
+    var stats = req.body.stats
+    var cliente = req.body.cliente
+    var vendedor = req.body.vendedor
 
-            dataini = dataBusca(req.body.dataini)
-            datafim = dataBusca(req.body.datafim)
-
-
-            if (vendedor != 'Todos' && cliente != 'Todos' && stats != 'Todos') {
-                sql = { user: id, cliente: cliente, vendedor: vendedor, status: stats }
+    if (vendedor != 'Todos' && cliente != 'Todos' && stats != 'Todos') {
+        sql = { user: id, cliente: cliente, vendedor: vendedor, status: stats }
+    } else {
+        if (vendedor != 'Todos' && cliente != 'Todos' && stats == 'Todos') {
+            sql = { user: id, cliente: cliente, vendedor: vendedor }
+        } else {
+            if (vendedor != 'Todos' && cliente == 'Todos' && stats == 'Todos') {
+                sql = { user: id, vendedor: vendedor }
             } else {
-                if (vendedor != 'Todos' && cliente != 'Todos' && stats == 'Todos') {
-                    sql = { user: id, cliente: cliente, vendedor: vendedor }
+                if (vendedor == 'Todos' && cliente != 'Todos' && stats == 'Todos') {
+                    sql = { user: id, cliente: cliente }
                 } else {
-                    if (vendedor != 'Todos' && cliente == 'Todos' && stats == 'Todos') {
-                        sql = { user: id, vendedor: vendedor }
-                    } else {
-                        if (vendedor == 'Todos' && cliente != 'Todos' && stats == 'Todos') {
-                            sql = { user: id, cliente: cliente }
+                    if (vendedor == 'Todos' && cliente == 'Todos' && stats != 'Todos') {
+                        if (stats == 'Negociando') {
+                            sql = { user: id, $or: [{ status: 'Negociando' }, { status: 'Analisando Financiamento' }, { status: 'Comparando Propostas' }, { status: 'Aguardando redução de preço' }] }
                         } else {
-                            if (vendedor == 'Todos' && cliente == 'Todos' && stats != 'Todos') {
+                            sql = { user: id, status: stats }
+                        }
+                    } else {
+                        if (vendedor != 'Todos' && cliente == 'Todos' && stats != 'Todos') {
+                            if (stats == 'Negociando') {
+                                sql = { user: id, vendedor: vendedor, $or: [{ status: 'Negociando' }, { status: 'Analisando Financiamento' }, { status: 'Comparando Propostas' }, { status: 'Aguardando redução de preço' }] }
+                            } else {
+                                sql = { user: id, vendedor: vendedor, status: stats }
+                            }
+                        } else {
+                            if (vendedor == 'Todos' && cliente != 'Todos' && stats != 'Todos') {
                                 if (stats == 'Negociando') {
-                                    sql = { user: id, $or: [{ status: 'Negociando' }, { status: 'Analisando Financiamento' }, { status: 'Comparando Propostas' }, { status: 'Aguardando redução de preço' }] }
+                                    sql = { user: id, cliente: cliente, $or: [{ status: 'Negociando' }, { status: 'Analisando Financiamento' }, { status: 'Comparando Propostas' }, { status: 'Aguardando redução de preço' }] }
                                 } else {
-                                    sql = { user: id, status: stats }
+                                    sql = { user: id, cliente: cliente, status: stats }
                                 }
                             } else {
-                                if (vendedor != 'Todos' && cliente == 'Todos' && stats != 'Todos') {
-                                    if (stats == 'Negociando') {
-                                        sql = { user: id, vendedor: vendedor, $or: [{ status: 'Negociando' }, { status: 'Analisando Financiamento' }, { status: 'Comparando Propostas' }, { status: 'Aguardando redução de preço' }] }
-                                    } else {
-                                        sql = { user: id, vendedor: vendedor, status: stats }
-                                    }
-                                } else {
-                                    if (vendedor == 'Todos' && cliente != 'Todos' && stats != 'Todos') {
-                                        if (stats == 'Negociando') {
-                                            sql = { user: id, cliente: cliente, $or: [{ status: 'Negociando' }, { status: 'Analisando Financiamento' }, { status: 'Comparando Propostas' }, { status: 'Aguardando redução de preço' }] }
-                                        } else {
-                                            sql = { user: id, cliente: cliente, status: stats }
-                                        }
-                                    } else {
-                                        sql = { user: id }
-                                    }
-                                }
+                                sql = { user: id }
                             }
                         }
                     }
                 }
             }
+        }
+    }
 
-            if (naoVazio(dataini) && naoVazio(datafim)) {
-                var data = { 'datacad': { $lte: datafim, $gte: dataini } }
+    var dataini = dataBusca(req.body.dataini)
+    var datafim = dataBusca(req.body.datafim)
+    if (naoVazio(dataini) && naoVazio(datafim)) {
+        var data = { 'datacad': { $gte: dataini,  $lte: datafim}}
+    }
+
+    Object.assign(busca, sql, sqlvlr)
+
+    Projeto.aggregate([
+        {
+            $match: busca
+        },
+        {
+            $lookup: {
+                from: 'clientes',
+                localField: 'cliente',
+                foreignField: '_id',
+                as: 'cliente'
+            },
+        },
+        {
+            $lookup: {
+                from: 'pessoas',
+                localField: 'vendedor',
+                foreignField: '_id',
+                as: 'vendedor'
             }
+        }
+    ]).then(async (projeto) => {
+        if (naoVazio(projeto)) {
+            projeto.forEach((prj) => {
+                if (naoVazio(prj.vendedor) && naoVazio(prj.cliente)) {
+                    qtd++;
+                    dtcadastro = naoVazio(prj.datacad) ? prj.datacad : '00000000';
+                    dtinicio = naoVazio(prj.dtinicio) ? prj.dtinicio : '0000-00-00';
+                    dtfim = naoVazio(prj.dtfim) ? prj.dtfim : '0000-00-00';
+                    nome_vendedor = naoVazio(prj.vendedor[0].nome) ? prj.vendedor[0].nome : '';
 
-            Object.assign(busca, sql, data, sqlvlr)
-
-            console.log('busca=>' + JSON.stringify(busca))
-
-            Projeto.find(busca).sort({ 'data': -1 }).then((projeto) => {
-
-                if (naoVazio(projeto)) {
-                    projeto.forEach((e) => {
-                        Cliente.findOne({ _id: e.cliente }).then((prj_cliente) => {
-                            Pessoa.findOne({ _id: e.vendedor }).then((prj_vendedor) => {
-                                q++
-                                //console.log('e.datacad=>' + e.datacad)
-                                if (naoVazio(e.datacad)) {
-                                    dtcadastro = e.datacad
-                                } else {
-                                    dtcadastro = '00000000'
-                                }
-
-                                if (naoVazio(e.dtinicio)) {
-                                    dtinicio = e.dtinicio
-                                } else {
-                                    dtinicio = '0000-00-00'
-                                }
-
-                                if (naoVazio(e.dtfim)) {
-                                    dtfim = e.dtfim
-                                } else {
-                                    dtfim = '0000-00-00'
-                                }
-
-                                if (naoVazio(prj_vendedor)) {
-                                    nome_vendedor = prj_vendedor.nome
-                                } else {
-                                    nome_vendedor = ''
-                                }
-
-                                //console.log('valor=>' + valor)
-                                if (naoVazio(e.valor)) {
-                                    total = total + e.valor
-                                    valor = e.valor
-                                } else {
-                                    valor = 0
-                                }
-
-                                lista.push({ s: e.status, id: e._id, seq: e.seq, uf: e.uf, cidade: e.cidade, dataini, datafim, valor: mascaraDecimal(valor), cliente: prj_cliente.nome, nome_vendedor, cadastro: dataMsgNum(dtcadastro), inicio: dataMensagem(dtinicio), fim: dataMensagem(dtfim) })
-
-                                if (q == projeto.length) {
-                                    //console.log(lista)
-                                    if (naoVazio(user) == false) {
-                                        funcaoGes = true
-                                    } else {
-                                        funcaoGes = funges
-                                    }
-                                    res.render('relatorios/consulta', {
-                                        qtd: q, lista, todos_clientes, todos_vendedores, dataini, datafim, total: mascaraDecimal(total), stats, cliente, vendedor, inicio: dataini, fim: datafim, mostrar: '',
-                                        check2030, check3050, check50100, check100, checktudo, funges: funcaoGes
-                                    })
-                                }
-
-                            }).catch((err) => {
-                                req.flash('error_msg', 'Nenhum vendedor encontrado.')
-                                res.redirect('/dashboard')
-                            })
-                        }).catch((err) => {
-                            req.flash('error_msg', 'Nenhum cliente encontrado.')
-                            res.redirect('/dashboard')
-                        })
-                    })
-                } else {
-                    if (naoVazio(user) == false) {
-                        funcaoGes = true
+                    if (naoVazio(prj.valor)) {
+                        total = total + prj.valor
+                        valor = prj.valor
                     } else {
-                        funcaoGes = funges
+                        valor = 0
                     }
-                    req.flash('aviso_msg', 'Não existem registros no sistema.')
-                    res.render('relatorios/consulta', {
-                        lista, todos_clientes, todos_vendedores, stats, cliente, inicio: dataini, fim: datafim, mostrar: '',
-                        check2030, check3050, check50100, check100, checktudo, funges: funcaoGes
-                    })
+
+                    lista.push({
+                        s: prj.status,
+                        id: prj._id,
+                        seq: prj.seq,
+                        uf: prj.uf,
+                        cidade: prj.cidade,
+                        valor: mascaraDecimal(valor),
+                        cliente: prj.cliente[0].nome,
+                        nome_vendedor,
+                        cadastro: dataMsgNum(dtcadastro),
+                        inicio: dataMensagem(dtinicio),
+                        fim: dataMensagem(dtfim)
+                    });
                 }
-            }).catch((err) => {
-                req.flash('error_msg', 'Nenhum projeto encontrado.')
-                res.redirect('/dashboard')
+            });
+
+            var todos_vendedores = await Pessoa.find({vendedor: 'checked' }).lean();
+            var todos_clientes = await Cliente.find().lean();
+
+            lista.sort(comparaNum)
+            res.render('relatorios/consulta',
+                {
+                    qtd: qtd, lista, todos_clientes, todos_vendedores, total: mascaraDecimal(total), mostrar: 'none'
+                });
+        } else {
+            if (naoVazio(user) == false) {
+                funcaoGes = true
+            } else {
+                funcaoGes = funges
+            }
+            req.flash('aviso_msg', 'Não existem registros no sistema.')
+            res.render('relatorios/consulta', {
+                lista, todos_clientes, todos_vendedores, stats, cliente, inicio: dataini, fim: datafim, mostrar: '',
+                check2030, check3050, check50100, check100, checktudo, funges: funcaoGes
             })
-        }).catch((err) => {
-            req.flash('error_msg', 'Nenhum vendedor encontrado.')
-            res.redirect('/dashboard')
-        })
-    }).catch((err) => {
-        res.redirect('/dashboard')
-    })
+        }
+
+    });
+
 })
 
 module.exports = router
