@@ -7441,13 +7441,13 @@ router.post('/filtrar', ehAdmin, (req, res) => {
         }
     }
 
-    var dataini = dataBusca(req.body.dataini)
-    var datafim = dataBusca(req.body.datafim)
+    var dataini = Number(dataBusca(req.body.dataini));
+    var datafim = Number(dataBusca(req.body.datafim));
     if (naoVazio(dataini) && naoVazio(datafim)) {
         var data = { 'datacad': { $gte: dataini,  $lte: datafim}}
     }
 
-    Object.assign(busca, sql, sqlvlr)
+    Object.assign(busca, data, sql, sqlvlr)
 
     Projeto.aggregate([
         {
