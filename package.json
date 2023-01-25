@@ -19,7 +19,7 @@
     "connect-flash": "^0.1.1",
     "core-js": "^3.21.1",
     "data-uri-to-file": "^0.1.8",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.3",
     "excel4node": "^1.7.2",
     "exceljs": "^4.3.0",
     "express": "^4.17.2",

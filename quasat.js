@@ -10,6 +10,8 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('connect-flash')
 
+require('dotenv').config();
+
 const pessoa = require('./routes/pessoa')
 const cliente = require('./routes/cliente')
 const usuario = require('./routes/usuario')
